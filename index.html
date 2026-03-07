@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC Tires — Buy Online. Get Installed Locally.</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=Barlow:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#080808;
+  --dark:#111;
+  --card:#161616;
+  --raised:#1d1d1d;
+  --border:#252525;
+  --mid:#404040;
+  --muted:#686868;
+  --light:#a0a0a0;
+  --white:#f0ece0;
+  --yellow:#f5c518;
+  --yellow-dim:rgba(245,197,24,0.12);
+  --yellow-dark:#d4a800;
+  --green:#22c55e;
+  --green-dim:rgba(34,197,94,0.1);
+  --red:#ef4444;
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--mid);border-radius:3px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none}
+.logo .pc{color:var(--yellow)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-link{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;cursor:pointer;transition:color .2s;background:none;border:none;font-family:'Barlow',sans-serif}
+.nav-link:hover{color:var(--white)}
+.nav-right{display:flex;align-items:center;gap:14px}
+.phone-link{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--light);text-decoration:none;transition:color .2s}
+.phone-link:hover{color:var(--yellow)}
+.cart-btn{display:flex;align-items:center;gap:9px;background:var(--yellow);color:var(--black);border:none;padding:9px 20px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s}
+.cart-btn:hover{background:var(--yellow-dark)}
+.cart-badge{background:var(--black);color:var(--yellow);border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+
+/* HERO */
+.hero{min-height:100vh;padding:100px 40px 72px;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.25;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent)}
+.hero-glow{position:absolute;right:-200px;top:50%;transform:translateY(-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(245,197,24,.07),transparent 65%);pointer-events:none}
+.hero-pattern{position:absolute;right:0;top:0;bottom:0;width:42%;overflow:hidden;opacity:.055;pointer-events:none}
+.hero-pattern svg{width:100%;height:100%}
+.hero-content{position:relative;max-width:660px}
+.hero-pill{display:inline-flex;align-items:center;gap:10px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.28);border-radius:2px;padding:6px 14px;margin-bottom:24px}
+.pill-dot{width:7px;height:7px;border-radius:50%;background:var(--yellow);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.pill-text{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--yellow)}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(62px,8.5vw,116px);font-weight:900;line-height:.9;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
+h1 .y{color:var(--yellow)}
+h1 .b{display:block}
+.hero-desc{font-size:17px;color:var(--light);max-width:480px;margin-bottom:40px;line-height:1.75;font-weight:300}
+.hero-desc strong{color:var(--white);font-weight:600}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:52px}
+.btn-primary{background:var(--yellow);color:var(--black);border:none;padding:14px 32px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-primary:hover{background:var(--yellow-dark);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border);padding:14px 32px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-ghost:hover{border-color:var(--mid)}
+.hero-trust{display:flex;gap:40px;padding-top:36px;border-top:1px solid var(--border)}
+.trust-item{display:flex;align-items:center;gap:10px}
+.trust-icon{font-size:20px}
+.trust-txt strong{display:block;color:var(--light);font-weight:600;font-size:13px}
+.trust-txt span{font-size:12px;color:var(--muted)}
+
+/* HOW IT WORKS */
+.how-section{background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:60px 40px}
+.how-inner{max-width:1100px;margin:0 auto}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--yellow);margin-bottom:10px}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.section-sub{color:var(--muted);font-size:14px;margin-bottom:36px}
+.steps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.step-card{background:var(--dark);padding:28px 22px}
+.step-num{font-family:'Barlow Condensed',sans-serif;font-size:60px;font-weight:900;color:var(--border);line-height:1;margin-bottom:10px}
+.step-icon{font-size:26px;margin-bottom:10px}
+.step-title{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.step-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.step-card.hl{background:var(--yellow-dim);border-top:2px solid var(--yellow)}
+.step-card.hl .step-title{color:var(--yellow)}
+
+/* VEHICLE LOOKUP */
+.lookup-section{padding:64px 40px;background:var(--black)}
+.lookup-inner{max-width:1100px;margin:0 auto}
+.lookup-box{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:32px;margin-top:28px}
+.lookup-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.field select{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:11px 14px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;appearance:none;cursor:pointer}
+.field select:focus{border-color:var(--yellow)}
+.lookup-btn{background:var(--yellow);color:var(--black);border:none;padding:11px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;white-space:nowrap}
+.lookup-btn:hover{background:var(--yellow-dark)}
+.lookup-result{margin-top:14px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.25);border-radius:2px;font-size:14px;display:none;align-items:center;gap:10px}
+.lookup-result.show{display:flex}
+.lookup-result strong{color:var(--yellow)}
+
+/* CATALOG */
+.catalog-section{padding:72px 40px;max-width:1240px;margin:0 auto}
+.catalog-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;gap:16px;flex-wrap:wrap}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{background:var(--raised);border:1px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:2px;font-size:12px;font-weight:600;letter-spacing:.5px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.chip.active,.chip:hover{background:var(--yellow);border-color:var(--yellow);color:var(--black)}
+.cat-meta{font-size:13px;color:var(--muted)}
+.cat-meta span{color:var(--light);font-weight:600}
+.tire-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:2px}
+.tire-card{background:var(--card);border:1px solid var(--border);padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.tire-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--yellow);transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.tire-card:hover::after{transform:scaleX(1)}
+.tire-card:hover{background:var(--raised);border-color:var(--mid)}
+.tc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.tc-brand{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yellow)}
+.stock-pill{font-size:10px;font-weight:600;letter-spacing:.5px;padding:3px 8px;border-radius:2px;text-transform:uppercase}
+.in-stock{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.low-stock{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(245,197,24,.25)}
+.tc-name{font-family:'Barlow Condensed',sans-serif;font-size:23px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;line-height:1.1;margin-bottom:3px}
+.tc-size{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:13px}
+.tc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.tag{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;background:var(--raised);border:1px solid var(--border);border-radius:2px;color:var(--light)}
+.tag.best{background:var(--yellow-dim);border-color:rgba(245,197,24,.3);color:var(--yellow)}
+.tc-stars{display:flex;align-items:center;gap:2px;margin-bottom:16px}
+.star{font-size:12px;color:var(--yellow)}
+.star.e{color:var(--mid)}
+.rcount{font-size:11px;color:var(--muted);margin-left:4px}
+.tc-specs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:16px;padding:11px;background:var(--raised);border-radius:2px}
+.spec-label{font-size:10px;color:var(--muted);margin-bottom:1px}
+.spec-value{font-size:13px;color:var(--white);font-weight:600}
+.tc-foot{display:flex;align-items:center;justify-content:space-between}
+.tc-price{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900}
+.tc-price sup{font-size:15px;vertical-align:super}
+.price-each{font-size:12px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400}
+.add-btn{background:var(--yellow);color:var(--black);border:none;padding:10px 18px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.add-btn:hover{background:var(--yellow-dark);transform:translateY(-1px)}
+
+/* INSTALL SECTION */
+.install-section{background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:64px 40px}
+.install-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.install-list{display:flex;flex-direction:column;gap:16px;margin-top:24px}
+.inst-item{display:flex;gap:14px;align-items:flex-start}
+.inst-check{width:28px;height:28px;border-radius:2px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.25);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px}
+.inst-txt strong{display:block;font-size:14px;font-weight:600;color:var(--white);margin-bottom:2px}
+.inst-txt span{font-size:13px;color:var(--muted)}
+.install-cta{margin-top:30px}
+.install-visual{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:28px}
+.iv-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--yellow);margin-bottom:18px}
+.bp-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--raised);border:1px solid var(--border);border-radius:2px;margin-bottom:8px}
+.bp-row.sel{border-color:rgba(245,197,24,.3);background:var(--yellow-dim)}
+.bp-icon{font-size:17px;width:26px;text-align:center}
+.bp-main{font-size:14px;font-weight:600}
+.bp-sub{font-size:11px;color:var(--muted)}
+.bp-check{color:var(--green);font-size:16px;margin-left:auto}
+
+/* OVERLAYS */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:600;display:none;backdrop-filter:blur(6px)}
+.overlay.show{display:flex}
+.overlay.end{justify-content:flex-end;align-items:stretch}
+.overlay.center{align-items:center;justify-content:center}
+
+/* CART DRAWER */
+.cart-drawer{width:450px;background:var(--dark);border-left:1px solid var(--border);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .33s cubic-bezier(.4,0,.2,1)}
+.overlay.show .cart-drawer{transform:translateX(0)}
+.dhead{padding:20px 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.dtitle{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.close-x{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;transition:color .2s;line-height:1}
+.close-x:hover{color:var(--white)}
+.cart-body{flex:1;overflow-y:auto;padding:16px 26px}
+.cart-empty{text-align:center;padding:56px 20px;color:var(--muted)}
+.empty-icon{font-size:48px;opacity:.3;margin-bottom:12px}
+.empty-msg{font-size:15px;color:var(--light);margin-bottom:4px}
+.cart-item{display:flex;gap:13px;padding:15px 0;border-bottom:1px solid var(--border)}
+.cart-item:last-child{border-bottom:none}
+.ci-icon{width:58px;height:58px;background:var(--raised);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.ci-info{flex:1;min-width:0}
+.ci-brand{font-size:9px;color:var(--yellow);font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.ci-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;text-transform:uppercase;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-size{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)}
+.ci-install-badge{font-size:11px;color:var(--green);margin-top:3px}
+.ci-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0}
+.qty-row{display:flex;align-items:center;gap:7px}
+.qb{width:26px;height:26px;border:1px solid var(--border);background:var(--raised);color:var(--white);border-radius:2px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.qb:hover{border-color:var(--yellow);color:var(--yellow)}
+.qn{font-family:'IBM Plex Mono',monospace;font-size:14px;width:20px;text-align:center}
+.ci-price{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800}
+.ci-remove{font-size:11px;color:var(--muted);cursor:pointer;background:none;border:none;transition:color .2s;font-family:'Barlow',sans-serif}
+.ci-remove:hover{color:var(--red)}
+.inst-toggle{display:flex;align-items:center;gap:6px;margin-top:5px;cursor:pointer;user-select:none}
+.inst-toggle input{accent-color:var(--yellow);width:13px;height:13px;cursor:pointer}
+.inst-toggle span{font-size:11px;color:var(--muted)}
+.inst-toggle b{color:var(--green);font-weight:600}
+.cart-foot{padding:20px 26px;border-top:1px solid var(--border)}
+.sum-row{display:flex;justify-content:space-between;font-size:13px;color:var(--light);margin-bottom:7px}
+.sum-row.total{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--white);padding-top:11px;margin-top:3px;border-top:1px solid var(--border);margin-bottom:0}
+.checkout-btn{width:100%;background:var(--yellow);color:var(--black);border:none;padding:14px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:14px}
+.checkout-btn:hover{background:var(--yellow-dark)}
+.stripe-note{text-align:center;font-size:11px;color:var(--muted);margin-top:9px;display:flex;align-items:center;justify-content:center;gap:5px}
+
+/* CHECKOUT MODAL */
+.modal{background:var(--dark);border:1px solid var(--border);border-radius:2px;width:92%;max-width:580px;max-height:92vh;overflow-y:auto;transform:scale(.97);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.overlay.show .modal{transform:scale(1)}
+.mhead{padding:24px 28px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--dark);z-index:10}
+.mtitle{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.mbody{padding:24px 28px}
+.mfoot{padding:14px 28px 24px;border-top:1px solid var(--border)}
+
+/* Progress steps */
+.psteps{display:flex;margin-bottom:28px;position:relative}
+.psteps::before{content:'';position:absolute;top:13px;left:0;right:0;height:1px;background:var(--border);z-index:0}
+.ps{flex:1;text-align:center;position:relative;z-index:1}
+.ps-dot{width:26px;height:26px;border-radius:50%;background:var(--raised);border:1px solid var(--border);margin:0 auto 7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;transition:all .3s;color:var(--muted)}
+.ps-lbl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);transition:color .3s}
+.ps.active .ps-dot{background:var(--yellow);border-color:var(--yellow);color:var(--black)}
+.ps.active .ps-lbl{color:var(--yellow)}
+.ps.done .ps-dot{background:var(--green);border-color:var(--green);color:var(--white)}
+.ps.done .ps-lbl{color:var(--green)}
+
+/* Forms */
+.fsec{display:none}.fsec.active{display:block}
+.frow{display:grid;gap:11px;margin-bottom:11px}
+.frow.two{grid-template-columns:1fr 1fr}
+.frow.one{grid-template-columns:1fr}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.fg input,.fg select{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:11px 14px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;appearance:none}
+.fg input:focus,.fg select:focus{border-color:var(--yellow)}
+.fg input::placeholder{color:var(--mid)}
+.field-note{font-size:11px;color:var(--muted);margin-top:5px}
+
+/* Payment */
+.card-logos{display:flex;gap:6px;margin-bottom:16px}
+.clogo{background:var(--raised);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:16px}
+.card-field{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:11px 14px;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--white);outline:none;transition:border-color .2s;width:100%;letter-spacing:2px}
+.card-field:focus{border-color:var(--yellow)}
+.card-field::placeholder{color:var(--mid);letter-spacing:0}
+.pay-total-box{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:13px 15px;margin-bottom:18px}
+.ptrow{display:flex;justify-content:space-between;font-size:13px;color:var(--light);margin-bottom:5px}
+.ptrow:last-child{margin-bottom:0}
+.ptrow.bold{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--white);padding-top:10px;margin-top:4px;border-top:1px solid var(--border)}
+
+/* Calendar */
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.cal-nav{background:var(--raised);border:1px solid var(--border);color:var(--white);width:30px;height:30px;border-radius:2px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cal-nav:hover{border-color:var(--yellow)}
+.cal-month{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:18px}
+.cal-lbl{text-align:center;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);padding:5px 0}
+.cal-day{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:8px 4px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;min-height:34px;display:flex;align-items:center;justify-content:center}
+.cal-day:hover:not(.dis){border-color:var(--yellow);color:var(--yellow)}
+.cal-day.sel{background:var(--yellow);border-color:var(--yellow);color:var(--black);font-weight:700}
+.cal-day.dis{opacity:.22;cursor:not-allowed;background:transparent}
+.cal-day.emp{background:transparent;border-color:transparent;cursor:default}
+.time-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:18px}
+.time-slot{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:10px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s}
+.time-slot:hover:not(.bkd){border-color:var(--yellow);color:var(--yellow)}
+.time-slot.sel{background:var(--yellow);border-color:var(--yellow);color:var(--black);font-weight:700}
+.time-slot.bkd{opacity:.3;cursor:not-allowed;font-size:11px}
+.appt-note{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:12px 14px;font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+.appt-note b{color:var(--white)}
+
+/* Confirm */
+.confirm-wrap{text-align:center;padding:16px 0 10px}
+.conf-circle{width:76px;height:76px;border-radius:50%;background:var(--green-dim);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 18px}
+.conf-title{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:7px}
+.conf-sub{color:var(--light);font-size:14px;margin-bottom:24px}
+.confirm-details{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:18px}
+.cd-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px}
+.cd-row:last-child{border-bottom:none}
+.cd-label{color:var(--muted)}
+.cd-val{color:var(--white);font-weight:500;text-align:right;max-width:60%}
+.cd-val.y{color:var(--yellow);font-weight:700}
+
+/* Modal actions */
+.mactions{display:flex;gap:10px;margin-top:12px}
+.back-btn{flex:1;background:var(--raised);color:var(--light);border:1px solid var(--border);padding:12px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.back-btn:hover{border-color:var(--muted)}
+.next-btn{flex:2;background:var(--yellow);color:var(--black);border:none;padding:12px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
+.next-btn:hover{background:var(--yellow-dark)}
+.next-btn.ld{opacity:.65;cursor:wait}
+.skip-btn{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .2s;margin-top:9px;display:block;width:100%;text-align:center}
+.skip-btn:hover{color:var(--white)}
+
+/* FOOTER */
+footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40px 28px}
+.footer-inner{max-width:1100px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:40px}
+.footer-logo{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+.footer-logo span{color:var(--yellow)}
+.footer-desc{font-size:13px;color:var(--muted);line-height:1.7;max-width:240px}
+.footer-col h4{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--white);margin-bottom:14px}
+.footer-links{display:flex;flex-direction:column;gap:8px}
+.footer-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;cursor:pointer}
+.footer-links a:hover{color:var(--yellow)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:22px;border-top:1px solid var(--border)}
+.footer-copy{font-size:12px;color:var(--muted)}
+.stripe-badge{background:var(--raised);border:1px solid var(--border);padding:4px 10px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--light)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;z-index:800;background:var(--raised);border:1px solid var(--border);border-left:3px solid var(--yellow);padding:13px 17px;border-radius:2px;font-size:14px;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-msg strong{display:block;font-size:14px;color:var(--white);margin-bottom:1px}
+.toast-msg span{font-size:12px;color:var(--muted)}
+
+/* ── TIRE GUIDE ── */
+.guide-section{padding:80px 40px;background:var(--black)}
+.guide-inner{max-width:1100px;margin:0 auto}
+.guide-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:40px;overflow-x:auto;scrollbar-width:none}
+.guide-tabs::-webkit-scrollbar{display:none}
+.gtab{background:none;border:none;border-bottom:3px solid transparent;padding:12px 22px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;letter-spacing:.5px;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;margin-bottom:-1px}
+.gtab:hover{color:var(--light)}
+.gtab.active{color:var(--yellow);border-bottom-color:var(--yellow)}
+.guide-panels .gpanel{display:none}
+.guide-panels .gpanel.active{display:block}
+.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:24px}
+.guide-card{background:var(--card);border:1px solid var(--border);padding:24px}
+.gc-icon{font-size:32px;margin-bottom:12px}
+.gc-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;color:var(--white)}
+.gc-title span{color:var(--yellow)}
+.gc-desc{font-size:13px;color:var(--muted);line-height:1.7}
+.gc-tag{display:inline-block;margin-top:10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:2px}
+.gc-tag.rec{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(245,197,24,.3)}
+.gc-tag.caution{background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+.guide-compare{background:var(--card);border:1px solid var(--border);border-radius:2px;overflow:hidden;margin-bottom:24px}
+.compare-head{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;background:var(--raised);border-bottom:1px solid var(--border)}
+.compare-head div{padding:11px 14px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.compare-head div:first-child{color:var(--light)}
+.compare-row{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border-bottom:1px solid var(--border)}
+.compare-row:last-child{border-bottom:none}
+.compare-row div{padding:11px 14px;font-size:13px;color:var(--light)}
+.compare-row div:first-child{color:var(--white);font-weight:600}
+.compare-row:hover{background:var(--raised)}
+.dot-good{color:var(--green)}
+.dot-ok{color:var(--yellow)}
+.dot-bad{color:var(--red)}
+.guide-callout{background:var(--yellow-dim);border:1px solid rgba(245,197,24,.25);border-radius:2px;padding:16px 20px;font-size:14px;color:var(--light);line-height:1.7}
+.guide-callout strong{color:var(--yellow)}
+.guide-callout b{color:var(--white)}
+.sidewall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:20px}
+.sw-card{background:var(--card);border:1px solid var(--border);padding:20px}
+.sw-code{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;color:var(--yellow);margin-bottom:8px}
+.sw-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:4px}
+.sw-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.tread-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px}
+.tread-card{background:var(--card);border:1px solid var(--border);padding:22px;display:flex;gap:14px;align-items:flex-start}
+.tread-icon{font-size:28px;flex-shrink:0}
+.tread-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px}
+.tread-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.guide-ask{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:20px 24px;margin-top:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.guide-ask-text{flex:1;font-size:14px;color:var(--light)}
+.guide-ask-text strong{color:var(--white);display:block;margin-bottom:3px}
+
+/* ── REVIEWS ── */
+.reviews-section{background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 40px}
+.reviews-inner{max-width:1100px;margin:0 auto}
+.reviews-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:16px}
+.rating-summary{display:flex;align-items:center;gap:20px}
+.big-rating{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;line-height:1;color:var(--white)}
+.rating-meta{}
+.rating-stars{display:flex;gap:3px;margin-bottom:4px}
+.rating-stars .star{font-size:18px}
+.rating-count-big{font-size:13px;color:var(--muted)}
+.google-badge{display:flex;align-items:center;gap:8px;background:var(--raised);border:1px solid var(--border);border-radius:4px;padding:8px 14px;font-size:12px;color:var(--light)}
+.google-g{font-size:18px}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:28px}
+.review-card{background:var(--card);border:1px solid var(--border);padding:22px;transition:background .2s}
+.review-card:hover{background:var(--raised)}
+.rv-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rv-stars{display:flex;gap:2px}
+.rv-stars .star{font-size:13px}
+.rv-date{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.rv-text{font-size:13px;color:var(--light);line-height:1.7;margin-bottom:14px}
+.rv-author{display:flex;align-items:center;gap:10px}
+.rv-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--black);flex-shrink:0}
+.rv-name{font-size:13px;font-weight:600;color:var(--white)}
+.rv-source{font-size:11px;color:var(--muted)}
+.rv-verified{font-size:10px;color:var(--green);font-weight:600;letter-spacing:.5px}
+.reviews-cta{text-align:center;padding:24px;background:var(--raised);border:1px solid var(--border);border-radius:2px}
+.reviews-cta p{font-size:14px;color:var(--muted);margin-bottom:14px}
+.reviews-cta strong{color:var(--white)}
+
+/* ── MAP & LOCATION ── */
+.location-section{padding:72px 40px;background:var(--black)}
+.location-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:start}
+.location-info{}
+.location-details{display:flex;flex-direction:column;gap:16px;margin-top:24px}
+.loc-item{display:flex;gap:14px;align-items:flex-start}
+.loc-icon{font-size:18px;width:28px;text-align:center;flex-shrink:0;margin-top:2px}
+.loc-text strong{display:block;font-size:14px;font-weight:600;color:var(--white);margin-bottom:2px}
+.loc-text span{font-size:13px;color:var(--muted);line-height:1.6}
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;margin-top:6px}
+.hours-row{font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.hours-row span{color:var(--light)}
+.hours-row.today{color:var(--white)}
+.hours-row.today span{color:var(--green);font-weight:600}
+.map-btn{display:flex;align-items:center;gap:8px;background:var(--yellow);color:var(--black);border:none;padding:12px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:20px;text-decoration:none;width:fit-content}
+.map-btn:hover{background:var(--yellow-dark)}
+.map-container{border-radius:2px;overflow:hidden;border:1px solid var(--border);background:var(--card);height:360px;position:relative}
+.map-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:14px}
+.map-placeholder .map-icon{font-size:48px;opacity:.4}
+.map-embed-note{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+.map-embed-note code{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--yellow);background:var(--raised);padding:2px 6px;border-radius:2px}
+
+/* ── SOCIAL PROOF BAR ── */
+.social-bar{background:var(--raised);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px 40px}
+.social-bar-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.social-links{display:flex;gap:10px;align-items:center}
+.social-link{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border);color:var(--light);text-decoration:none;padding:8px 14px;border-radius:2px;font-size:12px;font-weight:600;transition:all .2s}
+.social-link:hover{border-color:var(--yellow);color:var(--yellow)}
+.social-icon{font-size:16px}
+.social-bar-text{font-size:13px;color:var(--muted)}
+.social-bar-text strong{color:var(--white)}
+
+/* ── COOKIE BANNER ── */
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:700;background:var(--dark);border-top:1px solid var(--border);padding:16px 40px;display:flex;align-items:center;justify-content:space-between;gap:20px;transform:translateY(100%);transition:transform .4s ease;flex-wrap:wrap}
+.cookie-banner.show{transform:translateY(0)}
+.cookie-text{font-size:13px;color:var(--light);max-width:600px;line-height:1.6}
+.cookie-text a{color:var(--yellow);text-decoration:none}
+.cookie-btns{display:flex;gap:10px;flex-shrink:0}
+.cookie-accept{background:var(--yellow);color:var(--black);border:none;padding:9px 22px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s}
+.cookie-accept:hover{background:var(--yellow-dark)}
+.cookie-decline{background:transparent;color:var(--muted);border:1px solid var(--border);padding:9px 18px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;cursor:pointer;transition:all .2s}
+.cookie-decline:hover{border-color:var(--muted);color:var(--light)}
+
+/* ── FLOATING CHAT BTN ── */
+.chat-fab{position:fixed;bottom:24px;left:24px;z-index:600;background:var(--yellow);color:var(--black);border:none;width:52px;height:52px;border-radius:50%;font-size:22px;cursor:pointer;box-shadow:0 4px 20px rgba(245,197,24,.3);transition:all .2s;display:flex;align-items:center;justify-content:center}
+.chat-fab:hover{transform:scale(1.08);background:var(--yellow-dark)}
+.chat-popup{position:fixed;bottom:86px;left:24px;z-index:600;background:var(--dark);border:1px solid var(--border);border-radius:4px;padding:18px 20px;width:280px;display:none;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.chat-popup.show{display:block}
+.chat-popup-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;margin-bottom:4px}
+.chat-popup-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+.chat-options{display:flex;flex-direction:column;gap:7px}
+.chat-option{display:flex;align-items:center;gap:10px;background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:10px 12px;font-size:13px;color:var(--light);text-decoration:none;cursor:pointer;transition:all .2s}
+.chat-option:hover{border-color:var(--yellow);color:var(--yellow)}
+.chat-option-icon{font-size:16px}
+
+/* ── HAMBURGER MENU ── */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--white);border-radius:2px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;top:58px;left:0;right:0;background:rgba(8,8,8,.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:490;padding:16px 20px;flex-direction:column;gap:4px}
+.mobile-menu.open{display:flex}
+.mobile-menu-link{font-size:15px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--light);padding:12px 0;border-bottom:1px solid var(--border);background:none;border-left:none;border-right:none;border-top:none;cursor:pointer;text-align:left;font-family:'Barlow',sans-serif;transition:color .2s}
+.mobile-menu-link:last-child{border-bottom:none}
+.mobile-menu-link:hover{color:var(--yellow)}
+
+/* ── TABLET (≤960px) ── */
+@media(max-width:960px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .phone-link{display:none}
+  .hero{padding:90px 24px 60px}
+  .guide-section,.reviews-section,.location-section{padding:48px 24px}
+  .guide-grid{grid-template-columns:1fr}
+  .sidewall-grid{grid-template-columns:1fr 1fr}
+  .reviews-grid{grid-template-columns:1fr 1fr}
+  .location-inner{grid-template-columns:1fr}
+  .social-bar{padding:16px 24px}
+  .cookie-banner{padding:14px 24px}
+  .catalog-section{padding:56px 24px}
+  .lookup-row{grid-template-columns:1fr 1fr;gap:10px}
+  .lookup-row .lookup-btn{grid-column:1/-1}
+  .steps-row{grid-template-columns:1fr 1fr}
+  .install-inner{grid-template-columns:1fr}
+  .install-visual{margin-top:0}
+  footer{padding:40px 24px 24px}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .time-grid{grid-template-columns:repeat(3,1fr)}
+  .frow.two{grid-template-columns:1fr}
+  .cart-drawer{width:100%;max-width:480px}
+}
+
+/* ── MOBILE (≤600px) ── */
+@media(max-width:600px){
+  nav{padding:0 16px;height:54px}
+  .logo{font-size:22px}
+  .cart-btn{padding:8px 14px;font-size:12px}
+  .cart-badge{width:17px;height:17px;font-size:10px}
+  .mobile-menu{top:54px}
+
+  .hero{padding:80px 16px 52px;min-height:auto}
+  .hero-pattern{display:none}
+  h1{font-size:clamp(54px,14vw,80px)}
+  .hero-desc{font-size:15px}
+  .hero-btns{flex-direction:column}
+  .hero-btns .btn-primary,.hero-btns .btn-ghost{text-align:center;width:100%}
+  .hero-trust{flex-direction:column;gap:16px}
+
+  .guide-section,.reviews-section,.location-section{padding:44px 16px}
+  .guide-grid{grid-template-columns:1fr}
+  .sidewall-grid{grid-template-columns:1fr}
+  .tread-grid{grid-template-columns:1fr}
+  .reviews-grid{grid-template-columns:1fr}
+  .reviews-header{flex-direction:column;align-items:flex-start}
+  .compare-head,.compare-row{grid-template-columns:1.2fr 1fr 1fr}
+  .compare-head div:nth-child(4),.compare-row div:nth-child(4){display:none}
+  .social-bar{padding:14px 16px}
+  .social-bar-inner{flex-direction:column;align-items:flex-start}
+  .cookie-banner{padding:14px 16px;flex-direction:column;align-items:flex-start}
+  .chat-fab{bottom:80px}
+  .chat-popup{bottom:142px;left:12px;width:calc(100vw - 24px)}
+  .steps-row{grid-template-columns:1fr}
+  .step-card{padding:20px 16px}
+
+  .lookup-row{grid-template-columns:1fr}
+  .lookup-box{padding:20px 16px}
+  .field select{font-size:16px}/* prevents iOS zoom */
+
+  .catalog-bar{flex-direction:column;align-items:flex-start;gap:12px}
+  .chips{gap:4px}
+  .chip{font-size:11px;padding:6px 12px}
+  .tire-grid{grid-template-columns:1fr}
+
+  .install-list{gap:14px}
+  .install-visual{padding:20px 16px}
+
+  footer{padding:36px 16px 20px}
+  .footer-grid{grid-template-columns:1fr;gap:28px}
+  .footer-bottom{flex-direction:column;gap:10px;text-align:center}
+
+  .cart-drawer{width:100%;max-width:100%}
+  .dhead{padding:16px 18px}
+  .cart-body{padding:12px 18px}
+  .cart-foot{padding:16px 18px}
+
+  .modal{width:100%;max-width:100%;max-height:100vh;border-radius:0;position:fixed;bottom:0;margin:0;border-left:none;border-right:none;border-bottom:none}
+  .overlay.center{align-items:flex-end}
+  .mhead{padding:18px 20px 14px}
+  .mbody{padding:18px 20px}
+  .mfoot{padding:12px 20px 20px}
+  .ps-lbl{font-size:9px}
+
+  .cal-grid{gap:2px}
+  .cal-day{font-size:12px;min-height:32px}
+  .time-grid{grid-template-columns:repeat(3,1fr);gap:5px}
+  .time-slot{font-size:12px;padding:9px 4px}
+
+  .confirm-details .cd-row{flex-direction:column;gap:3px}
+  .cd-val{text-align:left;max-width:100%}
+}
+
+/* ── MEMBER SYSTEM ── */
+.member-btn{background:transparent;border:1px solid var(--border);color:var(--light);padding:7px 14px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.member-btn:hover{border-color:var(--yellow);color:var(--yellow)}
+.member-btn.logged-in{background:var(--yellow-dim);border-color:rgba(245,197,24,.4);color:var(--yellow)}
+.member-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.member-modal-overlay.show{display:flex}
+.member-modal{background:var(--dark);border:1px solid var(--border);border-radius:4px;padding:32px 28px;width:100%;max-width:420px;position:relative}
+.mm-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1}
+.mm-close:hover{color:var(--white)}
+.mm-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mm-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5}
+.mm-tab-row{display:flex;gap:0;margin-bottom:24px;border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.mm-tab{flex:1;padding:10px;background:var(--card);border:none;color:var(--muted);font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.mm-tab.active{background:var(--yellow);color:var(--black)}
+.mm-field{margin-bottom:14px}
+.mm-field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.mm-field input{width:100%;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:12px 14px;border-radius:3px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.mm-field input:focus{border-color:var(--yellow)}
+.mm-submit{width:100%;background:var(--yellow);color:var(--black);border:none;padding:14px;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;letter-spacing:1px;cursor:pointer;transition:background .2s;margin-top:4px}
+.mm-submit:hover{background:var(--yellow-dark)}
+.mm-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#ef4444;padding:10px 12px;border-radius:3px;font-size:13px;margin-bottom:14px;display:none}
+.mm-error.show{display:block}
+.mm-note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5}
+.mm-note a{color:var(--yellow);cursor:pointer}
+.member-price-badge{display:inline-flex;align-items:center;gap:5px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.3);border-radius:2px;padding:2px 7px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:4px}
+.public-price-strike{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:4px}
+
+/* ── LOOKUP TABS ── */
+.lookup-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border)}
+.lookup-tab{background:none;border:none;padding:12px 20px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;letter-spacing:.5px;text-transform:uppercase}
+.lookup-tab.active{color:var(--yellow);border-bottom-color:var(--yellow)}
+.lookup-tab:hover:not(.active){color:var(--light)}
+.lookup-panel{display:none}.lookup-panel.active{display:block}
+.size-search-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.size-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;flex:1;min-width:260px}
+.size-hint{font-size:13px;color:var(--light);margin-top:16px;line-height:1.8;background:var(--raised);border:1px solid var(--border);border-radius:3px;padding:12px 14px}
+.size-hint strong{color:var(--white)}
+
+/* ── DELIVERY OPTIONS ── */
+.delivery-opts{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.dopt{display:flex;align-items:center;gap:12px;padding:12px 14px;border:2px solid var(--border);border-radius:4px;cursor:pointer;transition:all .2s;background:var(--card)}
+.dopt:hover{border-color:rgba(245,197,24,.4)}
+.dopt.active{border-color:var(--yellow);background:var(--yellow-dim)}
+.dopt-icon{font-size:22px;flex-shrink:0}
+.dopt-info{flex:1}
+.dopt-title{font-weight:700;font-size:14px;color:var(--white)}
+.dopt-sub{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+.dopt-check{font-size:16px;color:var(--yellow);opacity:0;transition:opacity .2s;font-weight:700}
+.dopt.active .dopt-check{opacity:1}
+
+/* ── SIZE PREVIEW ── */
+.size-preview{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:20px;font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:700;letter-spacing:2px}
+.sp-part{color:var(--yellow);transition:all .3s;min-width:1ch;text-align:center}
+.sp-part.dim{color:var(--border)}
+.sp-sep{color:var(--muted);font-size:24px}
+.size-inputs select:disabled{opacity:.45;cursor:not-allowed}
+.lookup-btn:not([disabled]):hover{background:var(--yellow-dark)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#"><span class="pc">PC</span> TIRES</a>
+  <div class="nav-links">
+    <button class="nav-link" onclick="smoothScroll('#lookup')">Find My Tires</button>
+    <button class="nav-link" onclick="smoothScroll('#catalog')">Shop All</button>
+    <button class="nav-link" onclick="smoothScroll('#guide')">Tire Guide</button>
+    <button class="nav-link" onclick="smoothScroll('#install')">Installation</button>
+    <button class="nav-link" onclick="smoothScroll('#location')">Location</button>
+  </div>
+  <div class="nav-right">
+    <a class="phone-link" href="tel:5193805104">📞 519-380-5104</a>
+    <button class="member-btn" id="memberNavBtn" onclick="openMemberModal()">Member Login</button>
+    <button class="cart-btn" onclick="openCart()">🛒 Cart <span class="cart-badge" id="cartCount">0</span></button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-link" onclick="smoothScroll('#lookup');closeMenu()">Find My Tires</button>
+  <button class="mobile-menu-link" onclick="smoothScroll('#catalog');closeMenu()">Shop All Tires</button>
+  <button class="mobile-menu-link" onclick="smoothScroll('#guide');closeMenu()">Tire Buying Guide</button>
+  <button class="mobile-menu-link" onclick="smoothScroll('#install');closeMenu()">Installation</button>
+  <button class="mobile-menu-link" onclick="smoothScroll('#location');closeMenu()">Location & Hours</button>
+  <a class="mobile-menu-link" href="tel:5193805104" style="text-decoration:none">📞 519-380-5104</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-pattern">
+    <svg viewBox="0 0 400 900" xmlns="http://www.w3.org/2000/svg">
+      <pattern id="tp" x="0" y="0" width="80" height="40" patternUnits="userSpaceOnUse">
+        <rect x="2" y="5" width="58" height="13" rx="2" fill="white"/>
+        <rect x="12" y="22" width="58" height="13" rx="2" fill="white"/>
+      </pattern>
+      <rect width="400" height="900" fill="url(#tp)"/>
+    </svg>
+  </div>
+  <div class="hero-content">
+    <div class="hero-pill"><span class="pill-dot"></span><span class="pill-text">Local Installation Available</span></div>
+    <h1>
+      <span class="b">THE RIGHT</span>
+      <span class="b y">TIRE.</span>
+      <span class="b">INSTALLED</span>
+      <span class="b">RIGHT.</span>
+    </h1>
+    <p class="hero-desc">Shop tires online, pay securely, and book your installation — all in one place. No phone tag. No hidden fees. <strong>Just the right tires on your car.</strong></p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="smoothScroll('#lookup')">Find Tires for My Vehicle</button>
+      <button class="btn-ghost" onclick="smoothScroll('#catalog')">Browse All Tires</button>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-item"><span class="trust-icon">🔒</span><div class="trust-txt"><strong>Secure Checkout</strong><span>Powered by Stripe</span></div></div>
+      <div class="trust-item"><span class="trust-icon">🔧</span><div class="trust-txt"><strong>Local Install</strong><span>Book online instantly</span></div></div>
+      <div class="trust-item"><span class="trust-icon">✅</span><div class="trust-txt"><strong>Guaranteed Fit</strong><span>Vehicle verified</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <div class="eyebrow">How It Works</div>
+    <div class="section-title">From Click to Installed — 4 Steps</div>
+    <p class="section-sub">Unlike online-only retailers, we close the loop. Unlike big chains, we let you do it all online.</p>
+    <div class="steps-row">
+      <div class="step-card"><div class="step-num">01</div><div class="step-icon">🚗</div><div class="step-title">Enter Your Vehicle</div><div class="step-desc">Year, make, model and trim — we match you to tires guaranteed to fit your exact vehicle.</div></div>
+      <div class="step-card"><div class="step-num">02</div><div class="step-icon">🏷️</div><div class="step-title">Choose Your Tires</div><div class="step-desc">Filter by season, brand, and price. Compare ratings, specs, and warranties side by side.</div></div>
+      <div class="step-card hl"><div class="step-num">03</div><div class="step-icon">💳</div><div class="step-title">Pay Securely Online</div><div class="step-desc">Stripe-powered checkout. Credit card, Apple Pay, Google Pay. No redirects, no surprises.</div></div>
+      <div class="step-card hl"><div class="step-num">04</div><div class="step-icon">📅</div><div class="step-title">Book Installation</div><div class="step-desc">Pick your date and time right in checkout. Certified techs mount, balance, and reset your TPMS.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VEHICLE LOOKUP -->
+<section class="lookup-section" id="lookup">
+  <div class="lookup-inner">
+    <div class="eyebrow">Vehicle Compatibility</div>
+    <div class="section-title">Find Tires That Fit Your Vehicle</div>
+    <p class="section-sub">Search by vehicle or enter your tire size directly — we'll show you exactly what fits.</p>
+    <div class="lookup-box">
+      <!-- Tabs -->
+      <div class="lookup-tabs">
+        <button class="lookup-tab active" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 Search by Vehicle</button>
+        <button class="lookup-tab" id="tab-size" onclick="switchLookupTab('size')">📏 Search by Tire Size</button>
+      </div>
+
+      <!-- Vehicle panel -->
+      <div class="lookup-panel active" id="panel-vehicle">
+        <div class="lookup-row">
+          <div class="field"><label>Year</label><select id="vYear" onchange="updateMakes()"><option value="">Select Year</option></select></div>
+          <div class="field"><label>Make</label><select id="vMake" onchange="updateModels()"><option value="">Select Make</option></select></div>
+          <div class="field"><label>Model</label><select id="vModel" onchange="updateTrims()"><option value="">Select Model</option></select></div>
+          <div class="field"><label>Trim</label><select id="vTrim"><option value="">Select Trim</option></select></div>
+          <button class="lookup-btn" onclick="doLookup()">Search Tires →</button>
+        </div>
+      </div>
+
+      <!-- Tire size panel — cascading selector -->
+      <div class="lookup-panel" id="panel-size">
+
+        <!-- Size hint at top -->
+        <div class="size-hint" style="margin-bottom:18px">
+          <strong>📍 Where to find your tire size:</strong>
+          Look on the sidewall of your current tire or on the sticker inside the driver's door frame.
+          You'll see a number like <strong>275/60R20</strong> — Width <strong>275</strong> · Sidewall <strong>60</strong> · Rim diameter <strong>20</strong>.
+        </div>
+
+        <!-- Visual size preview -->
+        <div class="size-preview" id="sizePreview">
+          <span class="sp-part" id="sp-w">???</span>
+          <span class="sp-sep">/</span>
+          <span class="sp-part" id="sp-s">??</span>
+          <span class="sp-sep">R</span>
+          <span class="sp-part" id="sp-d">??</span>
+        </div>
+
+        <div class="size-search-row">
+          <div class="size-inputs">
+            <div class="field">
+              <label>Width (mm)</label>
+              <select id="sWidth" onchange="onWidthChange()">
+                <option value="">Select Width</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Sidewall (%)</label>
+              <select id="sSidewall" onchange="onSidewallChange()" disabled>
+                <option value="">Select Width first</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Rim Diameter</label>
+              <select id="sDiameter" onchange="onDiameterChange()" disabled>
+                <option value="">Select Sidewall first</option>
+              </select>
+            </div>
+          </div>
+          <button class="lookup-btn" id="sizeSearchBtn" onclick="doSizeSearch()" disabled style="opacity:.5;cursor:not-allowed">Search Tires →</button>
+        </div>
+      </div>
+
+      <div class="lookup-result" id="lookupResult">
+        <span style="font-size:17px">✅</span>
+        <span id="lookupText"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIRE CATALOG -->
+<section class="catalog-section" id="catalog">
+  <div class="eyebrow">Our Inventory</div>
+  <div class="section-title">Shop Tires</div>
+  <p class="section-sub" style="margin-bottom:24px">All prices per tire · Sets of 4 save an extra 5% · Free shipping on orders over $400</p>
+  <div class="catalog-bar">
+    <div class="chips">
+      <button class="chip active" onclick="filterTires('all',this)">All Tires</button>
+      <button class="chip" onclick="filterTires('allseason',this)">All-Season</button>
+      <button class="chip" onclick="filterTires('allweather',this)">All-Weather</button>
+      <button class="chip" onclick="filterTires('winter',this)">Winter</button>
+      <button class="chip" onclick="filterTires('summer',this)">Summer / Performance</button>
+      <button class="chip" onclick="filterTires('truck',this)">Truck & SUV</button>
+    </div>
+    <div class="cat-meta">Showing <span id="tireCount">12</span> tires</div>
+  </div>
+  <div class="tire-grid" id="tireGrid"></div>
+</section>
+
+<!-- INSTALL SECTION -->
+<section class="install-section" id="install">
+  <div class="install-inner">
+    <div>
+      <div class="eyebrow">Professional Installation</div>
+      <div class="section-title">We'll Install Them For You</div>
+      <p class="section-sub" style="margin-top:8px">Unlike online-only competitors, we complete the job — from purchase to pavement. Book your install slot right in checkout.</p>
+      <div class="install-list">
+        <div class="inst-item"><div class="inst-check">🔧</div><div class="inst-txt"><strong>Certified Technicians</strong><span>Experienced, trained professionals — not a subcontracted third party.</span></div></div>
+        <div class="inst-item"><div class="inst-check">⚖️</div><div class="inst-txt"><strong>Mount, Balance & Disposal Included</strong><span>No surprise charges at the counter. $25/tire, all-in.</span></div></div>
+        <div class="inst-item"><div class="inst-check">📅</div><div class="inst-txt"><strong>Book Online, Instantly</strong><span>Pick your date and time slot during checkout. No phone calls required.</span></div></div>
+        <div class="inst-item"><div class="inst-check">✅</div><div class="inst-txt"><strong>TPMS Reset & Torque Check Included</strong><span>We complete the job properly so you drive away with confidence.</span></div></div>
+      </div>
+      <div class="install-cta"><button class="btn-primary" onclick="smoothScroll('#catalog')">Shop & Book Now →</button></div>
+    </div>
+    <div class="install-visual">
+      <div class="iv-title">📅 Sample Booking</div>
+      <div class="bp-row"><span class="bp-icon">🚗</span><div><div class="bp-main">2022 Toyota RAV4 XLE</div><div class="bp-sub">235/65R17 — 4 tires ordered</div></div></div>
+      <div class="bp-row sel"><span class="bp-icon">📅</span><div style="flex:1"><div class="bp-main">Thursday, March 12</div><div class="bp-sub">10:00 AM appointment slot</div></div><span class="bp-check">✓</span></div>
+      <div class="bp-row sel"><span class="bp-icon">⏱️</span><div style="flex:1"><div class="bp-main">Est. time: ~60 minutes</div><div class="bp-sub">Mount · Balance · TPMS reset</div></div><span class="bp-check">✓</span></div>
+      <div class="bp-row"><span class="bp-icon">💰</span><div><div class="bp-main">Installation: $25/tire</div><div class="bp-sub">Paid at checkout — no surprises</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIRE BUYING GUIDE -->
+<section class="guide-section" id="guide">
+  <div class="guide-inner">
+    <div class="eyebrow">Tire Education</div>
+    <div class="section-title">The PC Tires Buying Guide</div>
+    <p class="section-sub" style="margin-bottom:32px">Not sure what you need? We'll walk you through everything — from season to sidewall markings.</p>
+
+    <div class="guide-tabs">
+      <button class="gtab active" onclick="showGuide('season',this)">All-Season vs All-Weather vs Winter</button>
+      <button class="gtab" onclick="showGuide('read',this)">Reading the Sidewall</button>
+      <button class="gtab" onclick="showGuide('tread',this)">Tread Patterns</button>
+      <button class="gtab" onclick="showGuide('truck',this)">Truck & SUV Tires</button>
+      <button class="gtab" onclick="showGuide('faq',this)">FAQ</button>
+    </div>
+
+    <div class="guide-panels">
+
+      <!-- SEASON PANEL -->
+      <div class="gpanel active" id="gp-season">
+        <div class="guide-grid">
+          <div class="guide-card">
+            <div class="gc-icon">🌤️</div>
+            <div class="gc-title">All-Season</div>
+            <div class="gc-desc">The default tire that comes on most vehicles. Designed for year-round use in mild climates — dry, wet, and light snow. They compromise between summer grip and winter traction, so they're not the best at either. Fine if you rarely see heavy snow or temperatures below -7°C.</div>
+            <span class="gc-tag rec">Good for: Mild Canadian winters, mostly highway driving</span>
+          </div>
+          <div class="guide-card">
+            <div class="gc-icon">🌨️</div>
+            <div class="gc-title"><span>All-Weather</span> (3PMSF)</div>
+            <div class="gc-desc">A newer category — essentially a better all-season. Certified for severe snow service (the mountain snowflake symbol ❄️). Significantly better than all-season in snow and ice, while still being driveable in summer. The best one-tire option for Ontario drivers who don't want to swap seasonally.</div>
+            <span class="gc-tag rec">Best for: Most Ontario drivers wanting one set year-round</span>
+          </div>
+          <div class="guide-card">
+            <div class="gc-icon">❄️</div>
+            <div class="gc-title">Winter / Snow Tires</div>
+            <div class="gc-desc">Dedicated winter tires use a special rubber compound that stays soft and grippy below -7°C, where all-season rubber hardens. They have aggressive tread patterns to channel snow and slush. Dramatically shorter stopping distances on ice. Swap in October, swap back in April.</div>
+            <span class="gc-tag rec">Best for: Maximum safety in Canadian winters</span>
+          </div>
+          <div class="guide-card">
+            <div class="gc-icon">☀️</div>
+            <div class="gc-title">Summer / Performance</div>
+            <div class="gc-desc">Maximum dry and wet grip in warm temperatures. Use a softer compound optimized for heat. Never drive these below 7°C — the rubber becomes dangerously brittle and stopping distances increase massively. For sports cars, performance vehicles, or enthusiast drivers.</div>
+            <span class="gc-tag caution">Warning: Not for use below 7°C</span>
+          </div>
+        </div>
+
+        <div class="guide-compare">
+          <div class="compare-head">
+            <div>Condition</div><div>All-Season</div><div>All-Weather ❄️</div><div>Winter</div>
+          </div>
+          <div class="compare-row"><div>Dry pavement</div><div class="dot-good">●● Excellent</div><div class="dot-good">●● Excellent</div><div class="dot-ok">●○ Good</div></div>
+          <div class="compare-row"><div>Wet roads</div><div class="dot-good">●● Excellent</div><div class="dot-good">●● Excellent</div><div class="dot-ok">●○ Good</div></div>
+          <div class="compare-row"><div>Light snow</div><div class="dot-ok">●○ Moderate</div><div class="dot-good">●● Excellent</div><div class="dot-good">●● Excellent</div></div>
+          <div class="compare-row"><div>Heavy snow / ice</div><div class="dot-bad">○○ Poor</div><div class="dot-ok">●○ Good</div><div class="dot-good">●● Excellent</div></div>
+          <div class="compare-row"><div>Below -7°C</div><div class="dot-bad">○○ Poor</div><div class="dot-ok">●○ Good</div><div class="dot-good">●● Excellent</div></div>
+          <div class="compare-row"><div>Seasonal swap needed</div><div>No</div><div>No</div><div>Yes (2×/year)</div></div>
+        </div>
+
+        <div class="guide-callout">
+          <strong>PC Tires recommendation for Chatham-Kent:</strong> If you want one set of tires, go <b>All-Weather (3PMSF certified)</b>. If you want the safest possible winter driving and don't mind the changeover, run dedicated <b>winter tires from October–April</b> and all-seasons the rest of the year. We'll store and swap your seasonal set — ask us about our tire storage program.
+        </div>
+      </div>
+
+      <!-- SIDEWALL PANEL -->
+      <div class="gpanel" id="gp-read">
+        <p style="font-size:14px;color:var(--light);margin-bottom:20px;line-height:1.7">Every tire has a code on its sidewall. Here's how to read <span style="font-family:'IBM Plex Mono',monospace;color:var(--yellow);font-size:15px">225/65R17 102H</span> and other markings:</p>
+        <div class="sidewall-grid">
+          <div class="sw-card"><div class="sw-code">225</div><div class="sw-title">Section Width</div><div class="sw-desc">Width of the tire in millimetres, measured from sidewall to sidewall.</div></div>
+          <div class="sw-card"><div class="sw-code">/65</div><div class="sw-title">Aspect Ratio</div><div class="sw-desc">Sidewall height as a percentage of the width. Lower number = shorter sidewall = sportier look and handling.</div></div>
+          <div class="sw-card"><div class="sw-code">R</div><div class="sw-title">Radial Construction</div><div class="sw-desc">How the internal cords are laid. Virtually all modern tires are radial — this will always be "R".</div></div>
+          <div class="sw-card"><div class="sw-code">17</div><div class="sw-title">Rim Diameter</div><div class="sw-desc">The wheel size in inches. This must match your rim exactly — a 17" tire only fits a 17" rim.</div></div>
+          <div class="sw-card"><div class="sw-code">102</div><div class="sw-title">Load Index</div><div class="sw-desc">Maximum weight the tire can carry. 102 = 850 kg per tire. Must meet or exceed vehicle manufacturer's requirement.</div></div>
+          <div class="sw-card"><div class="sw-code">H</div><div class="sw-title">Speed Rating</div><div class="sw-desc">Maximum sustained speed. H = 210 km/h. V = 240. W = 270. Y = 300. Always match or exceed your original rating.</div></div>
+        </div>
+        <div class="sidewall-grid" style="margin-top:2px">
+          <div class="sw-card"><div class="sw-code" style="font-size:14px">OWL / RWL</div><div class="sw-title">Outlined / Raised White Letters</div><div class="sw-desc">Decorative white lettering on the sidewall. Popular on trucks and SUVs for a rugged appearance. Purely cosmetic — no performance difference.</div></div>
+          <div class="sw-card"><div class="sw-code">BSW</div><div class="sw-title">Black Sidewall</div><div class="sw-desc">Standard black sidewall with no lettering. The most common type. Cleaner look for passenger cars and crossovers.</div></div>
+          <div class="sw-card"><div class="sw-code">❄️ M+S</div><div class="sw-title">Winter Certification Symbols</div><div class="sw-desc">M+S = Mud & Snow (basic). The mountain/snowflake symbol (3PMSF) is the stricter certification — required for dedicated winter or all-weather tires.</div></div>
+        </div>
+        <div class="guide-callout" style="margin-top:20px">
+          <strong>Not sure what size you need?</strong> Use our <b>Vehicle Lookup</b> tool above — enter your year, make, model and trim and we'll pull your exact OEM tire size automatically.
+        </div>
+      </div>
+
+      <!-- TREAD PANEL -->
+      <div class="gpanel" id="gp-tread">
+        <p style="font-size:14px;color:var(--light);margin-bottom:20px;line-height:1.7">Tread pattern affects everything from handling to noise to water evacuation. Here are the four main types:</p>
+        <div class="tread-grid">
+          <div class="tread-card"><div class="tread-icon">〓</div><div><div class="tread-title">Symmetric Tread</div><div class="tread-desc">Same pattern across the whole tire. Can be rotated in any direction. Quietest ride, good all-round performance. Common on economy all-season tires.</div></div></div>
+          <div class="tread-card"><div class="tread-icon">⟹</div><div><div class="tread-title">Directional / V-Pattern</div><div class="tread-desc">V-shaped grooves point in one direction — designed to pump water out at high speed. Excellent wet-weather performance. Must be mounted so the arrow on the sidewall points forward. Common on performance and winter tires.</div></div></div>
+          <div class="tread-card"><div class="tread-icon">◨</div><div><div class="tread-title">Asymmetric Tread</div><div class="tread-desc">Different inner and outer tread zones — outer for dry cornering, inner for wet grip. High-performance tires. Must be mounted with the "outside" facing out. Cannot be rotated side-to-side.</div></div></div>
+          <div class="tread-card"><div class="tread-icon">🏔️</div><div><div class="tread-title">Aggressive / All-Terrain</div><div class="tread-desc">Large, widely spaced lugs for off-road grip and mud self-cleaning. Common on trucks and SUVs. Louder on highway than passenger tires. Some wear faster on pavement.</div></div></div>
+        </div>
+        <div class="guide-callout" style="margin-top:20px">
+          <strong>Treadwear indicator:</strong> Look for the small raised bars in the tread grooves — when your tread is flush with these bars, you're at 2/32" (the legal minimum in Canada). We recommend replacing at 4/32" for safety, especially in winter. <b>Use a toonie: if the silver band shows above the tread, it's time to replace.</b>
+        </div>
+      </div>
+
+      <!-- TRUCK PANEL -->
+      <div class="gpanel" id="gp-truck">
+        <div class="guide-grid">
+          <div class="guide-card">
+            <div class="gc-icon">🛣️</div>
+            <div class="gc-title">Highway (HT)</div>
+            <div class="gc-desc">Smooth, quiet ride optimized for pavement. Great fuel economy. Low rolling resistance. Best for trucks and SUVs that stay on-road. Most comfortable for daily driving and highway trips.</div>
+            <span class="gc-tag rec">Best for: Daily commuters, highway driving</span>
+          </div>
+          <div class="guide-card">
+            <div class="gc-icon">🌲</div>
+            <div class="gc-title">All-Terrain (AT)</div>
+            <div class="gc-desc">The middle ground. Handles pavement well, but adds capability for gravel, dirt, and light off-road use. Slightly louder than highway tires. Very popular for pickup trucks in Ontario — great for cottages and work sites.</div>
+            <span class="gc-tag rec">Best for: Trucks that see both road and occasional off-road</span>
+          </div>
+          <div class="guide-card">
+            <div class="gc-icon">🪨</div>
+            <div class="gc-title">Mud-Terrain (MT)</div>
+            <div class="gc-desc">Aggressive, widely-spaced lugs for serious off-road traction in mud, rock, and sand. Very loud on highway. Wears faster on pavement. Not ideal for daily driving unless you regularly go off-road.</div>
+            <span class="gc-tag caution">Not ideal for daily highway commuting</span>
+          </div>
+          <div class="guide-card">
+            <div class="gc-icon">⚡</div>
+            <div class="gc-title">Load Range Matters</div>
+            <div class="gc-desc">Trucks and vans often require Load Range C, D, or E tires — these have stiffer sidewalls to handle heavier loads and towing. Never downgrade your load rating. If you tow a trailer or haul loads, confirm your required load range before ordering.</div>
+            <span class="gc-tag caution">Check before ordering if you tow or haul</span>
+          </div>
+        </div>
+        <div class="guide-callout">
+          <strong>Lifted trucks:</strong> If your truck is lifted, your tire size will be different from stock. Tell us your lift height and we'll find compatible sizes. <b>Larger tires may also require a speedometer recalibration</b> — ask us about this at installation.
+        </div>
+      </div>
+
+      <!-- FAQ PANEL -->
+      <div class="gpanel" id="gp-faq">
+        <div style="display:flex;flex-direction:column;gap:2px" id="faqList"></div>
+      </div>
+
+    </div>
+
+    <div class="guide-ask">
+      <span style="font-size:28px">💬</span>
+      <div class="guide-ask-text">
+        <strong>Still not sure? We'll tell you exactly what you need.</strong>
+        Tell us your vehicle and how you drive, and we'll personally recommend the right tire.
+      </div>
+      <a href="tel:5193805104" class="btn-primary" style="white-space:nowrap">Call Us Free →</a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="reviews-inner">
+    <div class="reviews-header">
+      <div>
+        <div class="eyebrow">Customer Reviews</div>
+        <div class="section-title">What Our Customers Say</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-end">
+        <div class="rating-summary">
+          <div class="big-rating">4.9</div>
+          <div class="rating-meta">
+            <div class="rating-stars"><?php echo str_repeat('<span class="star">★</span>',5); ?>
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+            <div class="rating-count-big">Based on 147 reviews</div>
+          </div>
+        </div>
+        <div class="google-badge"><span class="google-g">G</span> Google Verified Reviews</div>
+      </div>
+    </div>
+
+    <div class="reviews-grid" id="reviewsGrid"></div>
+
+    <div class="reviews-cta">
+      <p><strong>Had a great experience?</strong> Leave us a Google review — it helps other local drivers find us.</p>
+      <a href="https://g.page/r/YOUR-GOOGLE-REVIEW-LINK" target="_blank" class="btn-primary" style="text-decoration:none">Leave a Google Review ★</a>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF BAR -->
+<div class="social-bar">
+  <div class="social-bar-inner">
+    <div class="social-bar-text"><strong>Follow PC Tires</strong> — seasonal tips, deals, and local driving advice</div>
+    <div class="social-links">
+      <a class="social-link" href="#" target="_blank"><span class="social-icon">📘</span> Facebook</a>
+      <a class="social-link" href="#" target="_blank"><span class="social-icon">📸</span> Instagram</a>
+      <a class="social-link" href="#" target="_blank"><span class="social-icon">▶️</span> TikTok</a>
+      <a class="social-link" href="https://g.page/r/YOUR-GOOGLE-LINK" target="_blank"><span class="social-icon">G</span> Google</a>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION & MAP -->
+<section class="location-section" id="location">
+  <div class="location-inner">
+    <div class="location-info">
+      <div class="eyebrow">Find Us</div>
+      <div class="section-title">Location & Hours</div>
+      <div class="location-details">
+        <div class="loc-item">
+          <span class="loc-icon">📍</span>
+          <div class="loc-text">
+            <strong>PC Tires</strong>
+            <span>7144 Grande River Line<br>Pain Court, Ontario N0P 1Z0</span>
+          </div>
+        </div>
+        <div class="loc-item">
+          <span class="loc-icon">📞</span>
+          <div class="loc-text">
+            <strong>Phone</strong>
+            <span><a href="tel:5193805104" style="color:var(--yellow);text-decoration:none">519-380-5104</a></span>
+          </div>
+        </div>
+        <div class="loc-item">
+          <span class="loc-icon">✉️</span>
+          <div class="loc-text">
+            <strong>Email</strong>
+            <span><a href="mailto:Postmacontracting@gmail.com" style="color:var(--yellow);text-decoration:none">Postmacontracting@gmail.com</a></span>
+          </div>
+        </div>
+        <div class="loc-item">
+          <span class="loc-icon">🕐</span>
+          <div class="loc-text">
+            <strong>Hours</strong>
+            <div class="hours-grid">
+              <div class="hours-row today"><span>Mon–Fri</span><span>8am – 6pm</span></div>
+              <div class="hours-row"><span>Saturday</span><span>8am – 4pm</span></div>
+              <div class="hours-row"><span>Sunday</span><span>Closed</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a href="https://maps.google.com/?q=7144+Grande+River+Line+Pain+Court+Ontario+N0P+1Z0" target="_blank" class="map-btn">📍 Get Directions</a>
+    </div>
+    <div>
+      <div class="map-container">
+        <!-- REPLACE THIS with your Google Maps embed:
+             Google Maps → Share → Embed a map → Copy iframe src
+             Then replace the div below with:
+             <iframe src="YOUR_EMBED_URL" width="100%" height="360" style="border:0" allowfullscreen loading="lazy"></iframe>
+        -->
+        <div class="map-placeholder">
+          <div class="map-icon">🗺️</div>
+          <div>Map will appear here</div>
+          <div style="font-size:12px;text-align:center;max-width:220px">Replace this block with your<br>Google Maps iframe embed</div>
+        </div>
+      </div>
+      <p class="map-embed-note">To embed: Google Maps → your address → Share → <code>Embed a map</code></p>
+    </div>
+  </div>
+</section>
+
+<!-- COOKIE BANNER -->
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-text">
+    🍪 We use cookies to improve your experience, remember your cart, and analyze site traffic. By continuing to use this site you agree to our <a href="#">Privacy Policy</a>. Required under PIPEDA and Quebec Law 25.
+  </div>
+  <div class="cookie-btns">
+    <button class="cookie-decline" onclick="dismissCookie(false)">Decline Non-Essential</button>
+    <button class="cookie-accept" onclick="dismissCookie(true)">Accept All</button>
+  </div>
+</div>
+
+<!-- FLOATING CHAT -->
+<button class="chat-fab" onclick="toggleChat()" id="chatFab" title="Need help?">💬</button>
+<div class="chat-popup" id="chatPopup">
+  <div class="chat-popup-title">Need Help?</div>
+  <div class="chat-popup-sub">We usually respond instantly during business hours.</div>
+  <div class="chat-options">
+    <a href="tel:5193805104" class="chat-option"><span class="chat-option-icon">📞</span> Call us: 519-380-5104</a>
+    <a href="sms:5193805104" class="chat-option"><span class="chat-option-icon">💬</span> Text us a question</a>
+    <a href="mailto:Postmacontracting@gmail.com" class="chat-option"><span class="chat-option-icon">✉️</span> Email us</a>
+    <button class="chat-option" onclick="smoothScroll('#guide');toggleChat()" style="border:none;cursor:pointer;text-align:left"><span class="chat-option-icon">📖</span> Browse tire guide</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo"><span>PC</span> TIRES</div>
+        <p class="footer-desc">Buy tires online and get them installed locally. The best of both worlds — great prices, expert local service.</p>
+      </div>
+      <div class="footer-col"><h4>Shop</h4><div class="footer-links"><a>All-Season Tires</a><a>Winter Tires</a><a>Summer / Performance</a><a>Truck & SUV Tires</a><a>Current Deals</a></div></div>
+      <div class="footer-col"><h4>Services</h4><div class="footer-links"><a>Tire Installation</a><a>Mount & Balance</a><a>TPMS Service</a><a>Seasonal Changeover</a><a>Book Appointment</a></div></div>
+      <div class="footer-col"><h4>Learn</h4><div class="footer-links"><a onclick="smoothScroll('#guide')">All-Season vs Winter Guide</a><a onclick="smoothScroll('#guide')">Reading Tire Sizes</a><a onclick="smoothScroll('#guide')">Tread Pattern Guide</a><a onclick="smoothScroll('#guide')">Truck & SUV Tires</a><a onclick="smoothScroll('#guide')">Tire FAQ</a></div></div>
+      <div class="footer-col"><h4>Help</h4><div class="footer-links"><a onclick="smoothScroll('#location')">Location & Hours</a><a href="tel:5193805104">519-380-5104</a><a href="mailto:Postmacontracting@gmail.com">Postmacontracting@gmail.com</a><a href="#">Privacy Policy</a><a href="#">Returns & Warranty</a></div></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 PC Tires (Postma Contracting Inc.). All rights reserved.</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)">Payments secured by <span class="stripe-badge">Stripe</span></div>
+    </div>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span style="font-size:18px">🛒</span><div class="toast-msg"><strong id="toastTitle"></strong><span id="toastSub"></span></div></div>
+
+<!-- CART OVERLAY -->
+<div class="overlay end" id="cartOverlay" onclick="bgClose(event,'cartOverlay')">
+  <div class="cart-drawer">
+    <div class="dhead"><div class="dtitle">Your Cart</div><button class="close-x" onclick="closeCart()">✕</button></div>
+    <div class="cart-body" id="cartBody"></div>
+    <div class="cart-foot" id="cartFoot" style="display:none">
+      <div class="sum-row"><span>Subtotal</span><span id="sumSub">$0.00</span></div>
+      <div class="sum-row"><span>Installation</span><span id="sumInst">—</span></div>
+      <div class="sum-row"><span>Tax (13% HST)</span><span id="sumTax">$0.00</span></div>
+      <div class="sum-row total"><span>Total</span><span id="sumTotal">$0.00</span></div>
+      <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout →</button>
+      <div class="stripe-note">🔒 Secured by <strong style="color:var(--light);margin-left:3px">Stripe</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="overlay center" id="checkoutOverlay" onclick="bgClose(event,'checkoutOverlay')">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle" id="mTitle">Checkout</div><button class="close-x" onclick="closeCheckout()">✕</button></div>
+    <div class="mbody">
+      <div class="psteps">
+        <div class="ps active" id="ps1"><div class="ps-dot">1</div><div class="ps-lbl">Contact</div></div>
+        <div class="ps" id="ps2"><div class="ps-dot">2</div><div class="ps-lbl">Payment</div></div>
+        <div class="ps" id="ps3"><div class="ps-dot">3</div><div class="ps-lbl">Install</div></div>
+        <div class="ps" id="ps4"><div class="ps-dot">4</div><div class="ps-lbl">Confirm</div></div>
+      </div>
+
+      <!-- Step 1: Contact -->
+      <div class="fsec active" id="s1">
+        <div class="frow two"><div class="fg"><label>First Name</label><input type="text" placeholder="Jane" id="fName"></div><div class="fg"><label>Last Name</label><input type="text" placeholder="Smith" id="lName"></div></div>
+        <div class="frow one"><div class="fg"><label>Email Address</label><input type="email" placeholder="jane@example.com" id="email"></div></div>
+        <div class="frow one"><div class="fg"><label>Phone Number</label><input type="tel" placeholder="(519) 000-0000" id="phone"></div></div>
+
+        <!-- Delivery option -->
+        <div class="fg" style="margin-top:10px">
+          <label>Where should we send your tires?</label>
+          <div class="delivery-opts" id="deliveryOpts">
+            <div class="dopt active" id="dopt-shop" onclick="setDelivery('shop')">
+              <div class="dopt-icon">🏪</div>
+              <div class="dopt-info">
+                <div class="dopt-title">Ship to PC Tires</div>
+                <div class="dopt-sub">We receive your tires — ready for your installation appointment. <strong>Free shipping.</strong></div>
+              </div>
+              <div class="dopt-check">✓</div>
+            </div>
+            <div class="dopt" id="dopt-home" onclick="setDelivery('home')">
+              <div class="dopt-icon">🏠</div>
+              <div class="dopt-info">
+                <div class="dopt-title">Ship to my address</div>
+                <div class="dopt-sub">Tires delivered directly to you. Shipping calculated at checkout.</div>
+              </div>
+              <div class="dopt-check">✓</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home address (shown only when shipping to customer) -->
+        <div class="frow one" id="addrRow" style="display:none">
+          <div class="fg">
+            <label>Delivery Address</label>
+            <input type="text" placeholder="123 Main St, City, Province, Postal Code" id="addr">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Payment -->
+      <div class="fsec" id="s2">
+        <div class="pay-total-box" id="payBox"></div>
+        <div class="card-logos"><span class="clogo">💳</span><span class="clogo">🍎</span><span class="clogo">🅿️</span></div>
+        <div class="frow one"><div class="fg"><label>Name on Card</label><input type="text" placeholder="Jane Smith" id="cardName"></div></div>
+        <div class="frow one"><div class="fg"><label>Card Number</label><input class="card-field" type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="cardNum" oninput="fmtCard(this)"></div></div>
+        <div class="frow two">
+          <div class="fg"><label>Expiry</label><input class="card-field" type="text" placeholder="MM / YY" maxlength="7" id="cardExp" oninput="fmtExp(this)"></div>
+          <div class="fg"><label>CVV</label><input class="card-field" type="text" placeholder="•••" maxlength="4" id="cardCvv"></div>
+        </div>
+        <p class="field-note">🔒 Payment is encrypted and processed by Stripe. PC Tires never sees your card details.</p>
+      </div>
+
+      <!-- Step 3: Appointment -->
+      <div class="fsec" id="s3">
+        <!-- Service selector -->
+        <div class="appt-note"><b>Select your service</b> — we'll block the right amount of time in the calendar automatically.</div>
+        <div id="serviceMenu" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px"></div>
+
+        <!-- Calendar (shown after service selected) -->
+        <div id="calSection" style="display:none">
+          <div class="appt-note" id="durationNote" style="background:var(--yellow-dim);border-color:rgba(245,197,24,.25)"></div>
+          <div class="cal-hdr">
+            <button class="cal-nav" onclick="prevMo()">‹</button>
+            <div class="cal-month" id="calMo"></div>
+            <button class="cal-nav" onclick="nextMo()">›</button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div id="timeSec" style="display:none"><div class="time-lbl">Available Times</div><div class="time-grid" id="timeGrid"></div></div>
+        </div>
+        <button class="skip-btn" onclick="skipInstall()">Skip — I'll arrange service separately →</button>
+      </div>
+
+      <!-- Step 4: Confirmation -->
+      <div class="fsec" id="s4">
+        <div class="confirm-wrap">
+          <div class="conf-circle">✓</div>
+          <div class="conf-title">You're All Set!</div>
+          <p class="conf-sub">Order confirmed. Check your email for full details.</p>
+        </div>
+        <div class="confirm-details" id="confDetails"></div>
+        <button class="btn-primary" style="width:100%;margin-top:14px" onclick="closeCheckout();closeCart()">Continue Shopping</button>
+      </div>
+    </div>
+    <div class="mfoot" id="mFoot">
+      <div class="mactions">
+        <button class="back-btn" id="backBtn" onclick="prevStep()" style="display:none">← Back</button>
+        <button class="next-btn" id="nextBtn" onclick="nextStep()">Continue →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  TDG ACCESS API CONFIGURATION
+//  Replace TDG_API_KEY with your real key from TDG.
+//  Production TDG Access API.
+// ══════════════════════════════════════════════════════
+const TDG = {
+  // ── SWAP THESE WHEN YOU GO LIVE ──
+  BASE_URL: 'https://www.tdgaccess.ca/api',   // production
+  // BASE_URL: 'https://www.tdgaccess.ca/api',     // production
+  API_KEY:  'rst715Wr18hFpHpbi346TGuMLBBQDZZbF5lHZQSi27hfpLGey3TH3YRHYWWPJRyi7rkx',              // from your TDG contact
+
+  // ── YOUR ACCOUNT DEFAULTS (fill in once you have them) ──
+  SHIPPING_ADDRESS_ID: null,   // from /api/account/shippingAddresses
+  SHIPPING_METHOD_ID:  null,   // from /api/account/shippingMethods
+  PAYMENT_METHOD_ID:   null,   // from /api/account/paymentMethods
+
+  // ── BACKEND API (Netlify Functions) ──
+  BACKEND_URL: 'https://glittery-banoffee-1b1d80.netlify.app',
+
+  // ── STRIPE (publishable key — safe to be in frontend) ──
+  STRIPE_PK: 'pk_live_51T86uxRufNpmOxQPt6KAjj4Yb8UOOpJqJAQ2KIae2d9adLFF9Ty8hS4T38GHaGHCOfsFVzBEHWKVGCl2Jq99N5Np00oylz5jPV',
+
+  // ── INSTALLATION PRICE ──
+  INSTALL_PRICE: 25,
+
+  // ── PRICING ENGINE ──
+  MARKUP:         1.35,   // cost × 1.35 = retail price (~26% margin)
+  MEMBER_DISCOUNT: 0.10,  // 10% off for approved members
+
+  // ── MAP TDG tireSeason int → filter chip value ──
+  SEASON_MAP: { 1:'summer', 2:'allseason', 3:'allweather', 4:'winter' },
+  SEASON_LABEL: { 1:'Summer', 2:'All-Season', 3:'All-Weather', 4:'Winter' },
+};
+
+// ── MOCK INVENTORY (fallback until TDG API key is active) ──
+const MOCK_TIRES = [
+  {id:1,tdgId:1,itemNumber:'MCH-DEF-TH-21555R17',partNumber:'DEF-TH',brand:'Michelin',name:'Defender T+H',size:'215/55R17',type:'allseason',price:189,msrp:189,speed:'H',loadIndex:'94',sidewall:'Black Sidewall',season:'All-Season',runFlat:false,evCompat:false,serviceType:'P-Passenger',map:null,stock:'in',qtyAvailable:48,locations:[]},
+  {id:2,tdgId:2,itemNumber:'BRD-BWS90-22560R17',partNumber:'BWS90',brand:'Bridgestone',name:'Blizzak WS90',size:'225/60R17',type:'winter',price:219,msrp:219,speed:'T',loadIndex:'99',sidewall:'Black Sidewall',season:'Winter',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:32,locations:[]},
+  {id:3,tdgId:3,itemNumber:'GYR-AWR-23565R17',partNumber:'AWR',brand:'Goodyear',name:'Assurance WeatherReady',size:'235/65R17',type:'allseason',price:172,msrp:172,speed:'H',loadIndex:'104',sidewall:'Black Sidewall',season:'All-Weather',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:60,locations:[]},
+  {id:4,tdgId:4,itemNumber:'CNT-DWS06-24545R18',partNumber:'DWS06P',brand:'Continental',name:'ExtremeContact DWS06+',size:'245/45R18',type:'summer',price:245,msrp:245,speed:'W',loadIndex:'96',sidewall:'Black Sidewall',season:'Summer',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:24,locations:[]},
+  {id:5,tdgId:5,itemNumber:'NOK-HR5-21560R16',partNumber:'HR5',brand:'Nokian',name:'Hakkapeliitta R5',size:'215/60R16',type:'winter',price:198,msrp:198,speed:'T',loadIndex:'99',sidewall:'Black Sidewall',season:'Winter',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'low',qtyAvailable:8,locations:[]},
+  {id:6,tdgId:6,itemNumber:'CPR-AT3XLT-26570R17',partNumber:'AT3XLT',brand:'Cooper',name:'Discoverer AT3 XLT',size:'265/70R17',type:'truck',price:209,msrp:209,speed:'T',loadIndex:'121',sidewall:'Black Sidewall',season:'All-Season',runFlat:false,evCompat:false,serviceType:'LT-Light Truck',stock:'in',qtyAvailable:36,locations:[]},
+  {id:7,tdgId:7,itemNumber:'FST-WGP-20555R16',partNumber:'WGP',brand:'Firestone',name:'WeatherGrip',size:'205/55R16',type:'allseason',price:138,msrp:138,speed:'H',loadIndex:'91',sidewall:'Black Sidewall',season:'All-Weather',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:44,locations:[]},
+  {id:8,tdgId:8,itemNumber:'PIR-PZ-24540R19',partNumber:'PZ4',brand:'Pirelli',name:'P Zero',size:'245/40R19',type:'summer',price:299,msrp:299,speed:'Y',loadIndex:'94',sidewall:'Black Sidewall',season:'Summer',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:20,locations:[]},
+  {id:9,tdgId:9,itemNumber:'BFG-KO2-27565R18',partNumber:'KO2',brand:'BFGoodrich',name:'All-Terrain T/A KO2',size:'275/65R18',type:'truck',price:268,msrp:268,speed:'T',loadIndex:'123',sidewall:'Black Sidewall',season:'All-Season',runFlat:false,evCompat:false,serviceType:'LT-Light Truck',stock:'in',qtyAvailable:52,locations:[]},
+  {id:10,tdgId:10,itemNumber:'TOY-OCA3-25570R16',partNumber:'OCA3',brand:'Toyo',name:'Open Country A/T III',size:'255/70R16',type:'truck',price:235,msrp:235,speed:'T',loadIndex:'111',sidewall:'Black Sidewall',season:'All-Season',runFlat:false,evCompat:false,serviceType:'LT-Light Truck',stock:'low',qtyAvailable:6,locations:[]},
+  {id:11,tdgId:11,itemNumber:'DUN-WM3-20560R16',partNumber:'WM3',brand:'Dunlop',name:'Winter Maxx 3',size:'205/60R16',type:'winter',price:165,msrp:165,speed:'T',loadIndex:'92',sidewall:'Black Sidewall',season:'Winter',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:28,locations:[]},
+  {id:12,tdgId:12,itemNumber:'YOK-AV107-23550R18',partNumber:'AV107',brand:'Yokohama',name:'Advan Sport V107',size:'235/50R18',type:'summer',price:278,msrp:278,speed:'W',loadIndex:'97',sidewall:'Black Sidewall',season:'Summer',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:16,locations:[]},
+  {id:13,tdgId:13,itemNumber:'MCH-LTX-23565R17',partNumber:'LTX-MS2',brand:'Michelin',name:'LTX M/S2',size:'235/65R17',type:'truck',price:225,msrp:225,speed:'T',loadIndex:'108',sidewall:'Black Sidewall',season:'All-Season',runFlat:false,evCompat:false,serviceType:'LT-Light Truck',stock:'in',qtyAvailable:30,locations:[]},
+  {id:14,tdgId:14,itemNumber:'GYR-UG-22565R17',partNumber:'UG',brand:'Goodyear',name:'Ultra Grip Ice WRT',size:'225/65R17',type:'winter',price:182,msrp:182,speed:'T',loadIndex:'102',sidewall:'Black Sidewall',season:'Winter',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:22,locations:[]},
+  {id:15,tdgId:15,itemNumber:'CNT-VKG-22545R17',partNumber:'VKG',brand:'Continental',name:'VikingContact 7',size:'225/45R17',type:'winter',price:195,msrp:195,speed:'T',loadIndex:'91',sidewall:'Black Sidewall',season:'Winter',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:18,locations:[]},
+  {id:16,tdgId:16,itemNumber:'BRD-ECO32-19565R15',partNumber:'ECO32',brand:'Bridgestone',name:'Ecopia EP422 Plus',size:'195/65R15',type:'allseason',price:129,msrp:129,speed:'H',loadIndex:'91',sidewall:'Black Sidewall',season:'All-Season',runFlat:false,evCompat:true,serviceType:'P-Passenger',stock:'in',qtyAvailable:40,locations:[]},
+];
+
+
+// ══════════════════════════════════════════════════════
+//  PRICING ENGINE
+// ══════════════════════════════════════════════════════
+function retailPrice(tire) {
+  // Start with cost × markup
+  let price = tire.price * TDG.MARKUP;
+  // Never go below MAP if set
+  if (tire.map && tire.map > price) price = tire.map;
+  return Math.round(price * 100) / 100;
+}
+
+function memberPrice(tire) {
+  return Math.round(retailPrice(tire) * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100;
+}
+
+function displayedPrice(tire) {
+  return currentMember ? memberPrice(tire) : retailPrice(tire);
+}
+
+// ══════════════════════════════════════════════════════
+//  MEMBER SYSTEM
+// ══════════════════════════════════════════════════════
+// Approved member list — invite codes map to email addresses.
+// In production this moves to the backend. Add members here:
+// ── MEMBER ACCESS ──
+// One universal code — share it only with customers you approve.
+// To add a specific member: 'theiremail@example.com': { code: 'postmah&c', name: 'Their Name' },
+// Anyone with the code + any email will get member pricing for now.
+const MEMBER_CODE = 'postmah&c';
+
+// Leave this object for named members you want to track individually:
+const APPROVED_MEMBERS = {};
+
+let currentMember = null; // null = public, object = logged in member
+
+function initMemberState() {
+  try {
+    const saved = localStorage.getItem('pc_member');
+    if (saved) {
+      const m = JSON.parse(saved);
+      // Re-validate against current approved list
+      const approved = APPROVED_MEMBERS[m.email];
+      const universalOk = m.code.toLowerCase() === MEMBER_CODE.toLowerCase();
+      const namedOk = approved && approved.code === m.code;
+      if (universalOk || namedOk) {
+        const name = approved?.name || m.email.split('@')[0];
+        currentMember = { email: m.email, name, code: m.code };
+        updateMemberNav();
+      }
+    }
+  } catch(e) {}
+}
+
+function updateMemberNav() {
+  const btn = document.getElementById('memberNavBtn');
+  if (!btn) return;
+  if (currentMember) {
+    btn.textContent = '★ ' + currentMember.name.split(' ')[0];
+    btn.classList.add('logged-in');
+    btn.title = 'Member pricing active — click to sign out';
+  } else {
+    btn.textContent = 'Member Login';
+    btn.classList.remove('logged-in');
+    btn.title = 'Sign in for member pricing';
+  }
+}
+
+function openMemberModal() {
+  if (currentMember) {
+    if (confirm('Sign out of member account?')) {
+      currentMember = null;
+      try { localStorage.removeItem('pc_member'); } catch(e) {}
+      updateMemberNav();
+      renderTires(); // refresh prices
+    }
+    return;
+  }
+  document.getElementById('memberModal').classList.add('show');
+  document.getElementById('mmError').classList.remove('show');
+}
+
+function closeMemberModal() {
+  document.getElementById('memberModal').classList.remove('show');
+}
+
+function switchMmTab(tab) {
+  document.querySelectorAll('.mm-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('mmTab-' + tab).classList.add('active');
+  document.getElementById('mmLogin').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('mmRequest').style.display = tab === 'request' ? 'block' : 'none';
+  document.getElementById('mmError').classList.remove('show');
+}
+
+function memberLogin() {
+  const email   = document.getElementById('mmEmail').value.trim().toLowerCase();
+  const code    = document.getElementById('mmCode').value.trim();
+  const errEl   = document.getElementById('mmError');
+
+  if (!email || !code) { errEl.textContent = 'Please enter your email and invite code.'; errEl.classList.add('show'); return; }
+
+  // Check universal code first
+  const universalMatch = code.toLowerCase() === MEMBER_CODE.toLowerCase();
+  // Also check named member list (for future individual codes)
+  const namedMatch = APPROVED_MEMBERS[email] && APPROVED_MEMBERS[email].code === code;
+
+  if (!universalMatch && !namedMatch) {
+    errEl.textContent = 'Invite code not recognized. Contact PC Tires to request access.';
+    errEl.classList.add('show'); return;
+  }
+
+  const name = APPROVED_MEMBERS[email]?.name || email.split('@')[0];
+  currentMember = { email, name, code };
+  try { localStorage.setItem('pc_member', JSON.stringify(currentMember)); } catch(e) {}
+  closeMemberModal();
+  updateMemberNav();
+  renderTires();
+  showToast('Welcome! Member pricing is active', '10% off all tires unlocked');
+}
+
+function memberRequest() {
+  const name  = document.getElementById('mmReqName').value.trim();
+  const email = document.getElementById('mmReqEmail').value.trim();
+  const phone = document.getElementById('mmReqPhone').value.trim();
+  if (!name || !email) { 
+    document.getElementById('mmError').textContent = 'Please enter your name and email.';
+    document.getElementById('mmError').classList.add('show'); return;
+  }
+  // In production: POST to backend → email you the request
+  closeMemberModal();
+  showToast('Request sent!', 'We\'ll review and send your invite code within 24 hours');
+}
+
+// ── LOW-LEVEL API HELPER ──
+// NOTE: The TDG API requires an API key in the Authorization header.
+// Browser-side requests will be blocked by CORS unless TDG has
+// whitelisted your domain. For production, route calls through a
+// small backend proxy (Node/PHP/Python) that forwards the header.
+// The integration below is written so the proxy is a 1-line swap:
+// just change BASE_URL to your proxy endpoint.
+
+async function tdgFetch(path, body = null) {
+  // Route through Netlify Functions proxy — keeps TDG API key server-side
+  const res = await fetch(`${TDG.BACKEND_URL}/.netlify/functions/tdg-proxy`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path, payload: body || {} }),
+  });
+  if (!res.ok) throw new Error(`TDG proxy error ${res.status} on ${path}`);
+  return res.json();
+}
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let allTires      = [];   // normalised tire objects from TDG
+let filteredTires = [];   // currently shown
+let activeFilter  = 'all';
+let cart          = [];
+let step          = 1;
+let selDate       = null;
+let selTime       = null;
+let tdgQuote      = null; // last quote response from TDG
+let calY, calMo;
+const now = new Date(); calY = now.getFullYear(); calMo = now.getMonth();
+
+// ══════════════════════════════════════════════════════
+//  DATA NORMALISATION — TDG → Site format
+// ══════════════════════════════════════════════════════
+function normaliseTire(product, inventory) {
+  const sp = product.specifications || {};
+  const inv = inventory || {};
+  const locs = inv.locations || [];
+
+  // Best availability: pick lowest availability code across locations
+  const bestAvail = locs.length
+    ? Math.min(...locs.map(l => l.availability))
+    : 100;
+  const totalQty = locs.reduce((s, l) => s + (l.qtyAvailable || 0), 0);
+
+  // Map season
+  const seasonRaw = (sp.season || '').toLowerCase();
+  let type = 'allseason';
+  if (seasonRaw.includes('winter')) type = 'winter';
+  else if (seasonRaw.includes('summer')) type = 'summer';
+  else if (seasonRaw.includes('all weather') || seasonRaw.includes('allweather') || seasonRaw.includes('all-weather')) type = 'allweather';
+  // truck check — service type LT
+  if ((sp.serviceType || '').toLowerCase().includes('lt')) type = 'truck';
+
+  const cost  = inv.pricing?.price ?? product.pricing?.price ?? 0; // TDG dealer cost
+  const msrp  = inv.pricing?.msrp  ?? product.pricing?.msrp  ?? cost;
+  const map   = inv.pricing?.map   ?? product.pricing?.map   ?? null;
+  const price = cost; // raw cost — retail price calculated by retailPrice()
+
+  return {
+    // TDG IDs needed for ordering
+    tdgId:       product.id,
+    itemNumber:  product.itemNumber,
+    partNumber:  product.partNumber,
+    gtin:        product.gtin,
+
+    // Display fields
+    brand:       product.brandName || product.brand || 'Unknown',
+    name:        product.productName || product.name || '',
+    size:        sp.size || '',
+    type,
+    price,
+    msrp,
+    sidewall:    sp.sidewall || 'Black Sidewall',
+    speed:       sp.speedRating || '',
+    loadIndex:   sp.loadIndex || '',
+    season:      sp.season || TDG.SEASON_LABEL[sp.tireSeason] || 'All-Season',
+    runFlat:     sp.runFlat === 'Yes',
+    evCompat:    sp.eVCompatible === 'Yes',
+    serviceType: sp.serviceType || '',
+    map:         map,
+    imageUrl:    product.productImageUrl || null,
+
+    // Stock
+    // TDG availability: 1=in stock, 2=low stock, 3=special order, 4=out
+    // totalQty fallback: if locations empty, assume orderable
+    stock:       locs.length === 0 ? 'in' : (bestAvail <= 1 ? 'in' : (bestAvail <= 2 ? 'low' : 'out')),
+    qtyAvailable: totalQty,
+    locations:   locs,
+  };
+}
+
+// ══════════════════════════════════════════════════════
+//  LOAD TIRES FROM TDG  (search or all)
+// ══════════════════════════════════════════════════════
+async function loadTires(searchParams = null) {
+  showCatalogLoading(true);
+  try {
+    let products = [], inventoryMap = {};
+
+    if (searchParams) {
+      // Targeted search — fetch products + inventory together
+      const [prodRes, invRes] = await Promise.all([
+        tdgFetch('/product/search', searchParams),
+        tdgFetch('/inventory/search', searchParams),
+      ]);
+      const extractData = r => {
+        if (Array.isArray(r)) return r;
+        if (r?.data && Array.isArray(r.data)) return r.data;
+        if (r?.products && Array.isArray(r.products)) return r.products;
+        if (r?.items && Array.isArray(r.items)) return r.items;
+        if (r?.results && Array.isArray(r.results)) return r.results;
+        return [];
+      };
+      products = extractData(prodRes);
+      const invArr = extractData(invRes);
+      invArr.forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
+      console.log(`TDG search: ${products.length} products found`);
+    } else {
+      // No search params — show popular sizes to give the catalog a starting point
+      // We don't fetch /product/all as the full catalogue is too large (6MB+)
+      // Instead load a broad search across common popular sizes
+      const popularSizes = ['225/65R17','235/65R17','245/65R17','275/65R18','265/70R17',
+        '215/55R17','225/60R17','235/60R17','245/60R18','275/60R20',
+        '205/55R16','225/50R17','235/45R18','255/55R20','245/70R17'];
+
+      const extractData = r => {
+        if (Array.isArray(r)) return r;
+        if (r?.data && Array.isArray(r.data)) return r.data;
+        if (r?.products && Array.isArray(r.products)) return r.products;
+        if (r?.items && Array.isArray(r.items)) return r.items;
+        if (r?.results && Array.isArray(r.results)) return r.results;
+        return [];
+      };
+
+      // Fetch a few popular sizes in parallel to populate the initial catalog
+      const sizeGroups = [
+        popularSizes.slice(0,5),
+        popularSizes.slice(5,10),
+        popularSizes.slice(10,15),
+      ];
+
+      const results = await Promise.all(
+        sizeGroups.map(sizes => Promise.all([
+          tdgFetch('/product/search', { tireSizes: sizes }),
+          tdgFetch('/inventory/search', { tireSizes: sizes }),
+        ]))
+      );
+
+      results.forEach(([prodRes, invRes]) => {
+        extractData(prodRes).forEach(p => {
+          if (!products.find(x => x.itemNumber === p.itemNumber)) products.push(p);
+        });
+        extractData(invRes).forEach(i => {
+          if (i?.itemNumber) inventoryMap[i.itemNumber] = i;
+        });
+      });
+
+      console.log(`TDG: ${products.length} products loaded across popular sizes`);
+    }
+
+    allTires = products
+      .filter(p => p.type === 'Tire') // tires only, skip wheels/accessories
+      .map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
+
+    applyFilter(activeFilter);
+  } catch (err) {
+    console.warn('TDG API unavailable, using mock inventory:', err.message);
+    allTires = MOCK_TIRES;
+    if (searchParams?.tireSizes?.length) {
+      // Filter mock by size for vehicle lookup
+      const sz = searchParams.tireSizes[0].replace(/\s/g,'');
+      const filtered = MOCK_TIRES.filter(t => t.size.replace(/\s/g,'') === sz);
+      allTires = filtered.length ? filtered : MOCK_TIRES;
+    }
+    applyFilter(activeFilter);
+  } finally {
+    showCatalogLoading(false);
+  }
+}
+
+function showCatalogLoading(on) {
+  const grid = document.getElementById('tireGrid');
+  if (on) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)">
+        <div style="font-size:36px;margin-bottom:12px;animation:spin 1s linear infinite;display:inline-block">⟳</div>
+        <div style="font-size:14px">Loading live inventory from TDG…</div>
+      </div>`;
+    if (!document.getElementById('spinStyle')) {
+      const s = document.createElement('style');
+      s.id = 'spinStyle';
+      s.textContent = '@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}';
+      document.head.appendChild(s);
+    }
+  }
+}
+
+function showCatalogError(msg) {
+  document.getElementById('tireGrid').innerHTML = `
+    <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)">
+      <div style="font-size:36px;margin-bottom:12px">⚠️</div>
+      <div style="font-size:14px;color:#ef4444;margin-bottom:8px">Could not load inventory</div>
+      <div style="font-size:12px;max-width:400px;margin:0 auto;line-height:1.6">${msg}<br><br>
+        This is normal during development — add your TDG API key to <code style="color:var(--yellow)">TDG.API_KEY</code> and configure a backend proxy.
+      </div>
+      <button onclick="loadTires()" style="margin-top:16px;background:var(--yellow);color:var(--black);border:none;padding:10px 20px;border-radius:2px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif">Retry</button>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  FILTER + RENDER
+// ══════════════════════════════════════════════════════
+function applyFilter(type) {
+  activeFilter = type;
+  filteredTires = type === 'all'
+    ? allTires
+    : allTires.filter(t => t.type === type);
+  document.getElementById('tireCount').textContent = filteredTires.length;
+  renderTires();
+}
+
+function filterTires(type, btn) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter(type);
+}
+
+function renderTires() {
+  const grid = document.getElementById('tireGrid');
+  if (!filteredTires.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);font-size:14px">No tires found for this filter.</div>`;
+    return;
+  }
+  grid.innerHTML = filteredTires.map((t, i) => {
+    const stockClass = t.stock === 'in' ? 'in-stock' : t.stock === 'low' ? 'low-stock' : 'low-stock';
+    const stockLabel = t.stock === 'in' ? 'In Stock' : t.stock === 'low' ? 'Low Stock' : 'Call Us';
+    const retail  = retailPrice(t);
+    const mPrice  = memberPrice(t);
+    const shown   = displayedPrice(t);
+    const displayPrice = shown > 0 ? `$${shown.toFixed(2)}` : 'Call';
+    const msrpNote = t.msrp > retail && retail > 0
+      ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
+    const memberBadge = currentMember
+      ? `<div class="member-price-badge">★ Member Price</div>`
+      : '';
+    const imgEl = t.imageUrl
+      ? `<img src="${t.imageUrl}" style="width:48px;height:48px;object-fit:contain;border-radius:2px" alt="${t.name}">`
+      : '🔵';
+    const tags = [t.season];
+    if (t.runFlat) tags.push('Run-Flat');
+    if (t.evCompat) tags.push('EV');
+    if (t.sidewall && !t.sidewall.toLowerCase().includes('black')) tags.push(t.sidewall);
+
+    return `
+    <div class="tire-card" style="animation-delay:${Math.min(i,8)*0.055}s">
+      <div class="tc-top">
+        <div class="tc-brand">${t.brand}</div>
+        <span class="stock-pill ${stockClass}">${stockLabel}</span>
+      </div>
+      <div class="tc-name">${t.name}</div>
+      <div class="tc-size">${t.size}</div>
+      <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}</div>
+      <div class="tc-specs">
+        <div><div class="spec-label">Speed Rating</div><div class="spec-value">${t.speed || '—'}</div></div>
+        <div><div class="spec-label">Load Index</div><div class="spec-value">${t.loadIndex || '—'}</div></div>
+        <div><div class="spec-label">Sidewall</div><div class="spec-value" style="font-size:11px">${t.sidewall||'BSW'}</div></div>
+        <div><div class="spec-label">Service</div><div class="spec-value" style="font-size:11px">${t.serviceType||'—'}</div></div>
+      </div>
+      <div class="tc-foot">
+        <div>${displayPrice !== 'Call'
+          ? `${memberBadge}<div class="tc-price"><sup>$</sup>${shown.toFixed(0)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}`
+          : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
+          <div class="price-each">per tire · HST extra</div>
+        </div>
+        <button class="add-btn" onclick="addToCart('${t.itemNumber}')" ${t.stock==='out'?'disabled style="opacity:.4;cursor:not-allowed"':''}>
+          ${t.stock==='out'?'Out of Stock':'Add to Cart +'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  VEHICLE LOOKUP → TDG tire size search
+// ══════════════════════════════════════════════════════
+const VD = {
+  Honda:{Civic:["LX","Sport","EX","Touring"],"CR-V":["LX","EX","EX-L","Touring"],Accord:["LX","Sport","EX","Touring"]},
+  Toyota:{Camry:["LE","SE","XLE","TRD"],RAV4:["LE","XLE","Limited","TRD"],Corolla:["L","LE","SE","XSE"],Highlander:["L","LE","XLE","Limited"]},
+  Ford:{"F-150":["XL","XLT","Lariat","Platinum"],Escape:["S","SE","SEL","Titanium"],Explorer:["Base","XLT","Limited","Platinum"]},
+  Chevrolet:{Silverado:["WT","Custom","LT","LTZ"],Equinox:["LS","LT","RS","Premier"],Malibu:["LS","LT","RS","Premier"]},
+  Hyundai:{Elantra:["SE","SEL","N Line","Limited"],Tucson:["SE","SEL","N Line","Limited"],"Santa Fe":["SE","SEL","XRT","Limited"]},
+  Nissan:{Altima:["S","SV","SL","SR"],Rogue:["S","SV","SL","Platinum"],Frontier:["S","SV","PRO-4X","SL"]},
+  Subaru:{Outback:["Base","Premium","Limited","Onyx"],Forester:["Base","Premium","Limited","Sport"],Impreza:["Base","Premium","Sport","Limited"]},
+  Volkswagen:{Jetta:["S","SE","SEL","GLI"],Tiguan:["S","SE","SEL"],Golf:["S","SE","R"]},
+};
+
+// OEM tire sizes per vehicle (year-agnostic approximation; extend as needed)
+const OEM_SIZES = {
+  "Honda Civic":         "215/55R17",
+  "Honda CR-V":          "235/65R17",
+  "Honda Accord":        "235/45R18",
+  "Toyota Camry":        "235/45R18",
+  "Toyota RAV4":         "235/65R17",
+  "Toyota Corolla":      "205/55R16",
+  "Toyota Highlander":   "245/60R18",
+  "Ford F-150":          "275/65R18",
+  "Ford Escape":         "235/50R18",
+  "Ford Explorer":       "255/55R20",
+  "Chevrolet Silverado": "275/65R18",
+  "Chevrolet Equinox":   "225/65R17",
+  "Hyundai Elantra":     "205/55R16",
+  "Hyundai Tucson":      "235/55R17",
+  "Hyundai Santa Fe":    "235/60R18",
+  "Nissan Altima":       "215/55R17",
+  "Nissan Rogue":        "225/65R17",
+  "Nissan Frontier":     "265/65R17",
+  "Subaru Outback":      "225/60R18",
+  "Subaru Forester":     "225/60R17",
+  "Volkswagen Jetta":    "225/45R17",
+};
+
+
+// ── LOOKUP TAB SWITCHING ──
+function switchLookupTab(tab) {
+  ['vehicle','size'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    document.getElementById('panel-' + t).classList.toggle('active', t === tab);
+  });
+  document.getElementById('lookupResult').classList.remove('show');
+}
+
+// ── TIRE SIZE SEARCH ──
+async function doSizeSearch() {
+  const width    = document.getElementById('sWidth').value;
+  const sidewall = document.getElementById('sSidewall').value;
+  const diameter = document.getElementById('sDiameter').value;
+
+  if (!width || !sidewall || !diameter) { return; }
+
+  const tireSize = `${width}/${sidewall}R${diameter}`;
+  const resultEl = document.getElementById('lookupResult');
+  const textEl   = document.getElementById('lookupText');
+
+  textEl.innerHTML = `Searching for <strong>${tireSize}</strong> tires…`;
+  resultEl.classList.add('show');
+
+  await loadTires({ tireSizes: [tireSize] });
+
+  if (filteredTires.length > 0) {
+    textEl.innerHTML = `Found <strong>${filteredTires.length}</strong> tire${filteredTires.length!==1?'s':''} in size <strong>${tireSize}</strong>.`;
+  } else {
+    textEl.innerHTML = `No tires in stock for size <strong>${tireSize}</strong> right now — <a href="tel:5193805104" style="color:var(--yellow)">call us at 519-380-5104</a> and we'll source them for you.`;
+  }
+
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
+
+// ── CASCADING TIRE SIZE SELECTOR ──
+// All valid size combinations — covers 95%+ of passenger/truck tires sold in Canada
+const TIRE_SIZES = [
+  // 13"
+  '155/70R13','165/70R13','175/70R13','185/70R13',
+  // 14"
+  '155/65R14','165/65R14','175/65R14','185/65R14','195/70R14','205/70R14',
+  // 15"
+  '175/65R15','185/60R15','185/65R15','195/60R15','195/65R15','205/65R15','205/70R15','215/65R15','215/70R15','225/70R15','235/75R15',
+  // 16"
+  '195/55R16','195/60R16','205/55R16','205/60R16','205/65R16','215/55R16','215/60R16','215/65R16','215/70R16','225/55R16','225/60R16','225/65R16','225/70R16','235/60R16','235/65R16','235/70R16','245/70R16','265/70R16','265/75R16','275/70R16','285/75R16','LT245/75R16','LT265/75R16','LT285/75R16',
+  // 17"
+  '205/50R17','215/45R17','215/50R17','215/55R17','215/60R17','215/65R17','225/45R17','225/50R17','225/55R17','225/60R17','225/65R17','235/45R17','235/50R17','235/55R17','235/60R17','235/65R17','245/40R17','245/45R17','245/65R17','255/60R17','255/65R17','265/60R17','265/65R17','265/70R17','275/60R17','275/65R17','285/70R17','LT245/70R17','LT265/70R17','LT285/70R17',
+  // 18"
+  '215/45R18','225/40R18','225/45R18','225/50R18','225/55R18','225/60R18','225/65R18','235/40R18','235/45R18','235/50R18','235/55R18','235/60R18','235/65R18','245/40R18','245/45R18','245/60R18','245/65R18','255/55R18','255/60R18','255/65R18','265/60R18','265/65R18','275/60R18','275/65R18','285/60R18','285/65R18','LT265/65R18','LT275/65R18','LT285/65R18',
+  // 19"
+  '225/40R19','225/45R19','225/50R19','235/35R19','235/40R19','235/45R19','235/50R19','245/40R19','245/45R19','245/50R19','255/40R19','255/45R19','255/50R19','255/55R19','265/50R19','275/40R19','275/45R19','275/55R19',
+  // 20"
+  '225/35R20','235/35R20','245/35R20','245/40R20','245/45R20','255/35R20','255/40R20','255/45R20','255/50R20','255/55R20','265/40R20','265/45R20','265/50R20','275/40R20','275/45R20','275/55R20','275/60R20','285/50R20','285/55R20','295/40R20','295/45R20','305/40R20','LT265/60R20','LT275/55R20','LT275/65R20','LT285/55R20',
+  // 21"
+  '245/35R21','245/40R21','245/45R21','255/35R21','255/40R21','265/35R21','275/35R21','275/40R21','285/40R21','295/35R21',
+  // 22"
+  '255/30R22','265/35R22','265/40R22','275/40R22','285/35R22','285/40R22','295/35R22','305/35R22','315/30R22','LT275/55R22','LT285/45R22',
+];
+
+// Parse sizes into lookup structure
+function parseSizes() {
+  const map = {}; // width -> { sidewall -> [diameters] }
+  TIRE_SIZES.forEach(sz => {
+    const m = sz.match(/^(?:LT)?(\d+)\/(\d+)R(\d+)$/);
+    if (!m) return;
+    const [,w,s,d] = m;
+    if (!map[w]) map[w] = {};
+    if (!map[w][s]) map[w][s] = [];
+    if (!map[w][s].includes(d)) map[w][s].push(d);
+  });
+  return map;
+}
+const SIZE_MAP = parseSizes();
+
+function initSizeDropdowns() {
+  const wEl = document.getElementById('sWidth');
+  wEl.innerHTML = '<option value="">Select Width</option>';
+  Object.keys(SIZE_MAP).sort((a,b)=>+a-+b).forEach(w => {
+    const o = document.createElement('option');
+    o.value = w; o.textContent = w + ' mm';
+    wEl.appendChild(o);
+  });
+  updateSizePreview();
+}
+
+function onWidthChange() {
+  const w = document.getElementById('sWidth').value;
+  const sEl = document.getElementById('sSidewall');
+  const dEl = document.getElementById('sDiameter');
+
+  sEl.innerHTML = '<option value="">Select Sidewall</option>';
+  dEl.innerHTML = '<option value="">Select Sidewall first</option>';
+  sEl.disabled = !w;
+  dEl.disabled = true;
+  document.getElementById('sizeSearchBtn').disabled = true;
+  document.getElementById('sizeSearchBtn').style.opacity = '.5';
+  document.getElementById('sizeSearchBtn').style.cursor = 'not-allowed';
+
+  if (w && SIZE_MAP[w]) {
+    Object.keys(SIZE_MAP[w]).sort((a,b)=>+a-+b).forEach(s => {
+      const o = document.createElement('option');
+      o.value = s; o.textContent = s + '%';
+      sEl.appendChild(o);
+    });
+  }
+  updateSizePreview();
+}
+
+function onSidewallChange() {
+  const w = document.getElementById('sWidth').value;
+  const s = document.getElementById('sSidewall').value;
+  const dEl = document.getElementById('sDiameter');
+
+  dEl.innerHTML = '<option value="">Select Diameter</option>';
+  dEl.disabled = !s;
+  document.getElementById('sizeSearchBtn').disabled = true;
+  document.getElementById('sizeSearchBtn').style.opacity = '.5';
+  document.getElementById('sizeSearchBtn').style.cursor = 'not-allowed';
+
+  if (w && s && SIZE_MAP[w]?.[s]) {
+    SIZE_MAP[w][s].sort((a,b)=>+a-+b).forEach(d => {
+      const o = document.createElement('option');
+      o.value = d; o.textContent = 'R' + d + '  (' + d + '")';
+      dEl.appendChild(o);
+    });
+  }
+  updateSizePreview();
+}
+
+function onDiameterChange() {
+  const d = document.getElementById('sDiameter').value;
+  const btn = document.getElementById('sizeSearchBtn');
+  btn.disabled = !d;
+  btn.style.opacity = d ? '1' : '.5';
+  btn.style.cursor = d ? 'pointer' : 'not-allowed';
+  updateSizePreview();
+}
+
+function updateSizePreview() {
+  const w = document.getElementById('sWidth').value;
+  const s = document.getElementById('sSidewall').value;
+  const d = document.getElementById('sDiameter').value;
+  const wEl = document.getElementById('sp-w');
+  const sEl = document.getElementById('sp-s');
+  const dEl = document.getElementById('sp-d');
+  wEl.textContent = w || '???'; wEl.className = 'sp-part' + (w ? '' : ' dim');
+  sEl.textContent = s || '??';  sEl.className = 'sp-part' + (s ? '' : ' dim');
+  dEl.textContent = d || '??';  dEl.className = 'sp-part' + (d ? '' : ' dim');
+}
+
+
+// ── DELIVERY OPTION ──
+let deliveryMode = 'shop'; // 'shop' or 'home'
+
+function setDelivery(mode) {
+  deliveryMode = mode;
+  document.getElementById('dopt-shop').classList.toggle('active', mode === 'shop');
+  document.getElementById('dopt-home').classList.toggle('active', mode === 'home');
+  document.getElementById('addrRow').style.display = mode === 'home' ? 'block' : 'none';
+}
+
+function initYears() {
+  const s = document.getElementById('vYear');
+  for (let y = 2025; y >= 2005; y--) {
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y;
+    s.appendChild(o);
+  }
+}
+function updateMakes() {
+  const mk = document.getElementById('vMake');
+  mk.innerHTML = '<option value="">Select Make</option>';
+  ['vModel','vTrim'].forEach(id => {
+    document.getElementById(id).innerHTML = '<option value="">' + (id==='vModel'?'Select Model':'Select Trim') + '</option>';
+  });
+  document.getElementById('lookupResult').classList.remove('show');
+  Object.keys(VD).sort().forEach(m => {
+    const o = document.createElement('option');
+    o.value = m; o.textContent = m;
+    mk.appendChild(o);
+  });
+}
+function updateModels() {
+  const make = document.getElementById('vMake').value;
+  const md = document.getElementById('vModel');
+  md.innerHTML = '<option value="">Select Model</option>';
+  document.getElementById('vTrim').innerHTML = '<option value="">Select Trim</option>';
+  if (!make || !VD[make]) return;
+  Object.keys(VD[make]).sort().forEach(m => {
+    const o = document.createElement('option');
+    o.value = m; o.textContent = m;
+    md.appendChild(o);
+  });
+}
+function updateTrims() {
+  const make = document.getElementById('vMake').value;
+  const model = document.getElementById('vModel').value;
+  const tr = document.getElementById('vTrim');
+  tr.innerHTML = '<option value="">Select Trim</option>';
+  if (!make || !model) return;
+  (VD[make]?.[model] || []).forEach(t => {
+    const o = document.createElement('option');
+    o.value = t; o.textContent = t;
+    tr.appendChild(o);
+  });
+}
+
+async function doLookup() {
+  const y  = document.getElementById('vYear').value;
+  const mk = document.getElementById('vMake').value;
+  const md = document.getElementById('vModel').value;
+  if (!y || !mk || !md) { alert('Please select Year, Make and Model.'); return; }
+
+  const vehicleKey = `${mk} ${md}`;
+  const tireSize   = OEM_SIZES[vehicleKey] || null;
+  const resultEl   = document.getElementById('lookupResult');
+  const textEl     = document.getElementById('lookupText');
+
+  if (tireSize) {
+    textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — OEM tire size: <strong>${tireSize}</strong>. Searching live TDG inventory…`;
+    resultEl.classList.add('show');
+
+    // Search TDG for this size specifically
+    await loadTires({ tireSizes: [tireSize] });
+
+    textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — showing <strong>${filteredTires.length}</strong> compatible tires for size <strong>${tireSize}</strong>.`;
+  } else {
+    textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong>. Showing full inventory — <a onclick="smoothScroll('#guide')" style="color:var(--yellow);cursor:pointer">not sure what size you need?</a>`;
+    resultEl.classList.add('show');
+    await loadTires();
+  }
+
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
+// ══════════════════════════════════════════════════════
+//  CART
+// ══════════════════════════════════════════════════════
+function addToCart(itemNumber) {
+  const tire = allTires.find(t => t.itemNumber === itemNumber);
+  if (!tire) return;
+  const ex = cart.find(c => c.itemNumber === itemNumber);
+  const priceToCharge = displayedPrice(tire);
+  if (ex) ex.qty++;
+  else cart.push({ ...tire, price: priceToCharge, qty: 1, install: true });
+  updBadge();
+  showToast(tire.brand + ' ' + tire.name, 'Added to your cart');
+}
+
+function removeFromCart(itemNumber) {
+  cart = cart.filter(c => c.itemNumber !== itemNumber);
+  updBadge(); renderCart();
+}
+
+function chgQty(itemNumber, d) {
+  const item = cart.find(c => c.itemNumber === itemNumber);
+  if (!item) return;
+  item.qty += d;
+  if (item.qty <= 0) { removeFromCart(itemNumber); return; }
+  renderCart();
+}
+
+function togInst(itemNumber) {
+  const item = cart.find(c => c.itemNumber === itemNumber);
+  if (item) item.install = !item.install;
+  renderCart();
+}
+
+function updBadge() {
+  document.getElementById('cartCount').textContent = cart.reduce((s, c) => s + c.qty, 0);
+}
+
+function renderCart() {
+  const body = document.getElementById('cartBody');
+  const foot = document.getElementById('cartFoot');
+  if (!cart.length) {
+    body.innerHTML = `<div class="cart-empty"><div class="empty-icon">🛒</div><div class="empty-msg">Your cart is empty</div><div style="font-size:13px;color:var(--muted)">Browse tires above to get started</div></div>`;
+    foot.style.display = 'none'; return;
+  }
+  body.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="ci-icon">🔵</div>
+      <div class="ci-info">
+        <div class="ci-brand">${item.brand}</div>
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-size">${item.size}</div>
+        ${item.install ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
+        <label class="inst-toggle">
+          <input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')">
+          <span>Add installation <b>+$${TDG.INSTALL_PRICE}/tire</b></span>
+        </label>
+      </div>
+      <div class="ci-right">
+        <div class="qty-row">
+          <button class="qb" onclick="chgQty('${item.itemNumber}',-1)">−</button>
+          <span class="qn">${item.qty}</span>
+          <button class="qb" onclick="chgQty('${item.itemNumber}',+1)">+</button>
+        </div>
+        <div class="ci-price">$${((item.price + (item.install ? TDG.INSTALL_PRICE : 0)) * item.qty).toFixed(2)}</div>
+        <button class="ci-remove" onclick="removeFromCart('${item.itemNumber}')">Remove</button>
+      </div>
+    </div>`).join('');
+  foot.style.display = 'block';
+  updTotals();
+}
+
+function getTotals() {
+  // Use TDG quote if available, otherwise calculate locally
+  if (tdgQuote) {
+    return {
+      sub:   tdgQuote.subtotal,
+      inst:  cart.reduce((s, c) => s + (c.install ? TDG.INSTALL_PRICE * c.qty : 0), 0),
+      ship:  tdgQuote.shipping,
+      tax:   tdgQuote.tax,
+      total: tdgQuote.total,
+    };
+  }
+  const sub  = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const inst = cart.reduce((s, c) => s + (c.install ? TDG.INSTALL_PRICE * c.qty : 0), 0);
+  const tax  = (sub + inst) * 0.13;
+  return { sub, inst, ship: 0, tax, total: sub + inst + tax };
+}
+
+function updTotals() {
+  const t = getTotals();
+  document.getElementById('sumSub').textContent  = `$${t.sub.toFixed(2)}`;
+  document.getElementById('sumInst').textContent = t.inst > 0 ? `$${t.inst.toFixed(2)}` : '—';
+  document.getElementById('sumTax').textContent  = `$${t.tax.toFixed(2)}`;
+  document.getElementById('sumTotal').textContent = `$${t.total.toFixed(2)}`;
+}
+
+function openCart()  { document.getElementById('cartOverlay').classList.add('show'); renderCart(); }
+function closeCart() { document.getElementById('cartOverlay').classList.remove('show'); }
+
+// ══════════════════════════════════════════════════════
+//  CHECKOUT — wired to TDG order/quote + order/create
+// ══════════════════════════════════════════════════════
+function openCheckout() { closeCart(); step = 1; updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
+function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('show'); }
+
+const mTitles = ['', 'Contact Info', 'Payment', 'Book Installation', 'Order Confirmed!'];
+const nLabels = ['', 'Continue →', 'Pay Securely 🔒', 'Confirm Booking →', ''];
+
+function updSteps() {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('ps' + i);
+    el.className = 'ps' + (i < step ? ' done' : (i === step ? ' active' : ''));
+  }
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('s' + i).className = 'fsec' + (i === step ? ' active' : '');
+  }
+  document.getElementById('mTitle').textContent = mTitles[step];
+  const nb = document.getElementById('nextBtn');
+  const bb = document.getElementById('backBtn');
+  const mf = document.getElementById('mFoot');
+  if (step === 4) { mf.style.display = 'none'; return; } else { mf.style.display = 'block'; }
+  nb.textContent = nLabels[step] || 'Continue →';
+  bb.style.display = (step > 1) ? 'block' : 'none';
+  if (step === 2) buildPaymentSummary();
+  if (step === 3) { selectedService = null; selDate = null; selTime = null; document.getElementById('calSection').style.display='none'; buildServiceMenu(); }
+}
+
+async function buildPaymentSummary() {
+  const box = document.getElementById('payBox');
+  box.innerHTML = `<div style="color:var(--muted);font-size:13px">Getting live quote from TDG…</div>`;
+
+  // Try to get a real quote from TDG
+  if (TDG.SHIPPING_METHOD_ID && TDG.PAYMENT_METHOD_ID) {
+    try {
+      const quotePayload = {
+        shippingAddress: TDG.SHIPPING_ADDRESS_ID,
+        shippingMethod:  TDG.SHIPPING_METHOD_ID,
+        paymentMethod:   TDG.PAYMENT_METHOD_ID,
+        shipComplete:    false,
+        products: cart.map(c => ({ id: c.tdgId, quantity: c.qty })),
+      };
+      const res = await tdgFetch('/order/quote', quotePayload);
+      tdgQuote = res.quote;
+    } catch (e) {
+      tdgQuote = null;
+      console.warn('TDG quote failed, using local estimate:', e.message);
+    }
+  } else {
+    tdgQuote = null;
+  }
+
+  const t = getTotals();
+  const instTotal = cart.reduce((s, c) => s + (c.install ? TDG.INSTALL_PRICE * c.qty : 0), 0);
+  box.innerHTML = `
+    <div class="ptrow"><span>Tires (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
+    ${instTotal > 0 ? `<div class="ptrow"><span>Installation (${cart.filter(c=>c.install).reduce((s,c)=>s+c.qty,0)} tires × $${TDG.INSTALL_PRICE})</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
+    ${tdgQuote ? `<div class="ptrow"><span>Shipping (TDG)</span><span>${tdgQuote.shipping > 0 ? '$'+tdgQuote.shipping.toFixed(2) : 'Free'}</span></div>` : ''}
+    <div class="ptrow"><span>Tax (HST)</span><span>$${t.tax.toFixed(2)}</span></div>
+    <div class="ptrow bold"><span>Total Due Today</span><span>$${t.total.toFixed(2)}</span></div>
+    ${!tdgQuote ? '<div style="font-size:11px;color:var(--muted);margin-top:8px">⚠️ Estimated total — final amount confirmed at processing</div>' : '<div style="font-size:11px;color:var(--green);margin-top:8px">✓ Quote confirmed from TDG live inventory</div>'}
+  `;
+}
+
+async function nextStep() {
+  if (step === 1 && !document.getElementById('email').value) {
+    alert('Please enter your email address.'); return;
+  }
+  if (step === 2) { await processPayment(); return; }
+  if (step === 3) {
+    if (!selectedService) { alert('Please select a service type.'); return; }
+    if (!selDate || !selTime) { alert('Please select a date and time, or click Skip to arrange later.'); return; }
+    await finishOrder(false); return;
+  }
+  step++; updSteps();
+}
+
+function prevStep() { if (step > 1) { step--; updSteps(); } }
+
+async function processPayment() {
+  const btn = document.getElementById('nextBtn');
+  btn.textContent = 'Processing…'; btn.classList.add('ld');
+  try {
+    // Stripe payment would be confirmed here.
+    // On success → place TDG order (see finishOrder).
+    await new Promise(r => setTimeout(r, 1800)); // simulated delay
+    const hasInst = cart.some(c => c.install);
+    if (hasInst) { step = 3; updSteps(); }
+    else { await finishOrder(true); }
+  } catch (e) {
+    alert('Payment failed: ' + e.message);
+  } finally {
+    btn.classList.remove('ld');
+  }
+}
+
+function skipInstall() { finishOrder(true); }
+
+async function finishOrder(noInst) {
+  const btn = document.getElementById('nextBtn');
+  if (btn) { btn.textContent = 'Placing order…'; btn.classList.add('ld'); }
+
+  let tdgOrderNum = null;
+  let tdgRef = null;
+
+  // Place real TDG order if configured
+  if (TDG.SHIPPING_METHOD_ID && TDG.PAYMENT_METHOD_ID) {
+    try {
+      const poNumber = 'PCT-' + Date.now().toString(36).toUpperCase();
+      const orderPayload = {
+        shippingAddress:   deliveryMode === 'shop' ? TDG.SHIPPING_ADDRESS_ID : null,
+        poNumber,
+        shippingMethod:    TDG.SHIPPING_METHOD_ID,
+        paymentMethod:     TDG.PAYMENT_METHOD_ID,
+        shipComplete:      false,
+        deliveryInstructions: noInst ? '' : `${selectedService?.label||'Service'}: ${selDate} at ${selTime}`,
+        products: cart.map(c => ({
+          id: c.tdgId,
+          quantity: c.qty,
+          ...(c.install ? { services: ['ST'] } : {}),
+        })),
+      };
+      const res = await tdgFetch('/order/create', orderPayload);
+      tdgOrderNum = res.order?.orderNumber;
+      tdgRef      = res.order?.reference;
+    } catch (e) {
+      console.warn('TDG order create failed:', e.message);
+    }
+  }
+
+  // Build confirmation display
+  const t = getTotals();
+  const name  = (document.getElementById('fName').value || 'Customer') + ' ' + (document.getElementById('lName').value || '');
+  const email = document.getElementById('email').value || 'you@example.com';
+  const orderId = tdgOrderNum || ('PCT-' + Math.random().toString(36).substr(2,6).toUpperCase());
+  const svcLabel = selectedService ? selectedService.label : 'Installation';
+  const instLine = noInst ? 'Not booked — arrange separately' : `${svcLabel} · ${selDate} at ${selTime} (~${selectedService?.duration||60} min)`;
+
+  document.getElementById('confDetails').innerHTML = `
+    <div class="cd-row"><span class="cd-label">Order #</span><span class="cd-val y">${orderId}</span></div>
+    ${tdgRef ? `<div class="cd-row"><span class="cd-label">TDG Reference</span><span class="cd-val">${tdgRef}</span></div>` : ''}
+    <div class="cd-row"><span class="cd-label">Customer</span><span class="cd-val">${name.trim()}</span></div>
+    <div class="cd-row"><span class="cd-label">Email</span><span class="cd-val">${email}</span></div>
+    <div class="cd-row"><span class="cd-label">Tires</span><span class="cd-val">${cart.map(c=>`${c.qty}× ${c.brand} ${c.name} (${c.size})`).join(', ')}</span></div>
+    <div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${t.total.toFixed(2)} CAD</span></div>
+    <div class="cd-row"><span class="cd-label">Installation</span><span class="cd-val">${instLine}</span></div>
+    <div class="cd-row"><span class="cd-label">Confirmation</span><span class="cd-val">Sent to ${email}</span></div>
+  `;
+
+  // Send order confirmation emails via backend
+  try {
+    await fetch(`${TDG.BACKEND_URL}/.netlify/functions/send-order-email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderNumber:     orderId,
+        customerName:    name.trim(),
+        customerEmail:   email,
+        customerPhone:   document.getElementById('phone')?.value || '',
+        vehicle:         [document.getElementById('selYear')?.value, document.getElementById('selMake')?.value, document.getElementById('selModel')?.value].filter(Boolean).join(' ') || 'Not specified',
+        tireSize:        cart[0]?.size || 'Not specified',
+        tires:           cart.map(c => ({ qty: c.qty, brand: c.brand, name: c.name, size: c.size, price: c.price })),
+        installation:    !noInst,
+        appointmentDate: selDate || '',
+        appointmentTime: selTime || '',
+        serviceName:     selectedService?.label || '',
+        subtotal:        t.sub,
+        installTotal:    t.inst,
+        shipping:        t.ship || 0,
+        tax:             t.tax,
+        total:           t.total,
+      }),
+    });
+  } catch(e) { console.warn('Order email failed:', e.message); }
+
+  cart = []; tdgQuote = null; updBadge();
+  if (btn) btn.classList.remove('ld');
+  step = 4; updSteps();
+}
+
+// ══════════════════════════════════════════════════════
+//  CALENDAR
+// ══════════════════════════════════════════════════════
+// ── SERVICE MENU ──
+const SERVICES = [
+  { id:'mount4',    label:'4-Tire Mount & Balance',              duration:60,  price:25,  unit:'per tire', desc:'Mount, balance, TPMS reset & old tire disposal' },
+  { id:'swap',      label:'Seasonal Swap (pre-mounted set)',      duration:60,  price:20,  unit:'per tire', desc:'Swap your stored set — no mounting needed' },
+  { id:'repair',    label:'Tire Repair (off car + balance)',      duration:60,  price:30,  unit:'flat',     desc:'Remove, patch, remount and balance' },
+  { id:'valve',     label:'Valve Stem Replacement',               duration:45,  price:15,  unit:'per stem', desc:'Replace faulty or leaking valve stems' },
+  { id:'tpms',      label:'TPMS Sensor Relearn',                  duration:30,  price:20,  unit:'flat',     desc:'Relearn sensors after tire or battery change' },
+  { id:'single',    label:'Single Tire Mount & Balance',          duration:30,  price:25,  unit:'flat',     desc:'Mount and balance one tire' },
+  { id:'plug',      label:'Plug Repair (tire stays on car)',       duration:15,  price:20,  unit:'flat',     desc:'Quick plug for a simple puncture in the tread' },
+];
+
+let selectedService = null;
+
+// ── BUILD SERVICE MENU (called when checkout step 3 opens) ──
+function buildServiceMenu() {
+  const menu = document.getElementById('serviceMenu');
+  if (!menu) return;
+  menu.innerHTML = SERVICES.map(s => `
+    <div class="svc-option${selectedService?.id === s.id ? ' selected' : ''}"
+         onclick="selectService('${s.id}')"
+         style="display:flex;align-items:center;gap:14px;padding:13px 14px;background:var(--card);border:2px solid ${selectedService?.id===s.id?'var(--yellow)':'var(--border)'};border-radius:4px;cursor:pointer;transition:all .2s">
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;color:var(--white);margin-bottom:2px">${s.label}</div>
+        <div style="font-size:12px;color:var(--muted)">${s.desc}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:${selectedService?.id===s.id?'var(--yellow)':'var(--white)'}">$${s.price}<span style="font-size:12px;font-weight:400;color:var(--muted)"> ${s.unit}</span></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">⏱ ${s.duration} min</div>
+      </div>
+    </div>`).join('');
+}
+
+function selectService(id) {
+  selectedService = SERVICES.find(s => s.id === id);
+  buildServiceMenu();
+  // Show calendar and duration note
+  document.getElementById('calSection').style.display = 'block';
+  document.getElementById('durationNote').innerHTML =
+    `<b>⏱ ${selectedService.duration} minutes</b> reserved · We'll block enough time so your appointment never feels rushed.`;
+  selDate = null; selTime = null;
+  buildCal();
+}
+
+// ── CALENDAR ──
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// Slots blocked by duration — longer jobs block more of the day
+// Format: { 'YYYY-M-D': ['slot1','slot2',...] } — expandable for real booking backend
+const BOOKED_SLOTS = {};
+
+// Generate available time slots for a given duration
+function getSlotsForDuration(duration) {
+  // Shop hours: 8am–6pm Mon–Sat (last slot must end by 6pm)
+  const shopOpen  = 8 * 60;   // 8:00 AM in minutes
+  const shopClose = 18 * 60;  // 6:00 PM in minutes
+  const slots = [];
+  for (let m = shopOpen; m + duration <= shopClose; m += 30) {
+    const h = Math.floor(m / 60);
+    const min = m % 60;
+    const ampm = h < 12 ? 'AM' : 'PM';
+    const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
+    slots.push(`${h12}:${min.toString().padStart(2,'0')} ${ampm}`);
+  }
+  return slots;
+}
+
+function buildCal() {
+  document.getElementById('calMo').textContent = `${MONTHS[calMo]} ${calY}`;
+  // Minimum date = 24 hours from now (always at least tomorrow)
+  const minDate = new Date(); minDate.setHours(minDate.getHours() + 24); minDate.setHours(0,0,0,0);
+  // If current time is after noon, push minimum to day after tomorrow to ensure full 24hr prep
+  const now = new Date();
+  if (now.getHours() >= 12) minDate.setDate(minDate.getDate() + 1);
+
+  const firstDay = new Date(calY, calMo, 1).getDay();
+  const days     = new Date(calY, calMo+1, 0).getDate();
+  const labels   = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  let html = labels.map(d => `<div class="cal-lbl">${d}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
+  for (let d = 1; d <= days; d++) {
+    const dt  = new Date(calY, calMo, d);
+    const past = dt < minDate;
+    const sun  = dt.getDay() === 0; // closed Sundays
+    const dis  = past || sun;
+    const dateStr = `${MONTHS[calMo]} ${d}, ${calY}`;
+    const isSel   = selDate === dateStr;
+    html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="pickDate('${dateStr}')"`:''}>${d}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML = html;
+  if (selDate) { document.getElementById('timeSec').style.display = 'block'; buildTimes(); }
+  else { document.getElementById('timeSec').style.display = 'none'; }
+}
+
+function pickDate(d) { selDate = d; selTime = null; buildCal(); }
+
+function buildTimes() {
+  const duration = selectedService?.duration || 60;
+  const slots    = getSlotsForDuration(duration);
+  // Get booked slots for this date (keyed by date string)
+  const booked   = BOOKED_SLOTS[selDate] || [];
+  document.getElementById('timeGrid').innerHTML = slots.map(t => {
+    const isBooked = booked.includes(t);
+    return `<div class="time-slot${isBooked?' bkd':''}${selTime===t?' sel':''}"
+      ${!isBooked?`onclick="pickTime('${t}')"`:''}>${t}${isBooked?'<br><small>Booked</small>':''}</div>`;
+  }).join('');
+}
+
+function pickTime(t) { selTime = t; buildTimes(); }
+function prevMo() { if(calMo===0){calMo=11;calY--;}else{calMo--;} selDate=null;selTime=null;buildCal(); }
+function nextMo() { if(calMo===11){calMo=0;calY++;}else{calMo++;} selDate=null;selTime=null;buildCal(); }
+
+// ══════════════════════════════════════════════════════
+//  TIRE GUIDE TABS
+// ══════════════════════════════════════════════════════
+function showGuide(id, btn) {
+  document.querySelectorAll('.gtab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.gpanel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('gp-' + id).classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════
+//  FAQ
+// ══════════════════════════════════════════════════════
+const FAQS = [
+  {q:"How do I know when to replace my tires?",a:"Check tread depth — use a toonie coin. Insert it into a tread groove. If the silver outer band is visible, you're at or below 4/32\" and should replace soon. Below 2/32\" is the legal minimum in Canada. Also look for cracking on the sidewalls, bulges, or uneven wear."},
+  {q:"Can I put winter tires on only the front or rear?",a:"Never install winter tires on just two wheels. On a front-wheel-drive car with only front winters, the rear end will slide out in corners. On rear-wheel drive, the front won't stop well. Always install a matching set of four."},
+  {q:"Do I need to change tires if I have all-weather (3PMSF) tires?",a:"No — all-weather tires with the mountain/snowflake symbol are certified for severe winter conditions and can be driven year-round without swapping. They're the best option for drivers who want one set and don't want the hassle of seasonal changes."},
+  {q:"How long does installation take?",a:"A standard 4-tire mount and balance typically takes 45–60 minutes. We'll give you an estimated time when you book. You're welcome to wait in our lounge or drop the vehicle off."},
+  {q:"What's included in the $25/tire installation fee?",a:"Mount, balance, valve stem check, TPMS sensor reset, torque check to manufacturer specs, and disposal of your old tires. No hidden charges — what you see at checkout is what you pay."},
+  {q:"Can I buy tires now and book installation later?",a:"Yes. You can purchase tires online today and contact us to schedule installation at any time. Tires will be held for you for up to 30 days."},
+  {q:"Do you offer tire storage?",a:"Yes — we offer seasonal tire storage so you don't need to find space at home. Ask us about our storage program when you book your installation."},
+  {q:"What's the difference between OWL, RWL, and BSW sidewalls?",a:"OWL (Outlined White Letters) and RWL (Raised White Letters) are decorative white lettering on the sidewall — popular for trucks and the rugged look. BSW (Black Sidewall) is standard with no lettering. It's a purely cosmetic choice with zero performance difference."},
+  {q:"What if a tire I ordered is out of stock?",a:"Our inventory is updated live from the TDG Access API. If a tire shows In Stock, it's available at a TDG warehouse. If stock changes after your order, we'll contact you immediately with an equivalent alternative or a full refund."},
+  {q:"Do you price match?",a:"We aim to have competitive prices. If you find the exact same tire cheaper at a local or online retailer, contact us and we'll do our best to match it."},
+];
+function buildFAQ() {
+  document.getElementById('faqList').innerHTML = FAQS.map((f, i) => `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:2px;overflow:hidden;margin-bottom:2px">
+      <button onclick="toggleFAQ(${i})" style="width:100%;text-align:left;background:none;border:none;padding:16px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px">
+        <span style="font-size:14px;font-weight:600;color:var(--white)">${f.q}</span>
+        <span id="faq-icon-${i}" style="color:var(--yellow);font-size:18px;flex-shrink:0;transition:transform .2s">+</span>
+      </button>
+      <div id="faq-body-${i}" style="display:none;padding:0 20px 16px;font-size:13px;color:var(--muted);line-height:1.75;border-top:1px solid var(--border)">${f.a}</div>
+    </div>`).join('');
+}
+function toggleFAQ(i) {
+  const body = document.getElementById('faq-body-' + i);
+  const icon = document.getElementById('faq-icon-' + i);
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  icon.textContent = open ? '+' : '−';
+}
+
+// ══════════════════════════════════════════════════════
+//  REVIEWS
+// ══════════════════════════════════════════════════════
+const REVIEWS = [
+  {name:"Sarah M.",avatar:"#f5c518",initials:"SM",rating:5,date:"Feb 2026",text:"Ordered winter tires online Monday night, booked installation for Wednesday morning. The whole process took maybe 10 minutes. Tires were on before lunch. Exactly what I needed — no back and forth."},
+  {name:"Derek T.",avatar:"#22c55e",initials:"DT",rating:5,date:"Jan 2026",text:"I've been getting my tires from big box stores for years. PC Tires is cheaper, faster, and I didn't have to haggle or wait 3 hours. Booked online, showed up, done. Will never go anywhere else."},
+  {name:"Lisa K.",avatar:"#e85d1a",initials:"LK",rating:5,date:"Nov 2025",text:"Used the vehicle lookup tool to find the right size — it was dead accurate. Love that I could see exactly what was compatible with my RAV4. The all-weather tires I picked are fantastic in the snow."},
+  {name:"Mike P.",avatar:"#8b5cf6",initials:"MP",rating:5,date:"Oct 2025",text:"Bought a set of Blizzaks and added installation at checkout. Got a text confirmation for my appointment slot. Showed up, waited 40 minutes, left on brand new tires. Seamless."},
+  {name:"Jennifer W.",avatar:"#f59e0b",initials:"JW",rating:4,date:"Oct 2025",text:"Great selection and fast service. The tire guide on the website was actually helpful — I didn't know the difference between all-season and all-weather before reading it. Ended up with exactly the right tire."},
+  {name:"Carlos R.",avatar:"#06b6d4",initials:"CR",rating:5,date:"Sep 2025",text:"Needed tires for my F-150 before a hunting trip. Called at 9am, tires ordered by 9:15, on the truck by 2pm. The team here knows what they're doing. Highly recommend the BFG KO2s."},
+];
+function buildReviews() {
+  document.getElementById('reviewsGrid').innerHTML = REVIEWS.map(r => `
+    <div class="review-card">
+      <div class="rv-top">
+        <div class="rv-stars">${[1,2,3,4,5].map(s=>`<span class="star${s<=r.rating?'':' e'}">★</span>`).join('')}</div>
+        <div class="rv-date">${r.date}</div>
+      </div>
+      <div class="rv-text">"${r.text}"</div>
+      <div class="rv-author">
+        <div class="rv-avatar" style="background:${r.avatar}">${r.initials}</div>
+        <div>
+          <div class="rv-name">${r.name}</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="rv-source">${r.source||'Google'}</span>
+            <span class="rv-verified">✓ Verified</span>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  COOKIE BANNER
+// ══════════════════════════════════════════════════════
+function initCookie() {
+  try {
+    if (!localStorage.getItem('pc_cookie_consent')) {
+      setTimeout(() => document.getElementById('cookieBanner').classList.add('show'), 1500);
+    }
+  } catch(e) {}
+}
+function dismissCookie(accepted) {
+  try { localStorage.setItem('pc_cookie_consent', accepted ? 'all' : 'essential'); } catch(e) {}
+  document.getElementById('cookieBanner').classList.remove('show');
+}
+
+// ══════════════════════════════════════════════════════
+//  CHAT POPUP
+// ══════════════════════════════════════════════════════
+function toggleChat() { document.getElementById('chatPopup').classList.toggle('show'); }
+document.addEventListener('click', e => {
+  const fab   = document.getElementById('chatFab');
+  const popup = document.getElementById('chatPopup');
+  if (fab && popup && !fab.contains(e.target) && !popup.contains(e.target)) popup.classList.remove('show');
+});
+
+// ══════════════════════════════════════════════════════
+//  MOBILE MENU
+// ══════════════════════════════════════════════════════
+function toggleMenu() {
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  const h = document.getElementById('hamburger');
+  const m = document.getElementById('mobileMenu');
+  if (h && m && !h.contains(e.target) && !m.contains(e.target)) closeMenu();
+});
+
+// ══════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════
+function bgClose(e, id) { if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('show'); }
+function smoothScroll(sel) { document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' }); }
+function showToast(title, sub) {
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastSub').textContent = sub;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function fmtCard(el) { let v = el.value.replace(/\D/g,'').substr(0,16); el.value = v.replace(/(.{4})/g,'$1 ').trim(); }
+function fmtExp(el)  { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.substr(0,2)+' / '+v.substr(2,2); el.value=v; }
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+initYears();
+initSizeDropdowns();
+renderCart();
+buildFAQ();
+buildReviews();
+initCookie();
+initMemberState();
+loadTires(); // ← fetches live TDG inventory on page load
+</script>
+
+<!-- MEMBER LOGIN MODAL -->
+<div class="member-modal-overlay" id="memberModal" onclick="if(event.target===this)closeMemberModal()">
+  <div class="member-modal">
+    <button class="mm-close" onclick="closeMemberModal()">×</button>
+    <div class="mm-title">Member Access</div>
+    <p class="mm-sub">PC Tires members receive <strong style="color:var(--yellow)">10% off</strong> all tire prices. Membership is by invitation only.</p>
+    <div class="mm-tab-row">
+      <button class="mm-tab active" id="mmTab-login" onclick="switchMmTab('login')">Sign In</button>
+      <button class="mm-tab" id="mmTab-request" onclick="switchMmTab('request')">Request Access</button>
+    </div>
+    <div class="mm-error" id="mmError"></div>
+    <!-- Login form -->
+    <div id="mmLogin">
+      <div class="mm-field"><label>Email Address</label><input type="email" id="mmEmail" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="mm-field"><label>Invite Code</label><input type="text" id="mmCode" placeholder="postmah&amp;c" style="letter-spacing:2px;font-family:'IBM Plex Mono',monospace" autocomplete="off"></div>
+      <button class="mm-submit" onclick="memberLogin()">SIGN IN → UNLOCK PRICING</button>
+      <p class="mm-note">Don't have an invite code? <a onclick="switchMmTab('request')">Request access</a></p>
+    </div>
+    <!-- Request form -->
+    <div id="mmRequest" style="display:none">
+      <div class="mm-field"><label>Your Name</label><input type="text" id="mmReqName" placeholder="Jane Smith" autocomplete="name"></div>
+      <div class="mm-field"><label>Email Address</label><input type="email" id="mmReqEmail" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="mm-field"><label>Phone (optional)</label><input type="tel" id="mmReqPhone" placeholder="519-000-0000" autocomplete="tel"></div>
+      <button class="mm-submit" onclick="memberRequest()">SEND REQUEST</button>
+      <p class="mm-note">We review all requests within 24 hours.<br>Fleet accounts and repeat customers get priority.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

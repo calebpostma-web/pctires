@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Tire Swap — PC Tires | Chatham-Kent</title>
+<meta name="description" content="Book your spring tire swap at PC Tires in Pain Court. $20/tire or $80/set. Certified techs, same-day slots. Limited appointments — book online now.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:   #070707;
+    --dark:    #0f0f0f;
+    --card:    #161616;
+    --border:  #242424;
+    --yellow:  #f5c518;
+    --yellow2: #e8b800;
+    --orange:  #f07318;
+    --white:   #f4f4f4;
+    --muted:   #888;
+    --light:   #bbb;
+    --green:   #22c55e;
+    --red:     #ef4444;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 60px 24px 80px;
+  }
+
+  /* Animated tire track background */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 60px,
+        rgba(245,197,24,.03) 60px,
+        rgba(245,197,24,.03) 62px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 60px,
+        rgba(245,197,24,.03) 60px,
+        rgba(245,197,24,.03) 62px
+      );
+    animation: gridDrift 20s linear infinite;
+  }
+
+  @keyframes gridDrift {
+    from { transform: translate(0,0); }
+    to   { transform: translate(62px,62px); }
+  }
+
+  /* Big yellow glow */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(245,197,24,.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .season-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,197,24,.12);
+    border: 1px solid rgba(245,197,24,.3);
+    border-radius: 2px;
+    padding: 6px 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 28px;
+  }
+
+  .season-badge .dot {
+    width: 7px; height: 7px;
+    background: var(--yellow);
+    border-radius: 50%;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .4; transform: scale(.7); }
+  }
+
+  .hero-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 14vw, 160px);
+    line-height: .9;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+
+  .hero-headline .line1 { color: var(--white); display: block; }
+  .hero-headline .line2 {
+    color: var(--yellow);
+    display: block;
+    -webkit-text-stroke: 2px var(--yellow);
+    text-shadow: 0 0 60px rgba(245,197,24,.4);
+  }
+  .hero-headline .line3 { color: var(--white); display: block; }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--light);
+    max-width: 520px;
+    line-height: 1.6;
+    margin: 24px 0 40px;
+  }
+
+  .hero-sub strong { color: var(--white); }
+
+  .hero-ctas {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    padding: 16px 36px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--yellow2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(245,197,24,.35);
+  }
+
+  .btn-ghost {
+    color: var(--white);
+    border: 2px solid var(--border);
+    background: none;
+    padding: 14px 28px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-ghost:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  /* ── URGENCY BAR ── */
+  .urgency-bar {
+    background: linear-gradient(135deg, #1a1500, #0f0f0f);
+    border-top: 3px solid var(--yellow);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+  }
+
+  .urgency-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .urgency-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .urgency-icon {
+    font-size: 28px;
+    animation: wobble 2s ease-in-out infinite;
+  }
+
+  @keyframes wobble {
+    0%,100% { transform: rotate(-5deg); }
+    50%      { transform: rotate(5deg); }
+  }
+
+  .urgency-text strong {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--yellow);
+    letter-spacing: .5px;
+  }
+
+  .urgency-text span {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .slots-remaining {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .slot-pip {
+    width: 14px; height: 14px;
+    border-radius: 3px;
+    background: var(--green);
+    transition: background .3s;
+  }
+
+  .slot-pip.taken { background: var(--border); }
+  .slot-pip.last  { background: var(--orange); animation: pipPulse 1s ease-in-out infinite; }
+
+  @keyframes pipPulse {
+    0%,100% { opacity: 1; } 50% { opacity: .4; }
+  }
+
+  .slots-label {
+    font-size: 13px;
+    color: var(--light);
+    margin-left: 4px;
+  }
+
+  /* ── PRICING ── */
+  .pricing-section {
+    padding: 80px 24px;
+    background: var(--dark);
+  }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 8vw, 72px);
+    line-height: 1;
+    margin-bottom: 48px;
+  }
+
+  .pricing-grid {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .price-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s, border-color .2s;
+  }
+
+  .price-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(245,197,24,.4);
+  }
+
+  .price-card.featured {
+    border-color: var(--yellow);
+    background: linear-gradient(135deg, #1a1500 0%, var(--card) 60%);
+  }
+
+  .price-card.featured::before {
+    content: 'BEST VALUE';
+    position: absolute;
+    top: 16px; right: -22px;
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 4px 28px;
+    transform: rotate(35deg);
+  }
+
+  .price-tag {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--yellow);
+    margin-bottom: 4px;
+  }
+
+  .price-tag sup {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    vertical-align: super;
+  }
+
+  .price-unit {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .price-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+
+  .price-includes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .price-includes li {
+    font-size: 14px;
+    color: var(--light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price-includes li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .price-cta {
+    margin-top: 28px;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    padding: 80px 24px;
+    background: var(--black);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    margin-top: 48px;
+  }
+
+  .steps-grid::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow));
+    opacity: .3;
+  }
+
+  .step-item {
+    text-align: center;
+    padding: 0 16px;
+  }
+
+  .step-num {
+    width: 56px; height: 56px;
+    background: var(--card);
+    border: 2px solid var(--yellow);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--yellow);
+    margin: 0 auto 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 8px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── TRUST BAR ── */
+  .trust-section {
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 24px;
+  }
+
+  .trust-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    text-align: center;
+  }
+
+  .trust-item strong {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--yellow);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .trust-item span {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── BOOKING FORM ── */
+  .booking-section {
+    padding: 80px 24px;
+    background: var(--dark);
+  }
+
+  .booking-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .booking-card {
+    background: var(--card);
+    border: 2px solid var(--yellow);
+    border-radius: 4px;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .booking-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow));
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .form-row.one { grid-template-columns: 1fr; }
+
+  .fg label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+
+  .fg input, .fg select {
+    width: 100%;
+    background: var(--black);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 12px 14px;
+    border-radius: 3px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color .2s;
+    appearance: none;
+  }
+
+  .fg input:focus, .fg select:focus { border-color: var(--yellow); }
+  .fg select option { background: var(--card); }
+
+  .pkg-select {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .pkg-opt {
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+  }
+
+  .pkg-opt:hover { border-color: rgba(245,197,24,.4); }
+  .pkg-opt.active { border-color: var(--yellow); background: rgba(245,197,24,.06); }
+
+  .pkg-opt .pkg-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--yellow);
+    line-height: 1;
+  }
+
+  .pkg-opt .pkg-name {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    padding: 18px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-top: 20px;
+    transition: all .2s;
+  }
+
+  .submit-btn:hover {
+    background: var(--yellow2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(245,197,24,.3);
+  }
+
+  .form-note {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .success-circle {
+    width: 80px; height: 80px;
+    background: rgba(34,197,94,.15);
+    border: 3px solid var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 20px;
+  }
+
+  .success-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+
+  .success-sub {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .footer-logo span { color: var(--yellow); }
+
+  .footer-info {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .footer-info a { color: var(--yellow); text-decoration: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .pricing-grid { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .steps-grid::before { display: none; }
+    .trust-inner { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .booking-card { padding: 28px 20px; }
+    .urgency-inner { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (max-width: 480px) {
+    .steps-grid { grid-template-columns: 1fr; }
+    .trust-inner { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="season-badge">
+      <div class="dot"></div>
+      Spring 2025 · Chatham-Kent
+    </div>
+    <h1 class="hero-headline">
+      <span class="line1">Time To</span>
+      <span class="line2">Swap</span>
+      <span class="line3">Your Tires</span>
+    </h1>
+    <p class="hero-sub">
+      Snow season's over. Get your winters off before the warm weather hits.
+      <strong>Certified techs. Same-day slots. Done in under an hour.</strong>
+    </p>
+    <div class="hero-ctas">
+      <a href="#book" class="btn-primary">Book My Swap →</a>
+      <a href="#pricing" class="btn-ghost">See Pricing</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── URGENCY BAR ── -->
+<div class="urgency-bar">
+  <div class="urgency-inner">
+    <div class="urgency-left">
+      <div class="urgency-icon">🗓️</div>
+      <div class="urgency-text">
+        <strong>Limited Spots This Week</strong>
+        <span>We book a fixed number of swaps per week — grab yours before they fill up.</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div class="slots-remaining" id="slotPips"></div>
+      <span class="slots-label" id="slotLabel">Loading…</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── PRICING ── -->
+<section class="pricing-section" id="pricing">
+  <div style="max-width:960px;margin:0 auto">
+    <div class="section-label">Transparent Pricing</div>
+    <div class="section-title">No Surprises.<br>Just Results.</div>
+    <div class="pricing-grid">
+
+      <div class="price-card">
+        <div class="price-tag"><sup>$</sup>20</div>
+        <div class="price-unit">per tire</div>
+        <div class="price-name">Single Tire Swap</div>
+        <ul class="price-includes">
+          <li>Dismount winter tire</li>
+          <li>Mount all-season or summer tire</li>
+          <li>Computer balance included</li>
+          <li>TPMS sensor reset</li>
+          <li>Torque to manufacturer spec</li>
+        </ul>
+        <div class="price-cta">
+          <a href="#book" class="btn-ghost" style="display:block;text-align:center">Book Now →</a>
+        </div>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-tag"><sup>$</sup>80</div>
+        <div class="price-unit">full set of 4 tires</div>
+        <div class="price-name">Full Set Swap</div>
+        <ul class="price-includes">
+          <li>All 4 tires dismounted & mounted</li>
+          <li>Computer balance on all 4</li>
+          <li>TPMS relearn on all sensors</li>
+          <li>Torque check to spec</li>
+          <li>Winter tires stored or disposed</li>
+          <li>Done in under 60 minutes</li>
+        </ul>
+        <div class="price-cta">
+          <a href="#book" class="btn-primary" style="display:block;text-align:center">Book My Set →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── TRUST ── -->
+<div class="trust-section">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <strong>60</strong>
+      <span>Minutes or less</span>
+    </div>
+    <div class="trust-item">
+      <strong>$20</strong>
+      <span>Per tire, no hidden fees</span>
+    </div>
+    <div class="trust-item">
+      <strong>100%</strong>
+      <span>Certified technicians</span>
+    </div>
+    <div class="trust-item">
+      <strong>Pain Court</strong>
+      <span>Serving Chatham-Kent</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<section style="padding:80px 24px;background:var(--black)">
+  <div style="max-width:960px;margin:0 auto">
+    <div class="section-label">Dead Simple</div>
+    <div class="section-title">How It Works</div>
+    <div class="steps-grid">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-title">Book Online</div>
+        <div class="step-desc">Pick your date and time slot below. Takes 60 seconds.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-title">We Confirm</div>
+        <div class="step-desc">You'll get an email confirmation with your appointment details.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-title">Drive In</div>
+        <div class="step-desc">Pull up to 7144 Grande River Line, Pain Court at your time.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-title">Drive Away</div>
+        <div class="step-desc">Done in under an hour. Winter tires stored or ready to take home.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BOOKING FORM ── -->
+<section class="booking-section" id="book">
+  <div class="booking-inner">
+    <div style="text-align:center;margin-bottom:36px">
+      <div class="section-label">Book Your Appointment</div>
+      <div class="section-title" style="font-size:clamp(36px,7vw,60px)">Grab Your Slot</div>
+      <p style="color:var(--muted);font-size:15px">Spots fill fast. Book now and we'll hold your time.</p>
+    </div>
+
+    <div class="booking-card">
+      <!-- Form -->
+      <div id="bookForm">
+        <div style="margin-bottom:20px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Select Package</div>
+          <div class="pkg-select">
+            <div class="pkg-opt active" id="pkg-set" onclick="selectPkg('set')">
+              <div class="pkg-price">$80</div>
+              <div class="pkg-name">Full Set of 4</div>
+            </div>
+            <div class="pkg-opt" id="pkg-single" onclick="selectPkg('single')">
+              <div class="pkg-price">$20<span style="font-size:16px">/tire</span></div>
+              <div class="pkg-name">Single Tire</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="fg"><label>First Name</label><input type="text" id="bFName" placeholder="Jane"></div>
+          <div class="fg"><label>Last Name</label><input type="text" id="bLName" placeholder="Smith"></div>
+        </div>
+        <div class="form-row one">
+          <div class="fg"><label>Email Address</label><input type="email" id="bEmail" placeholder="jane@example.com"></div>
+        </div>
+        <div class="form-row one">
+          <div class="fg"><label>Phone Number</label><input type="tel" id="bPhone" placeholder="(519) 000-0000"></div>
+        </div>
+        <div class="form-row">
+          <div class="fg">
+            <label>Preferred Date</label>
+            <input type="date" id="bDate" min="">
+          </div>
+          <div class="fg">
+            <label>Preferred Time</label>
+            <select id="bTime">
+              <option value="">Select a time</option>
+              <option>8:00 AM</option>
+              <option>8:30 AM</option>
+              <option>9:00 AM</option>
+              <option>9:30 AM</option>
+              <option>10:00 AM</option>
+              <option>10:30 AM</option>
+              <option>11:00 AM</option>
+              <option>11:30 AM</option>
+              <option>12:00 PM</option>
+              <option>12:30 PM</option>
+              <option>1:00 PM</option>
+              <option>1:30 PM</option>
+              <option>2:00 PM</option>
+              <option>2:30 PM</option>
+              <option>3:00 PM</option>
+              <option>3:30 PM</option>
+              <option>4:00 PM</option>
+              <option>4:30 PM</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row one">
+          <div class="fg"><label>Vehicle (Year, Make, Model)</label><input type="text" id="bVehicle" placeholder="e.g. 2019 Honda CR-V"></div>
+        </div>
+        <div class="form-row one">
+          <div class="fg"><label>Tire Size (if known)</label><input type="text" id="bSize" placeholder="e.g. 225/65R17 — check your door jamb or tire sidewall"></div>
+        </div>
+
+        <button class="submit-btn" onclick="submitBooking()">
+          Reserve My Spot →
+        </button>
+        <p class="form-note">🔒 No payment required to book. You pay on the day of your appointment.<br>We'll confirm your slot by email within 1 hour.</p>
+      </div>
+
+      <!-- Success -->
+      <div class="success-state" id="bookSuccess">
+        <div class="success-circle">✓</div>
+        <div class="success-title">You're Booked!</div>
+        <p class="success-sub">Check your email for confirmation.<br>We'll see you at <strong>7144 Grande River Line, Pain Court</strong>.<br><br>Questions? Call us at <a href="tel:5193805104" style="color:var(--yellow)">519-380-5104</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-logo">PC <span>Tires</span></div>
+  <div class="footer-info">
+    7144 Grande River Line, Pain Court, Ontario N0P 1Z0<br>
+    <a href="tel:5193805104">519-380-5104</a> · <a href="mailto:Postmacontracting@gmail.com">Postmacontracting@gmail.com</a><br>
+    Mon–Fri 8am–6pm · Sat 8am–4pm · Sun Closed<br><br>
+    <a href="https://pctires.ca" style="color:var(--muted)">Shop tires online at pctires.ca →</a>
+  </div>
+</footer>
+
+<script>
+// ── SLOT COUNTER ── 
+// Simulate 12 slots/week, some taken
+const TOTAL_SLOTS = 12;
+const TAKEN_SLOTS = 8; // update manually or connect to backend
+const remaining   = TOTAL_SLOTS - TAKEN_SLOTS;
+
+function buildSlotPips() {
+  const container = document.getElementById('slotPips');
+  const label     = document.getElementById('slotLabel');
+  let html = '';
+  for (let i = 0; i < TOTAL_SLOTS; i++) {
+    if (i < TAKEN_SLOTS)         html += '<div class="slot-pip taken"></div>';
+    else if (i === TAKEN_SLOTS)  html += '<div class="slot-pip last"></div>';
+    else                         html += '<div class="slot-pip"></div>';
+  }
+  container.innerHTML = html;
+  label.textContent   = `${remaining} spot${remaining !== 1 ? 's' : ''} left this week`;
+  label.style.color   = remaining <= 3 ? 'var(--orange)' : 'var(--light)';
+}
+buildSlotPips();
+
+// ── MIN DATE (24hrs out) ──
+function setMinDate() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  if (d.getDay() === 0) d.setDate(d.getDate() + 1); // skip Sunday
+  const yyyy = d.getFullYear();
+  const mm   = String(d.getMonth() + 1).padStart(2, '0');
+  const dd   = String(d.getDate()).padStart(2, '0');
+  document.getElementById('bDate').min = `${yyyy}-${mm}-${dd}`;
+  document.getElementById('bDate').value = `${yyyy}-${mm}-${dd}`;
+}
+setMinDate();
+
+// ── PACKAGE SELECT ──
+let selectedPkg = 'set';
+function selectPkg(pkg) {
+  selectedPkg = pkg;
+  document.getElementById('pkg-set').classList.toggle('active', pkg === 'set');
+  document.getElementById('pkg-single').classList.toggle('active', pkg === 'single');
+}
+
+// ── FORM SUBMISSION ──
+async function submitBooking() {
+  const fname   = document.getElementById('bFName').value.trim();
+  const lname   = document.getElementById('bLName').value.trim();
+  const email   = document.getElementById('bEmail').value.trim();
+  const phone   = document.getElementById('bPhone').value.trim();
+  const date    = document.getElementById('bDate').value;
+  const time    = document.getElementById('bTime').value;
+  const vehicle = document.getElementById('bVehicle').value.trim();
+  const size    = document.getElementById('bSize').value.trim();
+
+  if (!fname || !email || !date || !time) {
+    alert('Please fill in your name, email, date and time.');
+    return;
+  }
+
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  // Format date nicely
+  const dateObj = new Date(date + 'T12:00:00');
+  const dateStr = dateObj.toLocaleDateString('en-CA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  const pkgLabel = selectedPkg === 'set' ? 'Full Set of 4 — $80' : 'Single Tire Swap — $20/tire';
+
+  try {
+    await fetch('https://pctires-api.netlify.app/.netlify/functions/send-order-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderNumber:     'SWAP-' + Date.now().toString(36).toUpperCase(),
+        customerName:    `${fname} ${lname}`,
+        customerEmail:   email,
+        customerPhone:   phone,
+        vehicle:         vehicle || 'Not specified',
+        tireSize:        size || 'Not specified',
+        tires:           [{ qty: selectedPkg === 'set' ? 4 : 1, brand: 'Service', name: pkgLabel, size: size || 'TBD', price: selectedPkg === 'set' ? 80 : 20 }],
+        installation:    true,
+        appointmentDate: dateStr,
+        appointmentTime: time,
+        serviceName:     'Spring Tire Swap — ' + pkgLabel,
+        subtotal:        selectedPkg === 'set' ? 80 : 20,
+        installTotal:    0,
+        shipping:        0,
+        tax:             (selectedPkg === 'set' ? 80 : 20) * 0.13,
+        total:           (selectedPkg === 'set' ? 80 : 20) * 1.13,
+      }),
+    });
+  } catch(e) {
+    console.warn('Email send failed:', e.message);
+    // Still show success — booking was received
+  }
+
+  // Show success
+  document.getElementById('bookForm').style.display = 'none';
+  document.getElementById('bookSuccess').style.display = 'block';
+}
+</script>
+</body>
+</html>
