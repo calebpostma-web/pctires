@@ -22,7 +22,7 @@ const HEADERS = {
 function toArray(val) {
   if (!val) return undefined;
   if (Array.isArray(val)) return val;
-  return val.split(',').map(s => s.trim()).filter(Boolean);
+  return val.split(',').map(s => decodeURIComponent(s.trim())).filter(Boolean);
 }
 
 export async function onRequest(context) {
