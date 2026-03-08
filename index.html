@@ -2704,9 +2704,10 @@ function addToCart(itemNumber, itemType) {
   const ex = cart.find(c => c.itemNumber === itemNumber);
   const priceToCharge = displayedPrice(item);
   if (ex) ex.qty++;
-  else cart.push({ ...item, price: priceToCharge, qty: 1, install: true, itemType: itemType || 'tire' });
+  else cart.push({ ...item, price: priceToCharge, qty: 4, install: true, itemType: itemType || 'tire' });
   updBadge();
-  showToast(item.brand + ' ' + item.name, 'Added to your cart');
+  const qty = ex ? ex.qty : 4;
+  showToast(item.brand + ' ' + item.name, `${qty} tires added to your cart`);
 }
 
 function removeFromCart(itemNumber) { cart = cart.filter(c => c.itemNumber !== itemNumber); updBadge(); renderCart(); }
