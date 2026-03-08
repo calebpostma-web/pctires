@@ -1267,7 +1267,7 @@ function memberRequest() {
 //  API HELPER
 // ══════════════════════════════════════════════════════
 async function tdgFetch(path, body = null) {
-  const res = await fetch(`${TDG.BACKEND_URL}/.netlify/functions/tdg-proxy`, {
+  const res = await fetch(`${TDG.BACKEND_URL}/api/tdg-proxy`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ path, payload: body || {} }),
