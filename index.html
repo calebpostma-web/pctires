@@ -1088,9 +1088,9 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  CONFIG
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const TDG = {
   BASE_URL:  'https://www.tdgaccess.ca/api',
   API_KEY:   'rst715Wr18hFpHpbi346TGuMLBBQDZZbF5lHZQSi27hfpLGey3TH3YRHYWWPJRyi7rkx',
@@ -1103,9 +1103,9 @@ const TDG = {
   SEASON_LABEL: { 1:'Summer', 2:'All-Season', 3:'All-Weather', 4:'Winter' },
 };
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  MOCK TIRE INVENTORY (TDG fallback)
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const MOCK_TIRES = [
   {id:1,tdgId:1,itemNumber:'MCH-DEF-TH-21555R17',partNumber:'DEF-TH',brand:'Michelin',name:'Defender T+H',size:'215/55R17',type:'allseason',price:189,msrp:189,speed:'H',loadIndex:'94',sidewall:'Black Sidewall',season:'All-Season',runFlat:false,evCompat:false,serviceType:'P-Passenger',map:null,stock:'in',qtyAvailable:48,locations:[]},
   {id:2,tdgId:2,itemNumber:'BRD-BWS90-22560R17',partNumber:'BWS90',brand:'Bridgestone',name:'Blizzak WS90',size:'225/60R17',type:'winter',price:219,msrp:219,speed:'T',loadIndex:'99',sidewall:'Black Sidewall',season:'Winter',runFlat:false,evCompat:false,serviceType:'P-Passenger',stock:'in',qtyAvailable:32,locations:[]},
@@ -1125,9 +1125,9 @@ const MOCK_TIRES = [
   {id:16,tdgId:16,itemNumber:'BRD-ECO32-19565R15',partNumber:'ECO32',brand:'Bridgestone',name:'Ecopia EP422 Plus',size:'195/65R15',type:'allseason',price:129,msrp:129,speed:'H',loadIndex:'91',sidewall:'Black Sidewall',season:'All-Season',runFlat:false,evCompat:true,serviceType:'P-Passenger',stock:'in',qtyAvailable:40,locations:[]},
 ];
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  MOCK WHEEL INVENTORY (TDG fallback)
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const MOCK_WHEELS = [
   {id:'W1',tdgId:'W1',itemNumber:'IKO-CRANK-17-5x114',partNumber:'CRANK17',brand:'Ikon',name:'Crank',category:'alloy',finish:'Gloss Black',boltPattern:'5x114.3',diameter:17,width:7.5,offset:40,hubBore:73.1,price:189,msrp:219,stock:'in',qtyAvailable:16,imageUrl:null},
   {id:'W2',tdgId:'W2',itemNumber:'MGL-RAZOR-18-5x114',partNumber:'RAZOR18',brand:'Magellan',name:'Razor',category:'alloy',finish:'Machined w/ Black',boltPattern:'5x114.3',diameter:18,width:8.0,offset:38,hubBore:73.1,price:225,msrp:259,stock:'in',qtyAvailable:12,imageUrl:null},
@@ -1143,9 +1143,9 @@ const MOCK_WHEELS = [
   {id:'W12',tdgId:'W12',itemNumber:'IKO-MATRIX-17-5x108',partNumber:'MATRIX17',brand:'Ikon',name:'Matrix',category:'alloy',finish:'Machined Silver',boltPattern:'5x108',diameter:17,width:7.5,offset:40,hubBore:63.4,price:199,msrp:229,stock:'in',qtyAvailable:14,imageUrl:null},
 ];
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  WHEEL SPECS DATA
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const BOLT_PATTERNS = [
   '4x98','4x100','4x108','4x114.3',
   '5x98','5x100','5x105','5x108','5x110','5x112','5x114.3','5x115','5x120','5x127','5x130','5x150',
@@ -1180,9 +1180,9 @@ const OEM_BOLT_PATTERNS = {
   "Volkswagen Jetta":     { bolt:'5x112',   bore:57.1,  dia:17 },
 };
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  PRICING ENGINE
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function retailPrice(item) {
   let price = item.price * TDG.MARKUP;
   if (item.map && item.map > price) price = item.map;
@@ -1191,9 +1191,9 @@ function retailPrice(item) {
 function memberPrice(item) { return Math.round(retailPrice(item) * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100; }
 function displayedPrice(item) { return currentMember ? memberPrice(item) : retailPrice(item); }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  MEMBER SYSTEM
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const MEMBER_CODE = 'postmah&c';
 const APPROVED_MEMBERS = {};
 let currentMember = null;
@@ -1263,9 +1263,9 @@ function memberRequest() {
   showToast('Request sent!', "We'll review and send your invite code within 24 hours");
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  API HELPER
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 async function tdgFetch(path, body = null) {
   const res = await fetch(`${TDG.BACKEND_URL}/.netlify/functions/tdg-proxy`, {
     method: 'POST',
@@ -1276,9 +1276,9 @@ async function tdgFetch(path, body = null) {
   return res.json();
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  STATE
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 let allTires      = [];
 let filteredTires = [];
 let allWheels     = [];
@@ -1292,9 +1292,9 @@ let selDate = null, selTime = null, tdgQuote = null;
 let calY, calMo;
 const now = new Date(); calY = now.getFullYear(); calMo = now.getMonth();
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  TIRE NORMALISATION
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function normaliseTire(product, inventory) {
   const sp = product.specifications || {};
   const inv = inventory || {};
@@ -1322,9 +1322,9 @@ function normaliseTire(product, inventory) {
   };
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  WHEEL NORMALISATION (TDG Wheel products)
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function normaliseWheel(product, inventory) {
   const sp  = product.specifications || {};
   const inv = inventory || {};
@@ -1352,9 +1352,9 @@ function normaliseWheel(product, inventory) {
   };
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  CATALOG TYPE TOGGLE
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function switchCatalogType(mode) {
   catalogMode = mode;
   document.getElementById('ctt-tires').classList.toggle('active', mode === 'tires');
@@ -1369,9 +1369,9 @@ function renderCatalog() {
   else renderWheels();
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  LOAD TIRES FROM TDG
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 async function loadTires(searchParams = null) {
   showCatalogLoading(true);
   try {
@@ -1424,9 +1424,9 @@ async function loadTires(searchParams = null) {
   }
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  LOAD WHEELS FROM TDG
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 async function loadWheels(searchParams = null) {
   catalogMode = 'wheels';
   switchCatalogType('wheels');
@@ -1488,9 +1488,9 @@ async function loadWheels(searchParams = null) {
   }
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  LOADING / ERROR STATES
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function showCatalogLoading(on) {
   if (on) {
     document.getElementById('tireGrid').innerHTML = `
@@ -1506,9 +1506,9 @@ function showCatalogLoading(on) {
   }
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  FILTER + RENDER — TIRES
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function applyFilter(type) {
   activeFilter = type;
   filteredTires = type === 'all' ? allTires : allTires.filter(t => t.type === type);
@@ -1559,9 +1559,9 @@ function renderTires() {
   }).join('');
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  FILTER + RENDER — WHEELS
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function applyWheelFilter(type) {
   activeWheelFilter = type;
   filteredWheels = type === 'all' ? allWheels : allWheels.filter(w => w.category === type);
@@ -1613,9 +1613,9 @@ function renderWheels() {
   }).join('');
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  VEHICLE LOOKUP DATA
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const VD = {
   Honda:{Civic:["LX","Sport","EX","Touring"],"CR-V":["LX","EX","EX-L","Touring"],Accord:["LX","Sport","EX","Touring"]},
   Toyota:{Camry:["LE","SE","XLE","TRD"],RAV4:["LE","XLE","Limited","TRD"],Corolla:["L","LE","SE","XSE"],Highlander:["L","LE","XLE","Limited"]},
@@ -1638,9 +1638,9 @@ const OEM_SIZES = {
   "Volkswagen Jetta":"225/45R17",
 };
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  LOOKUP TAB SWITCHING
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function switchLookupTab(tab) {
   ['vehicle','size','wheels'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
@@ -1649,9 +1649,9 @@ function switchLookupTab(tab) {
   document.getElementById('lookupResult').classList.remove('show');
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  TIRE — VEHICLE LOOKUP
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function initYears() {
   const s = document.getElementById('vYear');
   for (let y = 2025; y >= 2005; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y; s.appendChild(o); }
@@ -1698,9 +1698,9 @@ async function doLookup() {
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  WHEEL — VEHICLE LOOKUP
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function initWheelYears() {
   const s = document.getElementById('wYear');
   s.innerHTML = '<option value="">Year</option>';
@@ -1763,9 +1763,9 @@ async function doWheelSizeSearch() {
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  WHEEL DROPDOWNS INIT
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function initWheelDropdowns() {
   const bpEl = document.getElementById('wBoltPattern');
   BOLT_PATTERNS.forEach(bp => { const o = document.createElement('option'); o.value = bp; o.textContent = bp; bpEl.appendChild(o); });
@@ -1775,9 +1775,9 @@ function initWheelDropdowns() {
   WHEEL_WIDTHS.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + '"'; wEl.appendChild(o); });
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  TIRE SIZE SEARCH (cascading)
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const TIRE_SIZES = [
   '155/65R13','155/65R14','155/65R15','155/65R16','155/70R13','155/70R14','155/70R15','155/70R16','155/80R13','155/80R14','155/80R15','155/80R16',
   '165/60R13','165/60R14','165/60R15','165/60R16','165/65R13','165/65R14','165/65R15','165/65R16','165/70R13','165/70R14','165/70R15','165/70R16','165/80R13','165/80R14','165/80R15','165/80R16',
@@ -1870,9 +1870,9 @@ async function doSizeSearch() {
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  DELIVERY OPTION
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 let deliveryMode = 'shop';
 function setDelivery(mode) {
   deliveryMode = mode;
@@ -1881,9 +1881,9 @@ function setDelivery(mode) {
   document.getElementById('addrRow').style.display = mode === 'home' ? 'block' : 'none';
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  CART
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function addToCart(itemNumber, itemType) {
   const pool = itemType === 'wheel' ? allWheels : allTires;
   const item = pool.find(t => t.itemNumber === itemNumber);
@@ -1952,9 +1952,9 @@ function updTotals() {
 function openCart()  { document.getElementById('cartOverlay').classList.add('show'); renderCart(); }
 function closeCart() { document.getElementById('cartOverlay').classList.remove('show'); }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  CHECKOUT
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function openCheckout() { closeCart(); step = 1; updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
 function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('show'); }
 const mTitles = ['', 'Contact Info', 'Payment', 'Book Installation', 'Order Confirmed!'];
@@ -2032,9 +2032,9 @@ async function finishOrder(noInst) {
   step = 4; updSteps();
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  CALENDAR + SERVICE MENU
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const SERVICES = [
   { id:'mount4',  label:'4-Tire Mount & Balance',         duration:60, price:25, unit:'per tire', desc:'Mount, balance, TPMS reset & old tire disposal' },
   { id:'swap',    label:'Seasonal Swap (pre-mounted set)', duration:60, price:20, unit:'per tire', desc:'Swap your stored set — no mounting needed' },
@@ -2097,18 +2097,18 @@ function pickTime(t) { selTime = t; buildTimes(); }
 function prevMo() { if(calMo===0){calMo=11;calY--;}else{calMo--;} selDate=null;selTime=null;buildCal(); }
 function nextMo() { if(calMo===11){calMo=0;calY++;}else{calMo++;} selDate=null;selTime=null;buildCal(); }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  TIRE GUIDE
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function showGuide(id, btn) {
   document.querySelectorAll('.gtab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.gpanel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active'); document.getElementById('gp-' + id).classList.add('active');
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  FAQ
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const FAQS = [
   {q:"How do I know when to replace my tires?",a:"Check tread depth — use a toonie coin. Insert it into a tread groove. If the silver outer band is visible, you're at or below 4/32\" and should replace soon. Below 2/32\" is the legal minimum in Canada."},
   {q:"Can I put winter tires on only the front or rear?",a:"Never install winter tires on just two wheels. On a front-wheel-drive car with only front winters, the rear end will slide out in corners. Always install a matching set of four."},
@@ -2135,9 +2135,9 @@ function toggleFAQ(i) {
   const open = body.style.display === 'block'; body.style.display = open ? 'none' : 'block'; icon.textContent = open ? '+' : '−';
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  REVIEWS
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 const REVIEWS = [
   {name:"Sarah M.",avatar:"#f5c518",initials:"SM",rating:5,date:"Feb 2026",text:"Ordered winter tires online Monday night, booked installation for Wednesday morning. The whole process took maybe 10 minutes. Exactly what I needed."},
   {name:"Derek T.",avatar:"#22c55e",initials:"DT",rating:5,date:"Jan 2026",text:"I've been getting my tires from big box stores for years. PC Tires is cheaper, faster, and I didn't have to haggle or wait 3 hours. Will never go anywhere else."},
@@ -2158,9 +2158,9 @@ function buildReviews() {
     </div>`).join('');
 }
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  COOKIE / CHAT / MENU
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function initCookie() {
   try { if (!localStorage.getItem('pc_cookie_consent')) setTimeout(() => document.getElementById('cookieBanner').classList.add('show'), 1500); } catch(e) {}
 }
@@ -2177,9 +2177,9 @@ function toggleMenu() { document.getElementById('hamburger').classList.toggle('o
 function closeMenu() { document.getElementById('hamburger').classList.remove('open'); document.getElementById('mobileMenu').classList.remove('open'); }
 document.addEventListener('click', e => { const h = document.getElementById('hamburger'), m = document.getElementById('mobileMenu'); if (h && m && !h.contains(e.target) && !m.contains(e.target)) closeMenu(); });
 
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 //  UTILS
-// ══════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────
 function bgClose(e, id) { if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('show'); }
 function smoothScroll(sel) { document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' }); }
 function showToast(title, sub) {
@@ -2189,4 +2189,4 @@ function showToast(title, sub) {
 function fmtCard(el) { let v = el.value.replace(/\D/g,'').substr(0,16); el.value = v.replace(/(.{4})/g,'$1 ').trim(); }
 function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.substr(0,2)+' / '+v.substr(2,2); el.value=v; }
 
-// ═══════════════════════════════�
+// ─────────────────────────────────────────────────
