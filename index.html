@@ -1992,6 +1992,7 @@ async function doWheelSizeSearch() {
 // ─────────────────────────────────────────────────
 function initWheelDropdowns() {
   const bpEl = document.getElementById('wBoltPattern');
+  if (!bpEl) return; // wheel panel not present
   BOLT_PATTERNS.forEach(bp => { const o = document.createElement('option'); o.value = bp; o.textContent = bp; bpEl.appendChild(o); });
   const dEl = document.getElementById('wDiameter');
   WHEEL_DIAMETERS.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d + '"'; dEl.appendChild(o); });
