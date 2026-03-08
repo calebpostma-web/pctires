@@ -18,6 +18,13 @@ const HEADERS = {
   'Authorization': `ApiKey ${TDG_API_KEY}`,
 };
 
+// Parse a param that might be a comma-separated string into an array
+function toArray(val) {
+  if (!val) return undefined;
+  if (Array.isArray(val)) return val;
+  return val.split(',').map(s => s.trim()).filter(Boolean);
+}
+
 export async function onRequest(context) {
   const { request } = context;
 
@@ -27,68 +34,44 @@ export async function onRequest(context) {
 
   try {
     const url    = new URL(request.url);
-    const action = url.searchParams.get('action') || 'search';
+    const p      = Object.fromEntries(url.searchParams.entries());
+    const action = p.action || 'search';
 
-    let tdgUrl, body = null;
+    let tdgUrl, payload = {};
+
+    // Build shared search payload from query params
+    if (p.tireSizes)    payload.tireSizes    = toArray(p.tireSizes);
+    if (p.brands)       payload.brands       = toArray(p.brands);
+    if (p.tireSeason)   payload.tireSeason   = parseInt(p.tireSeason);
+    if (p.serviceType)  payload.serviceType  = p.serviceType;
+    if (p.itemnumbers)  payload.itemnumbers  = toArray(p.itemnumbers);
+    if (p.partnumbers)  payload.partnumbers  = toArray(p.partnumbers);
+    if (p.boltPatterns) payload.boltPatterns = toArray(p.boltPatterns);
+    if (p.diameters)    payload.diameters    = toArray(p.diameters);
+    if (p.widths)       payload.widths       = toArray(p.widths);
 
     switch (action) {
-
-      // Search products by tire size, brand, season, etc.
-      case 'search': {
+      case 'search':
         tdgUrl = `${TDG_API_BASE}/product/search`;
-        const p = Object.fromEntries(url.searchParams.entries());
-        const payload = {};
-        if (p.tireSizes)   payload.tireSizes   = p.tireSizes.split(',');
-        if (p.brands)      payload.brands      = p.brands.split(',');
-        if (p.tireSeason)  payload.tireSeason  = parseInt(p.tireSeason);
-        if (p.serviceType) payload.serviceType = p.serviceType;
-        if (p.itemnumbers) payload.itemnumbers = p.itemnumbers.split(',');
-        if (p.partnumbers) payload.partnumbers = p.partnumbers.split(',');
-        if (p.boltPatterns)payload.boltPatterns= p.boltPatterns.split(',');
-        if (p.diameters)   payload.diameters   = p.diameters.split(',');
-        if (p.widths)      payload.widths      = p.widths.split(',');
-        body = JSON.stringify(payload);
         break;
-      }
-
-      // Get inventory + pricing for specific items
-      case 'inventory': {
+      case 'inventory':
         tdgUrl = `${TDG_API_BASE}/inventory/search`;
-        const p = Object.fromEntries(url.searchParams.entries());
-        const payload = {};
-        if (p.tireSizes)    payload.tireSizes    = p.tireSizes.split(',');
-        if (p.brands)       payload.brands       = p.brands.split(',');
-        if (p.tireSeason)   payload.tireSeason   = parseInt(p.tireSeason);
-        if (p.serviceType)  payload.serviceType  = p.serviceType;
-        if (p.itemnumbers)  payload.itemnumbers  = p.itemnumbers.split(',');
-        if (p.partnumbers)  payload.partnumbers  = p.partnumbers.split(',');
-        if (p.boltPatterns) payload.boltPatterns = p.boltPatterns.split(',');
-        if (p.diameters)    payload.diameters    = p.diameters.split(',');
-        if (p.widths)       payload.widths       = p.widths.split(',');
-        body = JSON.stringify(payload);
         break;
-      }
-
-      // Get all products (large payload)
       case 'all':
         tdgUrl = `${TDG_API_BASE}/product/all`;
-        body = JSON.stringify({});
         break;
-
-      // Get shipping addresses
       case 'shippingAddresses':
         tdgUrl = `${TDG_API_BASE}/account/shippingAddresses`;
-        body = null;
+        payload = null;
         break;
-
       default:
         return new Response(JSON.stringify({ error: 'Unknown action' }), { status: 400, headers: CORS });
     }
 
     const res  = await fetch(tdgUrl, {
-      method: body !== null ? 'POST' : 'GET',
+      method: payload !== null ? 'POST' : 'GET',
       headers: HEADERS,
-      ...(body !== null ? { body } : {}),
+      ...(payload !== null ? { body: JSON.stringify(payload) } : {}),
     });
 
     const text = await res.text();
