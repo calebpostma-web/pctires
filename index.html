@@ -1246,7 +1246,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
       </div>
       <!-- Step 3: Add-ons -->
       <div class="fsec" id="s3">
-        <div class="appt-note" style="margin-bottom:18px"><b>While your card is out</b> — want to add anything to your order?</div>
+        <div class="appt-note" style="margin-bottom:18px"><b>Almost done!</b> — Would you like to add anything to your order before we process payment?</div>
         <div id="addonGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"></div>
         <div id="addonTotal" style="display:none;background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:12px 16px;font-size:13px;margin-top:8px"></div>
       </div>
@@ -2755,7 +2755,7 @@ function closeCart() { document.getElementById('cartOverlay').classList.remove('
 // ─────────────────────────────────────────────────
 //  CHECKOUT
 // ─────────────────────────────────────────────────
-function openCheckout() { closeCart(); step = 1; updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
+function openCheckout() { closeCart(); step = 1; selectedAddons = new Set(); updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
 function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('show'); }
 
 const mTitles = ['', 'Contact Info', 'Book Installation', 'Add-ons', 'Payment', 'Order Confirmed!'];
@@ -2799,6 +2799,11 @@ let selectedAddons = new Set();
 
 function buildAddonGrid() {
   const grid = document.getElementById('addonGrid'); if (!grid) return;
+  // Auto-select free torque re-check if not already touched
+  if (!selectedAddons.has('torque') && !selectedAddons._torqueSeen) {
+    selectedAddons.add('torque');
+    selectedAddons._torqueSeen = true;
+  }
   grid.innerHTML = ADDONS.map(a => {
     const sel = selectedAddons.has(a.id);
     const priceStr = a.price === 0 ? '<span style="color:var(--green);font-weight:700">FREE</span>' : `<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:18px;font-weight:800;color:${sel?'var(--yellow)':'var(--white)'}">$${a.price.toFixed(2)}</span><span style="font-size:11px;color:var(--muted)"> / ${a.unit}</span>`;
@@ -2836,10 +2841,13 @@ async function buildPaymentSummary() {
   const instTotal = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
   const addonAmt = getAddonTotal();
   const grandTotal = t.total + addonAmt;
+  const addonLines = ADDONS.filter(a => selectedAddons.has(a.id))
+    .map(a => `<div class="ptrow"><span>${a.name}</span><span>${a.price === 0 ? '<span style="color:var(--green)">FREE</span>' : '$' + a.price.toFixed(2)}</span></div>`)
+    .join('');
   box.innerHTML = `
     <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
     ${instTotal > 0 ? `<div class="ptrow"><span>Installation</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
-    ${addonAmt > 0 ? `<div class="ptrow"><span>Add-ons</span><span>$${addonAmt.toFixed(2)}</span></div>` : ''}
+    ${addonLines}
     <div class="ptrow"><span>Tax (HST 13%)</span><span>$${(grandTotal * 0.13 / 1.13).toFixed(2)}</span></div>
     <div class="ptrow bold"><span>Total Due Today</span><span>$${grandTotal.toFixed(2)}</span></div>
   `;
