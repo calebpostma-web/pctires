@@ -677,6 +677,39 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   .time-grid{grid-template-columns:repeat(3,1fr)}
   .time-slot{font-size:12px;padding:9px 4px}
 }
+/* TIRE DETAIL MODAL */
+.td-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.td-overlay.show{opacity:1;pointer-events:all}
+.td-modal{background:var(--card);border:1px solid var(--border);border-radius:4px;width:100%;max-width:780px;max-height:90vh;overflow-y:auto;position:relative;transform:translateY(16px);transition:transform .25s}
+.td-overlay.show .td-modal{transform:translateY(0)}
+.td-close{position:sticky;top:0;float:right;margin:14px 14px 0 0;background:var(--raised);border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;transition:all .2s;flex-shrink:0}
+.td-close:hover{color:var(--white);border-color:var(--mid)}
+.td-body{padding:28px 28px 32px;display:grid;grid-template-columns:240px 1fr;gap:28px}
+@media(max-width:600px){.td-body{grid-template-columns:1fr;gap:18px;padding:20px}}
+.td-img-wrap{background:var(--raised);border:1px solid var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;min-height:220px;padding:16px}
+.td-img-wrap img{width:100%;max-width:200px;object-fit:contain}
+.td-img-placeholder{font-size:72px;opacity:.2}
+.td-brand{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:6px}
+.td-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;line-height:1;margin-bottom:4px}
+.td-size{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);margin-bottom:14px}
+.td-specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px}
+.td-spec{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:7px 10px}
+.td-spec-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px}
+.td-spec-value{font-size:13px;font-weight:600;color:var(--white)}
+.td-desc{font-size:13px;color:var(--light);line-height:1.75;margin-bottom:14px}
+.td-features{list-style:none;padding:0;margin:0 0 18px}
+.td-features li{font-size:13px;color:var(--light);padding:5px 0 5px 18px;position:relative;border-bottom:1px solid var(--border);line-height:1.5}
+.td-features li:last-child{border-bottom:none}
+.td-features li::before{content:'→';position:absolute;left:0;color:var(--yellow);font-size:11px}
+.td-price-row{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.td-price{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--white)}
+.td-price sup{font-size:18px;vertical-align:super}
+.td-msrp{font-size:12px;color:var(--muted);text-decoration:line-through}
+.td-actions{display:flex;gap:10px;flex-wrap:wrap}
+.td-add-btn{background:var(--yellow);color:var(--black);border:none;padding:12px 28px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
+.td-add-btn:hover{background:var(--yellow-dark)}
+.td-add-btn:disabled{opacity:.4;cursor:not-allowed}
+.td-qty{font-size:12px;color:var(--muted);margin-top:6px}
 </style>
 </head>
 <body>
@@ -1225,6 +1258,40 @@ function getRebateForBrand(brand) {
   </div>
 </section>
 
+<!-- TIRE DETAIL MODAL -->
+<div class="td-overlay" id="tireDetailOverlay" onclick="if(event.target===this)closeTireDetail()">
+  <div class="td-modal">
+    <button class="td-close" onclick="closeTireDetail()">✕</button>
+    <div class="td-body">
+      <div>
+        <div class="td-img-wrap" id="tdImgWrap">
+          <span class="td-img-placeholder">🛞</span>
+        </div>
+      </div>
+      <div>
+        <div class="td-brand" id="tdBrand"></div>
+        <div class="td-title" id="tdTitle"></div>
+        <div class="td-size" id="tdSize"></div>
+        <div class="td-specs-grid" id="tdSpecs"></div>
+        <div class="td-desc" id="tdDesc"></div>
+        <ul class="td-features" id="tdFeatures"></ul>
+        <div class="td-price-row">
+          <div class="td-price" id="tdPrice"></div>
+          <div>
+            <div class="td-msrp" id="tdMsrp"></div>
+            <div style="font-size:11px;color:var(--muted)">per tire · HST extra</div>
+          </div>
+        </div>
+        <div class="td-actions">
+          <button class="td-add-btn" id="tdAddBtn">Add to Cart +</button>
+          <span id="tdStock" style="font-size:12px;color:var(--muted);align-self:center"></span>
+        </div>
+        <div class="td-qty" id="tdQty"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- COOKIE BANNER -->
 <div class="cookie-banner" id="cookieBanner">
   <div class="cookie-text">🍪 We use cookies to improve your experience, remember your cart, and analyze site traffic. By continuing you agree to our <a href="#">Privacy Policy</a>. Required under PIPEDA and Quebec Law 25.</div>
@@ -1755,6 +1822,8 @@ function normaliseTire(product, inventory) {
     speed: sp.speedRating || '', loadIndex: sp.loadIndex || '', season: sp.season || TDG.SEASON_LABEL[sp.tireSeason] || 'All-Season',
     runFlat: sp.runFlat === 'Yes', evCompat: sp.eVCompatible === 'Yes', serviceType: sp.serviceType || '',
     map, imageUrl: product.productImageUrl || null,
+    description: product.description || product.productDescription || '',
+    features: Array.isArray(product.features) ? product.features : (Array.isArray(product.bulletPoints) ? product.bulletPoints : []),
     stock: locs.length === 0 ? 'out' : (totalQty === 0 ? 'out' : (totalQty <= 4 ? 'low' : 'in')),
     qtyAvailable: totalQty, locations: locs,
   };
@@ -2125,8 +2194,9 @@ function renderTires() {
     const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
     const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} rebate</span>` : '';
     return `
-    <div class="tire-card" style="animation-delay:${Math.min(i,8)*0.055}s;${dimStyle}">
+    <div class="tire-card" style="animation-delay:${Math.min(i,8)*0.055}s;${dimStyle}" onclick="openTireDetail('${t.itemNumber}')">
       <div class="tc-top"><div class="tc-brand">${t.brand}</div><span class="stock-pill ${stockClass}">${stockLabel}</span></div>
+      ${t.imageUrl ? `<div style="text-align:center;margin-bottom:10px"><img src="${t.imageUrl}" alt="${t.name}" style="height:80px;object-fit:contain;opacity:.9"></div>` : ''}
       <div class="tc-name">${t.name}</div>
       <div class="tc-size">${t.size}</div>
       <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}${rebateBadge}</div>
@@ -2140,7 +2210,7 @@ function renderTires() {
         <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
           <div class="price-each">per tire · HST extra${rebate ? ` · <span style="color:var(--yellow)">+$${rebate.amount} rebate</span>` : ''}</div>
         </div>
-        <button class="add-btn" onclick="addToCart('${t.itemNumber}','tire')" ${t.stock==='out'?'disabled style="opacity:.4;cursor:not-allowed"':''}>
+        <button class="add-btn" onclick="event.stopPropagation();addToCart('${t.itemNumber}','tire')" ${t.stock==='out'?'disabled style="opacity:.4;cursor:not-allowed"':''}>
           ${t.stock==='out'?'Out of Stock':'Add to Cart +'}
         </button>
       </div>
@@ -3468,6 +3538,83 @@ document.addEventListener('click', e => { const h = document.getElementById('ham
 // ─────────────────────────────────────────────────
 function bgClose(e, id) { if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('show'); }
 function smoothScroll(sel) { document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' }); }
+
+// ─────────────────────────────────────────────────
+//  TIRE DETAIL MODAL
+// ─────────────────────────────────────────────────
+function openTireDetail(itemNumber) {
+  const t = [...allTires, ...(filteredTires || [])].find(x => x.itemNumber === itemNumber);
+  if (!t) return;
+  const retail = retailPrice(t), shown = displayedPrice(t);
+
+  // Image
+  const imgWrap = document.getElementById('tdImgWrap');
+  imgWrap.innerHTML = t.imageUrl
+    ? `<img src="${t.imageUrl}" alt="${t.name}" onerror="this.parentNode.innerHTML='<span class=td-img-placeholder>🛞</span>'">`
+    : `<span class="td-img-placeholder">🛞</span>`;
+
+  // Text fields
+  document.getElementById('tdBrand').textContent = t.brand;
+  document.getElementById('tdTitle').textContent = t.name;
+  document.getElementById('tdSize').textContent = t.size + (t.sidewall ? ' · ' + t.sidewall : '');
+
+  // Specs grid
+  const specItems = [
+    ['Season', t.season], ['Speed Rating', t.speed || '—'],
+    ['Load Index', t.loadIndex || '—'], ['Service Type', t.serviceType || '—'],
+    ['Run-Flat', t.runFlat ? 'Yes' : 'No'], ['EV Compatible', t.evCompat ? 'Yes' : 'No'],
+  ];
+  document.getElementById('tdSpecs').innerHTML = specItems.map(([l,v]) =>
+    `<div class="td-spec"><div class="td-spec-label">${l}</div><div class="td-spec-value">${v}</div></div>`
+  ).join('');
+
+  // Description & features
+  const descEl = document.getElementById('tdDesc');
+  descEl.textContent = t.description || '';
+  descEl.style.display = t.description ? 'block' : 'none';
+
+  const featEl = document.getElementById('tdFeatures');
+  if (t.features && t.features.length) {
+    featEl.innerHTML = t.features.map(f => `<li>${f}</li>`).join('');
+    featEl.style.display = 'block';
+  } else {
+    featEl.style.display = 'none';
+  }
+
+  // Price
+  const priceEl = document.getElementById('tdPrice');
+  if (shown > 0) {
+    priceEl.innerHTML = `<sup>$</sup>${Math.floor(shown)}<span style="font-size:18px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span>`;
+  } else {
+    priceEl.innerHTML = `<span style="font-size:20px">Call for price</span>`;
+  }
+  const msrpEl = document.getElementById('tdMsrp');
+  msrpEl.textContent = (t.msrp > retail && retail > 0) ? `MSRP $${t.msrp.toFixed(2)}` : '';
+
+  // Stock & add button
+  const addBtn = document.getElementById('tdAddBtn');
+  const stockEl = document.getElementById('tdStock');
+  const qtyEl = document.getElementById('tdQty');
+  if (t.stock === 'out') {
+    addBtn.disabled = true; addBtn.style.opacity = '.4'; addBtn.textContent = 'Out of Stock';
+    stockEl.textContent = '';
+  } else {
+    addBtn.disabled = false; addBtn.style.opacity = '1'; addBtn.textContent = 'Add to Cart +';
+    stockEl.textContent = t.stock === 'low' ? '⚠️ Low Stock' : '✅ In Stock';
+    stockEl.style.color = t.stock === 'low' ? 'var(--yellow)' : 'var(--green)';
+  }
+  qtyEl.textContent = t.qtyAvailable > 0 ? `${t.qtyAvailable} units available` : '';
+  addBtn.onclick = () => { addToCart(t.itemNumber, 'tire'); closeTireDetail(); };
+
+  document.getElementById('tireDetailOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTireDetail() {
+  document.getElementById('tireDetailOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
 function showToast(title, sub) {
   document.getElementById('toastTitle').textContent = title; document.getElementById('toastSub').textContent = sub;
   const t = document.getElementById('toast'); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
@@ -3623,6 +3770,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildSvcGrid();
   loadTires();
 });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTireDetail(); });
 
 </script>
 </body>
