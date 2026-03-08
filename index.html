@@ -424,7 +424,35 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .reviews-cta strong{color:var(--white)}
 
 /* MAP */
-/* ── SERVICE BOOKING SECTION ── */
+/* ── VIN LOOKUP ── */
+.vin-badge{display:inline-block;background:var(--yellow);color:var(--black);font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle}
+.vin-intro{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;margin-bottom:18px;font-size:13px;color:var(--light);line-height:1.6}
+.vin-intro-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.vin-input-row{display:flex;gap:10px;align-items:flex-end}
+.vin-field-wrap{flex:1;position:relative}
+.vin-input{width:100%;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:12px 80px 12px 16px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:16px;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .2s}
+.vin-input:focus{border-color:var(--yellow)}
+.vin-input.valid{border-color:var(--green)}
+.vin-input.invalid{border-color:var(--red)}
+.vin-chars{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);pointer-events:none}
+.vin-result{margin-top:16px}
+.vin-card{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:18px 20px}
+.vin-card.success{border-color:rgba(34,197,94,.3);background:var(--green-dim)}
+.vin-card.error{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.05)}
+.vin-vehicle-title{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.vin-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:14px}
+.vin-spec{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:8px 12px}
+.vin-spec-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.vin-spec-value{font-size:13px;font-weight:600;color:var(--white)}
+.vin-spec-value.highlight{color:var(--yellow);font-family:'IBM Plex Mono',monospace;font-size:15px}
+.vin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.vin-search-btn{background:var(--yellow);color:var(--black);border:none;padding:11px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.vin-search-btn:hover{background:var(--yellow-dark)}
+.vin-alt-btn{background:var(--raised);color:var(--light);border:1px solid var(--border);padding:11px 18px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.vin-alt-btn:hover{border-color:var(--yellow);color:var(--yellow)}
+.vin-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;padding:16px 0}
+.vin-spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--yellow);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+@media(max-width:600px){.vin-input-row{flex-direction:column}.vin-input{font-size:14px;letter-spacing:2px}}
 .services-section{padding:72px 40px;background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .services-inner{max-width:1100px;margin:0 auto}
 .svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2px;margin:28px 0 40px}
@@ -706,7 +734,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     <div class="hero-trust">
       <div class="trust-item"><span class="trust-icon">🔒</span><div class="trust-txt"><strong>Secure Checkout</strong><span>Powered by Stripe</span></div></div>
       <div class="trust-item"><span class="trust-icon">🔧</span><div class="trust-txt"><strong>Local Install</strong><span>Book online instantly</span></div></div>
-      <div class="trust-item"><span class="trust-icon">✅</span><div class="trust-txt"><strong>Guaranteed Fit</strong><span>Vehicle verified</span></div></div>
+      <div class="trust-item"><span class="trust-icon">✅</span><div class="trust-txt"><strong>Guaranteed Fit</strong><span>VIN-verified accuracy</span></div></div>
     </div>
   </div>
 </section>
@@ -736,13 +764,30 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 
       <!-- Three tabs -->
       <div class="lookup-tabs">
-        <button class="lookup-tab active" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 By Vehicle</button>
+        <button class="lookup-tab active" id="tab-vin" onclick="switchLookupTab('vin')">🔍 By VIN <span class="vin-badge">Most Accurate</span></button>
+        <button class="lookup-tab" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 By Vehicle</button>
         <button class="lookup-tab" id="tab-size" onclick="switchLookupTab('size')">📏 By Tire Size</button>
         <button class="lookup-tab" id="tab-wheels" onclick="switchLookupTab('wheels')">🔩 Shop Wheels</button>
       </div>
 
+      <!-- VIN panel -->
+      <div class="lookup-panel active" id="panel-vin">
+        <div class="vin-intro">
+          <span class="vin-intro-icon">📍</span>
+          <div>Find your VIN on the <strong>driver's door frame sticker</strong>, your <strong>dashboard (visible through windshield)</strong>, or your <strong>registration / insurance card</strong>. It's always 17 characters.</div>
+        </div>
+        <div class="vin-input-row">
+          <div class="vin-field-wrap">
+            <input type="text" id="vinInput" class="vin-input" placeholder="e.g. 2GCUKREC4P1234567" maxlength="17" oninput="onVinInput(this)" autocomplete="off" spellcheck="false">
+            <div class="vin-chars" id="vinChars">0 / 17</div>
+          </div>
+          <button class="lookup-btn" id="vinSearchBtn" onclick="doVinLookup()" disabled style="opacity:.5;cursor:not-allowed">Decode VIN →</button>
+        </div>
+        <div class="vin-result" id="vinResult"></div>
+      </div>
+
       <!-- Vehicle panel -->
-      <div class="lookup-panel active" id="panel-vehicle">
+      <div class="lookup-panel" id="panel-vehicle">
         <div class="lookup-row">
           <div class="field"><label>Year</label><select id="vYear" onchange="updateMakes()"><option value="">Select Year</option></select></div>
           <div class="field"><label>Make</label><select id="vMake" onchange="updateModels()"><option value="">Select Make</option></select></div>
@@ -2105,21 +2150,80 @@ const VD = {
 };
 
 const OEM_SIZES = {
+  // Honda
   "Honda Civic":"215/55R17","Honda CR-V":"235/65R17","Honda Accord":"235/45R18",
-  "Toyota Camry":"235/45R18","Toyota RAV4":"235/65R17","Toyota Corolla":"205/55R16","Toyota Highlander":"245/60R18",
-  "Ford F-150":"275/65R18","Ford Escape":"235/50R18","Ford Explorer":"255/55R20",
-  "Chevrolet Silverado":"275/65R18","Chevrolet Equinox":"225/65R17","Chevrolet Malibu":"235/45R18",
-  "Hyundai Elantra":"205/55R16","Hyundai Tucson":"235/55R17","Hyundai Santa Fe":"235/60R18",
-  "Nissan Altima":"215/55R17","Nissan Rogue":"225/65R17","Nissan Frontier":"265/65R17",
-  "Subaru Outback":"225/60R18","Subaru Forester":"225/60R17",
-  "Volkswagen Jetta":"225/45R17","Volkswagen Tiguan":"235/50R18","Volkswagen Golf":"225/45R17",
-  "Cadillac Escalade":"275/50R22","Cadillac XT5":"235/65R17","Cadillac CT5":"235/40R19","Cadillac CT4":"235/40R18",
-  "GMC Sierra 1500":"265/65R18","GMC Terrain":"225/65R17","GMC Yukon":"275/55R20",
-  "RAM 1500":"275/60R20","RAM 2500":"265/70R17",
+  "Honda Odyssey":"235/60R18","Honda Pilot":"245/60R18","Honda HR-V":"215/55R17",
+  "Honda Passport":"245/60R18","Honda Ridgeline":"245/60R18",
+  // Toyota
+  "Toyota Camry":"235/45R18","Toyota Corolla":"205/55R16","Toyota RAV4":"235/65R17",
+  "Toyota Highlander":"245/60R18","Toyota 4Runner":"265/70R17","Toyota Tacoma":"265/65R17",
+  "Toyota Tundra":"275/65R18","Toyota Sienna":"235/60R18","Toyota Venza":"225/65R18",
+  "Toyota C-HR":"225/50R18","Toyota Prius":"195/65R15","Toyota Prius V":"215/50R17",
+  "Toyota Avalon":"235/45R18","Toyota Land Cruiser":"285/60R18","Toyota Sequoia":"275/65R18",
+  "Toyota RAV4 Prime":"235/55R18","Toyota RAV4 Hybrid":"225/65R17",
+  "Toyota Highlander Hybrid":"235/65R17",
+  // Ford
+  "Ford F-150":"275/65R18","Ford F-250":"265/70R17","Ford F-350":"275/70R18",
+  "Ford Escape":"235/50R18","Ford Explorer":"255/55R20","Ford Bronco":"255/70R18",
+  "Ford Bronco Sport":"225/65R17","Ford Edge":"235/55R19","Ford Expedition":"275/55R20",
+  "Ford Maverick":"225/65R17","Ford Ranger":"265/65R17","Ford Mustang":"255/40R19",
+  "Ford Mustang Mach-E":"245/50R20","Ford Fusion":"235/45R18",
+  // Chevrolet
+  "Chevrolet Silverado 1500":"275/65R18","Chevrolet Silverado 2500":"265/70R17",
+  "Chevrolet Silverado 3500":"245/75R17","Chevrolet Equinox":"225/65R17",
+  "Chevrolet Traverse":"235/65R18","Chevrolet Tahoe":"265/65R18",
+  "Chevrolet Suburban":"265/65R18","Chevrolet Colorado":"265/65R17",
+  "Chevrolet Blazer":"235/55R19","Chevrolet Trax":"215/55R17",
+  "Chevrolet Trailblazer":"215/55R17","Chevrolet Malibu":"235/45R18",
+  "Chevrolet Camaro":"245/45R20","Chevrolet Corvette":"245/35R19",
+  "Chevrolet Spark":"175/65R15",
+  // GMC
+  "GMC Sierra 1500":"265/65R18","GMC Sierra 2500":"265/70R17","GMC Sierra 3500":"245/75R17",
+  "GMC Terrain":"225/65R17","GMC Acadia":"235/65R17","GMC Yukon":"265/65R18",
+  "GMC Yukon XL":"265/65R18","GMC Canyon":"265/65R17",
+  "GMC Envoy":"225/65R17","GMC Envista":"215/55R17",
+  // Dodge / RAM
   "Dodge Durango":"265/50R20","Dodge Charger":"235/55R19","Dodge Challenger":"245/45R20",
-  "Jeep Wrangler":"255/70R18","Jeep Grand Cherokee":"265/60R18","Jeep Compass":"225/60R17",
+  "Dodge Grand Caravan":"225/65R16","Dodge Hornet":"225/55R18",
+  "RAM 1500":"275/60R20","RAM 2500":"265/70R17","RAM 3500":"245/70R17",
+  "RAM ProMaster City":"215/60R16","RAM 1500 Classic":"275/60R20",
+  // Hyundai
+  "Hyundai Elantra":"205/55R16","Hyundai Tucson":"235/55R17","Hyundai Santa Fe":"235/60R18",
+  "Hyundai Santa Cruz":"245/60R18","Hyundai Sonata":"225/50R17","Hyundai Kona":"215/55R17",
+  "Hyundai Palisade":"245/60R18","Hyundai Venue":"205/60R16",
+  "Hyundai Ioniq5":"235/55R19","Hyundai Ioniq6":"225/55R18",
+  // Kia
   "Kia Sorento":"235/65R17","Kia Sportage":"235/55R18","Kia Telluride":"245/60R20",
-  "Mazda CX-5":"225/65R17","Mazda CX-50":"225/60R18","Mazda Mazda3":"215/45R18",
+  "Kia Soul":"205/55R16","Kia Forte":"205/55R16","Kia K5":"225/45R18",
+  "Kia Carnival":"235/60R18","Kia EV6":"235/55R19","Kia Niro":"215/55R17",
+  "Kia Seltos":"215/60R17","Kia Stinger":"225/40R19",
+  // Nissan
+  "Nissan Altima":"215/55R17","Nissan Rogue":"225/65R17","Nissan Frontier":"265/65R17",
+  "Nissan Titan":"265/70R18","Nissan Pathfinder":"235/65R18","Nissan Murano":"235/65R18",
+  "Nissan Sentra":"205/55R16","Nissan Kicks":"205/60R16","Nissan Armada":"275/60R20",
+  "Nissan Maxima":"245/40R19","Nissan Versa":"185/65R15","Nissan Qashqai":"225/55R17",
+  // Subaru
+  "Subaru Outback":"225/60R18","Subaru Forester":"225/60R17","Subaru Crosstrek":"215/60R16",
+  "Subaru Impreza":"205/55R16","Subaru Legacy":"225/55R17","Subaru Ascent":"235/65R18",
+  "Subaru WRX":"225/45R17","Subaru BRZ":"215/45R17","Subaru Solterra":"235/50R20",
+  // Volkswagen
+  "Volkswagen Jetta":"225/45R17","Volkswagen Tiguan":"235/50R18","Volkswagen Golf":"225/45R17",
+  "Volkswagen Golf GTI":"225/45R18","Volkswagen Golf R":"235/35R19",
+  "Volkswagen Atlas":"235/55R18","Volkswagen Atlas Cross Sport":"235/50R20",
+  "Volkswagen Taos":"215/55R17","Volkswagen Arteon":"235/45R19","Volkswagen ID4":"235/50R20",
+  // Jeep
+  "Jeep Wrangler":"255/70R18","Jeep Grand Cherokee":"265/60R18",
+  "Jeep Grand Cherokee L":"265/60R18","Jeep Cherokee":"225/60R17",
+  "Jeep Compass":"225/60R17","Jeep Renegade":"215/60R17",
+  "Jeep Gladiator":"255/70R18","Jeep Commander":"265/60R18",
+  // Cadillac
+  "Cadillac Escalade":"275/50R22","Cadillac Escalade ESV":"275/50R22",
+  "Cadillac XT4":"235/55R18","Cadillac XT5":"235/65R17","Cadillac XT6":"235/55R19",
+  "Cadillac CT4":"235/40R18","Cadillac CT5":"235/40R19","Cadillac Lyriq":"255/50R20",
+  // Mazda
+  "Mazda CX-5":"225/65R17","Mazda CX-50":"225/60R18","Mazda CX-90":"235/55R20",
+  "Mazda CX-30":"215/60R16","Mazda Mazda3":"215/45R18","Mazda Mazda3 Sport":"215/45R18",
+  "Mazda MX-5 Miata":"195/50R16","Mazda CX-70":"235/55R20",
 };
 
 // Alternate OEM sizes per vehicle (e.g. different trim levels or staggered fitments)
@@ -2226,10 +2330,122 @@ const OEM_ALT_SIZES = {
 };
 
 // ─────────────────────────────────────────────────
+//  VIN DECODER (NHTSA free API)
+// ─────────────────────────────────────────────────
+let vinDecoded = null;
+
+function onVinInput(el) {
+  const v = el.value.replace(/[^A-HJ-NPR-Z0-9]/gi, '').toUpperCase().substr(0, 17);
+  el.value = v;
+  document.getElementById('vinChars').textContent = v.length + ' / 17';
+  el.classList.remove('valid','invalid');
+  const btn = document.getElementById('vinSearchBtn');
+  if (v.length === 17) {
+    el.classList.add('valid');
+    btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+  } else {
+    if (v.length > 0) el.classList.add('invalid');
+    btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed';
+  }
+  if (v.length < 17) document.getElementById('vinResult').innerHTML = '';
+}
+
+async function doVinLookup() {
+  const vin = document.getElementById('vinInput').value.trim().toUpperCase();
+  if (vin.length !== 17) return;
+  const resultEl = document.getElementById('vinResult');
+  resultEl.innerHTML = `<div class="vin-loading"><div class="vin-spinner"></div>Decoding VIN — checking NHTSA database…</div>`;
+
+  try {
+    const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${vin}?format=json`);
+    const data = await res.json();
+    const r = data.Results?.[0];
+    if (!r || r.ErrorCode?.startsWith('8') || r.ErrorCode?.startsWith('11')) throw new Error('VIN not found');
+
+    const year  = r.ModelYear || '';
+    const make  = r.Make ? r.Make.charAt(0) + r.Make.slice(1).toLowerCase() : '';
+    const model = r.Model || '';
+    const trim  = r.Trim || r.Series || '';
+    const body  = r.BodyClass || '';
+    const drive = r.DriveType || '';
+    const engine = r.DisplacementL ? parseFloat(r.DisplacementL).toFixed(1) + 'L' : '';
+    const cylinders = r.EngineCylinders ? r.EngineCylinders + '-cyl' : '';
+    const engineStr = [engine, cylinders].filter(Boolean).join(' ');
+
+    // Try OEM size lookup from our table
+    const vehicleKey = `${make.charAt(0).toUpperCase() + make.slice(1)} ${model}`;
+    const oemSize = OEM_SIZES[vehicleKey] || null;
+    const altSizes = OEM_ALT_SIZES?.[vehicleKey] || [];
+
+    vinDecoded = { year, make, model, trim, oemSize, altSizes, vin, vehicleKey };
+
+    const sizeHTML = oemSize
+      ? `<div class="vin-spec"><div class="vin-spec-label">OEM Tire Size</div><div class="vin-spec-value highlight">${oemSize}</div></div>
+         ${altSizes.length ? `<div class="vin-spec"><div class="vin-spec-label">Alt Sizes</div><div class="vin-spec-value" style="font-size:11px;color:var(--muted)">${altSizes.join(', ')}</div></div>` : ''}`
+      : `<div class="vin-spec" style="grid-column:1/-1"><div class="vin-spec-label">Tire Size</div><div class="vin-spec-value" style="color:var(--muted);font-size:12px">Not in our database — check door sticker</div></div>`;
+
+    const actionsHTML = oemSize
+      ? `<button class="vin-search-btn" onclick="vinSearchTires()">Search Tires for ${oemSize} →</button>
+         ${altSizes.length ? `<button class="vin-alt-btn" onclick="vinSearchAllSizes()">Search All Sizes</button>` : ''}`
+      : `<button class="vin-search-btn" onclick="smoothScroll('#catalog')">Browse Full Inventory →</button>`;
+
+    resultEl.innerHTML = `
+      <div class="vin-card success">
+        <div class="vin-vehicle-title">✅ ${year} ${make.charAt(0).toUpperCase() + make.slice(1)} ${model}${trim ? ' — ' + trim : ''}</div>
+        <div class="vin-specs-grid">
+          <div class="vin-spec"><div class="vin-spec-label">Year</div><div class="vin-spec-value">${year}</div></div>
+          <div class="vin-spec"><div class="vin-spec-label">Make</div><div class="vin-spec-value">${make.charAt(0).toUpperCase() + make.slice(1)}</div></div>
+          <div class="vin-spec"><div class="vin-spec-label">Model</div><div class="vin-spec-value">${model}</div></div>
+          ${trim ? `<div class="vin-spec"><div class="vin-spec-label">Trim</div><div class="vin-spec-value">${trim}</div></div>` : ''}
+          ${body ? `<div class="vin-spec"><div class="vin-spec-label">Body</div><div class="vin-spec-value">${body}</div></div>` : ''}
+          ${engineStr ? `<div class="vin-spec"><div class="vin-spec-label">Engine</div><div class="vin-spec-value">${engineStr}</div></div>` : ''}
+          ${drive ? `<div class="vin-spec"><div class="vin-spec-label">Drive</div><div class="vin-spec-value">${drive}</div></div>` : ''}
+          ${sizeHTML}
+        </div>
+        <div class="vin-actions">${actionsHTML}</div>
+      </div>`;
+
+  } catch(err) {
+    resultEl.innerHTML = `
+      <div class="vin-card error">
+        <div style="font-size:14px;font-weight:600;margin-bottom:6px">⚠️ Could not decode this VIN</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:14px">This VIN wasn't found in the NHTSA database. Double-check the number, or use the vehicle dropdowns below.</div>
+        <button class="vin-alt-btn" onclick="switchLookupTab('vehicle')">Try Vehicle Lookup Instead →</button>
+      </div>`;
+  }
+  setTimeout(() => smoothScroll('#lookup'), 100);
+}
+
+function vinSearchTires() {
+  if (!vinDecoded?.oemSize) return;
+  switchCatalogType('tires');
+  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
+  textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — searching tires for <strong>${vinDecoded.oemSize}</strong>…`;
+  resultEl.classList.add('show');
+  loadTires({ tireSizes: [vinDecoded.oemSize] }).then(() => {
+    textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> tires for size <strong>${vinDecoded.oemSize}</strong>.`;
+  });
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
+function vinSearchAllSizes() {
+  if (!vinDecoded) return;
+  const allSizes = [vinDecoded.oemSize, ...(vinDecoded.altSizes || [])].filter(Boolean);
+  switchCatalogType('tires');
+  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
+  textEl.innerHTML = `Showing all compatible sizes for <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong>…`;
+  resultEl.classList.add('show');
+  loadTires({ tireSizes: allSizes }).then(() => {
+    textEl.innerHTML = `<strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> compatible tires across ${allSizes.length} sizes.`;
+  });
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
+// ─────────────────────────────────────────────────
 //  LOOKUP TAB SWITCHING
 // ─────────────────────────────────────────────────
 function switchLookupTab(tab) {
-  ['vehicle','size','wheels'].forEach(t => {
+  ['vin','vehicle','size','wheels'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('panel-' + t).classList.toggle('active', t === tab);
   });
