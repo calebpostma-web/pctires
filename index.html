@@ -13,12 +13,26 @@
   --yellow:#f5c518;--yellow-dim:rgba(245,197,24,0.12);--yellow-dark:#d4a800;
   --green:#22c55e;--green-dim:rgba(34,197,94,0.1);--red:#ef4444;
 }
+body.light-mode{
+  --black:#ffffff;--dark:#f4f4f4;--card:#ffffff;--raised:#f0f0f0;--border:#e0e0e0;
+  --mid:#c0c0c0;--muted:#888888;--light:#555555;--white:#111111;
+  --yellow:#d4a800;--yellow-dim:rgba(212,168,0,0.10);--yellow-dark:#b38f00;
+  --green:#16a34a;--green-dim:rgba(22,163,74,0.1);--red:#dc2626;
+}
 html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--mid);border-radius:3px}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.rebate-ticker{background:var(--yellow);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:7px 0;overflow:hidden;position:fixed;top:0;left:0;right:0;z-index:502}
+.rebate-ticker-inner{display:flex;animation:ticker 60s linear infinite;white-space:nowrap;width:max-content}
+.rebate-ticker-inner:hover{animation-play-state:paused}
+.rebate-ticker-item{padding:0 40px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.rebate-ticker-sep{opacity:.4;margin:0 4px}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.rebate-badge{display:inline-flex;align-items:center;gap:4px;background:var(--yellow);color:var(--black);font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid rgba(0,0,0,.15);white-space:nowrap;flex-shrink:0}
+.rebate-badge.on-card{font-size:9px;padding:2px 6px}
+
+nav{position:fixed;top:33px;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .logo{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none}
 .logo .pc{color:var(--yellow)}
 .nav-links{display:flex;align-items:center;gap:28px}
@@ -32,7 +46,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:cen
 .cart-badge{background:var(--black);color:var(--yellow);border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
 
 /* HERO */
-.hero{min-height:100vh;padding:100px 40px 72px;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero{min-height:100vh;padding:133px 40px 72px;display:flex;align-items:center;position:relative;overflow:hidden}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.25;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent)}
 .hero-glow{position:absolute;right:-200px;top:50%;transform:translateY(-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(245,197,24,.07),transparent 65%);pointer-events:none}
 .hero-pattern{position:absolute;right:0;top:0;bottom:0;width:42%;overflow:hidden;opacity:.055;pointer-events:none}
@@ -95,6 +109,16 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .chip.active,.chip:hover{background:var(--yellow);border-color:var(--yellow);color:var(--black)}
 .cat-meta{font-size:13px;color:var(--muted)}
 .cat-meta span{color:var(--light);font-weight:600}
+/* ── REFINE BAR ── */
+.refine-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:2px;font-size:13px}
+.refine-bar select{background:var(--raised);color:var(--white);border:1px solid var(--border);border-radius:2px;padding:5px 10px;font-size:13px;cursor:pointer;font-family:'Barlow',sans-serif}
+.refine-bar select:focus{outline:none;border-color:var(--yellow)}
+.refine-label{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.refine-divider{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.refine-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;color:var(--light);font-size:13px}
+.refine-toggle input{accent-color:var(--yellow);width:15px;height:15px;cursor:pointer}
+.refine-clear{margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);border-radius:2px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s}
+.refine-clear:hover{border-color:var(--yellow);color:var(--yellow)}
 .tire-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:2px}
 .tire-card{background:var(--card);border:1px solid var(--border);padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;animation:fadeUp .4s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -124,6 +148,35 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .price-each{font-size:12px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400}
 .add-btn{background:var(--yellow);color:var(--black);border:none;padding:10px 18px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
 .add-btn:hover{background:var(--yellow-dark);transform:translateY(-1px)}
+
+/* ── PC RECOMMENDED TIRES ── */
+.rec-section{margin-bottom:40px}
+.rec-header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.rec-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--yellow)}
+.rec-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--white)}
+.rec-divider{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.rec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.rec-card{position:relative;padding:24px;cursor:pointer;transition:all .22s;overflow:hidden;animation:fadeUp .4s ease both}
+.rec-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;transition:transform .3s;transform-origin:left;transform:scaleX(0)}
+.rec-card:hover::after{transform:scaleX(1)}
+.rec-card:hover{background:var(--raised) !important;border-color:var(--mid) !important}
+/* Economical — green tint */
+.rec-card.economical{background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.2)}
+.rec-card.economical::after{background:var(--green)}
+.rec-badge.economical{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);color:var(--green)}
+/* Value — yellow tint */
+.rec-card.value{background:rgba(245,197,24,0.05);border:1px solid rgba(245,197,24,0.25)}
+.rec-card.value::after{background:var(--yellow)}
+.rec-badge.value{background:var(--yellow-dim);border:1px solid rgba(245,197,24,0.35);color:var(--yellow)}
+/* Premium — purple tint */
+.rec-card.premium{background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.25)}
+.rec-card.premium::after{background:#8b5cf6}
+.rec-badge.premium{background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.3);color:#c4b5fd}
+.rec-badge{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:5px 10px;border-radius:2px;margin-bottom:14px}
+.rec-badge-icon{font-size:12px}
+.rec-card .tc-name{font-size:20px}
+.rec-why{font-size:12px;color:var(--muted);margin-top:8px;margin-bottom:14px;line-height:1.5;font-style:italic}
+@media(max-width:860px){.rec-grid{grid-template-columns:1fr}}
 
 /* ── CATALOG TYPE TOGGLE (Tires / Wheels) ── */
 .catalog-type-row{display:flex;align-items:center;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border)}
@@ -379,6 +432,69 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .reviews-cta strong{color:var(--white)}
 
 /* MAP */
+/* ── VIN LOOKUP ── */
+.vin-badge{display:inline-block;background:var(--yellow);color:var(--black);font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle}
+.vin-intro{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;margin-bottom:18px;font-size:13px;color:var(--light);line-height:1.6}
+.vin-intro-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.vin-input-row{display:flex;gap:10px;align-items:flex-end}
+.vin-field-wrap{flex:1;position:relative}
+.vin-input{width:100%;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:12px 80px 12px 16px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:16px;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .2s}
+.vin-input:focus{border-color:var(--yellow)}
+.vin-input.valid{border-color:var(--green)}
+.vin-input.invalid{border-color:var(--red)}
+.vin-chars{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);pointer-events:none}
+.vin-result{margin-top:16px}
+.vin-card{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:18px 20px}
+.vin-card.success{border-color:rgba(34,197,94,.3);background:var(--green-dim)}
+.vin-card.error{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.05)}
+.vin-vehicle-title{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.vin-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:14px}
+.vin-spec{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:8px 12px}
+.vin-spec-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.vin-spec-value{font-size:13px;font-weight:600;color:var(--white)}
+.vin-spec-value.highlight{color:var(--yellow);font-family:'IBM Plex Mono',monospace;font-size:15px}
+.vin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.vin-search-btn{background:var(--yellow);color:var(--black);border:none;padding:11px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.vin-search-btn:hover{background:var(--yellow-dark)}
+.vin-alt-btn{background:var(--raised);color:var(--light);border:1px solid var(--border);padding:11px 18px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.vin-alt-btn:hover{border-color:var(--yellow);color:var(--yellow)}
+.vin-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;padding:16px 0}
+.vin-spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--yellow);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+@media(max-width:600px){.vin-input-row{flex-direction:column}.vin-input{font-size:14px;letter-spacing:2px}}
+.services-section{padding:72px 40px;background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.services-inner{max-width:1100px;margin:0 auto}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2px;margin:28px 0 40px}
+.svc-card{background:var(--card);border:1px solid var(--border);padding:22px;cursor:pointer;transition:all .2s;position:relative}
+.svc-card:hover{background:var(--raised);border-color:var(--mid)}
+.svc-card.selected{border-color:var(--yellow);background:var(--yellow-dim)}
+.svc-card.selected::after{content:'✓';position:absolute;top:14px;right:14px;width:22px;height:22px;background:var(--yellow);color:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:22px;text-align:center}
+.svc-icon{font-size:26px;margin-bottom:10px}
+.svc-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.svc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.svc-meta{display:flex;align-items:center;justify-content:space-between}
+.svc-price{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:var(--yellow)}
+.svc-price span{font-size:12px;font-weight:400;color:var(--muted);font-family:'Barlow',sans-serif}
+.svc-dur{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.svc-booking-panel{background:var(--card);border:1px solid var(--border);padding:28px;margin-top:2px;display:none}
+.svc-booking-panel.show{display:block}
+.svc-booking-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.svc-contact-fields{display:flex;flex-direction:column;gap:12px}
+.svc-field{display:flex;flex-direction:column;gap:5px}
+.svc-field label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.svc-field input,.svc-field textarea,.svc-field select{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:11px 14px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%}
+.svc-field input:focus,.svc-field textarea:focus,.svc-field select:focus{border-color:var(--yellow)}
+.svc-field textarea{resize:vertical;min-height:80px}
+.svc-submit-btn{background:var(--yellow);color:var(--black);border:none;padding:14px 28px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;width:100%;margin-top:16px;text-transform:uppercase;letter-spacing:.5px}
+.svc-submit-btn:hover{background:var(--yellow-dark)}
+.svc-submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.svc-pending-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6}
+.svc-confirm-box{background:var(--green-dim);border:1px solid rgba(34,197,94,.25);border-radius:2px;padding:20px;text-align:center;display:none}
+.svc-confirm-box.show{display:block}
+.svc-confirm-box .conf-icon{font-size:32px;margin-bottom:8px}
+.svc-confirm-box .conf-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+.svc-confirm-box .conf-msg{font-size:13px;color:var(--muted);line-height:1.7}
+@media(max-width:720px){.svc-booking-grid{grid-template-columns:1fr}.services-section{padding:48px 24px}}
+
 .location-section{padding:72px 40px;background:var(--black)}
 .location-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:start}
 .location-details{display:flex;flex-direction:column;gap:16px;margin-top:24px}
@@ -565,19 +681,65 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 </head>
 <body>
 
+<!-- REBATE TICKER -->
+<!-- ↓↓↓ UPDATE REBATES HERE — change dates, amounts, brands as needed ↓↓↓ -->
+<div class="rebate-ticker" id="rebateTicker"></div>
+<script>
+// ── REBATE DATA — UPDATE THIS SECTION EACH SEASON ──────────────────────────
+const REBATES = [
+  { brand:'BFGoodrich',   amount:100, type:'up to', expires:'May 29, 2026',  url:'https://www.bfgoodrichtires.ca/en/rebates.html' },
+  { brand:'Bridgestone',  amount:100, type:'up to', expires:'May 30, 2026',  url:'https://www.bridgestonetire.ca/en-ca/promotions' },
+  { brand:'Continental',  amount:110, type:'up to', expires:'May 31, 2026',  url:'https://www.continental-tires.com/car/promotions/canada' },
+  { brand:'Dunlop',       amount:200, type:'get a', expires:'May 31, 2026',  url:'https://www.dunloptires.ca/en-ca/promotions' },
+  { brand:'Falken',       amount:80,  type:'up to', expires:'May 31, 2026',  url:'https://www.falkentire.com/en-CA/rebates' },
+  { brand:'Firestone',    amount:80,  type:'up to', expires:'May 30, 2026',  url:'https://www.firestonetire.ca/en-ca/promotions' },
+  { brand:'General Tire', amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.generaltire.ca/en-ca/promotions' },
+  { brand:'Hankook',      amount:100, type:'get a', expires:'Jun 30, 2026',  url:'https://www.hankooktire.com/ca/en/campaign/promotions.html' },
+  { brand:'Kumho',        amount:60,  type:'get a', expires:'Jun 15, 2026',  url:'https://www.kumhotire.ca/en/promotion' },
+  { brand:'Laufenn',      amount:40,  type:'get a', expires:'Jun 30, 2026',  url:'https://www.laufenn.com/promotion' },
+  { brand:'Michelin',     amount:100, type:'get a', expires:'May 29, 2026',  url:'https://www.michelin.ca/en/promotions/' },
+  { brand:'Nexen',        amount:80,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nexentire.ca/promotion' },
+  { brand:'Nitto',        amount:70,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nittotire.com/rebates' },
+  { brand:'Pirelli',      amount:100, type:'up to', expires:'May 8, 2026',   url:'https://www.pirelli.com/tyres/en-ca/car/promotions' },
+  { brand:'Toyo',         amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.toyotires.ca/promotions/' },
+  { brand:'Uniroyal',     amount:50,  type:'get a', expires:'May 29, 2026',  url:'https://www.uniroyaltire.ca/en-ca/promotions' },
+  { brand:'Yokohama',     amount:125, type:'up to', expires:'May 31, 2026',  url:'https://www.yokohamatire.ca/en-ca/promotions' },
+];
+// ── END REBATE DATA ─────────────────────────────────────────────────────────
+
+function buildTicker() {
+  const ticker = document.getElementById('rebateTicker');
+  if (!ticker || !REBATES.length) return;
+  // Double the items so the loop is seamless
+  const items = [...REBATES, ...REBATES].map(r =>
+    `<span class="rebate-ticker-item">💰 <strong>${r.brand}</strong> — ${r.type} $${r.amount} rebate <span class="rebate-ticker-sep">·</span> expires ${r.expires}</span>`
+  ).join('');
+  ticker.innerHTML = `<div class="rebate-ticker-inner">${items}</div>`;
+}
+buildTicker();
+
+function getRebateForBrand(brand) {
+  if (!brand) return null;
+  const b = brand.toLowerCase();
+  return REBATES.find(r => b.includes(r.brand.toLowerCase()) || r.brand.toLowerCase().includes(b)) || null;
+}
+</script>
+
 <!-- NAV -->
 <nav>
-  <a class="logo" href="#"><span class="pc">PC</span> TIRES</a>
+  <a class="logo" href="#"><span class="pc">PC</span> TIRES<span style="display:block;font-size:9px;font-weight:500;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:-4px">Chatham-Kent</span></a>
   <div class="nav-links">
     <button class="nav-link" onclick="smoothScroll('#lookup')">Find Tires & Wheels</button>
     <button class="nav-link" onclick="smoothScroll('#catalog')">Shop All</button>
     <button class="nav-link" onclick="smoothScroll('#guide')">Tire Guide</button>
     <button class="nav-link" onclick="smoothScroll('#install')">Installation</button>
+    <button class="nav-link" onclick="smoothScroll('#services')" style="color:var(--yellow)">Book a Service</button>
     <button class="nav-link" onclick="smoothScroll('#location')">Location</button>
   </div>
   <div class="nav-right">
     <a class="phone-link" href="tel:5193805104">📞 519-380-5104</a>
     <button class="member-btn" id="memberNavBtn" onclick="openMemberModal()">Member Login</button>
+    <button id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode" style="background:none;border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:2px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0">🌙</button>
     <button class="cart-btn" onclick="openCart()">🛒 Cart <span class="cart-badge" id="cartCount">0</span></button>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -589,6 +751,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   <button class="mobile-menu-link" onclick="smoothScroll('#catalog');closeMenu()">Shop All</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#guide');closeMenu()">Tire Buying Guide</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#install');closeMenu()">Installation</button>
+  <button class="mobile-menu-link" onclick="smoothScroll('#services');closeMenu()" style="color:var(--yellow)">🔧 Book a Service</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#location');closeMenu()">Location & Hours</button>
   <a class="mobile-menu-link" href="tel:5193805104" style="text-decoration:none">📞 519-380-5104</a>
 </div>
@@ -607,22 +770,23 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     </svg>
   </div>
   <div class="hero-content">
-    <div class="hero-pill"><span class="pill-dot"></span><span class="pill-text">Tires &amp; Wheels — Local Installation</span></div>
+    <div class="hero-pill"><span class="pill-dot"></span><span class="pill-text">Chatham-Kent's Online Tire & Wheel Shop</span></div>
     <h1>
       <span class="b">THE RIGHT</span>
       <span class="b y">TIRE.</span>
       <span class="b">INSTALLED</span>
       <span class="b">RIGHT.</span>
     </h1>
-    <p class="hero-desc">Shop tires and wheels online, pay securely, and book your installation — all in one place. No phone tag. No hidden fees. <strong>Just the right setup on your car.</strong></p>
+    <p class="hero-desc">Chatham-Kent's own tire shop — shop online, pay securely, and book your installation locally. No phone tag. No hidden fees. <strong>Just the right setup on your car.</strong></p>
     <div class="hero-btns">
       <button class="btn-primary" onclick="smoothScroll('#lookup')">Find Tires for My Vehicle</button>
       <button class="btn-ghost" onclick="smoothScroll('#catalog')">Browse All</button>
+      <button class="btn-ghost" onclick="smoothScroll('#services')" style="border-color:rgba(245,197,24,.35);color:var(--yellow)">🔧 Book a Service</button>
     </div>
     <div class="hero-trust">
       <div class="trust-item"><span class="trust-icon">🔒</span><div class="trust-txt"><strong>Secure Checkout</strong><span>Powered by Stripe</span></div></div>
       <div class="trust-item"><span class="trust-icon">🔧</span><div class="trust-txt"><strong>Local Install</strong><span>Book online instantly</span></div></div>
-      <div class="trust-item"><span class="trust-icon">✅</span><div class="trust-txt"><strong>Guaranteed Fit</strong><span>Vehicle verified</span></div></div>
+      <div class="trust-item"><span class="trust-icon">✅</span><div class="trust-txt"><strong>Guaranteed Fit</strong><span>VIN-verified accuracy</span></div></div>
     </div>
   </div>
 </section>
@@ -652,13 +816,30 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 
       <!-- Three tabs -->
       <div class="lookup-tabs">
-        <button class="lookup-tab active" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 By Vehicle</button>
+        <button class="lookup-tab active" id="tab-vin" onclick="switchLookupTab('vin')">🔍 By VIN <span class="vin-badge">Most Accurate</span></button>
+        <button class="lookup-tab" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 By Vehicle</button>
         <button class="lookup-tab" id="tab-size" onclick="switchLookupTab('size')">📏 By Tire Size</button>
         <button class="lookup-tab" id="tab-wheels" onclick="switchLookupTab('wheels')">🔩 Shop Wheels</button>
       </div>
 
+      <!-- VIN panel -->
+      <div class="lookup-panel active" id="panel-vin">
+        <div class="vin-intro">
+          <span class="vin-intro-icon">📍</span>
+          <div>Find your VIN on the <strong>driver's door frame sticker</strong>, your <strong>dashboard (visible through windshield)</strong>, or your <strong>registration / insurance card</strong>. It's always 17 characters.</div>
+        </div>
+        <div class="vin-input-row">
+          <div class="vin-field-wrap">
+            <input type="text" id="vinInput" class="vin-input" placeholder="e.g. 2GCUKREC4P1234567" maxlength="17" oninput="onVinInput(this)" autocomplete="off" spellcheck="false">
+            <div class="vin-chars" id="vinChars">0 / 17</div>
+          </div>
+          <button class="lookup-btn" id="vinSearchBtn" onclick="doVinLookup()" disabled style="opacity:.5;cursor:not-allowed">Decode VIN →</button>
+        </div>
+        <div class="vin-result" id="vinResult"></div>
+      </div>
+
       <!-- Vehicle panel -->
-      <div class="lookup-panel active" id="panel-vehicle">
+      <div class="lookup-panel" id="panel-vehicle">
         <div class="lookup-row">
           <div class="field"><label>Year</label><select id="vYear" onchange="updateMakes()"><option value="">Select Year</option></select></div>
           <div class="field"><label>Make</label><select id="vMake" onchange="updateModels()"><option value="">Select Make</option></select></div>
@@ -726,11 +907,24 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 
         <!-- Search by Size -->
         <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">📐 Search by Size</div>
-        <div class="wheel-size-row">
+        <div class="wheel-size-row" id="wheelSizeRow1">
           <div class="field"><label>Bolt Pattern</label><select id="wBoltPattern"><option value="">Select Bolt Pattern</option></select></div>
           <div class="field"><label>Diameter</label><select id="wDiameter"><option value="">Select Diameter</option></select></div>
           <div class="field"><label>Width</label><select id="wWidth"><option value="">Any Width</option></select></div>
           <button class="lookup-btn" onclick="doWheelSizeSearch()">Find Wheels →</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:10px;cursor:pointer">
+          <input type="checkbox" id="staggeredCheck" onchange="toggleStaggered()" style="accent-color:var(--yellow);width:14px;height:14px">
+          Add a second size (staggered fitment — different front &amp; rear)
+        </label>
+        <div id="staggeredRow" style="display:none;margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:2px;background:var(--raised)">
+          <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:10px">Rear Size</div>
+          <div class="wheel-size-row">
+            <div class="field"><label>Bolt Pattern</label><select id="wBoltPattern2"><option value="">Same as front</option></select></div>
+            <div class="field"><label>Diameter</label><select id="wDiameter2"><option value="">Same as front</option></select></div>
+            <div class="field"><label>Width</label><select id="wWidth2"><option value="">Any Width</option></select></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">Both sizes will be included in results. Common on sports cars with wider rears.</div>
         </div>
       </div>
 
@@ -766,6 +960,39 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
         <button class="chip" onclick="filterTires('truck',this)">Truck &amp; SUV</button>
       </div>
       <div class="cat-meta">Showing <span id="tireCount">—</span> tires</div>
+    </div>
+    <!-- Refine bar -->
+    <div class="refine-bar" id="refineBar">
+      <label class="refine-toggle">
+        <input type="checkbox" id="inStockOnly" onchange="applyRefinements()">
+        <span>In Stock Only</span>
+      </label>
+      <div class="refine-divider"></div>
+      <label class="refine-label">Brand</label>
+      <select id="brandFilter" onchange="applyRefinements()">
+        <option value="">All Brands</option>
+      </select>
+      <div class="refine-divider"></div>
+      <label class="refine-label">Price</label>
+      <select id="priceFilter" onchange="applyRefinements()">
+        <option value="">Any Price</option>
+        <option value="0-100">Under $100</option>
+        <option value="100-150">$100 – $150</option>
+        <option value="150-200">$150 – $200</option>
+        <option value="200-300">$200 – $300</option>
+        <option value="300-500">$300 – $500</option>
+        <option value="500-9999">$500+</option>
+      </select>
+      <div class="refine-divider"></div>
+      <label class="refine-label">Sort</label>
+      <select id="sortOrder" onchange="applyRefinements()">
+        <option value="default">Default</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="brand">Brand A → Z</option>
+        <option value="name">Name A → Z</option>
+      </select>
+      <button class="refine-clear" onclick="clearRefinements()">✕ Clear filters</button>
     </div>
   </div>
 
@@ -905,6 +1132,53 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   </div>
 </section>
 
+<!-- SERVICE BOOKING -->
+<section class="services-section" id="services">
+  <div class="services-inner">
+    <div class="eyebrow">Already Have Tires?</div>
+    <div class="section-title">Book a Service</div>
+    <p class="section-sub" style="margin-bottom:0">Select a service below, pick a time, and we'll confirm within a few hours. No purchase required.</p>
+
+    <div class="svc-grid" id="svcGrid"></div>
+
+    <!-- Booking panel — appears after service selected -->
+    <div class="svc-booking-panel" id="svcBookingPanel">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);margin-bottom:16px">Book Your Appointment</div>
+      <div class="svc-booking-grid">
+        <!-- Left: contact + notes -->
+        <div>
+          <div class="svc-contact-fields">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="svc-field"><label>First Name</label><input type="text" id="svcFName" placeholder="Jane"></div>
+              <div class="svc-field"><label>Last Name</label><input type="text" id="svcLName" placeholder="Smith"></div>
+            </div>
+            <div class="svc-field"><label>Phone Number</label><input type="tel" id="svcPhone" placeholder="(519) 000-0000"></div>
+            <div class="svc-field"><label>Email (optional)</label><input type="email" id="svcEmail" placeholder="jane@example.com"></div>
+            <div class="svc-field"><label>Vehicle (optional)</label><input type="text" id="svcVehicle" placeholder="e.g. 2021 Toyota RAV4"></div>
+            <div class="svc-field"><label>Notes</label><textarea id="svcNotes" placeholder="Anything we should know? e.g. TPMS light is on, brought my own tires, etc."></textarea></div>
+          </div>
+          <div id="svcConfirmBox" class="svc-confirm-box">
+            <div class="conf-icon">📅</div>
+            <div class="conf-title">Request Received!</div>
+            <div class="conf-msg" id="svcConfirmMsg"></div>
+          </div>
+          <div id="svcFormWrap">
+            <button class="svc-submit-btn" id="svcSubmitBtn" onclick="submitServiceBooking()">Request Appointment →</button>
+            <p class="svc-pending-note">We'll confirm your appointment by phone or email within a few hours during business hours.</p>
+          </div>
+        </div>
+        <!-- Right: calendar -->
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Select a preferred date and time:</div>
+          <div class="cal-hdr"><button class="cal-nav" onclick="svcPrevMo()">‹</button><div class="cal-month" id="svcCalMo"></div><button class="cal-nav" onclick="svcNextMo()">›</button></div>
+          <div class="cal-grid" id="svcCalGrid"></div>
+          <div id="svcTimeSec" style="display:none"><div class="time-lbl">Available Times</div><div class="time-grid" id="svcTimeGrid"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- SOCIAL PROOF BAR -->
 <div class="social-bar">
   <div class="social-bar-inner">
@@ -938,7 +1212,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     </div>
     <div>
       <div class="map-container">
-        <iframe src="https://maps.google.com/maps?cid=11770934583290184135&output=embed&z=14" width="100%" height="360" style="border:0;display:block" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="PC Tires location — 7144 Grande River Line, Pain Court, Ontario"></iframe>
+        <iframe src="https://maps.google.com/maps?q=7144+Grande+River+Line,+Pain+Court,+Ontario+N0P+1Z0&output=embed&z=15" width="100%" height="360" style="border:0;display:block" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="PC Tires location — 7144 Grande River Line, Pain Court, Ontario"></iframe>
       </div>
     </div>
   </div>
@@ -1008,36 +1282,28 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     <div class="mbody">
       <div class="psteps">
         <div class="ps active" id="ps1"><div class="ps-dot">1</div><div class="ps-lbl">Contact</div></div>
-        <div class="ps" id="ps2"><div class="ps-dot">2</div><div class="ps-lbl">Payment</div></div>
-        <div class="ps" id="ps3"><div class="ps-dot">3</div><div class="ps-lbl">Install</div></div>
-        <div class="ps" id="ps4"><div class="ps-dot">4</div><div class="ps-lbl">Confirm</div></div>
+        <div class="ps" id="ps2"><div class="ps-dot">2</div><div class="ps-lbl">Schedule</div></div>
+        <div class="ps" id="ps3"><div class="ps-dot">3</div><div class="ps-lbl">Add-ons</div></div>
+        <div class="ps" id="ps4"><div class="ps-dot">4</div><div class="ps-lbl">Payment</div></div>
+        <div class="ps" id="ps5"><div class="ps-dot">5</div><div class="ps-lbl">Confirm</div></div>
       </div>
-      <!-- Step 1 -->
+      <!-- Step 1: Contact -->
       <div class="fsec active" id="s1">
         <div class="frow two"><div class="fg"><label>First Name</label><input type="text" placeholder="Jane" id="fName"></div><div class="fg"><label>Last Name</label><input type="text" placeholder="Smith" id="lName"></div></div>
         <div class="frow one"><div class="fg"><label>Email Address</label><input type="email" placeholder="jane@example.com" id="email"></div></div>
         <div class="frow one"><div class="fg"><label>Phone Number</label><input type="tel" placeholder="(519) 000-0000" id="phone"></div></div>
         <div class="fg" style="margin-top:10px">
-          <label>Where should we send your order?</label>
-          <div class="delivery-opts" id="deliveryOpts">
-            <div class="dopt active" id="dopt-shop" onclick="setDelivery('shop')"><div class="dopt-icon">🏪</div><div class="dopt-info"><div class="dopt-title">Ship to PC Tires</div><div class="dopt-sub">We receive your order — ready for your installation appointment. <strong>Free shipping.</strong></div></div><div class="dopt-check">✓</div></div>
-            <div class="dopt" id="dopt-home" onclick="setDelivery('home')"><div class="dopt-icon">🏠</div><div class="dopt-info"><div class="dopt-title">Ship to my address</div><div class="dopt-sub">Delivered directly to you. Shipping calculated at checkout.</div></div><div class="dopt-check">✓</div></div>
-          </div>
+          <label>Order Delivery</label>
+          <div class="dopt active" style="pointer-events:none"><div class="dopt-icon">🏪</div><div class="dopt-info"><div class="dopt-title">Ships to PC Tires</div><div class="dopt-sub">Your order ships directly to our shop — ready for your installation appointment. <strong style="color:var(--green)">Free shipping.</strong></div></div><div class="dopt-check">✓</div></div>
         </div>
-        <div class="frow one" id="addrRow" style="display:none"><div class="fg"><label>Delivery Address</label><input type="text" placeholder="123 Main St, City, Province, Postal Code" id="addr"></div></div>
+        <label class="refine-toggle" style="margin-top:14px;font-size:13px;color:var(--light)">
+          <input type="checkbox" id="caslOptIn" style="accent-color:var(--yellow);width:15px;height:15px">
+          <span>Send me seasonal reminders and deals from PC Tires</span>
+        </label>
       </div>
-      <!-- Step 2 -->
+      <!-- Step 2: Schedule -->
       <div class="fsec" id="s2">
-        <div class="pay-total-box" id="payBox"></div>
-        <div class="card-logos"><span class="clogo">💳</span><span class="clogo">🍎</span><span class="clogo">🅿️</span></div>
-        <div class="frow one"><div class="fg"><label>Name on Card</label><input type="text" placeholder="Jane Smith" id="cardName"></div></div>
-        <div class="frow one"><div class="fg"><label>Card Number</label><input class="card-field" type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="cardNum" oninput="fmtCard(this)"></div></div>
-        <div class="frow two"><div class="fg"><label>Expiry</label><input class="card-field" type="text" placeholder="MM / YY" maxlength="7" id="cardExp" oninput="fmtExp(this)"></div><div class="fg"><label>CVV</label><input class="card-field" type="text" placeholder="•••" maxlength="4" id="cardCvv"></div></div>
-        <p class="field-note">🔒 Payment is encrypted and processed by Stripe. PC Tires never sees your card details.</p>
-      </div>
-      <!-- Step 3 -->
-      <div class="fsec" id="s3">
-        <div class="appt-note"><b>Select your service</b> — we'll block the right amount of time automatically.</div>
+        <div class="appt-note"><b>Select your installation service</b> — we'll block the right amount of time automatically.</div>
         <div id="serviceMenu" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px"></div>
         <div id="calSection" style="display:none">
           <div class="appt-note" id="durationNote" style="background:var(--yellow-dim);border-color:rgba(245,197,24,.25)"></div>
@@ -1047,10 +1313,30 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
         </div>
         <button class="skip-btn" onclick="skipInstall()">Skip — I'll arrange service separately →</button>
       </div>
-      <!-- Step 4 -->
+      <!-- Step 3: Add-ons -->
+      <div class="fsec" id="s3">
+        <div class="appt-note" style="margin-bottom:18px"><b>Almost done!</b> — Would you like to add anything to your order before we process payment?</div>
+        <div id="addonGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"></div>
+        <div id="addonTotal" style="display:none;background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:12px 16px;font-size:13px;margin-top:8px"></div>
+      </div>
+      <!-- Step 4: Payment -->
       <div class="fsec" id="s4">
+        <div class="pay-total-box" id="payBox"></div>
+        <div class="card-logos"><span class="clogo">💳</span><span class="clogo">🍎</span><span class="clogo">🅿️</span></div>
+        <div class="frow one"><div class="fg"><label>Name on Card</label><input type="text" placeholder="Jane Smith" id="cardName"></div></div>
+        <div class="frow one"><div class="fg"><label>Card Number</label><input class="card-field" type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="cardNum" oninput="fmtCard(this)"></div></div>
+        <div class="frow two"><div class="fg"><label>Expiry</label><input class="card-field" type="text" placeholder="MM / YY" maxlength="7" id="cardExp" oninput="fmtExp(this)"></div><div class="fg"><label>CVV</label><input class="card-field" type="text" placeholder="•••" maxlength="4" id="cardCvv"></div></div>
+        <p class="field-note">🔒 Payment is encrypted and processed by Stripe. PC Tires never sees your card details.</p>
+      </div>
+      <!-- Step 5: Confirm -->
+      <div class="fsec" id="s5">
         <div class="confirm-wrap"><div class="conf-circle">✓</div><div class="conf-title">You're All Set!</div><p class="conf-sub">Order confirmed. Check your email for full details.</p></div>
         <div class="confirm-details" id="confDetails"></div>
+        <div id="confRebates" style="display:none;margin-top:14px;padding:14px 16px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:2px">
+          <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:10px">💰 Manufacturer Rebates Available</div>
+          <div id="confRebateList" style="font-size:13px;color:var(--light);line-height:1.8"></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px">Rebates are mail-in — apply directly with each manufacturer using the links above. Instructions also sent to your email.</div>
+        </div>
         <button class="btn-primary" style="width:100%;margin-top:14px" onclick="closeCheckout();closeCart()">Continue Shopping</button>
       </div>
     </div>
@@ -1157,27 +1443,172 @@ const WHEEL_WIDTHS    = [5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,12.0
 
 // OEM bolt patterns — covers the most common vehicles in Ontario
 const OEM_BOLT_PATTERNS = {
-  "Honda Civic":          { bolt:'5x114.3', bore:64.1,  dia:16 },
+  // Honda
+  "Honda Civic":          { bolt:'5x114.3', bore:64.1,  dia:17 },
   "Honda CR-V":           { bolt:'5x114.3', bore:64.1,  dia:17 },
   "Honda Accord":         { bolt:'5x114.3', bore:64.1,  dia:18 },
+  "Honda Odyssey":        { bolt:'5x114.3', bore:64.1,  dia:18 },
+  "Honda Pilot":          { bolt:'5x120',   bore:64.1,  dia:18 },
+  "Honda HR-V":           { bolt:'5x114.3', bore:64.1,  dia:17 },
+  "Honda Passport":       { bolt:'5x120',   bore:64.1,  dia:18 },
+  "Honda Ridgeline":      { bolt:'5x120',   bore:64.1,  dia:18 },
+  // Toyota
   "Toyota Camry":         { bolt:'5x114.3', bore:60.1,  dia:18 },
-  "Toyota RAV4":          { bolt:'5x114.3', bore:60.1,  dia:17 },
   "Toyota Corolla":       { bolt:'5x100',   bore:54.1,  dia:16 },
+  "Toyota RAV4":          { bolt:'5x114.3', bore:60.1,  dia:17 },
   "Toyota Highlander":    { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota 4Runner":       { bolt:'6x139.7', bore:106.1, dia:17 },
+  "Toyota Tacoma":        { bolt:'6x139.7', bore:106.1, dia:16 },
+  "Toyota Tundra":        { bolt:'5x150',   bore:110.1, dia:18 },
+  "Toyota Sienna":        { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota Venza":         { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota C-HR":          { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota Prius":         { bolt:'5x114.3', bore:60.1,  dia:15 },
+  "Toyota Prius V":       { bolt:'5x114.3', bore:60.1,  dia:17 },
+  "Toyota Avalon":        { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota Land Cruiser":  { bolt:'5x150',   bore:110.1, dia:18 },
+  "Toyota Sequoia":       { bolt:'5x150',   bore:110.1, dia:18 },
+  "Toyota RAV4 Prime":    { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota RAV4 Hybrid":   { bolt:'5x114.3', bore:60.1,  dia:17 },
+  "Toyota Highlander Hybrid": { bolt:'5x114.3', bore:60.1, dia:18 },
+  // Ford
   "Ford F-150":           { bolt:'6x135',   bore:87.1,  dia:18 },
+  "Ford F-250":           { bolt:'8x170',   bore:125.2, dia:18 },
+  "Ford F-350":           { bolt:'8x170',   bore:125.2, dia:18 },
   "Ford Escape":          { bolt:'5x108',   bore:63.4,  dia:17 },
   "Ford Explorer":        { bolt:'5x114.3', bore:70.5,  dia:18 },
-  "Chevrolet Silverado":  { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "Ford Bronco":          { bolt:'6x139.7', bore:93.1,  dia:17 },
+  "Ford Bronco Sport":    { bolt:'5x114.3', bore:63.4,  dia:17 },
+  "Ford Edge":            { bolt:'5x108',   bore:63.4,  dia:19 },
+  "Ford Expedition":      { bolt:'6x135',   bore:87.1,  dia:18 },
+  "Ford Maverick":        { bolt:'5x114.3', bore:63.4,  dia:17 },
+  "Ford Ranger":          { bolt:'6x139.7', bore:93.1,  dia:17 },
+  "Ford Mustang":         { bolt:'5x114.3', bore:70.5,  dia:19 },
+  "Ford Mustang Mach-E":  { bolt:'5x108',   bore:63.4,  dia:20 },
+  "Ford Fusion":          { bolt:'5x108',   bore:63.4,  dia:18 },
+  // Chevrolet
+  "Chevrolet Silverado 1500": { bolt:'6x139.7', bore:78.1, dia:18 },
+  "Chevrolet Silverado 2500": { bolt:'8x180',   bore:124.1,dia:18 },
+  "Chevrolet Silverado 3500": { bolt:'8x180',   bore:124.1,dia:17 },
   "Chevrolet Equinox":    { bolt:'5x115',   bore:70.3,  dia:17 },
-  "Hyundai Elantra":      { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Chevrolet Traverse":   { bolt:'6x132',   bore:78.1,  dia:18 },
+  "Chevrolet Tahoe":      { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "Chevrolet Suburban":   { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "Chevrolet Colorado":   { bolt:'6x139.7', bore:78.1,  dia:17 },
+  "Chevrolet Blazer":     { bolt:'5x120',   bore:70.3,  dia:19 },
+  "Chevrolet Trax":       { bolt:'5x105',   bore:56.6,  dia:17 },
+  "Chevrolet Trailblazer":{ bolt:'5x105',   bore:56.6,  dia:17 },
+  "Chevrolet Malibu":     { bolt:'5x115',   bore:70.3,  dia:18 },
+  "Chevrolet Camaro":     { bolt:'5x120',   bore:66.9,  dia:20 },
+  "Chevrolet Corvette":   { bolt:'5x120',   bore:70.3,  dia:19 },
+  "Chevrolet Spark":      { bolt:'4x100',   bore:56.6,  dia:15 },
+  // GMC
+  "GMC Sierra 1500":      { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "GMC Sierra 2500":      { bolt:'8x180',   bore:124.1, dia:18 },
+  "GMC Sierra 3500":      { bolt:'8x180',   bore:124.1, dia:17 },
+  "GMC Terrain":          { bolt:'5x115',   bore:70.3,  dia:17 },
+  "GMC Acadia":           { bolt:'6x132',   bore:78.1,  dia:18 },
+  "GMC Yukon":            { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "GMC Yukon XL":         { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "GMC Canyon":           { bolt:'6x139.7', bore:78.1,  dia:17 },
+  "GMC Envoy":            { bolt:'5x127',   bore:78.1,  dia:17 },
+  "GMC Envista":          { bolt:'5x105',   bore:56.6,  dia:17 },
+  // Dodge
+  "Dodge Durango":        { bolt:'5x139.7', bore:71.5,  dia:18 },
+  "Dodge Charger":        { bolt:'5x115',   bore:71.5,  dia:18 },
+  "Dodge Challenger":     { bolt:'5x115',   bore:71.5,  dia:18 },
+  "Dodge Grand Caravan":  { bolt:'5x127',   bore:71.5,  dia:17 },
+  "Dodge Hornet":         { bolt:'5x110',   bore:65.1,  dia:18 },
+  // RAM
+  "RAM 1500":             { bolt:'5x139.7', bore:77.8,  dia:18 },
+  "RAM 2500":             { bolt:'8x165.1', bore:116.9, dia:18 },
+  "RAM 3500":             { bolt:'8x165.1', bore:116.9, dia:17 },
+  "RAM ProMaster City":   { bolt:'5x108',   bore:65.1,  dia:16 },
+  "RAM 1500 Classic":     { bolt:'5x139.7', bore:77.8,  dia:17 },
+  // Hyundai
+  "Hyundai Elantra":      { bolt:'5x114.3', bore:67.1,  dia:17 },
   "Hyundai Tucson":       { bolt:'5x114.3', bore:67.1,  dia:17 },
   "Hyundai Santa Fe":     { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Hyundai Santa Cruz":   { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Hyundai Sonata":       { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Hyundai Kona":         { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Hyundai Palisade":     { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Hyundai Venue":        { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Hyundai Ioniq5":       { bolt:'5x114.3', bore:67.1,  dia:19 },
+  "Hyundai Ioniq6":       { bolt:'5x114.3', bore:67.1,  dia:18 },
+  // Kia
+  "Kia Sportage":         { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Kia Sorento":          { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Kia Telluride":        { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Kia Soul":             { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Kia Forte":            { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Kia K5":               { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Kia Carnival":         { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Kia EV6":              { bolt:'5x114.3', bore:67.1,  dia:19 },
+  "Kia Niro":             { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Kia Seltos":           { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Kia Stinger":          { bolt:'5x114.3', bore:67.1,  dia:18 },
+  // Nissan
   "Nissan Altima":        { bolt:'5x114.3', bore:66.1,  dia:17 },
   "Nissan Rogue":         { bolt:'5x114.3', bore:66.1,  dia:17 },
   "Nissan Frontier":      { bolt:'6x114.3', bore:66.1,  dia:16 },
+  "Nissan Titan":         { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "Nissan Pathfinder":    { bolt:'5x114.3', bore:66.1,  dia:18 },
+  "Nissan Murano":        { bolt:'5x114.3', bore:66.1,  dia:18 },
+  "Nissan Sentra":        { bolt:'5x114.3', bore:66.1,  dia:16 },
+  "Nissan Kicks":         { bolt:'5x114.3', bore:66.1,  dia:16 },
+  "Nissan Armada":        { bolt:'6x139.7', bore:66.1,  dia:18 },
+  "Nissan Maxima":        { bolt:'5x114.3', bore:66.1,  dia:18 },
+  "Nissan Versa":         { bolt:'4x100',   bore:60.1,  dia:15 },
+  "Nissan Qashqai":       { bolt:'5x114.3', bore:66.1,  dia:17 },
+  // Subaru
   "Subaru Outback":       { bolt:'5x100',   bore:56.1,  dia:18 },
   "Subaru Forester":      { bolt:'5x100',   bore:56.1,  dia:17 },
+  "Subaru Crosstrek":     { bolt:'5x100',   bore:56.1,  dia:17 },
+  "Subaru Impreza":       { bolt:'5x100',   bore:56.1,  dia:16 },
+  "Subaru Legacy":        { bolt:'5x100',   bore:56.1,  dia:18 },
+  "Subaru Ascent":        { bolt:'5x114.3', bore:56.1,  dia:18 },
+  "Subaru WRX":           { bolt:'5x114.3', bore:56.1,  dia:17 },
+  "Subaru BRZ":           { bolt:'5x100',   bore:56.1,  dia:17 },
+  "Subaru Solterra":      { bolt:'5x114.3', bore:56.1,  dia:18 },
+  // Volkswagen
   "Volkswagen Jetta":     { bolt:'5x112',   bore:57.1,  dia:17 },
+  "Volkswagen Tiguan":    { bolt:'5x112',   bore:57.1,  dia:17 },
+  "Volkswagen Golf":      { bolt:'5x112',   bore:57.1,  dia:17 },
+  "Volkswagen Golf GTI":  { bolt:'5x112',   bore:57.1,  dia:18 },
+  "Volkswagen Golf R":    { bolt:'5x112',   bore:57.1,  dia:19 },
+  "Volkswagen Atlas":     { bolt:'5x112',   bore:57.1,  dia:18 },
+  "Volkswagen Atlas Cross Sport": { bolt:'5x112', bore:57.1, dia:18 },
+  "Volkswagen Taos":      { bolt:'5x112',   bore:57.1,  dia:17 },
+  "Volkswagen Arteon":    { bolt:'5x112',   bore:57.1,  dia:18 },
+  "Volkswagen ID4":       { bolt:'5x112',   bore:57.1,  dia:20 },
+  // Jeep
+  "Jeep Wrangler":        { bolt:'5x127',   bore:71.5,  dia:17 },
+  "Jeep Grand Cherokee":  { bolt:'5x127',   bore:71.5,  dia:18 },
+  "Jeep Grand Cherokee L":{ bolt:'5x127',   bore:71.5,  dia:18 },
+  "Jeep Cherokee":        { bolt:'5x127',   bore:71.5,  dia:17 },
+  "Jeep Compass":         { bolt:'5x110',   bore:65.1,  dia:17 },
+  "Jeep Renegade":        { bolt:'5x110',   bore:65.1,  dia:17 },
+  "Jeep Gladiator":       { bolt:'5x127',   bore:71.5,  dia:17 },
+  "Jeep Commander":       { bolt:'5x127',   bore:71.5,  dia:18 },
+  // Cadillac
+  "Cadillac Escalade":    { bolt:'6x139.7', bore:78.1,  dia:22 },
+  "Cadillac Escalade ESV":{ bolt:'6x139.7', bore:78.1,  dia:22 },
+  "Cadillac XT4":         { bolt:'5x114.3', bore:70.3,  dia:18 },
+  "Cadillac XT5":         { bolt:'5x114.3', bore:70.3,  dia:18 },
+  "Cadillac XT6":         { bolt:'5x114.3', bore:70.3,  dia:20 },
+  "Cadillac CT4":         { bolt:'5x114.3', bore:70.3,  dia:18 },
+  "Cadillac CT5":         { bolt:'5x114.3', bore:70.3,  dia:18 },
+  "Cadillac Lyriq":       { bolt:'5x114.3', bore:70.3,  dia:20 },
+  // Mazda
+  "Mazda CX-5":           { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Mazda CX-50":          { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Mazda CX-90":          { bolt:'5x114.3', bore:67.1,  dia:20 },
+  "Mazda CX-30":          { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Mazda Mazda3":         { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Mazda Mazda3 Sport":   { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Mazda MX-5 Miata":     { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Mazda CX-70":          { bolt:'5x114.3', bore:67.1,  dia:20 },
 };
 
 // ─────────────────────────────────────────────────
@@ -1317,7 +1748,7 @@ function normaliseTire(product, inventory) {
     speed: sp.speedRating || '', loadIndex: sp.loadIndex || '', season: sp.season || TDG.SEASON_LABEL[sp.tireSeason] || 'All-Season',
     runFlat: sp.runFlat === 'Yes', evCompat: sp.eVCompatible === 'Yes', serviceType: sp.serviceType || '',
     map, imageUrl: product.productImageUrl || null,
-    stock: locs.length === 0 ? 'out' : (bestAvail <= 1 ? 'in' : (bestAvail <= 2 ? 'low' : 'out')),
+    stock: locs.length === 0 ? 'out' : (totalQty === 0 ? 'out' : (totalQty <= 4 ? 'low' : 'in')),
     qtyAvailable: totalQty, locations: locs,
   };
 }
@@ -1347,7 +1778,7 @@ function normaliseWheel(product, inventory) {
     offset:      parseFloat(sp.offset || 0),
     hubBore:     parseFloat(sp.hubBore || sp.hub_bore || 0),
     price: cost, msrp, map, imageUrl: product.productImageUrl || null,
-    stock: locs.length === 0 ? 'out' : (bestAvail <= 1 ? 'in' : (bestAvail <= 2 ? 'low' : 'out')),
+    stock: locs.length === 0 ? 'out' : (totalQty === 0 ? 'out' : (totalQty <= 4 ? 'low' : 'in')),
     qtyAvailable: totalQty, locations: locs,
   };
 }
@@ -1512,13 +1943,136 @@ function applyFilter(type) {
   activeFilter = type;
   filteredTires = type === 'all' ? allTires : allTires.filter(t => t.type === type);
   document.getElementById('tireCount').textContent = filteredTires.length;
+  populateBrandFilter();
   renderTires();
 }
 
 function filterTires(type, btn) {
   document.querySelectorAll('#tire-chips-row .chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
-  applyFilter(type);
+  activeFilter = type;
+  populateBrandFilter();
+  applyRefinements();
+}
+
+function populateBrandFilter() {
+  const sel = document.getElementById('brandFilter');
+  if (!sel) return;
+  const base = activeFilter === 'all' ? allTires : allTires.filter(t => t.type === activeFilter);
+  const brands = [...new Set(base.map(t => t.brand))].filter(Boolean).sort();
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Brands</option>' +
+    brands.map(b => `<option value="${b}"${b === current ? ' selected' : ''}>${b}</option>`).join('');
+}
+
+function applyRefinements() {
+  const inStockOnly = document.getElementById('inStockOnly')?.checked;
+  const brand       = document.getElementById('brandFilter')?.value  || '';
+  const price       = document.getElementById('priceFilter')?.value  || '';
+  const sort        = document.getElementById('sortOrder')?.value    || 'default';
+
+  let tires = activeFilter === 'all' ? allTires : allTires.filter(t => t.type === activeFilter);
+  if (inStockOnly) tires = tires.filter(t => t.stock !== 'out');
+  if (brand)       tires = tires.filter(t => t.brand === brand);
+  if (price) {
+    const [lo, hi] = price.split('-').map(Number);
+    tires = tires.filter(t => { const p = retailPrice(t); return p >= lo && p <= hi; });
+  }
+  if (sort === 'price-asc')  tires = [...tires].sort((a, b) => retailPrice(a) - retailPrice(b));
+  if (sort === 'price-desc') tires = [...tires].sort((a, b) => retailPrice(b) - retailPrice(a));
+  if (sort === 'brand')      tires = [...tires].sort((a, b) => a.brand.localeCompare(b.brand));
+  if (sort === 'name')       tires = [...tires].sort((a, b) => a.name.localeCompare(b.name));
+
+  filteredTires = tires;
+  document.getElementById('tireCount').textContent = filteredTires.length;
+  renderTires();
+}
+
+function clearRefinements() {
+  ['inStockOnly','brandFilter','priceFilter','sortOrder'].forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    if (el.type === 'checkbox') el.checked = false; else el.value = '';
+  });
+  applyRefinements();
+}
+
+// ─────────────────────────────────────────────────
+//  PC RECOMMENDED TIRES — pick 3 from current set
+// ─────────────────────────────────────────────────
+function pickRecommended(tires) {
+  // Only consider in-stock / low-stock tires with a real price
+  const available = tires.filter(t => t.stock !== 'out' && retailPrice(t) > 0);
+  if (available.length < 2) return null;
+
+  // Sort by retail price ascending
+  const byPrice = [...available].sort((a, b) => retailPrice(a) - retailPrice(b));
+
+  // Most Economical — lowest price
+  const economical = byPrice[0];
+
+  // Premium — highest price (must be different from economical)
+  const premium = byPrice[byPrice.length - 1];
+  if (premium.itemNumber === economical.itemNumber) return null;
+
+  // Best Value — score = middle price bracket, prefer all-weather or all-season, penalise extremes
+  const minP = retailPrice(economical), maxP = retailPrice(premium);
+  const midP = (minP + maxP) / 2;
+  const valueTiers = ['allweather','allseason','winter','summer','truck'];
+  const valueCandidates = byPrice.filter(t =>
+    t.itemNumber !== economical.itemNumber && t.itemNumber !== premium.itemNumber
+  );
+  if (!valueCandidates.length) return null;
+
+  valueCandidates.sort((a, b) => {
+    // Score: closeness to midpoint weighted, prefer all-weather
+    const distA = Math.abs(retailPrice(a) - midP);
+    const distB = Math.abs(retailPrice(b) - midP);
+    const tierA = valueTiers.indexOf(a.type);
+    const tierB = valueTiers.indexOf(b.type);
+    return (distA + tierA * 8) - (distB + tierB * 8);
+  });
+  const value = valueCandidates[0];
+
+  return { economical, value, premium };
+}
+
+function buildRecCard(t, tier) {
+  const configs = {
+    economical: { label: '💚 Most Economical', cls: 'economical', why: 'Lowest price in current results — solid performance without breaking the budget.' },
+    value:      { label: '⭐ Best Value',       cls: 'value',      why: 'Best balance of price, season rating, and reliability for everyday driving.' },
+    premium:    { label: '💜 Premium Pick',     cls: 'premium',    why: 'Top-of-the-line performance, handling, and longevity in the current selection.' },
+  };
+  const { label, cls, why } = configs[tier];
+  const stockClass = t.stock === 'in' ? 'in-stock' : 'low-stock';
+  const stockLabel = t.stock === 'in' ? 'In Stock' : 'Low Stock';
+  const retail = retailPrice(t), shown = displayedPrice(t);
+  const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
+  const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
+  const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
+  const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
+  const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} mail-in rebate</span>` : '';
+  const effectiveNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:4px">Effective after rebate: ~$${Math.max(0, shown - rebate.amount / 4).toFixed(2)}/tire</div>` : '';
+  return `
+  <div class="rec-card ${cls}" style="animation-delay:.05s">
+    <div class="rec-badge ${cls}">${label}</div>
+    <div class="tc-top"><div class="tc-brand">${t.brand}</div><span class="stock-pill ${stockClass}">${stockLabel}</span></div>
+    <div class="tc-name">${t.name}</div>
+    <div class="tc-size">${t.size}</div>
+    <div class="rec-why">${why}</div>
+    <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}${rebateBadge}</div>
+    <div class="tc-specs">
+      <div><div class="spec-label">Speed Rating</div><div class="spec-value">${t.speed||'—'}</div></div>
+      <div><div class="spec-label">Load Index</div><div class="spec-value">${t.loadIndex||'—'}</div></div>
+      <div><div class="spec-label">Sidewall</div><div class="spec-value" style="font-size:11px">${t.sidewall||'BSW'}</div></div>
+      <div><div class="spec-label">Service</div><div class="spec-value" style="font-size:11px">${t.serviceType||'—'}</div></div>
+    </div>
+    <div class="tc-foot">
+      <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}${effectiveNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
+        <div class="price-each">per tire · HST extra</div>
+      </div>
+      <button class="add-btn" onclick="addToCart('${t.itemNumber}','tire')">Add to Cart +</button>
+    </div>
+  </div>`;
 }
 
 function renderTires() {
@@ -1527,19 +2081,48 @@ function renderTires() {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);font-size:14px">No tires found. Try adjusting the filter.</div>`;
     return;
   }
-  grid.innerHTML = filteredTires.map((t, i) => {
+
+  // Build recommended section
+  const picks = pickRecommended(filteredTires);
+  const recIds = picks ? new Set([picks.economical.itemNumber, picks.value.itemNumber, picks.premium.itemNumber]) : new Set();
+
+  let recHTML = '';
+  if (picks) {
+    recHTML = `
+    <div class="rec-section" style="grid-column:1/-1">
+      <div class="rec-header">
+        <div>
+          <div class="rec-eyebrow">PC Tires Picks</div>
+          <div class="rec-title">Recommended For You</div>
+        </div>
+        <div class="rec-divider"></div>
+      </div>
+      <div class="rec-grid">
+        ${buildRecCard(picks.economical,'economical')}
+        ${buildRecCard(picks.value,'value')}
+        ${buildRecCard(picks.premium,'premium')}
+      </div>
+      <div style="height:1px;background:var(--border);margin:36px 0 28px"></div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:18px">All Results</div>
+    </div>`;
+  }
+
+  const regularCards = filteredTires.map((t, i) => {
     const stockClass = t.stock === 'in' ? 'in-stock' : 'low-stock';
     const stockLabel = t.stock === 'in' ? 'In Stock' : t.stock === 'low' ? 'Low Stock' : 'Call Us';
     const retail = retailPrice(t), shown = displayedPrice(t);
     const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
     const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
     const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
+    const dimStyle = recIds.has(t.itemNumber) ? 'opacity:.55' : '';
+    const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
+    const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} rebate</span>` : '';
     return `
-    <div class="tire-card" style="animation-delay:${Math.min(i,8)*0.055}s">
+    <div class="tire-card" style="animation-delay:${Math.min(i,8)*0.055}s;${dimStyle}">
       <div class="tc-top"><div class="tc-brand">${t.brand}</div><span class="stock-pill ${stockClass}">${stockLabel}</span></div>
       <div class="tc-name">${t.name}</div>
       <div class="tc-size">${t.size}</div>
-      <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}</div>
+      <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}${rebateBadge}</div>
       <div class="tc-specs">
         <div><div class="spec-label">Speed Rating</div><div class="spec-value">${t.speed||'—'}</div></div>
         <div><div class="spec-label">Load Index</div><div class="spec-value">${t.loadIndex||'—'}</div></div>
@@ -1548,7 +2131,7 @@ function renderTires() {
       </div>
       <div class="tc-foot">
         <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
-          <div class="price-each">per tire · HST extra</div>
+          <div class="price-each">per tire · HST extra${rebate ? ` · <span style="color:var(--yellow)">+$${rebate.amount} rebate</span>` : ''}</div>
         </div>
         <button class="add-btn" onclick="addToCart('${t.itemNumber}','tire')" ${t.stock==='out'?'disabled style="opacity:.4;cursor:not-allowed"':''}>
           ${t.stock==='out'?'Out of Stock':'Add to Cart +'}
@@ -1556,6 +2139,8 @@ function renderTires() {
       </div>
     </div>`;
   }).join('');
+
+  grid.innerHTML = recHTML + regularCards;
 }
 
 // ─────────────────────────────────────────────────
@@ -1577,7 +2162,12 @@ function filterWheels(type, btn) {
 function renderWheels() {
   const grid = document.getElementById('tireGrid');
   if (!filteredWheels.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);font-size:14px">No wheels found. Try adjusting the filter or search above.</div>`;
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px">
+      <div style="font-size:40px;margin-bottom:12px">🔩</div>
+      <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:8px">No wheels found for that search</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:20px">TDG's wheel inventory is more limited than tires — we may still be able to source what you need.</div>
+      <a href="tel:5193805104" style="display:inline-flex;align-items:center;gap:8px;background:var(--yellow);color:var(--black);padding:10px 20px;border-radius:2px;font-weight:700;font-size:13px;text-decoration:none">📞 Call us — 519-380-5104</a>
+    </div>`;
     return;
   }
   grid.innerHTML = filteredWheels.map((w, i) => {
@@ -1616,46 +2206,479 @@ function renderWheels() {
 //  VEHICLE LOOKUP DATA
 // ─────────────────────────────────────────────────
 const VD = {
-  Honda:{Civic:["LX","Sport","EX","Touring"],"CR-V":["LX","EX","EX-L","Touring"],Accord:["LX","Sport","EX","Touring"]},
-  Toyota:{Camry:["LE","SE","XLE","TRD"],RAV4:["LE","XLE","Limited","TRD"],Corolla:["L","LE","SE","XSE"],Highlander:["L","LE","XLE","Limited"]},
-  Ford:{"F-150":["XL","XLT","Lariat","Platinum"],Escape:["S","SE","SEL","Titanium"],Explorer:["Base","XLT","Limited","Platinum"]},
-  Chevrolet:{Silverado:["WT","Custom","LT","LTZ"],Equinox:["LS","LT","RS","Premier"],Malibu:["LS","LT","RS","Premier"]},
-  Hyundai:{Elantra:["SE","SEL","N Line","Limited"],Tucson:["SE","SEL","N Line","Limited"],"Santa Fe":["SE","SEL","XRT","Limited"]},
-  Nissan:{Altima:["S","SV","SL","SR"],Rogue:["S","SV","SL","Platinum"],Frontier:["S","SV","PRO-4X","SL"]},
-  Subaru:{Outback:["Base","Premium","Limited","Onyx"],Forester:["Base","Premium","Limited","Sport"]},
-  Volkswagen:{Jetta:["S","SE","SEL","GLI"],Tiguan:["S","SE","SEL"],Golf:["S","SE","R"]},
-  Cadillac:{"Escalade":["Base","Luxury","Premium Luxury","Sport"],"XT5":["Luxury","Premium Luxury","Sport"],"CT5":["Luxury","Premium Luxury","Sport","V"],"CT4":["Luxury","Premium Luxury","Sport","V"]},
-  GMC:{"Sierra 1500":["Regular Cab","Double Cab","Crew Cab","Denali"],"Terrain":["SLE","SLT","AT4","Denali"],"Yukon":["SLE","SLT","AT4","Denali"]},
-  RAM:{"1500":["Tradesman","Big Horn","Rebel","Limited"],"2500":["Tradesman","Big Horn","Power Wagon","Limited"]},
-  Dodge:{Durango:["SXT","GT","R/T","SRT"],"Charger":["SXT","GT","R/T","Scat Pack"],"Challenger":["SXT","GT","R/T","Scat Pack"]},
-  Jeep:{Wrangler:["Sport","Sahara","Rubicon","Willys"],"Grand Cherokee":["Laredo","Altitude","Limited","Overland"],"Compass":["Sport","Latitude","Altitude","Limited"]},
-  Kia:{Sorento:["LX","S","EX","SX"],Sportage:["LX","S","EX","SX"],Telluride:["LX","S","EX","SX"]},
-  Mazda:{"CX-5":["Sport","Select","Preferred","Premium"],"CX-50":["Select","Preferred","Premium","Meridian"],"Mazda3":["Select","Preferred","Premium","Turbo"]},
+  Honda:{Civic:["LX","Sport","EX","Touring"],"CR-V":["LX","EX","EX-L","Touring"],Accord:["LX","Sport","EX","Touring"],Odyssey:["LX","EX","EX-L","Touring","Elite"],Pilot:["LX","EX","EX-L","Touring","Elite"],"HR-V":["LX","EX","EX-L"],"Passport":["Sport","EX-L","Touring","Elite"],"Ridgeline":["Sport","EX-L","Touring","Black Edition"]},
+  Toyota:{
+    Camry:["LE","SE","XLE","XSE","TRD"],
+    Corolla:["L","LE","SE","XSE","Hatchback"],
+    RAV4:["LE","XLE","XLE Premium","Limited","TRD","Adventure"],
+    Highlander:["L","LE","XLE","Limited","Platinum","XSE"],
+    "4Runner":["SR5","TRD Sport","TRD Off-Road","Limited","Venture"],
+    Tacoma:["SR","SR5","TRD Sport","TRD Off-Road","Limited","TRD Pro"],
+    Tundra:["SR","SR5","Limited","Platinum","1794","TRD Pro"],
+    Sienna:["LE","XLE","Limited","Platinum"],
+    Venza:["LE","XLE","Limited"],
+    "C-HR":["LE","XLE","Limited"],
+    Prius:["L","LE","XLE","Limited","Prime LE","Prime XSE"],
+    "Prius V":["Two","Three","Five"],
+    Avalon:["XLE","Touring","Limited","TRD"],
+    "Land Cruiser":["Base"],
+    Sequoia:["SR5","Limited","Platinum","TRD Pro","Capstone"],
+    "RAV4 Prime":["SE","XSE","XSE Premium"],
+    "RAV4 Hybrid":["LE","XLE","XLE Premium","Limited"],
+    "Highlander Hybrid":["LE","XLE","Limited","Platinum"],
+  },
+  Ford:{
+    "F-150":["XL","XLT","Lariat","King Ranch","Platinum","Limited","Tremor","Raptor"],
+    "F-250":["XL","XLT","Lariat","King Ranch","Platinum","Tremor"],
+    "F-350":["XL","XLT","Lariat","King Ranch","Platinum"],
+    Escape:["S","SE","SE Sport","SEL","Titanium","PHEV"],
+    Explorer:["Base","XLT","ST-Line","Timberline","Limited","ST","Platinum"],
+    Bronco:["Base","Big Bend","Black Diamond","Outer Banks","Badlands","Wildtrak","Raptor"],
+    "Bronco Sport":["Base","Big Bend","Outer Banks","Badlands","Heritage"],
+    Edge:["SE","SEL","ST-Line","Titanium","ST"],
+    Expedition:["XL","XLT","Limited","Timberline","King Ranch","Platinum","Max"],
+    Maverick:["XL","XLT","Lariat","Tremor"],
+    Ranger:["XL","XLT","Lariat","Raptor","Tremor"],
+    "Mustang":["EcoBoost","GT","Mach 1","Shelby GT500","Dark Horse"],
+    "Mustang Mach-E":["Select","Premium","GT","California Route 1"],
+    Fusion:["S","SE","SEL","Titanium","Sport"],
+  },
+  Chevrolet:{
+    "Silverado 1500":["WT","Custom","Custom Trail Boss","LT","LT Trail Boss","RST","LTZ","Trail Boss","High Country","ZR2"],
+    "Silverado 2500":["WT","Custom","LT","LTZ","High Country"],
+    "Silverado 3500":["WT","LT","LTZ","High Country"],
+    Equinox:["LS","LT","RS","Premier","EV"],
+    Traverse:["LS","LT","RS","LT Leather","Premier","High Country","Activ"],
+    Tahoe:["LS","LT","RST","Z71","Premier","High Country"],
+    Suburban:["LS","LT","RST","Z71","Premier","High Country"],
+    Colorado:["WT","LT","Z71","Trail Boss","ZR2"],
+    Blazer:["LT","RS","Premier","EV"],
+    Trax:["LS","LT","ACTIV","RS"],
+    Trailblazer:["LS","LT","ACTIV","RS"],
+    Malibu:["LS","LT","RS","Premier"],
+    Camaro:["LS","LT","SS","ZL1","LT1"],
+    Corvette:["Stingray","E-Ray","Z06","ZR1"],
+    "Spark":["LS","LT","ACTIV"],
+  },
+  GMC:{
+    "Sierra 1500":["Pro","SLE","Elevation","SLT","AT4","Denali","AT4X","Denali Ultimate"],
+    "Sierra 2500":["Pro","SLE","SLT","AT4","Denali"],
+    "Sierra 3500":["Pro","SLE","SLT","AT4","Denali"],
+    Terrain:["SLE","SLT","AT4","Denali"],
+    Acadia:["SLE","SLT","AT4","Denali"],
+    Yukon:["SLE","SLT","AT4","Denali","Denali Ultimate"],
+    "Yukon XL":["SLE","SLT","AT4","Denali","Denali Ultimate"],
+    Canyon:["Elevation","AT4","Denali","AT4X"],
+    Envoy:["SLE","SLT","Denali"],
+    Envista:["ST","SLE","Denali"],
+  },
+  Dodge:{
+    Durango:["SXT","GT","Citadel","R/T","SRT 392","SRT Hellcat"],
+    Charger:["SXT","GT","R/T","Scat Pack","SRT 392","SRT Hellcat","Super Bee"],
+    Challenger:["SXT","GT","R/T","Scat Pack","SRT 392","SRT Hellcat","SRT Demon"],
+    "Grand Caravan":["SE","SE Plus","SXT","GT"],
+    Hornet:["GT","R/T","GT Plus"],
+  },
+  RAM:{
+    "1500":["Tradesman","Big Horn","Warlock","Laramie","Rebel","Laramie Longhorn","Limited","TRX"],
+    "2500":["Tradesman","Big Horn","Laramie","Power Wagon","Laramie Longhorn","Limited"],
+    "3500":["Tradesman","Big Horn","Laramie","Laramie Longhorn","Limited"],
+    "ProMaster City":["Tradesman","Wagon SLT"],
+    "1500 Classic":["Tradesman","SLT","Warlock","Express","GT"],
+  },
+  Hyundai:{
+    Elantra:["SE","SEL","N Line","Limited","N","Hybrid Blue","Hybrid Limited"],
+    Tucson:["SE","SEL","N Line","XRT","Limited","Hybrid","Plug-in Hybrid"],
+    "Santa Fe":["SE","SEL","XRT","Calligraphy","Limited","Hybrid","Plug-in Hybrid"],
+    "Santa Cruz":["SE","SEL","SEL Premium","Limited"],
+    Sonata:["SE","SEL","SEL Plus","N Line","Limited"],
+    Kona:["SE","SEL","N Line","Limited","Electric"],
+    Palisade:["SE","SEL","XRT","Calligraphy","Limited"],
+    Venue:["SE","SEL","Denim"],
+    Ioniq5:["Standard Range","Long Range","Long Range AWD","N"],
+    Ioniq6:["Standard Range RWD","Long Range RWD","Long Range AWD"],
+  },
+  Kia:{
+    Sportage:["LX","S","EX","EX Premium","SX","SX Prestige","Hybrid","Plug-in Hybrid","X-Pro"],
+    Sorento:["LX","S","EX","SX","SX Prestige","X-Line","Hybrid","Plug-in Hybrid"],
+    Telluride:["LX","S","EX","SX","X-Line","SX Prestige","X-Pro"],
+    "Soul":["LX","S","GT-Line","EX","Turbo"],
+    Forte:["FE","LXS","GT-Line","EX","GT"],
+    "K5":["LXS","GT-Line","EX","EX Prestige","GT"],
+    Carnival:["LX","EX","SX","SX Prestige"],
+    EV6:["Light","Wind","GT-Line","GT"],
+    "Niro":["LX","EX","EX Touring","EV LX","EV EX","EV EX Premium","EV SX Touring"],
+    Seltos:["LX","S","EX","SX"],
+    Stinger:["GT-Line","GT1","GT2"],
+  },
+  Nissan:{
+    Altima:["S","SV","SR","SL","Platinum"],
+    Rogue:["S","SV","SL","Platinum","Rock Creek"],
+    Frontier:["S","SV","PRO-4X","SL","PRO-X"],
+    Titan:["S","SV","PRO-4X","SL","Platinum Reserve"],
+    Pathfinder:["S","SV","Rock Creek","SL","Platinum"],
+    Murano:["S","SV","SL","Platinum"],
+    Sentra:["S","SV","SR"],
+    Kicks:["S","SV","SR"],
+    Armada:["S","SV","SL","Platinum"],
+    "Maxima":["S","SV","SL","Platinum","40th Anniversary"],
+    Versa:["S","SV","SR"],
+    "Qashqai":["S","SV","SL","Platinum"],
+  },
+  Subaru:{
+    Outback:["Base","Premium","Onyx Edition","Onyx Edition XT","Limited","Limited XT","Touring","Touring XT","Wilderness"],
+    Forester:["Base","Premium","Sport","Limited","Touring","Wilderness"],
+    Crosstrek:["Base","Premium","Sport","Limited","Hybrid","Wilderness"],
+    Impreza:["Base","Premium","Sport","Limited","RS"],
+    Legacy:["Base","Premium","Sport","Limited","Touring XT"],
+    Ascent:["Base","Premium","Onyx Edition","Limited","Touring"],
+    WRX:["Base","Premium","Limited","GT","TR"],
+    BRZ:["Premium","Limited","tS"],
+    Solterra:["Premium","Limited","Touring"],
+  },
+  Volkswagen:{
+    Jetta:["S","SE","SEL","GLI S","GLI Autobahn","GLI 35th Anniversary"],
+    Tiguan:["S","SE","SEL","SEL R-Line","SEL Premium R-Line"],
+    Golf:["S","SE","R-Line"],
+    "Golf GTI":["S","SE","Autobahn","Clubsport"],
+    "Golf R":["Base","20 Years"],
+    Atlas:["S","SE","SE Technology","SEL","SEL R-Line","SEL Premium"],
+    "Atlas Cross Sport":["S","SE","SE Technology","SEL","SEL R-Line","SEL Premium"],
+    Taos:["S","SE","SEL"],
+    Arteon:["SE","SEL","SEL Premium R-Line","SEL R-Line 4Motion"],
+    ID4:["Standard","Pro","Pro S","AWD Pro","AWD Pro S"],
+  },
+  Jeep:{
+    Wrangler:["Sport","Sport S","Willys","Sahara","High Altitude","Rubicon","392","4xe"],
+    "Grand Cherokee":["Laredo","Altitude","Altitude X","Limited","Overland","Summit","Summit Reserve","L","4xe","Trackhawk"],
+    "Grand Cherokee L":["Laredo","Altitude","Limited","Overland","Summit","Summit Reserve"],
+    Cherokee:["Latitude","Latitude Lux","Altitude","Limited","Trailhawk","Overland"],
+    Compass:["Sport","Latitude","Latitude Lux","Altitude","Limited","Trailhawk","High Altitude"],
+    Renegade:["Sport","Latitude","Altitude","Limited","Trailhawk"],
+    Gladiator:["Sport","Sport S","Willys","Overland","Mojave","Rubicon"],
+    Commander:["Limited","Overland","Trailhawk"],
+  },
+  Cadillac:{
+    Escalade:["Luxury","Premium Luxury","Premium Luxury Platinum","Sport","Sport Platinum","V-Series Blackwing"],
+    "Escalade ESV":["Luxury","Premium Luxury","Sport","Sport Platinum"],
+    XT4:["Luxury","Premium Luxury","Sport"],
+    XT5:["Luxury","Premium Luxury","Sport","V-Series"],
+    XT6:["Luxury","Premium Luxury","Sport","V-Series"],
+    CT4:["Luxury","Premium Luxury","Sport","V-Series","V-Series Blackwing"],
+    CT5:["Luxury","Premium Luxury","Sport","V-Series","V-Series Blackwing"],
+    Lyriq:["Luxury 1","Luxury 2","Sport 1","Sport 2","Sport 3"],
+  },
+  Mazda:{
+    "CX-5":["Sport","Select","Carbon Edition","Preferred","Premium","Premium Plus"],
+    "CX-50":["Select","Preferred","Premium","Premium Plus","Meridian Edition","Turbo","Turbo Premium","Turbo Premium Plus"],
+    "CX-90":["Select","Preferred","Premium","Premium Plus","PHEV","PHEV Premium","PHEV Premium Plus"],
+    "CX-30":["Select","Preferred","Premium","Premium Plus"],
+    "Mazda3":["Select","Preferred","Premium","Premium Plus","Turbo","Turbo Premium Plus"],
+    "Mazda3 Sport":["GX","GS","GT","Turbo"],
+    "MX-5 Miata":["Sport","Club","Grand Touring","RF Club","RF Grand Touring"],
+    "CX-70":["Select","Preferred","Premium","Premium Plus","PHEV"],
+  },
 };
 
 const OEM_SIZES = {
+  // Honda
   "Honda Civic":"215/55R17","Honda CR-V":"235/65R17","Honda Accord":"235/45R18",
-  "Toyota Camry":"235/45R18","Toyota RAV4":"235/65R17","Toyota Corolla":"205/55R16","Toyota Highlander":"245/60R18",
-  "Ford F-150":"275/65R18","Ford Escape":"235/50R18","Ford Explorer":"255/55R20",
-  "Chevrolet Silverado":"275/65R18","Chevrolet Equinox":"225/65R17","Chevrolet Malibu":"235/45R18",
-  "Hyundai Elantra":"205/55R16","Hyundai Tucson":"235/55R17","Hyundai Santa Fe":"235/60R18",
-  "Nissan Altima":"215/55R17","Nissan Rogue":"225/65R17","Nissan Frontier":"265/65R17",
-  "Subaru Outback":"225/60R18","Subaru Forester":"225/60R17",
-  "Volkswagen Jetta":"225/45R17","Volkswagen Tiguan":"235/50R18","Volkswagen Golf":"225/45R17",
-  "Cadillac Escalade":"275/50R22","Cadillac XT5":"235/65R17","Cadillac CT5":"235/40R19","Cadillac CT4":"235/40R18",
-  "GMC Sierra 1500":"265/65R18","GMC Terrain":"225/65R17","GMC Yukon":"275/55R20",
-  "RAM 1500":"275/60R20","RAM 2500":"265/70R17",
+  "Honda Odyssey":"235/60R18","Honda Pilot":"245/60R18","Honda HR-V":"215/55R17",
+  "Honda Passport":"245/60R18","Honda Ridgeline":"245/60R18",
+  // Toyota
+  "Toyota Camry":"235/45R18","Toyota Corolla":"205/55R16","Toyota RAV4":"235/65R17",
+  "Toyota Highlander":"245/60R18","Toyota 4Runner":"265/70R17","Toyota Tacoma":"265/65R17",
+  "Toyota Tundra":"275/65R18","Toyota Sienna":"235/60R18","Toyota Venza":"225/65R18",
+  "Toyota C-HR":"225/50R18","Toyota Prius":"195/65R15","Toyota Prius V":"215/50R17",
+  "Toyota Avalon":"235/45R18","Toyota Land Cruiser":"285/60R18","Toyota Sequoia":"275/65R18",
+  "Toyota RAV4 Prime":"235/55R18","Toyota RAV4 Hybrid":"225/65R17",
+  "Toyota Highlander Hybrid":"235/65R17",
+  // Ford
+  "Ford F-150":"275/65R18","Ford F-250":"265/70R17","Ford F-350":"275/70R18",
+  "Ford Escape":"235/50R18","Ford Explorer":"255/55R20","Ford Bronco":"255/70R18",
+  "Ford Bronco Sport":"225/65R17","Ford Edge":"235/55R19","Ford Expedition":"275/55R20",
+  "Ford Maverick":"225/65R17","Ford Ranger":"265/65R17","Ford Mustang":"255/40R19",
+  "Ford Mustang Mach-E":"245/50R20","Ford Fusion":"235/45R18",
+  // Chevrolet
+  "Chevrolet Silverado 1500":"275/65R18","Chevrolet Silverado 2500":"265/70R17",
+  "Chevrolet Silverado 3500":"245/75R17","Chevrolet Equinox":"225/65R17",
+  "Chevrolet Traverse":"235/65R18","Chevrolet Tahoe":"265/65R18",
+  "Chevrolet Suburban":"265/65R18","Chevrolet Colorado":"265/65R17",
+  "Chevrolet Blazer":"235/55R19","Chevrolet Trax":"215/55R17",
+  "Chevrolet Trailblazer":"215/55R17","Chevrolet Malibu":"235/45R18",
+  "Chevrolet Camaro":"245/45R20","Chevrolet Corvette":"245/35R19",
+  "Chevrolet Spark":"175/65R15",
+  // GMC
+  "GMC Sierra 1500":"265/65R18","GMC Sierra 2500":"265/70R17","GMC Sierra 3500":"245/75R17",
+  "GMC Terrain":"225/65R17","GMC Acadia":"235/65R17","GMC Yukon":"265/65R18",
+  "GMC Yukon XL":"265/65R18","GMC Canyon":"265/65R17",
+  "GMC Envoy":"225/65R17","GMC Envista":"215/55R17",
+  // Dodge / RAM
   "Dodge Durango":"265/50R20","Dodge Charger":"235/55R19","Dodge Challenger":"245/45R20",
-  "Jeep Wrangler":"255/70R18","Jeep Grand Cherokee":"265/60R18","Jeep Compass":"225/60R17",
+  "Dodge Grand Caravan":"225/65R16","Dodge Hornet":"225/55R18",
+  "RAM 1500":"275/60R20","RAM 2500":"265/70R17","RAM 3500":"245/70R17",
+  "RAM ProMaster City":"215/60R16","RAM 1500 Classic":"275/60R20",
+  // Hyundai
+  "Hyundai Elantra":"205/55R16","Hyundai Tucson":"235/55R17","Hyundai Santa Fe":"235/60R18",
+  "Hyundai Santa Cruz":"245/60R18","Hyundai Sonata":"225/50R17","Hyundai Kona":"215/55R17",
+  "Hyundai Palisade":"245/60R18","Hyundai Venue":"205/60R16",
+  "Hyundai Ioniq5":"235/55R19","Hyundai Ioniq6":"225/55R18",
+  // Kia
   "Kia Sorento":"235/65R17","Kia Sportage":"235/55R18","Kia Telluride":"245/60R20",
-  "Mazda CX-5":"225/65R17","Mazda CX-50":"225/60R18","Mazda Mazda3":"215/45R18",
+  "Kia Soul":"205/55R16","Kia Forte":"205/55R16","Kia K5":"225/45R18",
+  "Kia Carnival":"235/60R18","Kia EV6":"235/55R19","Kia Niro":"215/55R17",
+  "Kia Seltos":"215/60R17","Kia Stinger":"225/40R19",
+  // Nissan
+  "Nissan Altima":"215/55R17","Nissan Rogue":"225/65R17","Nissan Frontier":"265/65R17",
+  "Nissan Titan":"265/70R18","Nissan Pathfinder":"235/65R18","Nissan Murano":"235/65R18",
+  "Nissan Sentra":"205/55R16","Nissan Kicks":"205/60R16","Nissan Armada":"275/60R20",
+  "Nissan Maxima":"245/40R19","Nissan Versa":"185/65R15","Nissan Qashqai":"225/55R17",
+  // Subaru
+  "Subaru Outback":"225/60R18","Subaru Forester":"225/60R17","Subaru Crosstrek":"215/60R16",
+  "Subaru Impreza":"205/55R16","Subaru Legacy":"225/55R17","Subaru Ascent":"235/65R18",
+  "Subaru WRX":"225/45R17","Subaru BRZ":"215/45R17","Subaru Solterra":"235/50R20",
+  // Volkswagen
+  "Volkswagen Jetta":"225/45R17","Volkswagen Tiguan":"235/50R18","Volkswagen Golf":"225/45R17",
+  "Volkswagen Golf GTI":"225/45R18","Volkswagen Golf R":"235/35R19",
+  "Volkswagen Atlas":"235/55R18","Volkswagen Atlas Cross Sport":"235/50R20",
+  "Volkswagen Taos":"215/55R17","Volkswagen Arteon":"235/45R19","Volkswagen ID4":"235/50R20",
+  // Jeep
+  "Jeep Wrangler":"255/70R18","Jeep Grand Cherokee":"265/60R18",
+  "Jeep Grand Cherokee L":"265/60R18","Jeep Cherokee":"225/60R17",
+  "Jeep Compass":"225/60R17","Jeep Renegade":"215/60R17",
+  "Jeep Gladiator":"255/70R18","Jeep Commander":"265/60R18",
+  // Cadillac
+  "Cadillac Escalade":"275/50R22","Cadillac Escalade ESV":"275/50R22",
+  "Cadillac XT4":"235/55R18","Cadillac XT5":"235/65R17","Cadillac XT6":"235/55R19",
+  "Cadillac CT4":"235/40R18","Cadillac CT5":"235/40R19","Cadillac Lyriq":"255/50R20",
+  // Mazda
+  "Mazda CX-5":"225/65R17","Mazda CX-50":"225/60R18","Mazda CX-90":"235/55R20",
+  "Mazda CX-30":"215/60R16","Mazda Mazda3":"215/45R18","Mazda Mazda3 Sport":"215/45R18",
+  "Mazda MX-5 Miata":"195/50R16","Mazda CX-70":"235/55R20",
 };
+
+// Alternate OEM sizes per vehicle (e.g. different trim levels or staggered fitments)
+const OEM_ALT_SIZES = {
+  "Honda Civic":          ["205/55R16","225/45R17"],
+  "Honda CR-V":           ["225/65R17","235/65R17"],
+  "Honda Accord":         ["245/40R19","235/50R18"],
+  "Honda Odyssey":        ["235/60R18","245/60R18"],
+  "Honda Pilot":          ["235/65R18","245/60R18"],
+  "Honda HR-V":           ["215/55R17","215/60R16"],
+  "Honda Passport":       ["245/60R18","265/45R20"],
+  "Honda Ridgeline":      ["245/60R18","265/50R20"],
+  "Toyota Camry":         ["215/55R17","225/50R17"],
+  "Toyota RAV4":          ["225/65R17","255/55R18"],
+  "Toyota Corolla":       ["195/65R15","215/45R17"],
+  "Toyota Highlander":    ["235/65R17","265/50R20"],
+  "Toyota 4Runner":       ["265/70R17","265/60R18"],
+  "Toyota Tacoma":        ["245/75R16","265/65R17","265/60R18"],
+  "Toyota Tundra":        ["275/65R18","275/55R20","285/55R20"],
+  "Toyota Sienna":        ["235/60R18","245/60R18"],
+  "Toyota Venza":         ["225/65R18","235/55R19"],
+  "Toyota C-HR":          ["215/60R17","225/50R18"],
+  "Toyota Prius":         ["195/65R15","215/45R17"],
+  "Toyota Avalon":        ["235/45R18","235/50R18"],
+  "Toyota Sequoia":       ["275/65R18","285/55R20"],
+  "Toyota RAV4 Prime":    ["235/55R18","255/45R19"],
+  "Toyota RAV4 Hybrid":   ["225/65R17","235/55R18"],
+  "Toyota Highlander Hybrid": ["235/65R17","245/55R19"],
+  "Ford F-150":           ["265/60R18","275/60R20","265/70R17"],
+  "Ford Escape":          ["225/55R17","225/65R17"],
+  "Ford Explorer":        ["265/50R20","245/60R18"],
+  "Chevrolet Silverado":  ["265/65R18","265/70R17","275/60R20"],
+  "Chevrolet Equinox":    ["235/55R17"],
+  "Hyundai Elantra":      ["215/50R17","225/45R17"],
+  "Hyundai Tucson":       ["235/65R17","235/60R18"],
+  "Hyundai Santa Fe":     ["235/65R17","255/50R19"],
+  "Nissan Altima":        ["225/50R17"],
+  "Nissan Rogue":         ["235/65R17"],
+  "Nissan Frontier":      ["265/70R16","265/65R17"],
+  "Subaru Outback":       ["225/65R17"],
+  "Subaru Forester":      ["225/65R17"],
+  "Volkswagen Jetta":     ["205/55R16","215/45R17"],
+  "Volkswagen Tiguan":    ["225/55R17"],
+  "Cadillac Escalade":    ["255/65R22","285/45R22"],
+  "Cadillac XT5":         ["255/55R19"],
+  "GMC Sierra 1500":      ["275/60R20","265/70R17"],
+  "GMC Terrain":          ["235/55R17"],
+  "GMC Yukon":            ["265/50R20","285/45R22"],
+  "RAM 1500":             ["265/70R17","265/60R18","285/45R22"],
+  "RAM 2500":             ["265/70R17","235/80R17"],
+  "Dodge Durango":        ["245/60R20","275/45R22"],
+  "Jeep Wrangler":        ["245/75R17","275/70R18"],
+  "Jeep Grand Cherokee":  ["255/55R20","265/50R20"],
+  "Kia Sorento":          ["235/60R18","255/45R20"],
+  "Kia Sportage":         ["225/60R17","255/45R19"],
+  "Kia Telluride":        ["265/45R21"],
+  "Kia Soul":             ["205/55R16","215/45R17"],
+  "Kia Forte":            ["205/55R16","225/40R18"],
+  "Kia K5":               ["225/45R18","245/40R19"],
+  "Kia Carnival":         ["235/60R18","245/50R19"],
+  "Kia EV6":              ["235/55R19","255/45R20"],
+  "Kia Seltos":           ["215/60R17","235/50R18"],
+  "Mazda CX-5":           ["225/55R19"],
+  "Mazda CX-50":          ["255/45R20"],
+  "Mazda CX-90":          ["235/55R20","255/45R21"],
+  "Mazda CX-30":          ["215/60R16","215/55R18"],
+  "Mazda Mazda3":         ["205/60R16","215/45R18"],
+  "Ford F-250":           ["265/70R17","275/65R18","275/65R20"],
+  "Ford Bronco":          ["255/70R18","265/70R17","315/70R17"],
+  "Ford Bronco Sport":    ["225/65R17","235/55R17"],
+  "Ford Edge":            ["235/55R19","245/50R20"],
+  "Ford Expedition":      ["275/55R20","275/50R22"],
+  "Ford Maverick":        ["225/65R17","245/45R19"],
+  "Ford Ranger":          ["245/65R17","265/65R17","265/60R18"],
+  "Ford Mustang":         ["235/55R17","255/40R19","305/35R20"],
+  "Chevrolet Silverado 1500": ["265/65R18","275/60R20","265/70R17"],
+  "Chevrolet Silverado 2500": ["245/75R17","265/70R17"],
+  "Chevrolet Traverse":   ["235/65R18","255/55R20"],
+  "Chevrolet Tahoe":      ["265/65R18","275/55R20"],
+  "Chevrolet Suburban":   ["265/65R18","275/55R20"],
+  "Chevrolet Colorado":   ["245/65R17","265/65R17","265/60R18"],
+  "Chevrolet Blazer":     ["235/55R19","255/45R20"],
+  "Chevrolet Trax":       ["215/55R17","225/50R18"],
+  "Chevrolet Trailblazer":["215/55R17","225/45R18"],
+  "GMC Sierra 2500":      ["245/75R17","265/70R17"],
+  "GMC Acadia":           ["235/65R17","255/55R20"],
+  "GMC Yukon XL":         ["265/65R18","275/55R20"],
+  "GMC Canyon":           ["245/65R17","265/65R17"],
+  "RAM 3500":             ["245/70R17","265/70R17"],
+  "Dodge Hornet":         ["225/55R18","235/45R20"],
+  "Hyundai Santa Cruz":   ["245/60R18","255/45R20"],
+  "Hyundai Sonata":       ["225/50R17","235/45R18"],
+  "Hyundai Kona":         ["205/55R17","215/45R18"],
+  "Hyundai Palisade":     ["245/60R18","255/45R20"],
+  "Hyundai Ioniq5":       ["235/55R19","255/45R20"],
+  "Hyundai Ioniq6":       ["225/55R18","245/45R19"],
+  "Nissan Titan":         ["265/70R18","275/60R20"],
+  "Nissan Pathfinder":    ["235/65R18","255/60R18"],
+  "Nissan Murano":        ["235/65R18","245/55R19"],
+  "Nissan Armada":        ["275/60R20","285/45R22"],
+  "Subaru Crosstrek":     ["215/60R16","225/55R17"],
+  "Subaru Impreza":       ["195/65R15","205/55R16"],
+  "Subaru Legacy":        ["225/55R17","225/50R18"],
+};
+
+// ─────────────────────────────────────────────────
+//  VIN DECODER (NHTSA free API)
+// ─────────────────────────────────────────────────
+let vinDecoded = null;
+
+function onVinInput(el) {
+  const v = el.value.replace(/[^A-HJ-NPR-Z0-9]/gi, '').toUpperCase().substr(0, 17);
+  el.value = v;
+  document.getElementById('vinChars').textContent = v.length + ' / 17';
+  el.classList.remove('valid','invalid');
+  const btn = document.getElementById('vinSearchBtn');
+  if (v.length === 17) {
+    el.classList.add('valid');
+    btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+  } else {
+    if (v.length > 0) el.classList.add('invalid');
+    btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed';
+  }
+  if (v.length < 17) document.getElementById('vinResult').innerHTML = '';
+}
+
+async function doVinLookup() {
+  const vin = document.getElementById('vinInput').value.trim().toUpperCase();
+  if (vin.length !== 17) return;
+  const resultEl = document.getElementById('vinResult');
+  resultEl.innerHTML = `<div class="vin-loading"><div class="vin-spinner"></div>Decoding VIN — checking NHTSA database…</div>`;
+
+  try {
+    const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${vin}?format=json`);
+    const data = await res.json();
+    const r = data.Results?.[0];
+    if (!r || r.ErrorCode?.startsWith('8') || r.ErrorCode?.startsWith('11')) throw new Error('VIN not found');
+
+    const year  = r.ModelYear || '';
+    const make  = r.Make ? r.Make.charAt(0) + r.Make.slice(1).toLowerCase() : '';
+    const model = r.Model || '';
+    const trim  = r.Trim || r.Series || '';
+    const body  = r.BodyClass || '';
+    const drive = r.DriveType || '';
+    const engine = r.DisplacementL ? parseFloat(r.DisplacementL).toFixed(1) + 'L' : '';
+    const cylinders = r.EngineCylinders ? r.EngineCylinders + '-cyl' : '';
+    const engineStr = [engine, cylinders].filter(Boolean).join(' ');
+
+    // Try OEM size lookup from our table
+    const vehicleKey = `${make.charAt(0).toUpperCase() + make.slice(1)} ${model}`;
+    const oemSize = OEM_SIZES[vehicleKey] || null;
+    const altSizes = OEM_ALT_SIZES?.[vehicleKey] || [];
+
+    vinDecoded = { year, make, model, trim, oemSize, altSizes, vin, vehicleKey };
+
+    const sizeHTML = oemSize
+      ? `<div class="vin-spec"><div class="vin-spec-label">OEM Tire Size</div><div class="vin-spec-value highlight">${oemSize}</div></div>
+         ${altSizes.length ? `<div class="vin-spec"><div class="vin-spec-label">Alt Sizes</div><div class="vin-spec-value" style="font-size:11px;color:var(--muted)">${altSizes.join(', ')}</div></div>` : ''}`
+      : `<div class="vin-spec" style="grid-column:1/-1"><div class="vin-spec-label">Tire Size</div><div class="vin-spec-value" style="color:var(--muted);font-size:12px">Not in our database — check door sticker</div></div>`;
+
+    const actionsHTML = oemSize
+      ? `<button class="vin-search-btn" onclick="vinSearchTires()">Search Tires for ${oemSize} →</button>
+         ${altSizes.length ? `<button class="vin-alt-btn" onclick="vinSearchAllSizes()">Search All Sizes</button>` : ''}`
+      : `<button class="vin-search-btn" onclick="smoothScroll('#catalog')">Browse Full Inventory →</button>`;
+
+    resultEl.innerHTML = `
+      <div class="vin-card success">
+        <div class="vin-vehicle-title">✅ ${year} ${make.charAt(0).toUpperCase() + make.slice(1)} ${model}${trim ? ' — ' + trim : ''}</div>
+        <div class="vin-specs-grid">
+          <div class="vin-spec"><div class="vin-spec-label">Year</div><div class="vin-spec-value">${year}</div></div>
+          <div class="vin-spec"><div class="vin-spec-label">Make</div><div class="vin-spec-value">${make.charAt(0).toUpperCase() + make.slice(1)}</div></div>
+          <div class="vin-spec"><div class="vin-spec-label">Model</div><div class="vin-spec-value">${model}</div></div>
+          ${trim ? `<div class="vin-spec"><div class="vin-spec-label">Trim</div><div class="vin-spec-value">${trim}</div></div>` : ''}
+          ${body ? `<div class="vin-spec"><div class="vin-spec-label">Body</div><div class="vin-spec-value">${body}</div></div>` : ''}
+          ${engineStr ? `<div class="vin-spec"><div class="vin-spec-label">Engine</div><div class="vin-spec-value">${engineStr}</div></div>` : ''}
+          ${drive ? `<div class="vin-spec"><div class="vin-spec-label">Drive</div><div class="vin-spec-value">${drive}</div></div>` : ''}
+          ${sizeHTML}
+        </div>
+        <div class="vin-actions">${actionsHTML}</div>
+      </div>`;
+
+  } catch(err) {
+    resultEl.innerHTML = `
+      <div class="vin-card error">
+        <div style="font-size:14px;font-weight:600;margin-bottom:6px">⚠️ Could not decode this VIN</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:14px">This VIN wasn't found in the NHTSA database. Double-check the number, or use the vehicle dropdowns below.</div>
+        <button class="vin-alt-btn" onclick="switchLookupTab('vehicle')">Try Vehicle Lookup Instead →</button>
+      </div>`;
+  }
+  setTimeout(() => smoothScroll('#lookup'), 100);
+}
+
+function vinSearchTires() {
+  if (!vinDecoded?.oemSize) return;
+  lastSearchMethod = 'vin';
+  lastSearchVehicle = { year: vinDecoded.year, make: vinDecoded.make, model: vinDecoded.model, trim: vinDecoded.trim, vin: vinDecoded.vin };
+  switchCatalogType('tires');
+  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
+  textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — searching tires for <strong>${vinDecoded.oemSize}</strong>…`;
+  resultEl.classList.add('show');
+  loadTires({ tireSizes: [vinDecoded.oemSize] }).then(() => {
+    textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> tires for size <strong>${vinDecoded.oemSize}</strong>.`;
+  });
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
+function vinSearchAllSizes() {
+  if (!vinDecoded) return;
+  const allSizes = [vinDecoded.oemSize, ...(vinDecoded.altSizes || [])].filter(Boolean);
+  switchCatalogType('tires');
+  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
+  textEl.innerHTML = `Showing all compatible sizes for <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong>…`;
+  resultEl.classList.add('show');
+  loadTires({ tireSizes: allSizes }).then(() => {
+    textEl.innerHTML = `<strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> compatible tires across ${allSizes.length} sizes.`;
+  });
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
 
 // ─────────────────────────────────────────────────
 //  LOOKUP TAB SWITCHING
 // ─────────────────────────────────────────────────
 function switchLookupTab(tab) {
-  ['vehicle','size','wheels'].forEach(t => {
+  ['vin','vehicle','size','wheels'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('panel-' + t).classList.toggle('active', t === tab);
   });
@@ -1695,6 +2718,9 @@ async function doLookup() {
   const y = document.getElementById('vYear').value, mk = document.getElementById('vMake').value, md = document.getElementById('vModel').value;
   if (!y || !mk || !md) { alert('Please select Year, Make and Model.'); return; }
   const vehicleKey = `${mk} ${md}`, tireSize = OEM_SIZES[vehicleKey] || null;
+  const trim = document.getElementById('vTrim')?.value || '';
+  lastSearchMethod = 'vehicle';
+  lastSearchVehicle = { year: y, make: mk, model: md, trim };
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
   if (tireSize) {
     textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — OEM size: <strong>${tireSize}</strong>. Searching live TDG inventory…`;
@@ -1746,7 +2772,13 @@ async function doWheelVehicleLookup() {
     const params = { boltPatterns: [oemWheel.bolt], diameters: [oemWheel.dia] };
     if (cat) params.category = cat;
     await loadWheels(params);
-    textEl.innerHTML = `Showing <strong>${filteredWheels.length}</strong> compatible wheels for <strong>${y} ${mk} ${md}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>.`;
+    if (!filteredWheels.length) {
+      // Relax diameter constraint — show all for this bolt pattern
+      textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — no exact OEM size in stock. Showing all <strong>${oemWheel.bolt}</strong> wheels — call us to confirm fitment.`;
+      await loadWheels(cat ? { boltPatterns: [oemWheel.bolt], category: cat } : { boltPatterns: [oemWheel.bolt] });
+    } else {
+      textEl.innerHTML = `Showing <strong>${filteredWheels.length}</strong> compatible wheels for <strong>${y} ${mk} ${md}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>.`;
+    }
   } else {
     textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong>. Showing full wheel inventory — call us to confirm fitment.`;
     resultEl.classList.add('show');
@@ -1760,19 +2792,45 @@ async function doWheelSizeSearch() {
   const dia  = parseInt(document.getElementById('wDiameter').value) || null;
   const wid  = parseFloat(document.getElementById('wWidth').value) || null;
   const cat  = document.getElementById('wCategory').value || null;
+  const isStaggered = document.getElementById('staggeredCheck').checked;
+  const bolt2 = document.getElementById('wBoltPattern2').value;
+  const dia2  = parseInt(document.getElementById('wDiameter2').value) || null;
+  const wid2  = parseFloat(document.getElementById('wWidth2').value) || null;
   if (!bolt) { alert('Please select a bolt pattern.'); return; }
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
   let desc = `bolt pattern <strong>${bolt}</strong>`;
   if (dia) desc += `, <strong>${dia}"</strong> diameter`;
   if (wid) desc += `, <strong>${wid}"</strong> wide`;
+  if (isStaggered && (bolt2 || dia2)) desc += ` + rear size`;
   textEl.innerHTML = `Searching wheels — ${desc}…`;
   resultEl.classList.add('show');
   const params = { boltPatterns: [bolt] };
   if (dia) params.diameters = [dia];
   if (wid) params.widths = [wid];
   if (cat) params.category = cat;
+  // For staggered, merge both bolt patterns so API returns wheels for both sizes
+  if (isStaggered && (bolt2 || dia2)) {
+    const rearBolt = bolt2 || bolt;
+    if (rearBolt !== bolt) params.boltPatterns = [bolt, rearBolt];
+    if (dia2 && dia2 !== dia) { params.diameters = params.diameters || []; if (!params.diameters.includes(String(dia2))) params.diameters.push(String(dia2)); }
+    if (wid2 && wid2 !== wid) { params.widths = params.widths || []; if (!params.widths.includes(String(wid2))) params.widths.push(String(wid2)); }
+  }
   await loadWheels(params);
-  textEl.innerHTML = `Found <strong>${filteredWheels.length}</strong> wheel${filteredWheels.length!==1?'s':''} — ${desc}.`;
+  if (!filteredWheels.length) {
+    // Graceful fallback — relax to bolt pattern only
+    textEl.innerHTML = `No exact match for ${desc} — showing all <strong>${bolt}</strong> wheels instead. Call us to confirm fitment.`;
+    const fallback = { boltPatterns: [bolt] };
+    if (cat) fallback.category = cat;
+    await loadWheels(fallback);
+    if (!filteredWheels.length) {
+      // Last resort — show everything
+      textEl.innerHTML = `No wheels found for that size. Showing full inventory — <a href="tel:5193805104" style="color:var(--yellow)">call us at 519-380-5104</a> to find your fitment.`;
+      await loadWheels(null);
+    }
+  } else {
+    const staggeredNote = isStaggered ? ' (staggered set)' : '';
+    textEl.innerHTML = `Found <strong>${filteredWheels.length}</strong> wheel${filteredWheels.length!==1?'s':''} — ${desc}${staggeredNote}.`;
+  }
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
 
@@ -1786,6 +2844,18 @@ function initWheelDropdowns() {
   WHEEL_DIAMETERS.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d + '"'; dEl.appendChild(o); });
   const wEl = document.getElementById('wWidth');
   WHEEL_WIDTHS.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + '"'; wEl.appendChild(o); });
+  // Populate staggered dropdowns
+  const bp2 = document.getElementById('wBoltPattern2');
+  BOLT_PATTERNS.forEach(bp => { const o = document.createElement('option'); o.value = bp; o.textContent = bp; bp2.appendChild(o); });
+  const d2 = document.getElementById('wDiameter2');
+  WHEEL_DIAMETERS.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d + '"'; d2.appendChild(o); });
+  const w2 = document.getElementById('wWidth2');
+  WHEEL_WIDTHS.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + '"'; w2.appendChild(o); });
+}
+
+function toggleStaggered() {
+  const checked = document.getElementById('staggeredCheck').checked;
+  document.getElementById('staggeredRow').style.display = checked ? 'block' : 'none';
 }
 
 // ─────────────────────────────────────────────────
@@ -1870,6 +2940,8 @@ function updateSizePreview() {
 }
 
 async function doSizeSearch() {
+  lastSearchMethod = 'size';
+  lastSearchVehicle = null;
   const width = document.getElementById('sWidth').value, sidewall = document.getElementById('sSidewall').value, diameter = document.getElementById('sDiameter').value;
   if (!width || !sidewall || !diameter) return;
   const tireSize = `${width}/${sidewall}R${diameter}`;
@@ -1887,12 +2959,8 @@ async function doSizeSearch() {
 //  DELIVERY OPTION
 // ─────────────────────────────────────────────────
 let deliveryMode = 'shop';
-function setDelivery(mode) {
-  deliveryMode = mode;
-  document.getElementById('dopt-shop').classList.toggle('active', mode === 'shop');
-  document.getElementById('dopt-home').classList.toggle('active', mode === 'home');
-  document.getElementById('addrRow').style.display = mode === 'home' ? 'block' : 'none';
-}
+let lastSearchMethod = null; // 'vin' | 'vehicle' | 'size' | null
+let lastSearchVehicle = null; // { year, make, model, trim, vin? }
 
 // ─────────────────────────────────────────────────
 //  CART
@@ -1904,9 +2972,10 @@ function addToCart(itemNumber, itemType) {
   const ex = cart.find(c => c.itemNumber === itemNumber);
   const priceToCharge = displayedPrice(item);
   if (ex) ex.qty++;
-  else cart.push({ ...item, price: priceToCharge, qty: 1, install: true, itemType: itemType || 'tire' });
+  else cart.push({ ...item, price: priceToCharge, qty: 4, install: true, itemType: itemType || 'tire' });
   updBadge();
-  showToast(item.brand + ' ' + item.name, 'Added to your cart');
+  const qty = ex ? ex.qty : 4;
+  showToast(item.brand + ' ' + item.name, `${qty} tires added to your cart`);
 }
 
 function removeFromCart(itemNumber) { cart = cart.filter(c => c.itemNumber !== itemNumber); updBadge(); renderCart(); }
@@ -1925,6 +2994,8 @@ function renderCart() {
   }
   body.innerHTML = cart.map(item => {
     const icon = item.itemType === 'wheel' ? (item.category === 'steel' ? '⚙️' : '💿') : '🔵';
+    const rebate = item.itemType !== 'wheel' && typeof getRebateForBrand === 'function' ? getRebateForBrand(item.brand) : null;
+    const rebateNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:3px">💰 $${rebate.amount} mail-in rebate available — <a href="${rebate.url}" target="_blank" style="color:var(--yellow);text-decoration:none">apply here →</a></div>` : '';
     return `
     <div class="cart-item">
       <div class="ci-icon">${icon}</div>
@@ -1934,6 +3005,7 @@ function renderCart() {
         <div class="ci-size">${item.size || (item.diameter ? item.diameter+'" · '+item.boltPattern : '')}</div>
         ${item.install && item.itemType !== 'wheel' ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
         ${item.itemType !== 'wheel' ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${TDG.INSTALL_PRICE}/tire</b></span></label>` : ''}
+        ${rebateNote}
       </div>
       <div class="ci-right">
         <div class="qty-row">
@@ -1968,81 +3040,255 @@ function closeCart() { document.getElementById('cartOverlay').classList.remove('
 // ─────────────────────────────────────────────────
 //  CHECKOUT
 // ─────────────────────────────────────────────────
-function openCheckout() { closeCart(); step = 1; updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
+function openCheckout() { closeCart(); step = 1; selectedAddons = new Set(); updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
 function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('show'); }
-const mTitles = ['', 'Contact Info', 'Payment', 'Book Installation', 'Order Confirmed!'];
-const nLabels = ['', 'Continue →', 'Pay Securely 🔒', 'Confirm Booking →', ''];
+
+const mTitles = ['', 'Contact Info', 'Book Installation', 'Add-ons', 'Payment', 'Order Confirmed!'];
+const nLabels = ['', 'Continue →', 'Continue →', 'Continue →', 'Pay Securely 🔒', ''];
+
 function updSteps() {
-  for (let i = 1; i <= 4; i++) document.getElementById('ps' + i).className = 'ps' + (i < step ? ' done' : (i === step ? ' active' : ''));
-  for (let i = 1; i <= 4; i++) document.getElementById('s' + i).className = 'fsec' + (i === step ? ' active' : '');
+  for (let i = 1; i <= 5; i++) document.getElementById('ps' + i).className = 'ps' + (i < step ? ' done' : (i === step ? ' active' : ''));
+  for (let i = 1; i <= 5; i++) document.getElementById('s' + i).className = 'fsec' + (i === step ? ' active' : '');
   document.getElementById('mTitle').textContent = mTitles[step];
   const nb = document.getElementById('nextBtn'), bb = document.getElementById('backBtn'), mf = document.getElementById('mFoot');
-  if (step === 4) { mf.style.display = 'none'; return; } else mf.style.display = 'block';
+  if (step === 5) { mf.style.display = 'none'; return; } else mf.style.display = 'block';
   nb.textContent = nLabels[step] || 'Continue →';
   bb.style.display = (step > 1) ? 'block' : 'none';
-  if (step === 2) buildPaymentSummary();
-  if (step === 3) { selectedService = null; selDate = null; selTime = null; document.getElementById('calSection').style.display='none'; buildServiceMenu(); }
+  if (step === 2) {
+    selectedService = null; selDate = null; selTime = null;
+    document.getElementById('calSection').style.display = 'none';
+    buildServiceMenu();
+    // If cart already has installation, auto-select 4-Tire Mount & Balance
+    const cartHasInstall = cart.some(c => c.install && c.itemType !== 'wheel');
+    if (cartHasInstall) {
+      selectedService = SERVICES.find(s => s.id === 'mount4');
+      buildServiceMenu();
+      document.getElementById('calSection').style.display = 'block';
+      document.getElementById('durationNote').innerHTML = `<b>✅ Installation already included in your order</b> — just pick your date and time below.`;
+      buildCal();
+    }
+  }
+  if (step === 3) buildAddonGrid();
+  if (step === 4) buildPaymentSummary();
 }
-async function buildPaymentSummary() {
-  const box = document.getElementById('payBox');
-  box.innerHTML = `<div style="color:var(--muted);font-size:13px">Getting live quote…</div>`;
-  tdgQuote = null;
-  const t = getTotals();
-  const instTotal = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
-  box.innerHTML = `
-    <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
-    ${instTotal > 0 ? `<div class="ptrow"><span>Installation</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
-    <div class="ptrow"><span>Tax (HST)</span><span>$${t.tax.toFixed(2)}</span></div>
-    <div class="ptrow bold"><span>Total Due Today</span><span>$${t.total.toFixed(2)}</span></div>
-  `;
-}
+
 async function nextStep() {
   if (step === 1 && !document.getElementById('email').value) { alert('Please enter your email address.'); return; }
-  if (step === 2) { await processPayment(); return; }
-  if (step === 3) {
-    if (!selectedService) { alert('Please select a service type.'); return; }
+  if (step === 2) {
+    if (!selectedService) { alert('Please select a service type, or click Skip to arrange later.'); return; }
     if (!selDate || !selTime) { alert('Please select a date and time, or click Skip to arrange later.'); return; }
-    await finishOrder(false); return;
   }
+  if (step === 4) { await processPayment(); return; }
   step++; updSteps();
 }
 function prevStep() { if (step > 1) { step--; updSteps(); } }
+function skipInstall() { step = 3; updSteps(); }
+
+// ── ADD-ONS ──────────────────────────────────────
+const ADDONS = [
+  { id:'nitrogen',  icon:'💨', name:'Nitrogen Fill',          price:19.99, unit:'per tire', desc:'More stable pressure. Better in extreme cold.', vehicleSpecific: false },
+  { id:'hazard',    icon:'🛡️', name:'Road Hazard Protection', price:24.99, unit:'per tire', desc:'Free repair or replacement if you get a flat.', vehicleSpecific: false },
+  { id:'storage',   icon:'📦', name:'Seasonal Tire Storage',  price:49.99, unit:'per set',  desc:'We store your off-season tires until next swap.', vehicleSpecific: false },
+  { id:'wipers',    icon:'🌧️', name:'Wiper Blade Replacement',price:29.99, unit:'flat',     desc:'New blades installed while you\'re in for service.', vehicleSpecific: true },
+  { id:'cabin',     icon:'🌬️', name:'Cabin Air Filter',       price:39.99, unit:'flat',     desc:'Breathe cleaner air. Takes 10 min to swap.', vehicleSpecific: true },
+  { id:'torque',    icon:'✅', name:'Torque Re-check',         price:0,     unit:'free',     desc:'50–100 km after install. Included, no charge.', vehicleSpecific: false },
+];
+let selectedAddons = new Set();
+
+function buildAddonGrid() {
+  const grid = document.getElementById('addonGrid'); if (!grid) return;
+  if (!selectedAddons.has('torque') && !selectedAddons._torqueSeen) {
+    selectedAddons.add('torque');
+    selectedAddons._torqueSeen = true;
+  }
+  const hasVehicle = lastSearchMethod === 'vin' || lastSearchMethod === 'vehicle';
+  const vehicleName = lastSearchVehicle ? `${lastSearchVehicle.year} ${lastSearchVehicle.make} ${lastSearchVehicle.model}` : null;
+
+  grid.innerHTML = ADDONS.map(a => {
+    const sel = selectedAddons.has(a.id);
+    const locked = a.vehicleSpecific && !hasVehicle;
+    const priceStr = a.price === 0
+      ? `<span style="color:var(--green);font-weight:700">FREE</span>`
+      : `<span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:${sel?'var(--yellow)':'var(--white)'}">$${a.price.toFixed(2)}</span><span style="font-size:11px;color:var(--muted)"> / ${a.unit}</span>`;
+
+    if (locked) {
+      return `<div style="padding:14px;background:var(--card);border:2px solid var(--border);border-radius:4px;opacity:.55;position:relative">
+        <div style="font-size:20px;margin-bottom:6px">${a.icon}</div>
+        <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px">${a.name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5">${a.desc}</div>
+        <div style="font-size:11px;color:var(--yellow);font-weight:600;cursor:pointer" onclick="switchLookupTab('vin');closeCheckout()">🔍 Enter your VIN to unlock →</div>
+      </div>`;
+    }
+
+    return `<div onclick="toggleAddon('${a.id}')" style="padding:14px;background:var(--card);border:2px solid ${sel?'var(--yellow)':'var(--border)'};border-radius:4px;cursor:pointer;transition:all .2s;position:relative">
+      ${sel ? '<div style="position:absolute;top:8px;right:10px;background:var(--yellow);color:var(--black);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">✓</div>' : ''}
+      <div style="font-size:20px;margin-bottom:6px">${a.icon}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px">${a.name}</div>
+      ${a.vehicleSpecific && vehicleName ? `<div style="font-size:10px;color:var(--green);margin-bottom:4px;font-weight:600">✓ For your ${vehicleName}</div>` : ''}
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">${a.desc}</div>
+      <div>${priceStr}</div>
+    </div>`;
+  }).join('');
+  updateAddonTotal();
+}
+
+function toggleAddon(id) {
+  if (selectedAddons.has(id)) selectedAddons.delete(id); else selectedAddons.add(id);
+  buildAddonGrid();
+}
+
+function updateAddonTotal() {
+  const totalEl = document.getElementById('addonTotal'); if (!totalEl) return;
+  const added = ADDONS.filter(a => selectedAddons.has(a.id) && a.price > 0);
+  if (!added.length) { totalEl.style.display = 'none'; return; }
+  const sum = added.reduce((s, a) => s + a.price, 0);
+  totalEl.style.display = 'block';
+  totalEl.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--muted)">Add-ons selected:</span><span style="font-family:\'Barlow Condensed\',sans-serif;font-size:18px;font-weight:800;color:var(--yellow)">+$${sum.toFixed(2)}</span></div>
+  <div style="font-size:11px;color:var(--muted);margin-top:4px">${added.map(a=>a.name).join(' · ')}</div>`;
+}
+
+function getAddonTotal() { return ADDONS.filter(a => selectedAddons.has(a.id)).reduce((s,a) => s + a.price, 0); }
+
+async function buildPaymentSummary() {
+  const box = document.getElementById('payBox'); if (!box) return;
+  const t = getTotals();
+  const instTotal = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
+  const addonAmt = getAddonTotal();
+  const grandTotal = t.total + addonAmt;
+  const addonLines = ADDONS.filter(a => selectedAddons.has(a.id))
+    .map(a => `<div class="ptrow"><span>${a.name}</span><span>${a.price === 0 ? '<span style="color:var(--green)">FREE</span>' : '$' + a.price.toFixed(2)}</span></div>`)
+    .join('');
+  box.innerHTML = `
+    <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
+    ${instTotal > 0 ? `<div class="ptrow"><span>Installation</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
+    ${addonLines}
+    <div class="ptrow"><span>Tax (HST 13%)</span><span>$${(grandTotal * 0.13 / 1.13).toFixed(2)}</span></div>
+    <div class="ptrow bold"><span>Total Due Today</span><span>$${grandTotal.toFixed(2)}</span></div>
+  `;
+}
+
 async function processPayment() {
   const btn = document.getElementById('nextBtn'); btn.textContent = 'Processing…'; btn.classList.add('ld');
   try {
     await new Promise(r => setTimeout(r, 1800));
-    const hasInst = cart.some(c => c.install && c.itemType !== 'wheel');
-    if (hasInst) { step = 3; updSteps(); } else { await finishOrder(true); }
+    await finishOrder();
   } catch (e) { alert('Payment failed: ' + e.message); } finally { btn.classList.remove('ld'); }
 }
-function skipInstall() { finishOrder(true); }
-async function finishOrder(noInst) {
+
+async function finishOrder() {
   const btn = document.getElementById('nextBtn');
   if (btn) { btn.textContent = 'Placing order…'; btn.classList.add('ld'); }
   const t = getTotals();
+  const addonAmt = getAddonTotal();
+  const grandTotal = t.total + addonAmt;
   const name = (document.getElementById('fName').value || 'Customer') + ' ' + (document.getElementById('lName').value || '');
-  const email = document.getElementById('email').value || 'you@example.com';
+  const email = document.getElementById('email').value || '';
+  const phone = document.getElementById('phone')?.value || '';
+  const caslOptIn = document.getElementById('caslOptIn')?.checked || false;
   const orderId = 'PCT-' + Math.random().toString(36).substr(2,6).toUpperCase();
-  const svcLabel = selectedService ? selectedService.label : 'Installation';
-  const instLine = noInst ? 'Not booked — arrange separately' : `${svcLabel} · ${selDate} at ${selTime}`;
+  const svcLabel = selectedService ? selectedService.label : 'Not booked';
+  const instLine = selectedService ? `${svcLabel} · ${selDate} at ${selTime}` : 'Not booked — arrange separately';
+  const addonNames = ADDONS.filter(a => selectedAddons.has(a.id)).map(a => a.name).join(', ') || 'None';
+
+  // Vehicle info from search
+  const vin = lastSearchVehicle?.vin || '';
+  const vehicleYear = lastSearchVehicle?.year || '';
+  const vehicleMake = lastSearchVehicle?.make || '';
+  const vehicleModel = lastSearchVehicle?.model || '';
+  const vehicleTrim = lastSearchVehicle?.trim || '';
+  const vehicleStr = [vehicleYear, vehicleMake, vehicleModel, vehicleTrim].filter(Boolean).join(' ');
+
   document.getElementById('confDetails').innerHTML = `
     <div class="cd-row"><span class="cd-label">Order #</span><span class="cd-val y">${orderId}</span></div>
     <div class="cd-row"><span class="cd-label">Customer</span><span class="cd-val">${name.trim()}</span></div>
     <div class="cd-row"><span class="cd-label">Email</span><span class="cd-val">${email}</span></div>
+    ${vehicleStr ? `<div class="cd-row"><span class="cd-label">Vehicle</span><span class="cd-val">${vehicleStr}</span></div>` : ''}
     <div class="cd-row"><span class="cd-label">Items</span><span class="cd-val">${cart.map(c=>`${c.qty}× ${c.brand} ${c.name}`).join(', ')}</span></div>
-    <div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${t.total.toFixed(2)} CAD</span></div>
+    ${addonAmt > 0 ? `<div class="cd-row"><span class="cd-label">Add-ons</span><span class="cd-val">${addonNames}</span></div>` : ''}
+    <div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div>
     <div class="cd-row"><span class="cd-label">Installation</span><span class="cd-val">${instLine}</span></div>
     <div class="cd-row"><span class="cd-label">Confirmation</span><span class="cd-val">Sent to ${email}</span></div>
   `;
+
+  const orderPayload = {
+    orderNumber: orderId,
+    customerName: name.trim(),
+    customerEmail: email,
+    customerPhone: phone,
+    caslOptIn,
+    vin,
+    vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
+    searchMethod: lastSearchMethod || 'unknown',
+    tires: cart.map(c => ({ qty: c.qty, brand: c.brand, name: c.name, size: c.size || c.diameter + '"', price: c.price })),
+    addons: addonNames,
+    installation: !!selectedService,
+    appointmentDate: selDate || '',
+    appointmentTime: selTime || '',
+    serviceName: selectedService?.label || '',
+    subtotal: t.sub,
+    addonTotal: addonAmt,
+    tax: t.tax,
+    total: grandTotal,
+  };
+
+  // Send order email
   try {
-    await fetch(`/send-order-email`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ orderNumber: orderId, customerName: name.trim(), customerEmail: email, customerPhone: document.getElementById('phone')?.value || '', tires: cart.map(c=>({qty:c.qty,brand:c.brand,name:c.name,size:c.size||c.diameter+'"',price:c.price})), installation: !noInst, appointmentDate: selDate||'', appointmentTime: selTime||'', serviceName: selectedService?.label||'', subtotal: t.sub, installTotal: t.inst, shipping: 0, tax: t.tax, total: t.total }),
-    });
+    await fetch('/send-order-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderPayload) });
   } catch(e) { console.warn('Order email failed:', e.message); }
-  cart = []; tdgQuote = null; updBadge();
+
+  // Write to Google Sheets
+  try {
+    await fetch('https://script.google.com/macros/s/AKfycbyYNGjt0JIz1NTFeWgal4aMUp49Nyy-ceE8Y-MB3kpA6QWsFkdzWRG0EASapp-46cZ8/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        orderNumber: orderId,
+        customerName: name.trim(),
+        customerEmail: email,
+        customerPhone: phone,
+        caslOptIn: caslOptIn ? 'Yes' : 'No',
+        vin,
+        vehicle: vehicleStr,
+        vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
+        searchMethod: lastSearchMethod || 'unknown',
+        items: cart.map(c => `${c.qty}× ${c.brand} ${c.name} (${c.size || c.diameter + '"'})`).join(' | '),
+        addons: addonNames,
+        subtotal: t.sub.toFixed(2),
+        addonTotal: addonAmt.toFixed(2),
+        tax: t.tax.toFixed(2),
+        total: grandTotal.toFixed(2),
+        installationService: selectedService?.label || 'Not booked',
+        appointmentDate: selDate || '',
+        appointmentTime: selTime || '',
+      }),
+    });
+  } catch(e) { console.warn('Sheets write failed:', e.message); }
+
+  cart = []; tdgQuote = null; selectedAddons = new Set(); updBadge();
   if (btn) btn.classList.remove('ld');
-  step = 4; updSteps();
+
+  // Show rebate reminders on confirm screen
+  const rebatesInOrder = [];
+  const seenBrands = new Set();
+  (orderPayload.tires || []).forEach(t => {
+    const r = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
+    if (r && !seenBrands.has(r.brand)) {
+      rebatesInOrder.push(r);
+      seenBrands.add(r.brand);
+    }
+  });
+  const rebateBox = document.getElementById('confRebates');
+  const rebateList = document.getElementById('confRebateList');
+  if (rebatesInOrder.length && rebateBox && rebateList) {
+    rebateList.innerHTML = rebatesInOrder.map(r =>
+      `<div>• <strong>${r.brand}</strong> — ${r.type} $${r.amount} rebate · expires ${r.expires} · <a href="${r.url}" target="_blank" style="color:var(--yellow);text-decoration:none">Apply here →</a></div>`
+    ).join('');
+    rebateBox.style.display = 'block';
+  }
+
+  step = 5; updSteps();
 }
 
 // ─────────────────────────────────────────────────
@@ -2203,16 +3449,151 @@ function fmtCard(el) { let v = el.value.replace(/\D/g,'').substr(0,16); el.value
 function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.substr(0,2)+' / '+v.substr(2,2); el.value=v; }
 
 // ─────────────────────────────────────────────────
+//  SERVICE BOOKING SECTION
+// ─────────────────────────────────────────────────
+const BOOK_SERVICES = [
+  { id:'rotation',  icon:'🔄', name:'Tire Rotation',                  price:'$30',   unit:'flat',     duration:30,  desc:'Even out wear across all four tires. Recommended every 10,000 km.' },
+  { id:'swap',      icon:'❄️',  name:'Seasonal Swap',                  price:'$20',   unit:'per tire', duration:45,  desc:'Swap your pre-mounted stored set — no mounting needed. Torque check included.' },
+  { id:'tpms',      icon:'📡', name:'TPMS Relearn',                   price:'$20',   unit:'flat',     duration:30,  desc:'Relearn your TPMS sensors after a tire change, rotation, or battery replacement.' },
+  { id:'mount',     icon:'⚙️', name:'Mount & Balance',                 price:'$25',   unit:'per tire', duration:60,  desc:'Customer-supplied tires mounted, balanced, and TPMS reset. Old tire disposal included.' },
+  { id:'repair',    icon:'🩹', name:'Flat Repair / Plug',              price:'$20',   unit:'flat',     duration:20,  desc:'Quick plug for a simple tread puncture. Includes remount and balance.' },
+  { id:'valve',     icon:'🔩', name:'Valve Stem Replacement',          price:'$15',   unit:'per stem', duration:20,  desc:'Replace faulty, leaking, or corroded valve stems.' },
+  { id:'torque',    icon:'✅', name:'Wheel Torque Re-check',           price:'Free',  unit:'',         duration:15,  desc:'Recommended 50–100 km after any tire install. Takes 15 minutes, total peace of mind.' },
+];
+
+let svcSelected = null;
+let svcCalY, svcCalMo, svcSelDate = null, svcSelTime = null;
+
+function buildSvcGrid() {
+  const grid = document.getElementById('svcGrid');
+  if (!grid) return;
+  grid.innerHTML = BOOK_SERVICES.map(s => `
+    <div class="svc-card${svcSelected?.id === s.id ? ' selected' : ''}" onclick="selectSvc('${s.id}')">
+      <div class="svc-icon">${s.icon}</div>
+      <div class="svc-name">${s.name}</div>
+      <div class="svc-desc">${s.desc}</div>
+      <div class="svc-meta">
+        <div class="svc-price">${s.price}${s.unit ? `<span> / ${s.unit}</span>` : ''}</div>
+        <div class="svc-dur">⏱ ${s.duration} min</div>
+      </div>
+    </div>`).join('');
+}
+
+function selectSvc(id) {
+  svcSelected = BOOK_SERVICES.find(s => s.id === id);
+  svcSelDate = null; svcSelTime = null;
+  buildSvcGrid();
+  const panel = document.getElementById('svcBookingPanel');
+  panel.classList.add('show');
+  // Reset confirm state
+  document.getElementById('svcConfirmBox').classList.remove('show');
+  document.getElementById('svcFormWrap').style.display = 'block';
+  // Init calendar
+  const n = new Date(); svcCalY = n.getFullYear(); svcCalMo = n.getMonth();
+  buildSvcCal();
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+
+function buildSvcCal() {
+  document.getElementById('svcCalMo').textContent = `${MONTHS[svcCalMo]} ${svcCalY}`;
+  const minDate = new Date(); minDate.setHours(minDate.getHours() + 24); minDate.setHours(0,0,0,0);
+  if (new Date().getHours() >= 12) minDate.setDate(minDate.getDate() + 1);
+  const firstDay = new Date(svcCalY, svcCalMo, 1).getDay(), days = new Date(svcCalY, svcCalMo+1, 0).getDate();
+  let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
+  for (let d = 1; d <= days; d++) {
+    const dt = new Date(svcCalY, svcCalMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun;
+    const dateStr = `${MONTHS[svcCalMo]} ${d}, ${svcCalY}`, isSel = svcSelDate === dateStr;
+    html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="svcPickDate('${dateStr}')"`:''}>${d}</div>`;
+  }
+  document.getElementById('svcCalGrid').innerHTML = html;
+  if (svcSelDate) { document.getElementById('svcTimeSec').style.display = 'block'; buildSvcTimes(); }
+  else document.getElementById('svcTimeSec').style.display = 'none';
+}
+function svcPickDate(d) { svcSelDate = d; svcSelTime = null; buildSvcCal(); }
+function buildSvcTimes() {
+  const duration = svcSelected?.duration || 30;
+  const slots = getSlotsForDuration(duration);
+  document.getElementById('svcTimeGrid').innerHTML = slots.map(t =>
+    `<div class="time-slot${svcSelTime===t?' sel':''}" onclick="svcPickTime('${t}')">${t}</div>`
+  ).join('');
+}
+function svcPickTime(t) { svcSelTime = t; buildSvcTimes(); }
+function svcPrevMo() { if(svcCalMo===0){svcCalMo=11;svcCalY--;}else{svcCalMo--;} svcSelDate=null;svcSelTime=null;buildSvcCal(); }
+function svcNextMo() { if(svcCalMo===11){svcCalMo=0;svcCalY++;}else{svcCalMo++;} svcSelDate=null;svcSelTime=null;buildSvcCal(); }
+
+async function submitServiceBooking() {
+  const name = (document.getElementById('svcFName').value.trim() + ' ' + document.getElementById('svcLName').value.trim()).trim();
+  const phone = document.getElementById('svcPhone').value.trim();
+  if (!name) { alert('Please enter your name.'); return; }
+  if (!phone) { alert('Please enter a phone number so we can confirm.'); return; }
+  if (!svcSelDate || !svcSelTime) { alert('Please select a preferred date and time.'); return; }
+
+  const btn = document.getElementById('svcSubmitBtn');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+
+  const payload = {
+    service: svcSelected.name,
+    customerName: name,
+    customerPhone: phone,
+    customerEmail: document.getElementById('svcEmail').value.trim(),
+    vehicle: document.getElementById('svcVehicle').value.trim(),
+    notes: document.getElementById('svcNotes').value.trim(),
+    preferredDate: svcSelDate,
+    preferredTime: svcSelTime,
+    duration: svcSelected.duration,
+    price: svcSelected.price,
+  };
+
+  try {
+    await fetch('/send-service-request', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch(e) { console.warn('Service request email failed:', e.message); }
+
+  // Show confirmation
+  document.getElementById('svcFormWrap').style.display = 'none';
+  const msg = document.getElementById('svcConfirmMsg');
+  msg.innerHTML = `<strong style="color:var(--white)">${svcSelected.name}</strong> requested for <strong style="color:var(--white)">${svcSelDate} at ${svcSelTime}</strong>.<br>We'll call <strong style="color:var(--white)">${phone}</strong> to confirm within a few hours.`;
+  document.getElementById('svcConfirmBox').classList.add('show');
+
+  // Reset for next use
+  svcSelected = null; svcSelDate = null; svcSelTime = null;
+  buildSvcGrid();
+  btn.textContent = 'Request Appointment →'; btn.disabled = false;
+}
+
+// ─────────────────────────────────────────────────
+//  THEME TOGGLE
+// ─────────────────────────────────────────────────
+function toggleTheme() {
+  const light = document.body.classList.toggle('light-mode');
+  document.getElementById('themeToggle').textContent = light ? '☀️' : '🌙';
+  try { localStorage.setItem('pcTheme', light ? 'light' : 'dark'); } catch(e) {}
+}
+function initTheme() {
+  try {
+    if (localStorage.getItem('pcTheme') === 'light') {
+      document.body.classList.add('light-mode');
+      document.getElementById('themeToggle').textContent = '☀️';
+    }
+  } catch(e) {}
+}
+
+// ─────────────────────────────────────────────────
 // ─────────────────────────────────────────────────
 //  PAGE INIT
 // ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   initYears();
   initWheelYears();
   initSizeDropdowns();
   initWheelDropdowns();
   initMemberState();
   initCookie();
+  buildSvcGrid();
   loadTires();
 });
 
