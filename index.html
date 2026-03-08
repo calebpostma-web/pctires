@@ -23,8 +23,16 @@ html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--mid);border-radius:3px}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.rebate-ticker{background:var(--yellow);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:7px 0;overflow:hidden;position:fixed;top:0;left:0;right:0;z-index:502}
+.rebate-ticker-inner{display:flex;animation:ticker 60s linear infinite;white-space:nowrap;width:max-content}
+.rebate-ticker-inner:hover{animation-play-state:paused}
+.rebate-ticker-item{padding:0 40px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.rebate-ticker-sep{opacity:.4;margin:0 4px}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.rebate-badge{display:inline-flex;align-items:center;gap:4px;background:var(--yellow);color:var(--black);font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid rgba(0,0,0,.15);white-space:nowrap;flex-shrink:0}
+.rebate-badge.on-card{font-size:9px;padding:2px 6px}
+
+nav{position:fixed;top:33px;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .logo{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none}
 .logo .pc{color:var(--yellow)}
 .nav-links{display:flex;align-items:center;gap:28px}
@@ -38,7 +46,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:cen
 .cart-badge{background:var(--black);color:var(--yellow);border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
 
 /* HERO */
-.hero{min-height:100vh;padding:100px 40px 72px;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero{min-height:100vh;padding:133px 40px 72px;display:flex;align-items:center;position:relative;overflow:hidden}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.25;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent)}
 .hero-glow{position:absolute;right:-200px;top:50%;transform:translateY(-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(245,197,24,.07),transparent 65%);pointer-events:none}
 .hero-pattern{position:absolute;right:0;top:0;bottom:0;width:42%;overflow:hidden;opacity:.055;pointer-events:none}
@@ -673,9 +681,53 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 </head>
 <body>
 
+<!-- REBATE TICKER -->
+<!-- ↓↓↓ UPDATE REBATES HERE — change dates, amounts, brands as needed ↓↓↓ -->
+<div class="rebate-ticker" id="rebateTicker"></div>
+<script>
+// ── REBATE DATA — UPDATE THIS SECTION EACH SEASON ──────────────────────────
+const REBATES = [
+  { brand:'BFGoodrich',   amount:100, type:'up to', expires:'May 29, 2026',  url:'https://www.bfgoodrichtires.ca/rebates' },
+  { brand:'Bridgestone',  amount:100, type:'up to', expires:'May 30, 2026',  url:'https://www.bridgestonetire.ca/rebates' },
+  { brand:'Continental',  amount:110, type:'up to', expires:'May 31, 2026',  url:'https://www.continental-tires.com/ca' },
+  { brand:'Dunlop',       amount:200, type:'get a', expires:'May 31, 2026',  url:'https://www.dunloptire.ca/rebates' },
+  { brand:'Falken',       amount:80,  type:'up to', expires:'May 31, 2026',  url:'https://www.falkentire.ca/rebates' },
+  { brand:'Firestone',    amount:80,  type:'up to', expires:'May 30, 2026',  url:'https://www.firestonetire.ca/rebates' },
+  { brand:'General Tire', amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.generaltire.ca/rebates' },
+  { brand:'Hankook',      amount:100, type:'get a', expires:'Jun 30, 2026',  url:'https://www.hankooktire.com/ca/rebates' },
+  { brand:'Kumho',        amount:60,  type:'get a', expires:'Jun 15, 2026',  url:'https://www.kumhotire.ca/rebates' },
+  { brand:'Laufenn',      amount:40,  type:'get a', expires:'Jun 30, 2026',  url:'https://www.laufenn.com/rebates' },
+  { brand:'Michelin',     amount:100, type:'get a', expires:'May 29, 2026',  url:'https://www.michelin.ca/rebates' },
+  { brand:'Nexen',        amount:80,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nexentire.ca/rebates' },
+  { brand:'Nitto',        amount:70,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nittotire.ca/rebates' },
+  { brand:'Pirelli',      amount:100, type:'up to', expires:'May 8, 2026',   url:'https://www.pirelli.com/ca/rebates' },
+  { brand:'Toyo',         amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.toyotires.ca/rebates' },
+  { brand:'Uniroyal',     amount:50,  type:'get a', expires:'May 29, 2026',  url:'https://www.uniroyaltire.ca/rebates' },
+  { brand:'Yokohama',     amount:125, type:'up to', expires:'May 31, 2026',  url:'https://www.yokohamatire.ca/rebates' },
+];
+// ── END REBATE DATA ─────────────────────────────────────────────────────────
+
+function buildTicker() {
+  const ticker = document.getElementById('rebateTicker');
+  if (!ticker || !REBATES.length) return;
+  // Double the items so the loop is seamless
+  const items = [...REBATES, ...REBATES].map(r =>
+    `<span class="rebate-ticker-item">💰 <strong>${r.brand}</strong> — ${r.type} $${r.amount} rebate <span class="rebate-ticker-sep">·</span> expires ${r.expires}</span>`
+  ).join('');
+  ticker.innerHTML = `<div class="rebate-ticker-inner">${items}</div>`;
+}
+buildTicker();
+
+function getRebateForBrand(brand) {
+  if (!brand) return null;
+  const b = brand.toLowerCase();
+  return REBATES.find(r => b.includes(r.brand.toLowerCase()) || r.brand.toLowerCase().includes(b)) || null;
+}
+</script>
+
 <!-- NAV -->
 <nav>
-  <a class="logo" href="#"><span class="pc">PC</span> TIRES</a>
+  <a class="logo" href="#"><span class="pc">PC</span> TIRES<span style="display:block;font-size:9px;font-weight:500;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:-4px">Chatham-Kent</span></a>
   <div class="nav-links">
     <button class="nav-link" onclick="smoothScroll('#lookup')">Find Tires & Wheels</button>
     <button class="nav-link" onclick="smoothScroll('#catalog')">Shop All</button>
@@ -718,14 +770,14 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     </svg>
   </div>
   <div class="hero-content">
-    <div class="hero-pill"><span class="pill-dot"></span><span class="pill-text">Tires &amp; Wheels — Local Installation</span></div>
+    <div class="hero-pill"><span class="pill-dot"></span><span class="pill-text">Chatham-Kent's Online Tire & Wheel Shop</span></div>
     <h1>
       <span class="b">THE RIGHT</span>
       <span class="b y">TIRE.</span>
       <span class="b">INSTALLED</span>
       <span class="b">RIGHT.</span>
     </h1>
-    <p class="hero-desc">Shop tires and wheels online, pay securely, and book your installation — all in one place. No phone tag. No hidden fees. <strong>Just the right setup on your car.</strong></p>
+    <p class="hero-desc">Chatham-Kent's own tire shop — shop online, pay securely, and book your installation locally. No phone tag. No hidden fees. <strong>Just the right setup on your car.</strong></p>
     <div class="hero-btns">
       <button class="btn-primary" onclick="smoothScroll('#lookup')">Find Tires for My Vehicle</button>
       <button class="btn-ghost" onclick="smoothScroll('#catalog')">Browse All</button>
@@ -1147,7 +1199,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     </div>
     <div>
       <div class="map-container">
-        <iframe src="https://maps.google.com/maps?cid=11770934583290184135&output=embed&z=14" width="100%" height="360" style="border:0;display:block" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="PC Tires location — 7144 Grande River Line, Pain Court, Ontario"></iframe>
+        <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q=7144+Grande+River+Line,Pain+Court,Ontario,N0P+1Z0&zoom=14" width="100%" height="360" style="border:0;display:block" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="PC Tires location — 7144 Grande River Line, Pain Court, Ontario"></iframe>
       </div>
     </div>
   </div>
@@ -1267,6 +1319,11 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
       <div class="fsec" id="s5">
         <div class="confirm-wrap"><div class="conf-circle">✓</div><div class="conf-title">You're All Set!</div><p class="conf-sub">Order confirmed. Check your email for full details.</p></div>
         <div class="confirm-details" id="confDetails"></div>
+        <div id="confRebates" style="display:none;margin-top:14px;padding:14px 16px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:2px">
+          <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:10px">💰 Manufacturer Rebates Available</div>
+          <div id="confRebateList" style="font-size:13px;color:var(--light);line-height:1.8"></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px">Rebates are mail-in — apply directly with each manufacturer using the links above. Instructions also sent to your email.</div>
+        </div>
         <button class="btn-primary" style="width:100%;margin-top:14px" onclick="closeCheckout();closeCart()">Continue Shopping</button>
       </div>
     </div>
@@ -1834,6 +1891,9 @@ function buildRecCard(t, tier) {
   const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
   const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
   const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
+  const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
+  const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} mail-in rebate</span>` : '';
+  const effectiveNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:4px">Effective after rebate: ~$${Math.max(0, shown - rebate.amount / 4).toFixed(2)}/tire</div>` : '';
   return `
   <div class="rec-card ${cls}" style="animation-delay:.05s">
     <div class="rec-badge ${cls}">${label}</div>
@@ -1841,7 +1901,7 @@ function buildRecCard(t, tier) {
     <div class="tc-name">${t.name}</div>
     <div class="tc-size">${t.size}</div>
     <div class="rec-why">${why}</div>
-    <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}</div>
+    <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}${rebateBadge}</div>
     <div class="tc-specs">
       <div><div class="spec-label">Speed Rating</div><div class="spec-value">${t.speed||'—'}</div></div>
       <div><div class="spec-label">Load Index</div><div class="spec-value">${t.loadIndex||'—'}</div></div>
@@ -1849,7 +1909,7 @@ function buildRecCard(t, tier) {
       <div><div class="spec-label">Service</div><div class="spec-value" style="font-size:11px">${t.serviceType||'—'}</div></div>
     </div>
     <div class="tc-foot">
-      <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
+      <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}${effectiveNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
         <div class="price-each">per tire · HST extra</div>
       </div>
       <button class="add-btn" onclick="addToCart('${t.itemNumber}','tire')">Add to Cart +</button>
@@ -1896,14 +1956,15 @@ function renderTires() {
     const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
     const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
     const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
-    // Subtly dim cards already shown in recommended
     const dimStyle = recIds.has(t.itemNumber) ? 'opacity:.55' : '';
+    const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
+    const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} rebate</span>` : '';
     return `
     <div class="tire-card" style="animation-delay:${Math.min(i,8)*0.055}s;${dimStyle}">
       <div class="tc-top"><div class="tc-brand">${t.brand}</div><span class="stock-pill ${stockClass}">${stockLabel}</span></div>
       <div class="tc-name">${t.name}</div>
       <div class="tc-size">${t.size}</div>
-      <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}</div>
+      <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}${rebateBadge}</div>
       <div class="tc-specs">
         <div><div class="spec-label">Speed Rating</div><div class="spec-value">${t.speed||'—'}</div></div>
         <div><div class="spec-label">Load Index</div><div class="spec-value">${t.loadIndex||'—'}</div></div>
@@ -1912,7 +1973,7 @@ function renderTires() {
       </div>
       <div class="tc-foot">
         <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
-          <div class="price-each">per tire · HST extra</div>
+          <div class="price-each">per tire · HST extra${rebate ? ` · <span style="color:var(--yellow)">+$${rebate.amount} rebate</span>` : ''}</div>
         </div>
         <button class="add-btn" onclick="addToCart('${t.itemNumber}','tire')" ${t.stock==='out'?'disabled style="opacity:.4;cursor:not-allowed"':''}>
           ${t.stock==='out'?'Out of Stock':'Add to Cart +'}
@@ -2726,6 +2787,8 @@ function renderCart() {
   }
   body.innerHTML = cart.map(item => {
     const icon = item.itemType === 'wheel' ? (item.category === 'steel' ? '⚙️' : '💿') : '🔵';
+    const rebate = item.itemType !== 'wheel' && typeof getRebateForBrand === 'function' ? getRebateForBrand(item.brand) : null;
+    const rebateNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:3px">💰 $${rebate.amount} mail-in rebate available — <a href="${rebate.url}" target="_blank" style="color:var(--yellow);text-decoration:none">apply here →</a></div>` : '';
     return `
     <div class="cart-item">
       <div class="ci-icon">${icon}</div>
@@ -2735,6 +2798,7 @@ function renderCart() {
         <div class="ci-size">${item.size || (item.diameter ? item.diameter+'" · '+item.boltPattern : '')}</div>
         ${item.install && item.itemType !== 'wheel' ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
         ${item.itemType !== 'wheel' ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${TDG.INSTALL_PRICE}/tire</b></span></label>` : ''}
+        ${rebateNote}
       </div>
       <div class="ci-right">
         <div class="qty-row">
@@ -2997,6 +3061,26 @@ async function finishOrder() {
 
   cart = []; tdgQuote = null; selectedAddons = new Set(); updBadge();
   if (btn) btn.classList.remove('ld');
+
+  // Show rebate reminders on confirm screen
+  const rebatesInOrder = [];
+  const seenBrands = new Set();
+  (orderPayload.tires || []).forEach(t => {
+    const r = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
+    if (r && !seenBrands.has(r.brand)) {
+      rebatesInOrder.push(r);
+      seenBrands.add(r.brand);
+    }
+  });
+  const rebateBox = document.getElementById('confRebates');
+  const rebateList = document.getElementById('confRebateList');
+  if (rebatesInOrder.length && rebateBox && rebateList) {
+    rebateList.innerHTML = rebatesInOrder.map(r =>
+      `<div>• <strong>${r.brand}</strong> — ${r.type} $${r.amount} rebate · expires ${r.expires} · <a href="${r.url}" target="_blank" style="color:var(--yellow);text-decoration:none">Apply here →</a></div>`
+    ).join('');
+    rebateBox.style.display = 'block';
+  }
+
   step = 5; updSteps();
 }
 
