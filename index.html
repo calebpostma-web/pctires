@@ -845,7 +845,14 @@ function getRebateForBrand(brand) {
           <div class="field"><label>Make</label><select id="vMake" onchange="updateModels()"><option value="">Select Make</option></select></div>
           <div class="field"><label>Model</label><select id="vModel" onchange="updateTrims()"><option value="">Select Model</option></select></div>
           <div class="field"><label>Trim</label><select id="vTrim"><option value="">Select Trim</option></select></div>
-          <button class="lookup-btn" onclick="doLookup()">Search Tires →</button>
+          <button class="lookup-btn" onclick="doLookup()">Search Tires &rarr;</button>
+        </div>
+        <div id="vTireSizeRow" style="display:none;margin-top:12px;padding:12px 14px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.25);border-radius:2px;align-items:center;gap:14px;flex-wrap:wrap">
+          <span style="font-size:13px;color:var(--light)">&#9881;&#65039; <strong style="color:var(--yellow)">Multiple OEM sizes found.</strong> Which size is on your vehicle?</span>
+          <div class="field" style="margin:0;min-width:180px">
+            <label>Tire Size</label>
+            <select id="vTireSize" style="font-family:'IBM Plex Mono',monospace;font-size:13px"></select>
+          </div>
         </div>
       </div>
 
@@ -1732,7 +1739,7 @@ function normaliseTire(product, inventory) {
   const locs = inv.locations || [];
   const bestAvail = locs.length ? Math.min(...locs.map(l => l.availability)) : 100;
   const totalQty = locs.reduce((s, l) => s + (l.qtyAvailable || 0), 0);
-  const seasonRaw = (sp.season || '').toLowerCase();
+  const seasonRaw = (sp.season || TDG.SEASON_LABEL[sp.tireSeason] || '').toLowerCase();
   let type = 'allseason';
   if (seasonRaw.includes('winter')) type = 'winter';
   else if (seasonRaw.includes('summer')) type = 'summer';
@@ -2704,6 +2711,7 @@ function updateModels() {
   const md = document.getElementById('vModel');
   md.innerHTML = '<option value="">Select Model</option>';
   document.getElementById('vTrim').innerHTML = '<option value="">Select Trim</option>';
+  document.getElementById('vTireSizeRow').style.display = 'none';
   if (!make || !VD[make]) return;
   Object.keys(VD[make]).sort().forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; md.appendChild(o); });
 }
@@ -2712,13 +2720,32 @@ function updateTrims() {
   const tr = document.getElementById('vTrim'); tr.innerHTML = '<option value="">Select Trim</option>';
   if (!make || !model) return;
   (VD[make]?.[model] || []).forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; tr.appendChild(o); });
+  // Populate size picker
+  const vehicleKey = `${make} ${model}`;
+  const primary = OEM_SIZES[vehicleKey];
+  const alts = OEM_ALT_SIZES[vehicleKey] || [];
+  const allSizes = primary ? [primary, ...alts.filter(s => s !== primary)] : alts;
+  const sizeRow = document.getElementById('vTireSizeRow');
+  const sizeSel = document.getElementById('vTireSize');
+  if (allSizes.length > 1) {
+    sizeSel.innerHTML = allSizes.map(s => `<option value="${s}">${s}</option>`).join('');
+    sizeRow.style.display = 'flex';
+  } else {
+    sizeRow.style.display = 'none';
+  }
 }
 
 async function doLookup() {
   const y = document.getElementById('vYear').value, mk = document.getElementById('vMake').value, md = document.getElementById('vModel').value;
   if (!y || !mk || !md) { alert('Please select Year, Make and Model.'); return; }
-  const vehicleKey = `${mk} ${md}`, tireSize = OEM_SIZES[vehicleKey] || null;
+  const vehicleKey = `${mk} ${md}`;
   const trim = document.getElementById('vTrim')?.value || '';
+  // Use the size picker if visible (multiple sizes), otherwise fall back to OEM_SIZES
+  const sizeRow = document.getElementById('vTireSizeRow');
+  const sizePicker = document.getElementById('vTireSize');
+  const tireSize = (sizeRow && sizeRow.style.display !== 'none' && sizePicker?.value)
+    ? sizePicker.value
+    : (OEM_SIZES[vehicleKey] || null);
   lastSearchMethod = 'vehicle';
   lastSearchVehicle = { year: y, make: mk, model: md, trim };
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
