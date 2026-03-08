@@ -13,6 +13,12 @@
   --yellow:#f5c518;--yellow-dim:rgba(245,197,24,0.12);--yellow-dark:#d4a800;
   --green:#22c55e;--green-dim:rgba(34,197,94,0.1);--red:#ef4444;
 }
+body.light-mode{
+  --black:#ffffff;--dark:#f4f4f4;--card:#ffffff;--raised:#f0f0f0;--border:#e0e0e0;
+  --mid:#c0c0c0;--muted:#888888;--light:#555555;--white:#111111;
+  --yellow:#d4a800;--yellow-dim:rgba(212,168,0,0.10);--yellow-dark:#b38f00;
+  --green:#16a34a;--green-dim:rgba(22,163,74,0.1);--red:#dc2626;
+}
 html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--mid);border-radius:3px}
@@ -408,6 +414,41 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .reviews-cta strong{color:var(--white)}
 
 /* MAP */
+/* ── SERVICE BOOKING SECTION ── */
+.services-section{padding:72px 40px;background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.services-inner{max-width:1100px;margin:0 auto}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2px;margin:28px 0 40px}
+.svc-card{background:var(--card);border:1px solid var(--border);padding:22px;cursor:pointer;transition:all .2s;position:relative}
+.svc-card:hover{background:var(--raised);border-color:var(--mid)}
+.svc-card.selected{border-color:var(--yellow);background:var(--yellow-dim)}
+.svc-card.selected::after{content:'✓';position:absolute;top:14px;right:14px;width:22px;height:22px;background:var(--yellow);color:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:22px;text-align:center}
+.svc-icon{font-size:26px;margin-bottom:10px}
+.svc-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.svc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.svc-meta{display:flex;align-items:center;justify-content:space-between}
+.svc-price{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:var(--yellow)}
+.svc-price span{font-size:12px;font-weight:400;color:var(--muted);font-family:'Barlow',sans-serif}
+.svc-dur{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.svc-booking-panel{background:var(--card);border:1px solid var(--border);padding:28px;margin-top:2px;display:none}
+.svc-booking-panel.show{display:block}
+.svc-booking-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.svc-contact-fields{display:flex;flex-direction:column;gap:12px}
+.svc-field{display:flex;flex-direction:column;gap:5px}
+.svc-field label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.svc-field input,.svc-field textarea,.svc-field select{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:11px 14px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%}
+.svc-field input:focus,.svc-field textarea:focus,.svc-field select:focus{border-color:var(--yellow)}
+.svc-field textarea{resize:vertical;min-height:80px}
+.svc-submit-btn{background:var(--yellow);color:var(--black);border:none;padding:14px 28px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;width:100%;margin-top:16px;text-transform:uppercase;letter-spacing:.5px}
+.svc-submit-btn:hover{background:var(--yellow-dark)}
+.svc-submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.svc-pending-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6}
+.svc-confirm-box{background:var(--green-dim);border:1px solid rgba(34,197,94,.25);border-radius:2px;padding:20px;text-align:center;display:none}
+.svc-confirm-box.show{display:block}
+.svc-confirm-box .conf-icon{font-size:32px;margin-bottom:8px}
+.svc-confirm-box .conf-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+.svc-confirm-box .conf-msg{font-size:13px;color:var(--muted);line-height:1.7}
+@media(max-width:720px){.svc-booking-grid{grid-template-columns:1fr}.services-section{padding:48px 24px}}
+
 .location-section{padding:72px 40px;background:var(--black)}
 .location-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:start}
 .location-details{display:flex;flex-direction:column;gap:16px;margin-top:24px}
@@ -602,11 +643,13 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     <button class="nav-link" onclick="smoothScroll('#catalog')">Shop All</button>
     <button class="nav-link" onclick="smoothScroll('#guide')">Tire Guide</button>
     <button class="nav-link" onclick="smoothScroll('#install')">Installation</button>
+    <button class="nav-link" onclick="smoothScroll('#services')" style="color:var(--yellow)">Book a Service</button>
     <button class="nav-link" onclick="smoothScroll('#location')">Location</button>
   </div>
   <div class="nav-right">
     <a class="phone-link" href="tel:5193805104">📞 519-380-5104</a>
     <button class="member-btn" id="memberNavBtn" onclick="openMemberModal()">Member Login</button>
+    <button id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode" style="background:none;border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:2px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0">🌙</button>
     <button class="cart-btn" onclick="openCart()">🛒 Cart <span class="cart-badge" id="cartCount">0</span></button>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -618,6 +661,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   <button class="mobile-menu-link" onclick="smoothScroll('#catalog');closeMenu()">Shop All</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#guide');closeMenu()">Tire Buying Guide</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#install');closeMenu()">Installation</button>
+  <button class="mobile-menu-link" onclick="smoothScroll('#services');closeMenu()" style="color:var(--yellow)">🔧 Book a Service</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#location');closeMenu()">Location & Hours</button>
   <a class="mobile-menu-link" href="tel:5193805104" style="text-decoration:none">📞 519-380-5104</a>
 </div>
@@ -647,6 +691,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     <div class="hero-btns">
       <button class="btn-primary" onclick="smoothScroll('#lookup')">Find Tires for My Vehicle</button>
       <button class="btn-ghost" onclick="smoothScroll('#catalog')">Browse All</button>
+      <button class="btn-ghost" onclick="smoothScroll('#services')" style="border-color:rgba(245,197,24,.35);color:var(--yellow)">🔧 Book a Service</button>
     </div>
     <div class="hero-trust">
       <div class="trust-item"><span class="trust-icon">🔒</span><div class="trust-txt"><strong>Secure Checkout</strong><span>Powered by Stripe</span></div></div>
@@ -930,6 +975,53 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     <div class="reviews-cta">
       <p><strong>Had a great experience?</strong> Leave us a Google review — it helps other local drivers find us.</p>
       <a href="https://search.google.com/local/writereview?placeid=ChIJ11770934583290184135" target="_blank" class="btn-primary" style="text-decoration:none">Leave a Google Review ★</a>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE BOOKING -->
+<section class="services-section" id="services">
+  <div class="services-inner">
+    <div class="eyebrow">Already Have Tires?</div>
+    <div class="section-title">Book a Service</div>
+    <p class="section-sub" style="margin-bottom:0">Select a service below, pick a time, and we'll confirm within a few hours. No purchase required.</p>
+
+    <div class="svc-grid" id="svcGrid"></div>
+
+    <!-- Booking panel — appears after service selected -->
+    <div class="svc-booking-panel" id="svcBookingPanel">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);margin-bottom:16px">Book Your Appointment</div>
+      <div class="svc-booking-grid">
+        <!-- Left: contact + notes -->
+        <div>
+          <div class="svc-contact-fields">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="svc-field"><label>First Name</label><input type="text" id="svcFName" placeholder="Jane"></div>
+              <div class="svc-field"><label>Last Name</label><input type="text" id="svcLName" placeholder="Smith"></div>
+            </div>
+            <div class="svc-field"><label>Phone Number</label><input type="tel" id="svcPhone" placeholder="(519) 000-0000"></div>
+            <div class="svc-field"><label>Email (optional)</label><input type="email" id="svcEmail" placeholder="jane@example.com"></div>
+            <div class="svc-field"><label>Vehicle (optional)</label><input type="text" id="svcVehicle" placeholder="e.g. 2021 Toyota RAV4"></div>
+            <div class="svc-field"><label>Notes</label><textarea id="svcNotes" placeholder="Anything we should know? e.g. TPMS light is on, brought my own tires, etc."></textarea></div>
+          </div>
+          <div id="svcConfirmBox" class="svc-confirm-box">
+            <div class="conf-icon">📅</div>
+            <div class="conf-title">Request Received!</div>
+            <div class="conf-msg" id="svcConfirmMsg"></div>
+          </div>
+          <div id="svcFormWrap">
+            <button class="svc-submit-btn" id="svcSubmitBtn" onclick="submitServiceBooking()">Request Appointment →</button>
+            <p class="svc-pending-note">We'll confirm your appointment by phone or email within a few hours during business hours.</p>
+          </div>
+        </div>
+        <!-- Right: calendar -->
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Select a preferred date and time:</div>
+          <div class="cal-hdr"><button class="cal-nav" onclick="svcPrevMo()">‹</button><div class="cal-month" id="svcCalMo"></div><button class="cal-nav" onclick="svcNextMo()">›</button></div>
+          <div class="cal-grid" id="svcCalGrid"></div>
+          <div id="svcTimeSec" style="display:none"><div class="time-lbl">Available Times</div><div class="time-grid" id="svcTimeGrid"></div></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1751,21 +1843,178 @@ function renderWheels() {
 //  VEHICLE LOOKUP DATA
 // ─────────────────────────────────────────────────
 const VD = {
-  Honda:{Civic:["LX","Sport","EX","Touring"],"CR-V":["LX","EX","EX-L","Touring"],Accord:["LX","Sport","EX","Touring"]},
-  Toyota:{Camry:["LE","SE","XLE","TRD"],RAV4:["LE","XLE","Limited","TRD"],Corolla:["L","LE","SE","XSE"],Highlander:["L","LE","XLE","Limited"]},
-  Ford:{"F-150":["XL","XLT","Lariat","Platinum"],Escape:["S","SE","SEL","Titanium"],Explorer:["Base","XLT","Limited","Platinum"]},
-  Chevrolet:{Silverado:["WT","Custom","LT","LTZ"],Equinox:["LS","LT","RS","Premier"],Malibu:["LS","LT","RS","Premier"]},
-  Hyundai:{Elantra:["SE","SEL","N Line","Limited"],Tucson:["SE","SEL","N Line","Limited"],"Santa Fe":["SE","SEL","XRT","Limited"]},
-  Nissan:{Altima:["S","SV","SL","SR"],Rogue:["S","SV","SL","Platinum"],Frontier:["S","SV","PRO-4X","SL"]},
-  Subaru:{Outback:["Base","Premium","Limited","Onyx"],Forester:["Base","Premium","Limited","Sport"]},
-  Volkswagen:{Jetta:["S","SE","SEL","GLI"],Tiguan:["S","SE","SEL"],Golf:["S","SE","R"]},
-  Cadillac:{"Escalade":["Base","Luxury","Premium Luxury","Sport"],"XT5":["Luxury","Premium Luxury","Sport"],"CT5":["Luxury","Premium Luxury","Sport","V"],"CT4":["Luxury","Premium Luxury","Sport","V"]},
-  GMC:{"Sierra 1500":["Regular Cab","Double Cab","Crew Cab","Denali"],"Terrain":["SLE","SLT","AT4","Denali"],"Yukon":["SLE","SLT","AT4","Denali"]},
-  RAM:{"1500":["Tradesman","Big Horn","Rebel","Limited"],"2500":["Tradesman","Big Horn","Power Wagon","Limited"]},
-  Dodge:{Durango:["SXT","GT","R/T","SRT"],"Charger":["SXT","GT","R/T","Scat Pack"],"Challenger":["SXT","GT","R/T","Scat Pack"]},
-  Jeep:{Wrangler:["Sport","Sahara","Rubicon","Willys"],"Grand Cherokee":["Laredo","Altitude","Limited","Overland"],"Compass":["Sport","Latitude","Altitude","Limited"]},
-  Kia:{Sorento:["LX","S","EX","SX"],Sportage:["LX","S","EX","SX"],Telluride:["LX","S","EX","SX"]},
-  Mazda:{"CX-5":["Sport","Select","Preferred","Premium"],"CX-50":["Select","Preferred","Premium","Meridian"],"Mazda3":["Select","Preferred","Premium","Turbo"]},
+  Honda:{Civic:["LX","Sport","EX","Touring"],"CR-V":["LX","EX","EX-L","Touring"],Accord:["LX","Sport","EX","Touring"],Odyssey:["LX","EX","EX-L","Touring","Elite"],Pilot:["LX","EX","EX-L","Touring","Elite"],"HR-V":["LX","EX","EX-L"],"Passport":["Sport","EX-L","Touring","Elite"],"Ridgeline":["Sport","EX-L","Touring","Black Edition"]},
+  Toyota:{
+    Camry:["LE","SE","XLE","XSE","TRD"],
+    Corolla:["L","LE","SE","XSE","Hatchback"],
+    RAV4:["LE","XLE","XLE Premium","Limited","TRD","Adventure"],
+    Highlander:["L","LE","XLE","Limited","Platinum","XSE"],
+    "4Runner":["SR5","TRD Sport","TRD Off-Road","Limited","Venture"],
+    Tacoma:["SR","SR5","TRD Sport","TRD Off-Road","Limited","TRD Pro"],
+    Tundra:["SR","SR5","Limited","Platinum","1794","TRD Pro"],
+    Sienna:["LE","XLE","Limited","Platinum"],
+    Venza:["LE","XLE","Limited"],
+    "C-HR":["LE","XLE","Limited"],
+    Prius:["L","LE","XLE","Limited","Prime LE","Prime XSE"],
+    "Prius V":["Two","Three","Five"],
+    Avalon:["XLE","Touring","Limited","TRD"],
+    "Land Cruiser":["Base"],
+    Sequoia:["SR5","Limited","Platinum","TRD Pro","Capstone"],
+    "RAV4 Prime":["SE","XSE","XSE Premium"],
+    "RAV4 Hybrid":["LE","XLE","XLE Premium","Limited"],
+    "Highlander Hybrid":["LE","XLE","Limited","Platinum"],
+  },
+  Ford:{
+    "F-150":["XL","XLT","Lariat","King Ranch","Platinum","Limited","Tremor","Raptor"],
+    "F-250":["XL","XLT","Lariat","King Ranch","Platinum","Tremor"],
+    "F-350":["XL","XLT","Lariat","King Ranch","Platinum"],
+    Escape:["S","SE","SE Sport","SEL","Titanium","PHEV"],
+    Explorer:["Base","XLT","ST-Line","Timberline","Limited","ST","Platinum"],
+    Bronco:["Base","Big Bend","Black Diamond","Outer Banks","Badlands","Wildtrak","Raptor"],
+    "Bronco Sport":["Base","Big Bend","Outer Banks","Badlands","Heritage"],
+    Edge:["SE","SEL","ST-Line","Titanium","ST"],
+    Expedition:["XL","XLT","Limited","Timberline","King Ranch","Platinum","Max"],
+    Maverick:["XL","XLT","Lariat","Tremor"],
+    Ranger:["XL","XLT","Lariat","Raptor","Tremor"],
+    "Mustang":["EcoBoost","GT","Mach 1","Shelby GT500","Dark Horse"],
+    "Mustang Mach-E":["Select","Premium","GT","California Route 1"],
+    Fusion:["S","SE","SEL","Titanium","Sport"],
+  },
+  Chevrolet:{
+    "Silverado 1500":["WT","Custom","Custom Trail Boss","LT","LT Trail Boss","RST","LTZ","Trail Boss","High Country","ZR2"],
+    "Silverado 2500":["WT","Custom","LT","LTZ","High Country"],
+    "Silverado 3500":["WT","LT","LTZ","High Country"],
+    Equinox:["LS","LT","RS","Premier","EV"],
+    Traverse:["LS","LT","RS","LT Leather","Premier","High Country","Activ"],
+    Tahoe:["LS","LT","RST","Z71","Premier","High Country"],
+    Suburban:["LS","LT","RST","Z71","Premier","High Country"],
+    Colorado:["WT","LT","Z71","Trail Boss","ZR2"],
+    Blazer:["LT","RS","Premier","EV"],
+    Trax:["LS","LT","ACTIV","RS"],
+    Trailblazer:["LS","LT","ACTIV","RS"],
+    Malibu:["LS","LT","RS","Premier"],
+    Camaro:["LS","LT","SS","ZL1","LT1"],
+    Corvette:["Stingray","E-Ray","Z06","ZR1"],
+    "Spark":["LS","LT","ACTIV"],
+  },
+  GMC:{
+    "Sierra 1500":["Pro","SLE","Elevation","SLT","AT4","Denali","AT4X","Denali Ultimate"],
+    "Sierra 2500":["Pro","SLE","SLT","AT4","Denali"],
+    "Sierra 3500":["Pro","SLE","SLT","AT4","Denali"],
+    Terrain:["SLE","SLT","AT4","Denali"],
+    Acadia:["SLE","SLT","AT4","Denali"],
+    Yukon:["SLE","SLT","AT4","Denali","Denali Ultimate"],
+    "Yukon XL":["SLE","SLT","AT4","Denali","Denali Ultimate"],
+    Canyon:["Elevation","AT4","Denali","AT4X"],
+    Envoy:["SLE","SLT","Denali"],
+    Envista:["ST","SLE","Denali"],
+  },
+  Dodge:{
+    Durango:["SXT","GT","Citadel","R/T","SRT 392","SRT Hellcat"],
+    Charger:["SXT","GT","R/T","Scat Pack","SRT 392","SRT Hellcat","Super Bee"],
+    Challenger:["SXT","GT","R/T","Scat Pack","SRT 392","SRT Hellcat","SRT Demon"],
+    "Grand Caravan":["SE","SE Plus","SXT","GT"],
+    Hornet:["GT","R/T","GT Plus"],
+  },
+  RAM:{
+    "1500":["Tradesman","Big Horn","Warlock","Laramie","Rebel","Laramie Longhorn","Limited","TRX"],
+    "2500":["Tradesman","Big Horn","Laramie","Power Wagon","Laramie Longhorn","Limited"],
+    "3500":["Tradesman","Big Horn","Laramie","Laramie Longhorn","Limited"],
+    "ProMaster City":["Tradesman","Wagon SLT"],
+    "1500 Classic":["Tradesman","SLT","Warlock","Express","GT"],
+  },
+  Hyundai:{
+    Elantra:["SE","SEL","N Line","Limited","N","Hybrid Blue","Hybrid Limited"],
+    Tucson:["SE","SEL","N Line","XRT","Limited","Hybrid","Plug-in Hybrid"],
+    "Santa Fe":["SE","SEL","XRT","Calligraphy","Limited","Hybrid","Plug-in Hybrid"],
+    "Santa Cruz":["SE","SEL","SEL Premium","Limited"],
+    Sonata:["SE","SEL","SEL Plus","N Line","Limited"],
+    Kona:["SE","SEL","N Line","Limited","Electric"],
+    Palisade:["SE","SEL","XRT","Calligraphy","Limited"],
+    Venue:["SE","SEL","Denim"],
+    Ioniq5:["Standard Range","Long Range","Long Range AWD","N"],
+    Ioniq6:["Standard Range RWD","Long Range RWD","Long Range AWD"],
+  },
+  Kia:{
+    Sportage:["LX","S","EX","EX Premium","SX","SX Prestige","Hybrid","Plug-in Hybrid","X-Pro"],
+    Sorento:["LX","S","EX","SX","SX Prestige","X-Line","Hybrid","Plug-in Hybrid"],
+    Telluride:["LX","S","EX","SX","X-Line","SX Prestige","X-Pro"],
+    "Soul":["LX","S","GT-Line","EX","Turbo"],
+    Forte:["FE","LXS","GT-Line","EX","GT"],
+    "K5":["LXS","GT-Line","EX","EX Prestige","GT"],
+    Carnival:["LX","EX","SX","SX Prestige"],
+    EV6:["Light","Wind","GT-Line","GT"],
+    "Niro":["LX","EX","EX Touring","EV LX","EV EX","EV EX Premium","EV SX Touring"],
+    Seltos:["LX","S","EX","SX"],
+    Stinger:["GT-Line","GT1","GT2"],
+  },
+  Nissan:{
+    Altima:["S","SV","SR","SL","Platinum"],
+    Rogue:["S","SV","SL","Platinum","Rock Creek"],
+    Frontier:["S","SV","PRO-4X","SL","PRO-X"],
+    Titan:["S","SV","PRO-4X","SL","Platinum Reserve"],
+    Pathfinder:["S","SV","Rock Creek","SL","Platinum"],
+    Murano:["S","SV","SL","Platinum"],
+    Sentra:["S","SV","SR"],
+    Kicks:["S","SV","SR"],
+    Armada:["S","SV","SL","Platinum"],
+    "Maxima":["S","SV","SL","Platinum","40th Anniversary"],
+    Versa:["S","SV","SR"],
+    "Qashqai":["S","SV","SL","Platinum"],
+  },
+  Subaru:{
+    Outback:["Base","Premium","Onyx Edition","Onyx Edition XT","Limited","Limited XT","Touring","Touring XT","Wilderness"],
+    Forester:["Base","Premium","Sport","Limited","Touring","Wilderness"],
+    Crosstrek:["Base","Premium","Sport","Limited","Hybrid","Wilderness"],
+    Impreza:["Base","Premium","Sport","Limited","RS"],
+    Legacy:["Base","Premium","Sport","Limited","Touring XT"],
+    Ascent:["Base","Premium","Onyx Edition","Limited","Touring"],
+    WRX:["Base","Premium","Limited","GT","TR"],
+    BRZ:["Premium","Limited","tS"],
+    Solterra:["Premium","Limited","Touring"],
+  },
+  Volkswagen:{
+    Jetta:["S","SE","SEL","GLI S","GLI Autobahn","GLI 35th Anniversary"],
+    Tiguan:["S","SE","SEL","SEL R-Line","SEL Premium R-Line"],
+    Golf:["S","SE","R-Line"],
+    "Golf GTI":["S","SE","Autobahn","Clubsport"],
+    "Golf R":["Base","20 Years"],
+    Atlas:["S","SE","SE Technology","SEL","SEL R-Line","SEL Premium"],
+    "Atlas Cross Sport":["S","SE","SE Technology","SEL","SEL R-Line","SEL Premium"],
+    Taos:["S","SE","SEL"],
+    Arteon:["SE","SEL","SEL Premium R-Line","SEL R-Line 4Motion"],
+    ID4:["Standard","Pro","Pro S","AWD Pro","AWD Pro S"],
+  },
+  Jeep:{
+    Wrangler:["Sport","Sport S","Willys","Sahara","High Altitude","Rubicon","392","4xe"],
+    "Grand Cherokee":["Laredo","Altitude","Altitude X","Limited","Overland","Summit","Summit Reserve","L","4xe","Trackhawk"],
+    "Grand Cherokee L":["Laredo","Altitude","Limited","Overland","Summit","Summit Reserve"],
+    Cherokee:["Latitude","Latitude Lux","Altitude","Limited","Trailhawk","Overland"],
+    Compass:["Sport","Latitude","Latitude Lux","Altitude","Limited","Trailhawk","High Altitude"],
+    Renegade:["Sport","Latitude","Altitude","Limited","Trailhawk"],
+    Gladiator:["Sport","Sport S","Willys","Overland","Mojave","Rubicon"],
+    Commander:["Limited","Overland","Trailhawk"],
+  },
+  Cadillac:{
+    Escalade:["Luxury","Premium Luxury","Premium Luxury Platinum","Sport","Sport Platinum","V-Series Blackwing"],
+    "Escalade ESV":["Luxury","Premium Luxury","Sport","Sport Platinum"],
+    XT4:["Luxury","Premium Luxury","Sport"],
+    XT5:["Luxury","Premium Luxury","Sport","V-Series"],
+    XT6:["Luxury","Premium Luxury","Sport","V-Series"],
+    CT4:["Luxury","Premium Luxury","Sport","V-Series","V-Series Blackwing"],
+    CT5:["Luxury","Premium Luxury","Sport","V-Series","V-Series Blackwing"],
+    Lyriq:["Luxury 1","Luxury 2","Sport 1","Sport 2","Sport 3"],
+  },
+  Mazda:{
+    "CX-5":["Sport","Select","Carbon Edition","Preferred","Premium","Premium Plus"],
+    "CX-50":["Select","Preferred","Premium","Premium Plus","Meridian Edition","Turbo","Turbo Premium","Turbo Premium Plus"],
+    "CX-90":["Select","Preferred","Premium","Premium Plus","PHEV","PHEV Premium","PHEV Premium Plus"],
+    "CX-30":["Select","Preferred","Premium","Premium Plus"],
+    "Mazda3":["Select","Preferred","Premium","Premium Plus","Turbo","Turbo Premium Plus"],
+    "Mazda3 Sport":["GX","GS","GT","Turbo"],
+    "MX-5 Miata":["Sport","Club","Grand Touring","RF Club","RF Grand Touring"],
+    "CX-70":["Select","Preferred","Premium","Premium Plus","PHEV"],
+  },
 };
 
 const OEM_SIZES = {
@@ -1784,6 +2033,109 @@ const OEM_SIZES = {
   "Jeep Wrangler":"255/70R18","Jeep Grand Cherokee":"265/60R18","Jeep Compass":"225/60R17",
   "Kia Sorento":"235/65R17","Kia Sportage":"235/55R18","Kia Telluride":"245/60R20",
   "Mazda CX-5":"225/65R17","Mazda CX-50":"225/60R18","Mazda Mazda3":"215/45R18",
+};
+
+// Alternate OEM sizes per vehicle (e.g. different trim levels or staggered fitments)
+const OEM_ALT_SIZES = {
+  "Honda Civic":          ["205/55R16","225/45R17"],
+  "Honda CR-V":           ["225/65R17","235/65R17"],
+  "Honda Accord":         ["245/40R19","235/50R18"],
+  "Honda Odyssey":        ["235/60R18","245/60R18"],
+  "Honda Pilot":          ["235/65R18","245/60R18"],
+  "Honda HR-V":           ["215/55R17","215/60R16"],
+  "Honda Passport":       ["245/60R18","265/45R20"],
+  "Honda Ridgeline":      ["245/60R18","265/50R20"],
+  "Toyota Camry":         ["215/55R17","225/50R17"],
+  "Toyota RAV4":          ["225/65R17","255/55R18"],
+  "Toyota Corolla":       ["195/65R15","215/45R17"],
+  "Toyota Highlander":    ["235/65R17","265/50R20"],
+  "Toyota 4Runner":       ["265/70R17","265/60R18"],
+  "Toyota Tacoma":        ["245/75R16","265/65R17","265/60R18"],
+  "Toyota Tundra":        ["275/65R18","275/55R20","285/55R20"],
+  "Toyota Sienna":        ["235/60R18","245/60R18"],
+  "Toyota Venza":         ["225/65R18","235/55R19"],
+  "Toyota C-HR":          ["215/60R17","225/50R18"],
+  "Toyota Prius":         ["195/65R15","215/45R17"],
+  "Toyota Avalon":        ["235/45R18","235/50R18"],
+  "Toyota Sequoia":       ["275/65R18","285/55R20"],
+  "Toyota RAV4 Prime":    ["235/55R18","255/45R19"],
+  "Toyota RAV4 Hybrid":   ["225/65R17","235/55R18"],
+  "Toyota Highlander Hybrid": ["235/65R17","245/55R19"],
+  "Ford F-150":           ["265/60R18","275/60R20","265/70R17"],
+  "Ford Escape":          ["225/55R17","225/65R17"],
+  "Ford Explorer":        ["265/50R20","245/60R18"],
+  "Chevrolet Silverado":  ["265/65R18","265/70R17","275/60R20"],
+  "Chevrolet Equinox":    ["235/55R17"],
+  "Hyundai Elantra":      ["215/50R17","225/45R17"],
+  "Hyundai Tucson":       ["235/65R17","235/60R18"],
+  "Hyundai Santa Fe":     ["235/65R17","255/50R19"],
+  "Nissan Altima":        ["225/50R17"],
+  "Nissan Rogue":         ["235/65R17"],
+  "Nissan Frontier":      ["265/70R16","265/65R17"],
+  "Subaru Outback":       ["225/65R17"],
+  "Subaru Forester":      ["225/65R17"],
+  "Volkswagen Jetta":     ["205/55R16","215/45R17"],
+  "Volkswagen Tiguan":    ["225/55R17"],
+  "Cadillac Escalade":    ["255/65R22","285/45R22"],
+  "Cadillac XT5":         ["255/55R19"],
+  "GMC Sierra 1500":      ["275/60R20","265/70R17"],
+  "GMC Terrain":          ["235/55R17"],
+  "GMC Yukon":            ["265/50R20","285/45R22"],
+  "RAM 1500":             ["265/70R17","265/60R18","285/45R22"],
+  "RAM 2500":             ["265/70R17","235/80R17"],
+  "Dodge Durango":        ["245/60R20","275/45R22"],
+  "Jeep Wrangler":        ["245/75R17","275/70R18"],
+  "Jeep Grand Cherokee":  ["255/55R20","265/50R20"],
+  "Kia Sorento":          ["235/60R18","255/45R20"],
+  "Kia Sportage":         ["225/60R17","255/45R19"],
+  "Kia Telluride":        ["265/45R21"],
+  "Kia Soul":             ["205/55R16","215/45R17"],
+  "Kia Forte":            ["205/55R16","225/40R18"],
+  "Kia K5":               ["225/45R18","245/40R19"],
+  "Kia Carnival":         ["235/60R18","245/50R19"],
+  "Kia EV6":              ["235/55R19","255/45R20"],
+  "Kia Seltos":           ["215/60R17","235/50R18"],
+  "Mazda CX-5":           ["225/55R19"],
+  "Mazda CX-50":          ["255/45R20"],
+  "Mazda CX-90":          ["235/55R20","255/45R21"],
+  "Mazda CX-30":          ["215/60R16","215/55R18"],
+  "Mazda Mazda3":         ["205/60R16","215/45R18"],
+  "Ford F-250":           ["265/70R17","275/65R18","275/65R20"],
+  "Ford Bronco":          ["255/70R18","265/70R17","315/70R17"],
+  "Ford Bronco Sport":    ["225/65R17","235/55R17"],
+  "Ford Edge":            ["235/55R19","245/50R20"],
+  "Ford Expedition":      ["275/55R20","275/50R22"],
+  "Ford Maverick":        ["225/65R17","245/45R19"],
+  "Ford Ranger":          ["245/65R17","265/65R17","265/60R18"],
+  "Ford Mustang":         ["235/55R17","255/40R19","305/35R20"],
+  "Chevrolet Silverado 1500": ["265/65R18","275/60R20","265/70R17"],
+  "Chevrolet Silverado 2500": ["245/75R17","265/70R17"],
+  "Chevrolet Traverse":   ["235/65R18","255/55R20"],
+  "Chevrolet Tahoe":      ["265/65R18","275/55R20"],
+  "Chevrolet Suburban":   ["265/65R18","275/55R20"],
+  "Chevrolet Colorado":   ["245/65R17","265/65R17","265/60R18"],
+  "Chevrolet Blazer":     ["235/55R19","255/45R20"],
+  "Chevrolet Trax":       ["215/55R17","225/50R18"],
+  "Chevrolet Trailblazer":["215/55R17","225/45R18"],
+  "GMC Sierra 2500":      ["245/75R17","265/70R17"],
+  "GMC Acadia":           ["235/65R17","255/55R20"],
+  "GMC Yukon XL":         ["265/65R18","275/55R20"],
+  "GMC Canyon":           ["245/65R17","265/65R17"],
+  "RAM 3500":             ["245/70R17","265/70R17"],
+  "Dodge Hornet":         ["225/55R18","235/45R20"],
+  "Hyundai Santa Cruz":   ["245/60R18","255/45R20"],
+  "Hyundai Sonata":       ["225/50R17","235/45R18"],
+  "Hyundai Kona":         ["205/55R17","215/45R18"],
+  "Hyundai Palisade":     ["245/60R18","255/45R20"],
+  "Hyundai Ioniq5":       ["235/55R19","255/45R20"],
+  "Hyundai Ioniq6":       ["225/55R18","245/45R19"],
+  "Nissan Titan":         ["265/70R18","275/60R20"],
+  "Nissan Pathfinder":    ["235/65R18","255/60R18"],
+  "Nissan Murano":        ["235/65R18","245/55R19"],
+  "Nissan Armada":        ["275/60R20","285/45R22"],
+  "Subaru Crosstrek":     ["215/60R16","225/55R17"],
+  "Subaru Impreza":       ["195/65R15","205/55R16"],
+  "Subaru Legacy":        ["225/55R17","225/50R18"],
 };
 
 // ─────────────────────────────────────────────────
@@ -2338,16 +2690,151 @@ function fmtCard(el) { let v = el.value.replace(/\D/g,'').substr(0,16); el.value
 function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.substr(0,2)+' / '+v.substr(2,2); el.value=v; }
 
 // ─────────────────────────────────────────────────
+//  SERVICE BOOKING SECTION
+// ─────────────────────────────────────────────────
+const BOOK_SERVICES = [
+  { id:'rotation',  icon:'🔄', name:'Tire Rotation',                  price:'$30',   unit:'flat',     duration:30,  desc:'Even out wear across all four tires. Recommended every 10,000 km.' },
+  { id:'swap',      icon:'❄️',  name:'Seasonal Swap',                  price:'$20',   unit:'per tire', duration:45,  desc:'Swap your pre-mounted stored set — no mounting needed. Torque check included.' },
+  { id:'tpms',      icon:'📡', name:'TPMS Relearn',                   price:'$20',   unit:'flat',     duration:30,  desc:'Relearn your TPMS sensors after a tire change, rotation, or battery replacement.' },
+  { id:'mount',     icon:'⚙️', name:'Mount & Balance',                 price:'$25',   unit:'per tire', duration:60,  desc:'Customer-supplied tires mounted, balanced, and TPMS reset. Old tire disposal included.' },
+  { id:'repair',    icon:'🩹', name:'Flat Repair / Plug',              price:'$20',   unit:'flat',     duration:20,  desc:'Quick plug for a simple tread puncture. Includes remount and balance.' },
+  { id:'valve',     icon:'🔩', name:'Valve Stem Replacement',          price:'$15',   unit:'per stem', duration:20,  desc:'Replace faulty, leaking, or corroded valve stems.' },
+  { id:'torque',    icon:'✅', name:'Wheel Torque Re-check',           price:'Free',  unit:'',         duration:15,  desc:'Recommended 50–100 km after any tire install. Takes 15 minutes, total peace of mind.' },
+];
+
+let svcSelected = null;
+let svcCalY, svcCalMo, svcSelDate = null, svcSelTime = null;
+
+function buildSvcGrid() {
+  const grid = document.getElementById('svcGrid');
+  if (!grid) return;
+  grid.innerHTML = BOOK_SERVICES.map(s => `
+    <div class="svc-card${svcSelected?.id === s.id ? ' selected' : ''}" onclick="selectSvc('${s.id}')">
+      <div class="svc-icon">${s.icon}</div>
+      <div class="svc-name">${s.name}</div>
+      <div class="svc-desc">${s.desc}</div>
+      <div class="svc-meta">
+        <div class="svc-price">${s.price}${s.unit ? `<span> / ${s.unit}</span>` : ''}</div>
+        <div class="svc-dur">⏱ ${s.duration} min</div>
+      </div>
+    </div>`).join('');
+}
+
+function selectSvc(id) {
+  svcSelected = BOOK_SERVICES.find(s => s.id === id);
+  svcSelDate = null; svcSelTime = null;
+  buildSvcGrid();
+  const panel = document.getElementById('svcBookingPanel');
+  panel.classList.add('show');
+  // Reset confirm state
+  document.getElementById('svcConfirmBox').classList.remove('show');
+  document.getElementById('svcFormWrap').style.display = 'block';
+  // Init calendar
+  const n = new Date(); svcCalY = n.getFullYear(); svcCalMo = n.getMonth();
+  buildSvcCal();
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+
+function buildSvcCal() {
+  document.getElementById('svcCalMo').textContent = `${MONTHS[svcCalMo]} ${svcCalY}`;
+  const minDate = new Date(); minDate.setHours(minDate.getHours() + 24); minDate.setHours(0,0,0,0);
+  if (new Date().getHours() >= 12) minDate.setDate(minDate.getDate() + 1);
+  const firstDay = new Date(svcCalY, svcCalMo, 1).getDay(), days = new Date(svcCalY, svcCalMo+1, 0).getDate();
+  let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
+  for (let d = 1; d <= days; d++) {
+    const dt = new Date(svcCalY, svcCalMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun;
+    const dateStr = `${MONTHS[svcCalMo]} ${d}, ${svcCalY}`, isSel = svcSelDate === dateStr;
+    html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="svcPickDate('${dateStr}')"`:''}>${d}</div>`;
+  }
+  document.getElementById('svcCalGrid').innerHTML = html;
+  if (svcSelDate) { document.getElementById('svcTimeSec').style.display = 'block'; buildSvcTimes(); }
+  else document.getElementById('svcTimeSec').style.display = 'none';
+}
+function svcPickDate(d) { svcSelDate = d; svcSelTime = null; buildSvcCal(); }
+function buildSvcTimes() {
+  const duration = svcSelected?.duration || 30;
+  const slots = getSlotsForDuration(duration);
+  document.getElementById('svcTimeGrid').innerHTML = slots.map(t =>
+    `<div class="time-slot${svcSelTime===t?' sel':''}" onclick="svcPickTime('${t}')">${t}</div>`
+  ).join('');
+}
+function svcPickTime(t) { svcSelTime = t; buildSvcTimes(); }
+function svcPrevMo() { if(svcCalMo===0){svcCalMo=11;svcCalY--;}else{svcCalMo--;} svcSelDate=null;svcSelTime=null;buildSvcCal(); }
+function svcNextMo() { if(svcCalMo===11){svcCalMo=0;svcCalY++;}else{svcCalMo++;} svcSelDate=null;svcSelTime=null;buildSvcCal(); }
+
+async function submitServiceBooking() {
+  const name = (document.getElementById('svcFName').value.trim() + ' ' + document.getElementById('svcLName').value.trim()).trim();
+  const phone = document.getElementById('svcPhone').value.trim();
+  if (!name) { alert('Please enter your name.'); return; }
+  if (!phone) { alert('Please enter a phone number so we can confirm.'); return; }
+  if (!svcSelDate || !svcSelTime) { alert('Please select a preferred date and time.'); return; }
+
+  const btn = document.getElementById('svcSubmitBtn');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+
+  const payload = {
+    service: svcSelected.name,
+    customerName: name,
+    customerPhone: phone,
+    customerEmail: document.getElementById('svcEmail').value.trim(),
+    vehicle: document.getElementById('svcVehicle').value.trim(),
+    notes: document.getElementById('svcNotes').value.trim(),
+    preferredDate: svcSelDate,
+    preferredTime: svcSelTime,
+    duration: svcSelected.duration,
+    price: svcSelected.price,
+  };
+
+  try {
+    await fetch('/send-service-request', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch(e) { console.warn('Service request email failed:', e.message); }
+
+  // Show confirmation
+  document.getElementById('svcFormWrap').style.display = 'none';
+  const msg = document.getElementById('svcConfirmMsg');
+  msg.innerHTML = `<strong style="color:var(--white)">${svcSelected.name}</strong> requested for <strong style="color:var(--white)">${svcSelDate} at ${svcSelTime}</strong>.<br>We'll call <strong style="color:var(--white)">${phone}</strong> to confirm within a few hours.`;
+  document.getElementById('svcConfirmBox').classList.add('show');
+
+  // Reset for next use
+  svcSelected = null; svcSelDate = null; svcSelTime = null;
+  buildSvcGrid();
+  btn.textContent = 'Request Appointment →'; btn.disabled = false;
+}
+
+// ─────────────────────────────────────────────────
+//  THEME TOGGLE
+// ─────────────────────────────────────────────────
+function toggleTheme() {
+  const light = document.body.classList.toggle('light-mode');
+  document.getElementById('themeToggle').textContent = light ? '☀️' : '🌙';
+  try { localStorage.setItem('pcTheme', light ? 'light' : 'dark'); } catch(e) {}
+}
+function initTheme() {
+  try {
+    if (localStorage.getItem('pcTheme') === 'light') {
+      document.body.classList.add('light-mode');
+      document.getElementById('themeToggle').textContent = '☀️';
+    }
+  } catch(e) {}
+}
+
+// ─────────────────────────────────────────────────
 // ─────────────────────────────────────────────────
 //  PAGE INIT
 // ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   initYears();
   initWheelYears();
   initSizeDropdowns();
   initWheelDropdowns();
   initMemberState();
   initCookie();
+  buildSvcGrid();
   loadTires();
 });
 
