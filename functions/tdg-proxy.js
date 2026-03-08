@@ -4,7 +4,7 @@
  * Replaces the old Netlify function at glittery-banoffee-1b1d80.netlify.app
  */
 
-const TDG_API_BASE = 'https://api.tdgcanada.com/v1';
+const TDG_API_BASE = 'https://www.tdgaccess.ca/api';
 const TDG_API_KEY  = 'rst715Wr18hFpHpbi346TGuMLBBQDZZbF5lHZQSi27hfpLGey3TH3YRHYWWPJRyi7rkx';
 
 const CORS_HEADERS = {
