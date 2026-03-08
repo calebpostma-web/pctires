@@ -1404,11 +1404,14 @@ async function loadTires(searchParams = null) {
       const sizeGroups = [ popularSizes.slice(0,5), popularSizes.slice(5,10), popularSizes.slice(10,15) ];
       const results = await Promise.all(sizeGroups.map(sizes => Promise.all([ tdgFetch('search', { tireSizes: sizes }), tdgFetch('inventory', { tireSizes: sizes }) ])));
       results.forEach(([prodRes, invRes]) => {
+        console.log('batch prodRes type:', typeof prodRes, Array.isArray(prodRes), 'len:', Array.isArray(prodRes)?prodRes.length:'?');
         extractData(prodRes).forEach(p => { if (!products.find(x => x.itemNumber === p.itemNumber)) products.push(p); });
         extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
       });
+      console.log('total products before filter:', products.length);
     }
     allTires = products.filter(p => p.type === 'Tire' || p.type === 'tire').map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
+    console.log('allTires after normalise:', allTires.length);
     applyFilter(activeFilter);
   } catch (err) {
     console.warn('TDG API unavailable, using mock tire inventory:', err.message);
