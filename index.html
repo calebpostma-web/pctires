@@ -1403,42 +1403,52 @@ async function loadTires(searchParams = null) {
   showCatalogLoading(true);
   try {
     let products = [], inventoryMap = {};
+    const extractData = r => {
+      if (Array.isArray(r)) return r;
+      if (r?.data && Array.isArray(r.data)) return r.data;
+      if (r?.products && Array.isArray(r.products)) return r.products;
+      if (r?.items && Array.isArray(r.items)) return r.items;
+      if (r?.results && Array.isArray(r.results)) return r.results;
+      return [];
+    };
+
     if (searchParams) {
+      // Specific search (by size, vehicle, season)
+      console.log('[TDG] loadTires search:', searchParams);
       const [prodRes, invRes] = await Promise.all([
         tdgFetch('search', searchParams),
         tdgFetch('inventory', searchParams),
       ]);
-      const extractData = r => {
-        if (Array.isArray(r)) return r;
-        if (r?.data && Array.isArray(r.data)) return r.data;
-        if (r?.products && Array.isArray(r.products)) return r.products;
-        if (r?.items && Array.isArray(r.items)) return r.items;
-        if (r?.results && Array.isArray(r.results)) return r.results;
-        return [];
-      };
+      console.log('[TDG] search prodRes:', prodRes);
+      console.log('[TDG] search invRes:', invRes);
       products = extractData(prodRes);
       extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
     } else {
-      const popularSizes = ['225/65R17','235/65R17','245/65R17','275/65R18','265/70R17','215/55R17','225/60R17','235/60R17','245/60R18','275/60R20','205/55R16','225/50R17','235/45R18','255/55R20','245/70R17'];
-      const extractData = r => {
-        if (Array.isArray(r)) return r;
-        if (r?.data && Array.isArray(r.data)) return r.data;
-        if (r?.products && Array.isArray(r.products)) return r.products;
-        if (r?.items && Array.isArray(r.items)) return r.items;
-        if (r?.results && Array.isArray(r.results)) return r.results;
-        return [];
-      };
-      const sizeGroups = [ popularSizes.slice(0,5), popularSizes.slice(5,10), popularSizes.slice(10,15) ];
-      const results = await Promise.all(sizeGroups.map(sizes => Promise.all([ tdgFetch('search', { tireSizes: sizes }), tdgFetch('inventory', { tireSizes: sizes }) ])));
-      results.forEach(([prodRes, invRes]) => {
-        extractData(prodRes).forEach(p => { if (!products.find(x => x.itemNumber === p.itemNumber)) products.push(p); });
-        extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
-      });
+      // Default: load entire catalog via product/all + inventory/all
+      console.log('[TDG] loadTires: fetching full catalog (all + inventoryAll)');
+      const [prodRes, invRes] = await Promise.all([
+        tdgFetch('all', {}),
+        tdgFetch('inventoryAll', {}),
+      ]);
+      console.log('[TDG] all prodRes type:', typeof prodRes, Array.isArray(prodRes) ? prodRes.length : JSON.stringify(prodRes)?.slice(0,200));
+      console.log('[TDG] all invRes type:', typeof invRes, Array.isArray(invRes) ? invRes.length : JSON.stringify(invRes)?.slice(0,200));
+      products = extractData(prodRes);
+      extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
     }
-    allTires = products.filter(p => p.type === 'Tire' || p.type === 'tire').map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
+
+    console.log('[TDG] raw products:', products.length);
+    allTires = products.filter(p => (p.type || '').toLowerCase() === 'tire').map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
+    console.log('[TDG] allTires after filter:', allTires.length);
+
+    // If API returned products but none typed as Tire, log what types we got
+    if (products.length > 0 && allTires.length === 0) {
+      const types = [...new Set(products.map(p => p.type))];
+      console.warn('[TDG] Got', products.length, 'products but 0 tires. Types found:', types);
+    }
+
     applyFilter(activeFilter);
   } catch (err) {
-    console.warn('TDG API unavailable, using mock tire inventory:', err.message);
+    console.warn('[TDG] API unavailable, using mock tire inventory:', err.message);
     allTires = MOCK_TIRES;
     if (searchParams?.tireSizes?.length) {
       const sz = searchParams.tireSizes[0].replace(/\s/g,'');
@@ -1912,17 +1922,21 @@ async function doSizeSearch() {
 // ─────────────────────────────────────────────────
 function initWheelYears() {
   const s = document.getElementById('wYear');
+  if (!s) return; // wheel lookup panel may not be present
   s.innerHTML = '<option value="">Year</option>';
-  for (let y = 2025; y >= 2005; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y; s.appendChild(o); }
+  for (let y = 2026; y >= 2000; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y; s.appendChild(o); }
 }
 function updateWheelMakes() {
   const mk = document.getElementById('wMake');
+  if (!mk) return;
   mk.innerHTML = '<option value="">Make</option>';
   document.getElementById('wModel').innerHTML = '<option value="">Model</option>';
   Object.keys(VD).sort().forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; mk.appendChild(o); });
 }
 function updateWheelModels() {
-  const make = document.getElementById('wMake').value;
+  const mk = document.getElementById('wMake');
+  if (!mk) return;
+  const make = mk.value;
   const md = document.getElementById('wModel');
   md.innerHTML = '<option value="">Model</option>';
   if (!make || !VD[make]) return;
