@@ -1267,7 +1267,7 @@ function memberRequest() {
 //  API HELPER
 // ─────────────────────────────────────────────────
 async function tdgFetch(path, body = null) {
-  const res = await fetch(`${TDG.BACKEND_URL}/.netlify/functions/tdg-proxy`, {
+  const res = await fetch(`/tdg-proxy`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ path, payload: body || {} }),
@@ -2022,7 +2022,7 @@ async function finishOrder(noInst) {
     <div class="cd-row"><span class="cd-label">Confirmation</span><span class="cd-val">Sent to ${email}</span></div>
   `;
   try {
-    await fetch(`${TDG.BACKEND_URL}/.netlify/functions/send-order-email`, {
+    await fetch(`/send-order-email`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ orderNumber: orderId, customerName: name.trim(), customerEmail: email, customerPhone: document.getElementById('phone')?.value || '', tires: cart.map(c=>({qty:c.qty,brand:c.brand,name:c.name,size:c.size||c.diameter+'"',price:c.price})), installation: !noInst, appointmentDate: selDate||'', appointmentTime: selTime||'', serviceName: selectedService?.label||'', subtotal: t.sub, installTotal: t.inst, shipping: 0, tax: t.tax, total: t.total }),
     });
