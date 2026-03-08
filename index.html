@@ -1367,7 +1367,7 @@ function normaliseTire(product, inventory) {
   const sp = product.specifications || {};
   const inv = inventory || {};
   const locs = inv.locations || [];
-  const bestAvail = locs.length ? Math.min(...locs.map(l => l.availability)) : 100;
+  const bestAvail = locs.length ? Math.min(...locs.map(l => l.availability)) : 99;
   const totalQty = locs.reduce((s, l) => s + (l.qtyAvailable || 0), 0);
   const seasonRaw = (sp.season || '').toLowerCase();
   let type = 'allseason';
@@ -1385,7 +1385,7 @@ function normaliseTire(product, inventory) {
     speed: sp.speedRating || '', loadIndex: sp.loadIndex || '', season: sp.season || TDG.SEASON_LABEL[sp.tireSeason] || 'All-Season',
     runFlat: sp.runFlat === 'Yes', evCompat: sp.eVCompatible === 'Yes', serviceType: sp.serviceType || '',
     map, imageUrl: product.productImageUrl || null,
-    stock: locs.length === 0 ? 'in' : (bestAvail <= 1 ? 'in' : (bestAvail <= 2 ? 'low' : 'out')),
+    stock: locs.length === 0 ? 'in' : totalQty > 4 ? 'in' : totalQty > 0 ? 'low' : 'out',
     qtyAvailable: totalQty, locations: locs,
   };
 }
@@ -1397,7 +1397,6 @@ function normaliseWheel(product, inventory) {
   const sp  = product.specifications || {};
   const inv = inventory || {};
   const locs = inv.locations || [];
-  const bestAvail = locs.length ? Math.min(...locs.map(l => l.availability)) : 100;
   const totalQty  = locs.reduce((s, l) => s + (l.qtyAvailable || 0), 0);
   const cost = inv.pricing?.price ?? product.pricing?.price ?? 0;
   const msrp = inv.pricing?.msrp  ?? product.pricing?.msrp  ?? cost;
@@ -1415,7 +1414,7 @@ function normaliseWheel(product, inventory) {
     offset:      parseFloat(sp.offset || 0),
     hubBore:     parseFloat(sp.hubBore || sp.hub_bore || 0),
     price: cost, msrp, map, imageUrl: product.productImageUrl || null,
-    stock: locs.length === 0 ? 'in' : (bestAvail <= 1 ? 'in' : (bestAvail <= 2 ? 'low' : 'out')),
+    stock: locs.length === 0 ? 'in' : totalQty > 4 ? 'in' : totalQty > 0 ? 'low' : 'out',
     qtyAvailable: totalQty, locations: locs,
   };
 }
@@ -2702,7 +2701,7 @@ function openTireModal(itemNumber) {
       <div style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--yellow);margin-bottom:4px">${t.brand}</div>
       <div style="font-size:26px;font-weight:800;margin-bottom:4px">${t.name}</div>
       <div style="font-size:15px;color:var(--muted);margin-bottom:12px">${t.size}</div>
-      <div style="font-size:14px;margin-bottom:16px">${stockLabel}</div>
+      <div style="font-size:14px;margin-bottom:16px">${stockLabel}${t.qtyAvailable > 0 ? ` <span style="color:var(--muted);font-size:12px">(${t.qtyAvailable} available)</span>` : ''}</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px">
       ${specs.map(([k,v]) => `
