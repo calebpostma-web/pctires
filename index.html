@@ -1432,6 +1432,8 @@ async function loadTires(searchParams = null) {
       ]);
       console.log('[TDG] all prodRes type:', typeof prodRes, Array.isArray(prodRes) ? prodRes.length : JSON.stringify(prodRes)?.slice(0,200));
       console.log('[TDG] all invRes type:', typeof invRes, Array.isArray(invRes) ? invRes.length : JSON.stringify(invRes)?.slice(0,200));
+      console.log('[TDG] prodRes keys:', prodRes ? Object.keys(prodRes) : 'null');
+      console.log('[TDG] prodRes full (first 500):', JSON.stringify(prodRes)?.slice(0,500));
       products = extractData(prodRes);
       extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
     }
