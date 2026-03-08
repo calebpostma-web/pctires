@@ -1231,6 +1231,10 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
           <label>Order Delivery</label>
           <div class="dopt active" style="pointer-events:none"><div class="dopt-icon">🏪</div><div class="dopt-info"><div class="dopt-title">Ships to PC Tires</div><div class="dopt-sub">Your order ships directly to our shop — ready for your installation appointment. <strong style="color:var(--green)">Free shipping.</strong></div></div><div class="dopt-check">✓</div></div>
         </div>
+        <label class="refine-toggle" style="margin-top:14px;font-size:13px;color:var(--light)">
+          <input type="checkbox" id="caslOptIn" style="accent-color:var(--yellow);width:15px;height:15px">
+          <span>Send me seasonal reminders and deals from PC Tires</span>
+        </label>
       </div>
       <!-- Step 2: Schedule -->
       <div class="fsec" id="s2">
@@ -2421,6 +2425,8 @@ async function doVinLookup() {
 
 function vinSearchTires() {
   if (!vinDecoded?.oemSize) return;
+  lastSearchMethod = 'vin';
+  lastSearchVehicle = { year: vinDecoded.year, make: vinDecoded.make, model: vinDecoded.model, trim: vinDecoded.trim, vin: vinDecoded.vin };
   switchCatalogType('tires');
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
   textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — searching tires for <strong>${vinDecoded.oemSize}</strong>…`;
@@ -2488,6 +2494,9 @@ async function doLookup() {
   const y = document.getElementById('vYear').value, mk = document.getElementById('vMake').value, md = document.getElementById('vModel').value;
   if (!y || !mk || !md) { alert('Please select Year, Make and Model.'); return; }
   const vehicleKey = `${mk} ${md}`, tireSize = OEM_SIZES[vehicleKey] || null;
+  const trim = document.getElementById('vTrim')?.value || '';
+  lastSearchMethod = 'vehicle';
+  lastSearchVehicle = { year: y, make: mk, model: md, trim };
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
   if (tireSize) {
     textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — OEM size: <strong>${tireSize}</strong>. Searching live TDG inventory…`;
@@ -2663,6 +2672,8 @@ function updateSizePreview() {
 }
 
 async function doSizeSearch() {
+  lastSearchMethod = 'size';
+  lastSearchVehicle = null;
   const width = document.getElementById('sWidth').value, sidewall = document.getElementById('sSidewall').value, diameter = document.getElementById('sDiameter').value;
   if (!width || !sidewall || !diameter) return;
   const tireSize = `${width}/${sidewall}R${diameter}`;
@@ -2680,6 +2691,8 @@ async function doSizeSearch() {
 //  DELIVERY OPTION
 // ─────────────────────────────────────────────────
 let deliveryMode = 'shop';
+let lastSearchMethod = null; // 'vin' | 'vehicle' | 'size' | null
+let lastSearchVehicle = null; // { year, make, model, trim, vin? }
 
 // ─────────────────────────────────────────────────
 //  CART
@@ -2769,7 +2782,20 @@ function updSteps() {
   if (step === 5) { mf.style.display = 'none'; return; } else mf.style.display = 'block';
   nb.textContent = nLabels[step] || 'Continue →';
   bb.style.display = (step > 1) ? 'block' : 'none';
-  if (step === 2) { selectedService = null; selDate = null; selTime = null; document.getElementById('calSection').style.display='none'; buildServiceMenu(); }
+  if (step === 2) {
+    selectedService = null; selDate = null; selTime = null;
+    document.getElementById('calSection').style.display = 'none';
+    buildServiceMenu();
+    // If cart already has installation, auto-select 4-Tire Mount & Balance
+    const cartHasInstall = cart.some(c => c.install && c.itemType !== 'wheel');
+    if (cartHasInstall) {
+      selectedService = SERVICES.find(s => s.id === 'mount4');
+      buildServiceMenu();
+      document.getElementById('calSection').style.display = 'block';
+      document.getElementById('durationNote').innerHTML = `<b>✅ Installation already included in your order</b> — just pick your date and time below.`;
+      buildCal();
+    }
+  }
   if (step === 3) buildAddonGrid();
   if (step === 4) buildPaymentSummary();
 }
@@ -2788,29 +2814,45 @@ function skipInstall() { step = 3; updSteps(); }
 
 // ── ADD-ONS ──────────────────────────────────────
 const ADDONS = [
-  { id:'nitrogen',  icon:'💨', name:'Nitrogen Fill',          price:19.99, unit:'per tire', desc:'More stable pressure. Better in extreme cold.' },
-  { id:'hazard',    icon:'🛡️', name:'Road Hazard Protection', price:24.99, unit:'per tire', desc:'Free repair or replacement if you get a flat.' },
-  { id:'storage',   icon:'📦', name:'Seasonal Tire Storage',  price:49.99, unit:'per set',  desc:'We store your off-season tires until next swap.' },
-  { id:'wipers',    icon:'🌧️', name:'Wiper Blade Replacement',price:29.99, unit:'flat',     desc:'New blades installed while you\'re in for service.' },
-  { id:'cabin',     icon:'🌬️', name:'Cabin Air Filter',       price:39.99, unit:'flat',     desc:'Breathe cleaner air. Takes 10 min to swap.' },
-  { id:'torque',    icon:'✅', name:'Torque Re-check',         price:0,     unit:'free',     desc:'50–100 km after install. Included, no charge.' },
+  { id:'nitrogen',  icon:'💨', name:'Nitrogen Fill',          price:19.99, unit:'per tire', desc:'More stable pressure. Better in extreme cold.', vehicleSpecific: false },
+  { id:'hazard',    icon:'🛡️', name:'Road Hazard Protection', price:24.99, unit:'per tire', desc:'Free repair or replacement if you get a flat.', vehicleSpecific: false },
+  { id:'storage',   icon:'📦', name:'Seasonal Tire Storage',  price:49.99, unit:'per set',  desc:'We store your off-season tires until next swap.', vehicleSpecific: false },
+  { id:'wipers',    icon:'🌧️', name:'Wiper Blade Replacement',price:29.99, unit:'flat',     desc:'New blades installed while you\'re in for service.', vehicleSpecific: true },
+  { id:'cabin',     icon:'🌬️', name:'Cabin Air Filter',       price:39.99, unit:'flat',     desc:'Breathe cleaner air. Takes 10 min to swap.', vehicleSpecific: true },
+  { id:'torque',    icon:'✅', name:'Torque Re-check',         price:0,     unit:'free',     desc:'50–100 km after install. Included, no charge.', vehicleSpecific: false },
 ];
 let selectedAddons = new Set();
 
 function buildAddonGrid() {
   const grid = document.getElementById('addonGrid'); if (!grid) return;
-  // Auto-select free torque re-check if not already touched
   if (!selectedAddons.has('torque') && !selectedAddons._torqueSeen) {
     selectedAddons.add('torque');
     selectedAddons._torqueSeen = true;
   }
+  const hasVehicle = lastSearchMethod === 'vin' || lastSearchMethod === 'vehicle';
+  const vehicleName = lastSearchVehicle ? `${lastSearchVehicle.year} ${lastSearchVehicle.make} ${lastSearchVehicle.model}` : null;
+
   grid.innerHTML = ADDONS.map(a => {
     const sel = selectedAddons.has(a.id);
-    const priceStr = a.price === 0 ? '<span style="color:var(--green);font-weight:700">FREE</span>' : `<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:18px;font-weight:800;color:${sel?'var(--yellow)':'var(--white)'}">$${a.price.toFixed(2)}</span><span style="font-size:11px;color:var(--muted)"> / ${a.unit}</span>`;
+    const locked = a.vehicleSpecific && !hasVehicle;
+    const priceStr = a.price === 0
+      ? `<span style="color:var(--green);font-weight:700">FREE</span>`
+      : `<span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:${sel?'var(--yellow)':'var(--white)'}">$${a.price.toFixed(2)}</span><span style="font-size:11px;color:var(--muted)"> / ${a.unit}</span>`;
+
+    if (locked) {
+      return `<div style="padding:14px;background:var(--card);border:2px solid var(--border);border-radius:4px;opacity:.55;position:relative">
+        <div style="font-size:20px;margin-bottom:6px">${a.icon}</div>
+        <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px">${a.name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5">${a.desc}</div>
+        <div style="font-size:11px;color:var(--yellow);font-weight:600;cursor:pointer" onclick="switchLookupTab('vin');closeCheckout()">🔍 Enter your VIN to unlock →</div>
+      </div>`;
+    }
+
     return `<div onclick="toggleAddon('${a.id}')" style="padding:14px;background:var(--card);border:2px solid ${sel?'var(--yellow)':'var(--border)'};border-radius:4px;cursor:pointer;transition:all .2s;position:relative">
       ${sel ? '<div style="position:absolute;top:8px;right:10px;background:var(--yellow);color:var(--black);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">✓</div>' : ''}
       <div style="font-size:20px;margin-bottom:6px">${a.icon}</div>
       <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px">${a.name}</div>
+      ${a.vehicleSpecific && vehicleName ? `<div style="font-size:10px;color:var(--green);margin-bottom:4px;font-weight:600">✓ For your ${vehicleName}</div>` : ''}
       <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">${a.desc}</div>
       <div>${priceStr}</div>
     </div>`;
@@ -2868,27 +2910,90 @@ async function finishOrder() {
   const addonAmt = getAddonTotal();
   const grandTotal = t.total + addonAmt;
   const name = (document.getElementById('fName').value || 'Customer') + ' ' + (document.getElementById('lName').value || '');
-  const email = document.getElementById('email').value || 'you@example.com';
+  const email = document.getElementById('email').value || '';
+  const phone = document.getElementById('phone')?.value || '';
+  const caslOptIn = document.getElementById('caslOptIn')?.checked || false;
   const orderId = 'PCT-' + Math.random().toString(36).substr(2,6).toUpperCase();
   const svcLabel = selectedService ? selectedService.label : 'Not booked';
   const instLine = selectedService ? `${svcLabel} · ${selDate} at ${selTime}` : 'Not booked — arrange separately';
   const addonNames = ADDONS.filter(a => selectedAddons.has(a.id)).map(a => a.name).join(', ') || 'None';
+
+  // Vehicle info from search
+  const vin = lastSearchVehicle?.vin || '';
+  const vehicleYear = lastSearchVehicle?.year || '';
+  const vehicleMake = lastSearchVehicle?.make || '';
+  const vehicleModel = lastSearchVehicle?.model || '';
+  const vehicleTrim = lastSearchVehicle?.trim || '';
+  const vehicleStr = [vehicleYear, vehicleMake, vehicleModel, vehicleTrim].filter(Boolean).join(' ');
+
   document.getElementById('confDetails').innerHTML = `
     <div class="cd-row"><span class="cd-label">Order #</span><span class="cd-val y">${orderId}</span></div>
     <div class="cd-row"><span class="cd-label">Customer</span><span class="cd-val">${name.trim()}</span></div>
     <div class="cd-row"><span class="cd-label">Email</span><span class="cd-val">${email}</span></div>
+    ${vehicleStr ? `<div class="cd-row"><span class="cd-label">Vehicle</span><span class="cd-val">${vehicleStr}</span></div>` : ''}
     <div class="cd-row"><span class="cd-label">Items</span><span class="cd-val">${cart.map(c=>`${c.qty}× ${c.brand} ${c.name}`).join(', ')}</span></div>
     ${addonAmt > 0 ? `<div class="cd-row"><span class="cd-label">Add-ons</span><span class="cd-val">${addonNames}</span></div>` : ''}
     <div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div>
     <div class="cd-row"><span class="cd-label">Installation</span><span class="cd-val">${instLine}</span></div>
     <div class="cd-row"><span class="cd-label">Confirmation</span><span class="cd-val">Sent to ${email}</span></div>
   `;
+
+  const orderPayload = {
+    orderNumber: orderId,
+    customerName: name.trim(),
+    customerEmail: email,
+    customerPhone: phone,
+    caslOptIn,
+    vin,
+    vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
+    searchMethod: lastSearchMethod || 'unknown',
+    tires: cart.map(c => ({ qty: c.qty, brand: c.brand, name: c.name, size: c.size || c.diameter + '"', price: c.price })),
+    addons: addonNames,
+    installation: !!selectedService,
+    appointmentDate: selDate || '',
+    appointmentTime: selTime || '',
+    serviceName: selectedService?.label || '',
+    subtotal: t.sub,
+    addonTotal: addonAmt,
+    tax: t.tax,
+    total: grandTotal,
+  };
+
+  // Send order email
   try {
-    await fetch(`/send-order-email`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ orderNumber: orderId, customerName: name.trim(), customerEmail: email, customerPhone: document.getElementById('phone')?.value || '', tires: cart.map(c=>({qty:c.qty,brand:c.brand,name:c.name,size:c.size||c.diameter+'"',price:c.price})), addons: addonNames, installation: !!selectedService, appointmentDate: selDate||'', appointmentTime: selTime||'', serviceName: selectedService?.label||'', subtotal: t.sub, addonTotal: addonAmt, tax: t.tax, total: grandTotal }),
-    });
+    await fetch('/send-order-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderPayload) });
   } catch(e) { console.warn('Order email failed:', e.message); }
+
+  // Write to Google Sheets
+  try {
+    await fetch('https://script.google.com/macros/s/AKfycbyYNGjt0JIz1NTFeWgal4aMUp49Nyy-ceE8Y-MB3kpA6QWsFkdzWRG0EASapp-46cZ8/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        orderNumber: orderId,
+        customerName: name.trim(),
+        customerEmail: email,
+        customerPhone: phone,
+        caslOptIn: caslOptIn ? 'Yes' : 'No',
+        vin,
+        vehicle: vehicleStr,
+        vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
+        searchMethod: lastSearchMethod || 'unknown',
+        items: cart.map(c => `${c.qty}× ${c.brand} ${c.name} (${c.size || c.diameter + '"'})`).join(' | '),
+        addons: addonNames,
+        subtotal: t.sub.toFixed(2),
+        addonTotal: addonAmt.toFixed(2),
+        tax: t.tax.toFixed(2),
+        total: grandTotal.toFixed(2),
+        installationService: selectedService?.label || 'Not booked',
+        appointmentDate: selDate || '',
+        appointmentTime: selTime || '',
+      }),
+    });
+  } catch(e) { console.warn('Sheets write failed:', e.message); }
+
   cart = []; tdgQuote = null; selectedAddons = new Set(); updBadge();
   if (btn) btn.classList.remove('ld');
   step = 5; updSteps();
