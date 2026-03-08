@@ -1429,31 +1429,15 @@ async function loadTires(searchParams = null) {
       products = extractData(prodRes);
       extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
     } else {
-      // Default: search a broad set of the most common Ontario tire sizes
-      // Split into batches to avoid oversized requests
-      console.log('[TDG] loadTires: default broad search');
-      const batches = [
-        ['225/65R17','235/65R17','245/65R17','275/65R18','265/70R17'],
-        ['215/55R17','225/60R17','235/60R17','245/60R18','275/60R20'],
-        ['205/55R16','225/50R17','235/45R18','255/55R20','245/70R17'],
-        ['215/60R16','235/55R17','225/45R17','245/45R18','265/65R18'],
-        ['195/65R15','205/60R16','225/70R16','235/70R16','265/60R18'],
-      ];
-      for (const sizes of batches) {
-        try {
-          const [prodRes, invRes] = await Promise.all([
-            tdgFetch('search', { tireSizes: sizes }),
-            tdgFetch('inventory', { tireSizes: sizes }),
-          ]);
-          extractData(prodRes).forEach(p => {
-            if (p?.itemNumber && !products.find(x => x.itemNumber === p.itemNumber)) products.push(p);
-          });
-          extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
-        } catch (batchErr) {
-          console.warn('[TDG] batch failed:', sizes[0], batchErr.message);
-        }
-      }
-      console.log('[TDG] default search total products:', products.length);
+      // Default: fetch full catalog via product/all + inventory/all
+      console.log('[TDG] loadTires: fetching full catalog');
+      const [prodRes, invRes] = await Promise.all([
+        tdgFetch('all', {}),
+        tdgFetch('inventoryAll', {}),
+      ]);
+      products = extractData(prodRes);
+      extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
+      console.log('[TDG] default full catalog products:', products.length);
     }
 
     console.log('[TDG] raw products:', products.length);
