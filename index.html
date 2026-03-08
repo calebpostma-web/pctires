@@ -1408,7 +1408,7 @@ async function loadTires(searchParams = null) {
         extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
       });
     }
-    allTires = products.filter(p => p.type === 'Tire').map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
+    allTires = products.filter(p => p.type === 'Tire' || p.type === 'tire').map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
     applyFilter(activeFilter);
   } catch (err) {
     console.warn('TDG API unavailable, using mock tire inventory:', err.message);
@@ -1442,7 +1442,7 @@ async function loadWheels(searchParams = null) {
       return [];
     };
     if (searchParams) {
-      const wheelParams = { ...searchParams, productType: 'Wheel' };
+      const wheelParams = { ...searchParams };
       const [prodRes, invRes] = await Promise.all([
         tdgFetch('search', wheelParams),
         tdgFetch('inventory', wheelParams),
@@ -1452,13 +1452,13 @@ async function loadWheels(searchParams = null) {
     } else {
       // Load a broad wheel catalogue
       const [prodRes, invRes] = await Promise.all([
-        tdgFetch('search', { productType: 'Wheel', diameters: [16,17,18,20] }),
-        tdgFetch('inventory', { productType: 'Wheel', diameters: [16,17,18,20] }),
+        tdgFetch('search', { diameters: ['16','17','18','20'] }),
+        tdgFetch('inventory', { diameters: ['16','17','18','20'] }),
       ]);
       products = extractData(prodRes);
       extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
     }
-    allWheels = products.filter(p => p.type === 'Wheel').map(p => normaliseWheel(p, inventoryMap[p.itemNumber]));
+    allWheels = products.filter(p => p.type === 'Wheel' || p.type === 'wheel' || p.type === 'Rim').map(p => normaliseWheel(p, inventoryMap[p.itemNumber]));
     if (allWheels.length === 0) throw new Error('No wheels returned from TDG');
     applyWheelFilter(activeWheelFilter);
   } catch (err) {
