@@ -1378,8 +1378,8 @@ async function loadTires(searchParams = null) {
     let products = [], inventoryMap = {};
     if (searchParams) {
       const [prodRes, invRes] = await Promise.all([
-        tdgFetch('/product/search', searchParams),
-        tdgFetch('/inventory/search', searchParams),
+        tdgFetch('search', searchParams),
+        tdgFetch('inventory', searchParams),
       ]);
       const extractData = r => {
         if (Array.isArray(r)) return r;
@@ -1402,7 +1402,7 @@ async function loadTires(searchParams = null) {
         return [];
       };
       const sizeGroups = [ popularSizes.slice(0,5), popularSizes.slice(5,10), popularSizes.slice(10,15) ];
-      const results = await Promise.all(sizeGroups.map(sizes => Promise.all([ tdgFetch('/product/search', { tireSizes: sizes }), tdgFetch('/inventory/search', { tireSizes: sizes }) ])));
+      const results = await Promise.all(sizeGroups.map(sizes => Promise.all([ tdgFetch('search', { tireSizes: sizes }), tdgFetch('inventory', { tireSizes: sizes }) ])));
       results.forEach(([prodRes, invRes]) => {
         extractData(prodRes).forEach(p => { if (!products.find(x => x.itemNumber === p.itemNumber)) products.push(p); });
         extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
@@ -1444,16 +1444,16 @@ async function loadWheels(searchParams = null) {
     if (searchParams) {
       const wheelParams = { ...searchParams, productType: 'Wheel' };
       const [prodRes, invRes] = await Promise.all([
-        tdgFetch('/product/search', wheelParams),
-        tdgFetch('/inventory/search', wheelParams),
+        tdgFetch('search', wheelParams),
+        tdgFetch('inventory', wheelParams),
       ]);
       products = extractData(prodRes);
       extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
     } else {
       // Load a broad wheel catalogue
       const [prodRes, invRes] = await Promise.all([
-        tdgFetch('/product/search', { productType: 'Wheel', diameters: [16,17,18,20] }),
-        tdgFetch('/inventory/search', { productType: 'Wheel', diameters: [16,17,18,20] }),
+        tdgFetch('search', { productType: 'Wheel', diameters: [16,17,18,20] }),
+        tdgFetch('inventory', { productType: 'Wheel', diameters: [16,17,18,20] }),
       ]);
       products = extractData(prodRes);
       extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
@@ -2190,3 +2190,19 @@ function fmtCard(el) { let v = el.value.replace(/\D/g,'').substr(0,16); el.value
 function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.substr(0,2)+' / '+v.substr(2,2); el.value=v; }
 
 // ─────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
+//  PAGE INIT
+// ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initYears();
+  initSizeDropdowns();
+  initWheelDropdowns();
+  initMemberState();
+  initCookie();
+  loadCatalog();
+  loadWheelCatalog();
+});
+
+</script>
+</body>
+</html>
