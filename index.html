@@ -1404,14 +1404,11 @@ async function loadTires(searchParams = null) {
       const sizeGroups = [ popularSizes.slice(0,5), popularSizes.slice(5,10), popularSizes.slice(10,15) ];
       const results = await Promise.all(sizeGroups.map(sizes => Promise.all([ tdgFetch('search', { tireSizes: sizes }), tdgFetch('inventory', { tireSizes: sizes }) ])));
       results.forEach(([prodRes, invRes]) => {
-        console.log('batch prodRes type:', typeof prodRes, Array.isArray(prodRes), 'len:', Array.isArray(prodRes)?prodRes.length:'?');
         extractData(prodRes).forEach(p => { if (!products.find(x => x.itemNumber === p.itemNumber)) products.push(p); });
         extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
       });
-      console.log('total products before filter:', products.length);
     }
     allTires = products.filter(p => p.type === 'Tire' || p.type === 'tire').map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
-    console.log('allTires after normalise:', allTires.length);
     applyFilter(activeFilter);
   } catch (err) {
     console.warn('TDG API unavailable, using mock tire inventory:', err.message);
@@ -1627,17 +1624,31 @@ const VD = {
   Nissan:{Altima:["S","SV","SL","SR"],Rogue:["S","SV","SL","Platinum"],Frontier:["S","SV","PRO-4X","SL"]},
   Subaru:{Outback:["Base","Premium","Limited","Onyx"],Forester:["Base","Premium","Limited","Sport"]},
   Volkswagen:{Jetta:["S","SE","SEL","GLI"],Tiguan:["S","SE","SEL"],Golf:["S","SE","R"]},
+  Cadillac:{"Escalade":["Base","Luxury","Premium Luxury","Sport"],"XT5":["Luxury","Premium Luxury","Sport"],"CT5":["Luxury","Premium Luxury","Sport","V"],"CT4":["Luxury","Premium Luxury","Sport","V"]},
+  GMC:{"Sierra 1500":["Regular Cab","Double Cab","Crew Cab","Denali"],"Terrain":["SLE","SLT","AT4","Denali"],"Yukon":["SLE","SLT","AT4","Denali"]},
+  RAM:{"1500":["Tradesman","Big Horn","Rebel","Limited"],"2500":["Tradesman","Big Horn","Power Wagon","Limited"]},
+  Dodge:{Durango:["SXT","GT","R/T","SRT"],"Charger":["SXT","GT","R/T","Scat Pack"],"Challenger":["SXT","GT","R/T","Scat Pack"]},
+  Jeep:{Wrangler:["Sport","Sahara","Rubicon","Willys"],"Grand Cherokee":["Laredo","Altitude","Limited","Overland"],"Compass":["Sport","Latitude","Altitude","Limited"]},
+  Kia:{Sorento:["LX","S","EX","SX"],Sportage:["LX","S","EX","SX"],Telluride:["LX","S","EX","SX"]},
+  Mazda:{"CX-5":["Sport","Select","Preferred","Premium"],"CX-50":["Select","Preferred","Premium","Meridian"],"Mazda3":["Select","Preferred","Premium","Turbo"]},
 };
 
 const OEM_SIZES = {
   "Honda Civic":"215/55R17","Honda CR-V":"235/65R17","Honda Accord":"235/45R18",
   "Toyota Camry":"235/45R18","Toyota RAV4":"235/65R17","Toyota Corolla":"205/55R16","Toyota Highlander":"245/60R18",
   "Ford F-150":"275/65R18","Ford Escape":"235/50R18","Ford Explorer":"255/55R20",
-  "Chevrolet Silverado":"275/65R18","Chevrolet Equinox":"225/65R17",
+  "Chevrolet Silverado":"275/65R18","Chevrolet Equinox":"225/65R17","Chevrolet Malibu":"235/45R18",
   "Hyundai Elantra":"205/55R16","Hyundai Tucson":"235/55R17","Hyundai Santa Fe":"235/60R18",
   "Nissan Altima":"215/55R17","Nissan Rogue":"225/65R17","Nissan Frontier":"265/65R17",
   "Subaru Outback":"225/60R18","Subaru Forester":"225/60R17",
-  "Volkswagen Jetta":"225/45R17",
+  "Volkswagen Jetta":"225/45R17","Volkswagen Tiguan":"235/50R18","Volkswagen Golf":"225/45R17",
+  "Cadillac Escalade":"275/50R22","Cadillac XT5":"235/65R17","Cadillac CT5":"235/40R19","Cadillac CT4":"235/40R18",
+  "GMC Sierra 1500":"265/65R18","GMC Terrain":"225/65R17","GMC Yukon":"275/55R20",
+  "RAM 1500":"275/60R20","RAM 2500":"265/70R17",
+  "Dodge Durango":"265/50R20","Dodge Charger":"235/55R19","Dodge Challenger":"245/45R20",
+  "Jeep Wrangler":"255/70R18","Jeep Grand Cherokee":"265/60R18","Jeep Compass":"225/60R17",
+  "Kia Sorento":"235/65R17","Kia Sportage":"235/55R18","Kia Telluride":"245/60R20",
+  "Mazda CX-5":"225/65R17","Mazda CX-50":"225/60R18","Mazda Mazda3":"215/45R18",
 };
 
 // ─────────────────────────────────────────────────
