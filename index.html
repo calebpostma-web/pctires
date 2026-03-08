@@ -2195,12 +2195,13 @@ function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.su
 // ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initYears();
+  initWheelYears();
   initSizeDropdowns();
   initWheelDropdowns();
   initMemberState();
   initCookie();
-  loadCatalog();
-  loadWheelCatalog();
+  loadTires();
+  loadWheels();
 });
 
 </script>
