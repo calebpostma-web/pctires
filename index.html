@@ -1217,36 +1217,24 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
     <div class="mbody">
       <div class="psteps">
         <div class="ps active" id="ps1"><div class="ps-dot">1</div><div class="ps-lbl">Contact</div></div>
-        <div class="ps" id="ps2"><div class="ps-dot">2</div><div class="ps-lbl">Payment</div></div>
-        <div class="ps" id="ps3"><div class="ps-dot">3</div><div class="ps-lbl">Install</div></div>
-        <div class="ps" id="ps4"><div class="ps-dot">4</div><div class="ps-lbl">Confirm</div></div>
+        <div class="ps" id="ps2"><div class="ps-dot">2</div><div class="ps-lbl">Schedule</div></div>
+        <div class="ps" id="ps3"><div class="ps-dot">3</div><div class="ps-lbl">Add-ons</div></div>
+        <div class="ps" id="ps4"><div class="ps-dot">4</div><div class="ps-lbl">Payment</div></div>
+        <div class="ps" id="ps5"><div class="ps-dot">5</div><div class="ps-lbl">Confirm</div></div>
       </div>
-      <!-- Step 1 -->
+      <!-- Step 1: Contact -->
       <div class="fsec active" id="s1">
         <div class="frow two"><div class="fg"><label>First Name</label><input type="text" placeholder="Jane" id="fName"></div><div class="fg"><label>Last Name</label><input type="text" placeholder="Smith" id="lName"></div></div>
         <div class="frow one"><div class="fg"><label>Email Address</label><input type="email" placeholder="jane@example.com" id="email"></div></div>
         <div class="frow one"><div class="fg"><label>Phone Number</label><input type="tel" placeholder="(519) 000-0000" id="phone"></div></div>
         <div class="fg" style="margin-top:10px">
-          <label>Where should we send your order?</label>
-          <div class="delivery-opts" id="deliveryOpts">
-            <div class="dopt active" id="dopt-shop" onclick="setDelivery('shop')"><div class="dopt-icon">🏪</div><div class="dopt-info"><div class="dopt-title">Ship to PC Tires</div><div class="dopt-sub">We receive your order — ready for your installation appointment. <strong>Free shipping.</strong></div></div><div class="dopt-check">✓</div></div>
-            <div class="dopt" id="dopt-home" onclick="setDelivery('home')"><div class="dopt-icon">🏠</div><div class="dopt-info"><div class="dopt-title">Ship to my address</div><div class="dopt-sub">Delivered directly to you. Shipping calculated at checkout.</div></div><div class="dopt-check">✓</div></div>
-          </div>
+          <label>Order Delivery</label>
+          <div class="dopt active" style="pointer-events:none"><div class="dopt-icon">🏪</div><div class="dopt-info"><div class="dopt-title">Ships to PC Tires</div><div class="dopt-sub">Your order ships directly to our shop — ready for your installation appointment. <strong style="color:var(--green)">Free shipping.</strong></div></div><div class="dopt-check">✓</div></div>
         </div>
-        <div class="frow one" id="addrRow" style="display:none"><div class="fg"><label>Delivery Address</label><input type="text" placeholder="123 Main St, City, Province, Postal Code" id="addr"></div></div>
       </div>
-      <!-- Step 2 -->
+      <!-- Step 2: Schedule -->
       <div class="fsec" id="s2">
-        <div class="pay-total-box" id="payBox"></div>
-        <div class="card-logos"><span class="clogo">💳</span><span class="clogo">🍎</span><span class="clogo">🅿️</span></div>
-        <div class="frow one"><div class="fg"><label>Name on Card</label><input type="text" placeholder="Jane Smith" id="cardName"></div></div>
-        <div class="frow one"><div class="fg"><label>Card Number</label><input class="card-field" type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="cardNum" oninput="fmtCard(this)"></div></div>
-        <div class="frow two"><div class="fg"><label>Expiry</label><input class="card-field" type="text" placeholder="MM / YY" maxlength="7" id="cardExp" oninput="fmtExp(this)"></div><div class="fg"><label>CVV</label><input class="card-field" type="text" placeholder="•••" maxlength="4" id="cardCvv"></div></div>
-        <p class="field-note">🔒 Payment is encrypted and processed by Stripe. PC Tires never sees your card details.</p>
-      </div>
-      <!-- Step 3 -->
-      <div class="fsec" id="s3">
-        <div class="appt-note"><b>Select your service</b> — we'll block the right amount of time automatically.</div>
+        <div class="appt-note"><b>Select your installation service</b> — we'll block the right amount of time automatically.</div>
         <div id="serviceMenu" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px"></div>
         <div id="calSection" style="display:none">
           <div class="appt-note" id="durationNote" style="background:var(--yellow-dim);border-color:rgba(245,197,24,.25)"></div>
@@ -1256,8 +1244,23 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
         </div>
         <button class="skip-btn" onclick="skipInstall()">Skip — I'll arrange service separately →</button>
       </div>
-      <!-- Step 4 -->
+      <!-- Step 3: Add-ons -->
+      <div class="fsec" id="s3">
+        <div class="appt-note" style="margin-bottom:18px"><b>While your card is out</b> — want to add anything to your order?</div>
+        <div id="addonGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"></div>
+        <div id="addonTotal" style="display:none;background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:12px 16px;font-size:13px;margin-top:8px"></div>
+      </div>
+      <!-- Step 4: Payment -->
       <div class="fsec" id="s4">
+        <div class="pay-total-box" id="payBox"></div>
+        <div class="card-logos"><span class="clogo">💳</span><span class="clogo">🍎</span><span class="clogo">🅿️</span></div>
+        <div class="frow one"><div class="fg"><label>Name on Card</label><input type="text" placeholder="Jane Smith" id="cardName"></div></div>
+        <div class="frow one"><div class="fg"><label>Card Number</label><input class="card-field" type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="cardNum" oninput="fmtCard(this)"></div></div>
+        <div class="frow two"><div class="fg"><label>Expiry</label><input class="card-field" type="text" placeholder="MM / YY" maxlength="7" id="cardExp" oninput="fmtExp(this)"></div><div class="fg"><label>CVV</label><input class="card-field" type="text" placeholder="•••" maxlength="4" id="cardCvv"></div></div>
+        <p class="field-note">🔒 Payment is encrypted and processed by Stripe. PC Tires never sees your card details.</p>
+      </div>
+      <!-- Step 5: Confirm -->
+      <div class="fsec" id="s5">
         <div class="confirm-wrap"><div class="conf-circle">✓</div><div class="conf-title">You're All Set!</div><p class="conf-sub">Order confirmed. Check your email for full details.</p></div>
         <div class="confirm-details" id="confDetails"></div>
         <button class="btn-primary" style="width:100%;margin-top:14px" onclick="closeCheckout();closeCart()">Continue Shopping</button>
@@ -2677,12 +2680,6 @@ async function doSizeSearch() {
 //  DELIVERY OPTION
 // ─────────────────────────────────────────────────
 let deliveryMode = 'shop';
-function setDelivery(mode) {
-  deliveryMode = mode;
-  document.getElementById('dopt-shop').classList.toggle('active', mode === 'shop');
-  document.getElementById('dopt-home').classList.toggle('active', mode === 'home');
-  document.getElementById('addrRow').style.display = mode === 'home' ? 'block' : 'none';
-}
 
 // ─────────────────────────────────────────────────
 //  CART
@@ -2760,79 +2757,133 @@ function closeCart() { document.getElementById('cartOverlay').classList.remove('
 // ─────────────────────────────────────────────────
 function openCheckout() { closeCart(); step = 1; updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
 function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('show'); }
-const mTitles = ['', 'Contact Info', 'Payment', 'Book Installation', 'Order Confirmed!'];
-const nLabels = ['', 'Continue →', 'Pay Securely 🔒', 'Confirm Booking →', ''];
+
+const mTitles = ['', 'Contact Info', 'Book Installation', 'Add-ons', 'Payment', 'Order Confirmed!'];
+const nLabels = ['', 'Continue →', 'Continue →', 'Continue →', 'Pay Securely 🔒', ''];
+
 function updSteps() {
-  for (let i = 1; i <= 4; i++) document.getElementById('ps' + i).className = 'ps' + (i < step ? ' done' : (i === step ? ' active' : ''));
-  for (let i = 1; i <= 4; i++) document.getElementById('s' + i).className = 'fsec' + (i === step ? ' active' : '');
+  for (let i = 1; i <= 5; i++) document.getElementById('ps' + i).className = 'ps' + (i < step ? ' done' : (i === step ? ' active' : ''));
+  for (let i = 1; i <= 5; i++) document.getElementById('s' + i).className = 'fsec' + (i === step ? ' active' : '');
   document.getElementById('mTitle').textContent = mTitles[step];
   const nb = document.getElementById('nextBtn'), bb = document.getElementById('backBtn'), mf = document.getElementById('mFoot');
-  if (step === 4) { mf.style.display = 'none'; return; } else mf.style.display = 'block';
+  if (step === 5) { mf.style.display = 'none'; return; } else mf.style.display = 'block';
   nb.textContent = nLabels[step] || 'Continue →';
   bb.style.display = (step > 1) ? 'block' : 'none';
-  if (step === 2) buildPaymentSummary();
-  if (step === 3) { selectedService = null; selDate = null; selTime = null; document.getElementById('calSection').style.display='none'; buildServiceMenu(); }
+  if (step === 2) { selectedService = null; selDate = null; selTime = null; document.getElementById('calSection').style.display='none'; buildServiceMenu(); }
+  if (step === 3) buildAddonGrid();
+  if (step === 4) buildPaymentSummary();
 }
-async function buildPaymentSummary() {
-  const box = document.getElementById('payBox');
-  box.innerHTML = `<div style="color:var(--muted);font-size:13px">Getting live quote…</div>`;
-  tdgQuote = null;
-  const t = getTotals();
-  const instTotal = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
-  box.innerHTML = `
-    <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
-    ${instTotal > 0 ? `<div class="ptrow"><span>Installation</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
-    <div class="ptrow"><span>Tax (HST)</span><span>$${t.tax.toFixed(2)}</span></div>
-    <div class="ptrow bold"><span>Total Due Today</span><span>$${t.total.toFixed(2)}</span></div>
-  `;
-}
+
 async function nextStep() {
   if (step === 1 && !document.getElementById('email').value) { alert('Please enter your email address.'); return; }
-  if (step === 2) { await processPayment(); return; }
-  if (step === 3) {
-    if (!selectedService) { alert('Please select a service type.'); return; }
+  if (step === 2) {
+    if (!selectedService) { alert('Please select a service type, or click Skip to arrange later.'); return; }
     if (!selDate || !selTime) { alert('Please select a date and time, or click Skip to arrange later.'); return; }
-    await finishOrder(false); return;
   }
+  if (step === 4) { await processPayment(); return; }
   step++; updSteps();
 }
 function prevStep() { if (step > 1) { step--; updSteps(); } }
+function skipInstall() { step = 3; updSteps(); }
+
+// ── ADD-ONS ──────────────────────────────────────
+const ADDONS = [
+  { id:'nitrogen',  icon:'💨', name:'Nitrogen Fill',          price:19.99, unit:'per tire', desc:'More stable pressure. Better in extreme cold.' },
+  { id:'hazard',    icon:'🛡️', name:'Road Hazard Protection', price:24.99, unit:'per tire', desc:'Free repair or replacement if you get a flat.' },
+  { id:'storage',   icon:'📦', name:'Seasonal Tire Storage',  price:49.99, unit:'per set',  desc:'We store your off-season tires until next swap.' },
+  { id:'wipers',    icon:'🌧️', name:'Wiper Blade Replacement',price:29.99, unit:'flat',     desc:'New blades installed while you\'re in for service.' },
+  { id:'cabin',     icon:'🌬️', name:'Cabin Air Filter',       price:39.99, unit:'flat',     desc:'Breathe cleaner air. Takes 10 min to swap.' },
+  { id:'torque',    icon:'✅', name:'Torque Re-check',         price:0,     unit:'free',     desc:'50–100 km after install. Included, no charge.' },
+];
+let selectedAddons = new Set();
+
+function buildAddonGrid() {
+  const grid = document.getElementById('addonGrid'); if (!grid) return;
+  grid.innerHTML = ADDONS.map(a => {
+    const sel = selectedAddons.has(a.id);
+    const priceStr = a.price === 0 ? '<span style="color:var(--green);font-weight:700">FREE</span>' : `<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:18px;font-weight:800;color:${sel?'var(--yellow)':'var(--white)'}">$${a.price.toFixed(2)}</span><span style="font-size:11px;color:var(--muted)"> / ${a.unit}</span>`;
+    return `<div onclick="toggleAddon('${a.id}')" style="padding:14px;background:var(--card);border:2px solid ${sel?'var(--yellow)':'var(--border)'};border-radius:4px;cursor:pointer;transition:all .2s;position:relative">
+      ${sel ? '<div style="position:absolute;top:8px;right:10px;background:var(--yellow);color:var(--black);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">✓</div>' : ''}
+      <div style="font-size:20px;margin-bottom:6px">${a.icon}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px">${a.name}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">${a.desc}</div>
+      <div>${priceStr}</div>
+    </div>`;
+  }).join('');
+  updateAddonTotal();
+}
+
+function toggleAddon(id) {
+  if (selectedAddons.has(id)) selectedAddons.delete(id); else selectedAddons.add(id);
+  buildAddonGrid();
+}
+
+function updateAddonTotal() {
+  const totalEl = document.getElementById('addonTotal'); if (!totalEl) return;
+  const added = ADDONS.filter(a => selectedAddons.has(a.id) && a.price > 0);
+  if (!added.length) { totalEl.style.display = 'none'; return; }
+  const sum = added.reduce((s, a) => s + a.price, 0);
+  totalEl.style.display = 'block';
+  totalEl.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--muted)">Add-ons selected:</span><span style="font-family:\'Barlow Condensed\',sans-serif;font-size:18px;font-weight:800;color:var(--yellow)">+$${sum.toFixed(2)}</span></div>
+  <div style="font-size:11px;color:var(--muted);margin-top:4px">${added.map(a=>a.name).join(' · ')}</div>`;
+}
+
+function getAddonTotal() { return ADDONS.filter(a => selectedAddons.has(a.id)).reduce((s,a) => s + a.price, 0); }
+
+async function buildPaymentSummary() {
+  const box = document.getElementById('payBox'); if (!box) return;
+  const t = getTotals();
+  const instTotal = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
+  const addonAmt = getAddonTotal();
+  const grandTotal = t.total + addonAmt;
+  box.innerHTML = `
+    <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
+    ${instTotal > 0 ? `<div class="ptrow"><span>Installation</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
+    ${addonAmt > 0 ? `<div class="ptrow"><span>Add-ons</span><span>$${addonAmt.toFixed(2)}</span></div>` : ''}
+    <div class="ptrow"><span>Tax (HST 13%)</span><span>$${(grandTotal * 0.13 / 1.13).toFixed(2)}</span></div>
+    <div class="ptrow bold"><span>Total Due Today</span><span>$${grandTotal.toFixed(2)}</span></div>
+  `;
+}
+
 async function processPayment() {
   const btn = document.getElementById('nextBtn'); btn.textContent = 'Processing…'; btn.classList.add('ld');
   try {
     await new Promise(r => setTimeout(r, 1800));
-    const hasInst = cart.some(c => c.install && c.itemType !== 'wheel');
-    if (hasInst) { step = 3; updSteps(); } else { await finishOrder(true); }
+    await finishOrder();
   } catch (e) { alert('Payment failed: ' + e.message); } finally { btn.classList.remove('ld'); }
 }
-function skipInstall() { finishOrder(true); }
-async function finishOrder(noInst) {
+
+async function finishOrder() {
   const btn = document.getElementById('nextBtn');
   if (btn) { btn.textContent = 'Placing order…'; btn.classList.add('ld'); }
   const t = getTotals();
+  const addonAmt = getAddonTotal();
+  const grandTotal = t.total + addonAmt;
   const name = (document.getElementById('fName').value || 'Customer') + ' ' + (document.getElementById('lName').value || '');
   const email = document.getElementById('email').value || 'you@example.com';
   const orderId = 'PCT-' + Math.random().toString(36).substr(2,6).toUpperCase();
-  const svcLabel = selectedService ? selectedService.label : 'Installation';
-  const instLine = noInst ? 'Not booked — arrange separately' : `${svcLabel} · ${selDate} at ${selTime}`;
+  const svcLabel = selectedService ? selectedService.label : 'Not booked';
+  const instLine = selectedService ? `${svcLabel} · ${selDate} at ${selTime}` : 'Not booked — arrange separately';
+  const addonNames = ADDONS.filter(a => selectedAddons.has(a.id)).map(a => a.name).join(', ') || 'None';
   document.getElementById('confDetails').innerHTML = `
     <div class="cd-row"><span class="cd-label">Order #</span><span class="cd-val y">${orderId}</span></div>
     <div class="cd-row"><span class="cd-label">Customer</span><span class="cd-val">${name.trim()}</span></div>
     <div class="cd-row"><span class="cd-label">Email</span><span class="cd-val">${email}</span></div>
     <div class="cd-row"><span class="cd-label">Items</span><span class="cd-val">${cart.map(c=>`${c.qty}× ${c.brand} ${c.name}`).join(', ')}</span></div>
-    <div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${t.total.toFixed(2)} CAD</span></div>
+    ${addonAmt > 0 ? `<div class="cd-row"><span class="cd-label">Add-ons</span><span class="cd-val">${addonNames}</span></div>` : ''}
+    <div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div>
     <div class="cd-row"><span class="cd-label">Installation</span><span class="cd-val">${instLine}</span></div>
     <div class="cd-row"><span class="cd-label">Confirmation</span><span class="cd-val">Sent to ${email}</span></div>
   `;
   try {
     await fetch(`/send-order-email`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ orderNumber: orderId, customerName: name.trim(), customerEmail: email, customerPhone: document.getElementById('phone')?.value || '', tires: cart.map(c=>({qty:c.qty,brand:c.brand,name:c.name,size:c.size||c.diameter+'"',price:c.price})), installation: !noInst, appointmentDate: selDate||'', appointmentTime: selTime||'', serviceName: selectedService?.label||'', subtotal: t.sub, installTotal: t.inst, shipping: 0, tax: t.tax, total: t.total }),
+      body: JSON.stringify({ orderNumber: orderId, customerName: name.trim(), customerEmail: email, customerPhone: document.getElementById('phone')?.value || '', tires: cart.map(c=>({qty:c.qty,brand:c.brand,name:c.name,size:c.size||c.diameter+'"',price:c.price})), addons: addonNames, installation: !!selectedService, appointmentDate: selDate||'', appointmentTime: selTime||'', serviceName: selectedService?.label||'', subtotal: t.sub, addonTotal: addonAmt, tax: t.tax, total: grandTotal }),
     });
   } catch(e) { console.warn('Order email failed:', e.message); }
-  cart = []; tdgQuote = null; updBadge();
+  cart = []; tdgQuote = null; selectedAddons = new Set(); updBadge();
   if (btn) btn.classList.remove('ld');
-  step = 4; updSteps();
+  step = 5; updSteps();
 }
 
 // ─────────────────────────────────────────────────
