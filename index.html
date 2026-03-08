@@ -73,19 +73,54 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .step-card.hl .step-title{color:var(--yellow)}
 
 /* VEHICLE LOOKUP */
+/* ── LOOKUP ── */
 .lookup-section{padding:64px 40px;background:var(--black)}
-.lookup-inner{max-width:1100px;margin:0 auto}
-.lookup-box{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:32px;margin-top:28px}
-.lookup-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+.lookup-inner{max-width:860px;margin:0 auto}
+.lookup-card{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:28px}
+/* Season filter row */
+.season-row{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.season-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.season-chip{background:var(--raised);border:1px solid var(--border);color:var(--light);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:6px}
+.season-chip:hover{border-color:var(--mid);color:var(--white)}
+.season-chip.active{background:var(--yellow-dim);border-color:var(--yellow);color:var(--yellow)}
+/* Search sections */
+.lookup-section-block{padding:22px 24px;border-bottom:1px solid var(--border)}
+.lookup-section-block:last-child{border-bottom:none}
+.lsb-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.lsb-icon{font-size:18px}
+.lsb-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+/* Field styles */
 .field{display:flex;flex-direction:column;gap:5px}
 .field label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-.field select{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:11px 14px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;appearance:none;cursor:pointer}
-.field select:focus{border-color:var(--yellow)}
-.lookup-btn{background:var(--yellow);color:var(--black);border:none;padding:11px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;white-space:nowrap}
-.lookup-btn:hover{background:var(--yellow-dark)}
-.lookup-result{margin-top:14px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.25);border-radius:2px;font-size:14px;display:none;align-items:center;gap:10px}
+.field select,.field input{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:11px 14px;border-radius:3px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;appearance:none;cursor:pointer;width:100%}
+.field input{cursor:text}
+.field select:focus,.field input:focus{border-color:var(--yellow)}
+.field input::placeholder{color:var(--mid)}
+.field select:disabled{opacity:.45;cursor:not-allowed}
+.veh-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+.veh-option-row{margin-bottom:14px}
+.lookup-btn{width:100%;background:var(--yellow);color:var(--black);border:none;padding:13px 24px;border-radius:3px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
+.lookup-btn:hover:not(:disabled){background:var(--yellow-dark)}
+.lookup-btn:disabled{opacity:.45;cursor:not-allowed}
+/* Size search */
+.size-input-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.size-input-row .field{flex:1}
+.size-second-toggle{font-size:12px;color:var(--muted);cursor:pointer;user-select:none;display:flex;align-items:center;gap:7px;margin-bottom:14px}
+.size-second-toggle input[type=checkbox]{accent-color:var(--yellow);width:14px;height:14px;cursor:pointer}
+.size-second-toggle:hover{color:var(--light)}
+/* Divider */
+.lookup-or{display:flex;align-items:center;gap:14px;padding:0 24px;margin:-1px 0;position:relative;z-index:1}
+.lookup-or span{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--mid);background:var(--card);padding:0 10px}
+.lookup-or::before{content:'';flex:1;height:1px;background:var(--border)}
+.lookup-or::after{content:'';flex:1;height:1px;background:var(--border)}
+/* Result bar */
+.lookup-result{margin-top:14px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.25);border-radius:3px;font-size:14px;display:none;align-items:center;gap:10px}
 .lookup-result.show{display:flex}
 .lookup-result strong{color:var(--yellow)}
+/* Legacy lookup-row for wheel panel */
+.lookup-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+.lookup-btn-sm{background:var(--yellow);color:var(--black);border:none;padding:11px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;white-space:nowrap}
+.lookup-btn-sm:hover{background:var(--yellow-dark)}
 
 /* CATALOG */
 .catalog-section{padding:72px 40px;max-width:1240px;margin:0 auto}
@@ -647,98 +682,90 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   <div class="lookup-inner">
     <div class="eyebrow">Find Your Fit</div>
     <div class="section-title">Search Tires &amp; Wheels</div>
-    <p class="section-sub">Search by your vehicle, tire size, or wheel specs — we'll show you exactly what fits.</p>
-    <div class="lookup-box">
+    <p class="section-sub">Filter by season, search by your vehicle, or enter a size directly.</p>
 
-      <!-- Three tabs -->
-      <div class="lookup-tabs">
-        <button class="lookup-tab active" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 By Vehicle</button>
-        <button class="lookup-tab" id="tab-size" onclick="switchLookupTab('size')">📏 By Tire Size</button>
-        <button class="lookup-tab" id="tab-wheels" onclick="switchLookupTab('wheels')">🔩 Shop Wheels</button>
+    <div class="lookup-card">
+
+      <!-- Season filter -->
+      <div class="season-row">
+        <span class="season-label">Seasonal tires</span>
+        <button class="season-chip active" id="sc-all"        onclick="setSeason('all',this)">All tires</button>
+        <button class="season-chip"        id="sc-allseason"  onclick="setSeason('allseason',this)">❄️/☀️ All-Season</button>
+        <button class="season-chip"        id="sc-allweather" onclick="setSeason('allweather',this)">🏔 All-Weather</button>
+        <button class="season-chip"        id="sc-winter"     onclick="setSeason('winter',this)">❄️ Winter</button>
+        <button class="season-chip"        id="sc-summer"     onclick="setSeason('summer',this)">☀️ Summer</button>
       </div>
 
-      <!-- Vehicle panel -->
-      <div class="lookup-panel active" id="panel-vehicle">
-        <div class="lookup-row">
-          <div class="field"><label>Year</label><select id="vYear" onchange="updateMakes()"><option value="">Select Year</option></select></div>
-          <div class="field"><label>Make</label><select id="vMake" onchange="updateModels()"><option value="">Select Make</option></select></div>
-          <div class="field"><label>Model</label><select id="vModel" onchange="updateTrims()"><option value="">Select Model</option></select></div>
-          <div class="field"><label>Trim</label><select id="vTrim"><option value="">Select Trim</option></select></div>
-          <button class="lookup-btn" onclick="doLookup()">Search Tires →</button>
+      <!-- Search by vehicle -->
+      <div class="lookup-section-block">
+        <div class="lsb-header">
+          <span class="lsb-icon">🚗</span>
+          <span class="lsb-title">Search by vehicle</span>
         </div>
-      </div>
-
-      <!-- Tire size panel -->
-      <div class="lookup-panel" id="panel-size">
-        <div class="size-hint" style="margin-bottom:18px">
-          <strong>📍 Where to find your tire size:</strong>
-          Look on the sidewall of your current tire or on the sticker inside the driver's door frame.
-          You'll see a number like <strong>275/60R20</strong> — Width <strong>275</strong> · Sidewall <strong>60</strong> · Rim diameter <strong>20</strong>.
-        </div>
-        <div class="size-preview" id="sizePreview">
-          <span class="sp-part" id="sp-w">???</span>
-          <span class="sp-sep">/</span>
-          <span class="sp-part" id="sp-s">??</span>
-          <span class="sp-sep">R</span>
-          <span class="sp-part" id="sp-d">??</span>
-        </div>
-        <div class="size-search-row">
-          <div class="size-inputs">
-            <div class="field"><label>Width (mm)</label><select id="sWidth" onchange="onWidthChange()"><option value="">Select Width</option></select></div>
-            <div class="field"><label>Sidewall (%)</label><select id="sSidewall" onchange="onSidewallChange()" disabled><option value="">Select Width first</option></select></div>
-            <div class="field"><label>Rim Diameter</label><select id="sDiameter" onchange="onDiameterChange()" disabled><option value="">Select Sidewall first</option></select></div>
+        <div class="veh-row">
+          <div class="field">
+            <label>Select a year</label>
+            <select id="vYear" onchange="updateMakes()"><option value="">Select a year</option></select>
           </div>
-          <button class="lookup-btn" id="sizeSearchBtn" onclick="doSizeSearch()" disabled style="opacity:.5;cursor:not-allowed">Search Tires →</button>
-        </div>
-      </div>
-
-      <!-- Wheels panel -->
-      <div class="lookup-panel" id="panel-wheels">
-        <div class="size-hint" style="margin-bottom:20px">
-          <strong>🔩 Finding your wheel specs:</strong>
-          Your bolt pattern and hub bore are on the wheel itself, or look up your vehicle below.
-          Common sizes: bolt pattern <strong>5×114.3</strong>, diameter <strong>17"</strong>, width <strong>7.5"</strong>.
-        </div>
-
-        <!-- Category -->
-        <div class="wheel-category-row">
-          <div class="field" style="flex:1">
-            <label>Wheel Category</label>
-            <select id="wCategory">
-              <option value="">All Wheels</option>
-              <option value="steel">Steel Wheels</option>
-              <option value="alloy">Alloy / Aluminum</option>
-            </select>
+          <div class="field">
+            <label>Select a make</label>
+            <select id="vMake" onchange="updateModels()" disabled><option value="">Select a make</option></select>
+          </div>
+          <div class="field">
+            <label>Select a model</label>
+            <select id="vModel" onchange="updateTrims()" disabled><option value="">Select a model</option></select>
+          </div>
+          <div class="field">
+            <label>Choose your vehicle</label>
+            <select id="vTrim" onchange="updateTireOptions()" disabled><option value="">Select a trim</option></select>
           </div>
         </div>
-
-        <!-- Search by Vehicle -->
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">🚗 Search by Vehicle</div>
-        <div class="lookup-row" style="margin-bottom:0">
-          <div class="field"><label>Year</label><select id="wYear" onchange="updateWheelMakes()"><option value="">Year</option></select></div>
-          <div class="field"><label>Make</label><select id="wMake" onchange="updateWheelModels()"><option value="">Make</option></select></div>
-          <div class="field"><label>Model</label><select id="wModel"><option value="">Model</option></select></div>
-          <div class="field" style="visibility:hidden"><label>&nbsp;</label><select><option></option></select></div>
-          <button class="lookup-btn" onclick="doWheelVehicleLookup()">Find Wheels →</button>
+        <div class="veh-option-row" id="tireOptionRow" style="display:none">
+          <div class="field">
+            <label>Select a tire option</label>
+            <select id="vTireOption"><option value="">Choose tire size…</option></select>
+          </div>
         </div>
-
-        <div class="wheel-or-divider">or search by size</div>
-
-        <!-- Search by Size -->
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">📐 Search by Size</div>
-        <div class="wheel-size-row">
-          <div class="field"><label>Bolt Pattern</label><select id="wBoltPattern"><option value="">Select Bolt Pattern</option></select></div>
-          <div class="field"><label>Diameter</label><select id="wDiameter"><option value="">Select Diameter</option></select></div>
-          <div class="field"><label>Width</label><select id="wWidth"><option value="">Any Width</option></select></div>
-          <button class="lookup-btn" onclick="doWheelSizeSearch()">Find Wheels →</button>
-        </div>
+        <button class="lookup-btn" id="vehSearchBtn" onclick="doLookup()" disabled>Find tires for vehicle</button>
       </div>
 
-      <div class="lookup-result" id="lookupResult">
-        <span style="font-size:17px">✅</span>
-        <span id="lookupText"></span>
+      <!-- OR divider -->
+      <div class="lookup-or"><span>or</span></div>
+
+      <!-- Search by size -->
+      <div class="lookup-section-block">
+        <div class="lsb-header">
+          <span class="lsb-icon">⚙️</span>
+          <span class="lsb-title">Search by size</span>
+        </div>
+        <div class="size-input-row">
+          <div class="field">
+            <label>Size</label>
+            <input type="text" id="sizeInput1" placeholder="ex. 225/60R17 or 2256017" oninput="onSizeInput()" autocomplete="off">
+          </div>
+        </div>
+        <label class="size-second-toggle">
+          <input type="checkbox" id="addSecondSize" onchange="toggleSecondSize()">
+          Add a second size to your search
+        </label>
+        <div id="secondSizeRow" style="display:none;margin-bottom:14px">
+          <div class="field">
+            <label>Second Size</label>
+            <input type="text" id="sizeInput2" placeholder="ex. 235/60R17" oninput="onSizeInput()" autocomplete="off">
+          </div>
+        </div>
+        <button class="lookup-btn" id="sizeSearchBtn" onclick="doSizeSearch()" disabled>Find tires for size</button>
       </div>
+
+    </div><!-- /.lookup-card -->
+
+    <div class="lookup-result" id="lookupResult">
+      <span style="font-size:17px">✅</span>
+      <span id="lookupText"></span>
     </div>
+
+    <!-- Wheels tab kept accessible via nav link -->
+    <!-- Wheel search is inside catalog section below -->
   </div>
 </section>
 
@@ -1651,15 +1678,67 @@ const OEM_SIZES = {
   "Mazda CX-5":"225/65R17","Mazda CX-50":"225/60R18","Mazda Mazda3":"215/45R18",
 };
 
+// Alternate OEM sizes per vehicle (e.g. different trim levels or staggered fitments)
+const OEM_ALT_SIZES = {
+  "Honda Civic":          ["205/55R16","225/45R17"],
+  "Honda CR-V":           ["225/65R17"],
+  "Honda Accord":         ["245/40R19","235/50R18"],
+  "Toyota Camry":         ["215/55R17","225/50R17"],
+  "Toyota RAV4":          ["225/65R17","255/55R18"],
+  "Toyota Corolla":       ["195/65R15","215/45R17"],
+  "Toyota Highlander":    ["235/65R17","265/50R20"],
+  "Ford F-150":           ["265/60R18","275/60R20","265/70R17"],
+  "Ford Escape":          ["225/55R17","225/65R17"],
+  "Ford Explorer":        ["265/50R20","245/60R18"],
+  "Chevrolet Silverado":  ["265/65R18","265/70R17","275/60R20"],
+  "Chevrolet Equinox":    ["235/55R17"],
+  "Hyundai Elantra":      ["215/50R17","225/45R17"],
+  "Hyundai Tucson":       ["235/65R17","235/60R18"],
+  "Hyundai Santa Fe":     ["235/65R17","255/50R19"],
+  "Nissan Altima":        ["225/50R17"],
+  "Nissan Rogue":         ["235/65R17"],
+  "Nissan Frontier":      ["265/70R16","265/65R17"],
+  "Subaru Outback":       ["225/65R17"],
+  "Subaru Forester":      ["225/65R17"],
+  "Volkswagen Jetta":     ["205/55R16","215/45R17"],
+  "Volkswagen Tiguan":    ["225/55R17"],
+  "Cadillac Escalade":    ["255/65R22","285/45R22"],
+  "Cadillac XT5":         ["255/55R19"],
+  "GMC Sierra 1500":      ["275/60R20","265/70R17"],
+  "GMC Terrain":          ["235/55R17"],
+  "GMC Yukon":            ["265/50R20","285/45R22"],
+  "RAM 1500":             ["265/70R17","265/60R18","285/45R22"],
+  "RAM 2500":             ["265/70R17","235/80R17"],
+  "Dodge Durango":        ["245/60R20","275/45R22"],
+  "Jeep Wrangler":        ["245/75R17","275/70R18"],
+  "Jeep Grand Cherokee":  ["255/55R20","265/50R20"],
+  "Kia Sorento":          ["235/60R18","255/45R20"],
+  "Kia Sportage":         ["225/60R17","255/45R19"],
+  "Kia Telluride":        ["265/45R21"],
+  "Mazda CX-5":           ["225/55R19"],
+  "Mazda CX-50":          ["255/45R20"],
+};
+
 // ─────────────────────────────────────────────────
-//  LOOKUP TAB SWITCHING
+//  SEASON FILTER
+// ─────────────────────────────────────────────────
+let activeSeason = 'all'; // 'all'|'allseason'|'allweather'|'winter'|'summer'
+function setSeason(season, btn) {
+  activeSeason = season;
+  document.querySelectorAll('.season-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+}
+function seasonToTDG(s) {
+  return { all: null, allseason: 2, allweather: 3, winter: 4, summer: 1 }[s] ?? null;
+}
+
+// ─────────────────────────────────────────────────
+//  LOOKUP TAB SWITCHING (kept for wheel nav link)
 // ─────────────────────────────────────────────────
 function switchLookupTab(tab) {
-  ['vehicle','size','wheels'].forEach(t => {
-    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
-    document.getElementById('panel-' + t).classList.toggle('active', t === tab);
-  });
-  document.getElementById('lookupResult').classList.remove('show');
+  // Legacy — just scrolls to relevant section
+  if (tab === 'wheels') { switchCatalogType('wheels'); smoothScroll('#catalog'); }
+  else smoothScroll('#lookup');
 }
 
 // ─────────────────────────────────────────────────
@@ -1667,47 +1746,164 @@ function switchLookupTab(tab) {
 // ─────────────────────────────────────────────────
 function initYears() {
   const s = document.getElementById('vYear');
-  for (let y = 2025; y >= 2005; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y; s.appendChild(o); }
+  for (let y = 2026; y >= 2000; y--) {
+    const o = document.createElement('option'); o.value = y; o.textContent = y; s.appendChild(o);
+  }
 }
 function updateMakes() {
   const mk = document.getElementById('vMake');
-  mk.innerHTML = '<option value="">Select Make</option>';
-  ['vModel','vTrim'].forEach(id => document.getElementById(id).innerHTML = '<option value="">' + (id==='vModel'?'Select Model':'Select Trim') + '</option>');
+  mk.innerHTML = '<option value="">Select a make</option>';
+  mk.disabled = false;
+  ['vModel','vTrim'].forEach(id => {
+    const el = document.getElementById(id);
+    el.innerHTML = '<option value="">' + (id === 'vModel' ? 'Select a model' : 'Select a trim') + '</option>';
+    el.disabled = true;
+  });
+  document.getElementById('tireOptionRow').style.display = 'none';
+  document.getElementById('vehSearchBtn').disabled = true;
   document.getElementById('lookupResult').classList.remove('show');
-  Object.keys(VD).sort().forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; mk.appendChild(o); });
+  Object.keys(VD).sort().forEach(m => {
+    const o = document.createElement('option'); o.value = m; o.textContent = m; mk.appendChild(o);
+  });
 }
 function updateModels() {
   const make = document.getElementById('vMake').value;
   const md = document.getElementById('vModel');
-  md.innerHTML = '<option value="">Select Model</option>';
-  document.getElementById('vTrim').innerHTML = '<option value="">Select Trim</option>';
+  md.innerHTML = '<option value="">Select a model</option>';
+  md.disabled = !make;
+  const trimEl = document.getElementById('vTrim');
+  trimEl.innerHTML = '<option value="">Select a trim</option>';
+  trimEl.disabled = true;
+  document.getElementById('tireOptionRow').style.display = 'none';
+  document.getElementById('vehSearchBtn').disabled = true;
   if (!make || !VD[make]) return;
-  Object.keys(VD[make]).sort().forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; md.appendChild(o); });
+  Object.keys(VD[make]).sort().forEach(m => {
+    const o = document.createElement('option'); o.value = m; o.textContent = m; md.appendChild(o);
+  });
 }
 function updateTrims() {
   const make = document.getElementById('vMake').value, model = document.getElementById('vModel').value;
-  const tr = document.getElementById('vTrim'); tr.innerHTML = '<option value="">Select Trim</option>';
+  const tr = document.getElementById('vTrim');
+  tr.innerHTML = '<option value="">Select a trim</option>';
+  tr.disabled = !model;
+  document.getElementById('tireOptionRow').style.display = 'none';
+  document.getElementById('vehSearchBtn').disabled = true;
   if (!make || !model) return;
-  (VD[make]?.[model] || []).forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; tr.appendChild(o); });
+  (VD[make]?.[model] || []).forEach(t => {
+    const o = document.createElement('option'); o.value = t; o.textContent = t; tr.appendChild(o);
+  });
+}
+function updateTireOptions() {
+  const make = document.getElementById('vMake').value;
+  const model = document.getElementById('vModel').value;
+  const trim  = document.getElementById('vTrim').value;
+  const row   = document.getElementById('tireOptionRow');
+  const sel   = document.getElementById('vTireOption');
+  const btn   = document.getElementById('vehSearchBtn');
+  sel.innerHTML = '<option value="">Choose tire size…</option>';
+  if (!make || !model) { row.style.display = 'none'; btn.disabled = true; return; }
+
+  const vehicleKey = `${make} ${model}`;
+  // Build tire options: OEM size + alternates from STAGGERED_SIZES or just OEM
+  const oem = OEM_SIZES[vehicleKey];
+  const alts = OEM_ALT_SIZES[vehicleKey] || [];
+  const options = oem ? [{ label: `${oem} (OEM)`, value: oem }, ...alts.map(s => ({ label: s, value: s }))] : [];
+
+  if (options.length) {
+    options.forEach(opt => {
+      const o = document.createElement('option'); o.value = opt.value; o.textContent = opt.label; sel.appendChild(o);
+    });
+    // Auto-select first (OEM)
+    if (options.length === 1) sel.value = options[0].value;
+    row.style.display = 'block';
+    btn.disabled = false;
+  } else {
+    // No OEM size known — allow searching by vehicle without size
+    row.style.display = 'none';
+    btn.disabled = false;
+  }
 }
 
 async function doLookup() {
-  const y = document.getElementById('vYear').value, mk = document.getElementById('vMake').value, md = document.getElementById('vModel').value;
+  const y = document.getElementById('vYear').value;
+  const mk = document.getElementById('vMake').value;
+  const md = document.getElementById('vModel').value;
+  const trim = document.getElementById('vTrim').value;
+  const tireOpt = document.getElementById('vTireOption').value;
   if (!y || !mk || !md) { alert('Please select Year, Make and Model.'); return; }
-  const vehicleKey = `${mk} ${md}`, tireSize = OEM_SIZES[vehicleKey] || null;
+  const vehicleKey = `${mk} ${md}`;
+  const tireSize = tireOpt || OEM_SIZES[vehicleKey] || null;
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
+  const trimLabel = trim ? ` ${trim}` : '';
+
+  const searchParams = {};
+  if (tireSize) searchParams.tireSizes = [tireSize];
+  const season = seasonToTDG(activeSeason);
+  if (season) searchParams.tireSeason = season;
+
   if (tireSize) {
-    textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — OEM size: <strong>${tireSize}</strong>. Searching live TDG inventory…`;
-    resultEl.classList.add('show');
-    switchCatalogType('tires');
-    await loadTires({ tireSizes: [tireSize] });
-    textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — showing <strong>${filteredTires.length}</strong> compatible tires for size <strong>${tireSize}</strong>.`;
+    textEl.innerHTML = `Searching for <strong>${y} ${mk} ${md}${trimLabel}</strong> — size <strong>${tireSize}</strong>…`;
   } else {
-    textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong>. Showing full inventory — <a onclick="smoothScroll('#guide')" style="color:var(--yellow);cursor:pointer">not sure what size you need?</a>`;
-    resultEl.classList.add('show');
-    switchCatalogType('tires');
-    await loadTires();
+    textEl.innerHTML = `Searching full inventory for <strong>${y} ${mk} ${md}${trimLabel}</strong>…`;
   }
+  resultEl.classList.add('show');
+  switchCatalogType('tires');
+  await loadTires(Object.keys(searchParams).length ? searchParams : null);
+  if (tireSize) {
+    textEl.innerHTML = `<strong>${y} ${mk} ${md}${trimLabel}</strong> — showing <strong>${filteredTires.length}</strong> tires for size <strong>${tireSize}</strong>.`;
+  } else {
+    textEl.innerHTML = `<strong>${y} ${mk} ${md}${trimLabel}</strong> — showing all available inventory.`;
+  }
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
+// ─────────────────────────────────────────────────
+//  TIRE — SIZE SEARCH (text input)
+// ─────────────────────────────────────────────────
+function parseSizeInput(raw) {
+  if (!raw) return null;
+  raw = raw.trim().toUpperCase().replace(/\s/g,'');
+  // Already formatted: 225/60R17
+  let m = raw.match(/^(\d{3})\/(\d{2,3})R(\d{2})$/);
+  if (m) return `${m[1]}/${m[2]}R${m[3]}`;
+  // Compact: 2256017
+  m = raw.match(/^(\d{3})(\d{2})(\d{2})$/);
+  if (m) return `${m[1]}/${m[2]}R${m[3]}`;
+  // LT prefix: LT245/70R17
+  m = raw.match(/^LT(\d{3})\/(\d{2,3})R(\d{2})$/);
+  if (m) return `LT${m[1]}/${m[2]}R${m[3]}`;
+  return null;
+}
+
+function onSizeInput() {
+  const v1 = parseSizeInput(document.getElementById('sizeInput1').value);
+  document.getElementById('sizeSearchBtn').disabled = !v1;
+}
+
+function toggleSecondSize() {
+  const show = document.getElementById('addSecondSize').checked;
+  document.getElementById('secondSizeRow').style.display = show ? 'block' : 'none';
+}
+
+async function doSizeSearch() {
+  const raw1 = document.getElementById('sizeInput1').value;
+  const raw2 = document.getElementById('sizeInput2')?.value || '';
+  const size1 = parseSizeInput(raw1);
+  if (!size1) { alert('Please enter a valid tire size (e.g. 225/60R17 or 2256017).'); return; }
+  const sizes = [size1];
+  const size2 = parseSizeInput(raw2);
+  if (size2 && size2 !== size1) sizes.push(size2);
+
+  const searchParams = { tireSizes: sizes };
+  const season = seasonToTDG(activeSeason);
+  if (season) searchParams.tireSeason = season;
+
+  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
+  textEl.innerHTML = `Searching for size <strong>${sizes.join(' + ')}</strong>…`;
+  resultEl.classList.add('show');
+  switchCatalogType('tires');
+  await loadTires(searchParams);
+  textEl.innerHTML = `Showing <strong>${filteredTires.length}</strong> tires for size <strong>${sizes.join(' + ')}</strong>.`;
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
 
@@ -1777,6 +1973,7 @@ async function doWheelSizeSearch() {
 }
 
 // ─────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 //  WHEEL DROPDOWNS INIT
 // ─────────────────────────────────────────────────
 function initWheelDropdowns() {
@@ -1786,101 +1983,6 @@ function initWheelDropdowns() {
   WHEEL_DIAMETERS.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d + '"'; dEl.appendChild(o); });
   const wEl = document.getElementById('wWidth');
   WHEEL_WIDTHS.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + '"'; wEl.appendChild(o); });
-}
-
-// ─────────────────────────────────────────────────
-//  TIRE SIZE SEARCH (cascading)
-// ─────────────────────────────────────────────────
-const TIRE_SIZES = [
-  '155/65R13','155/65R14','155/65R15','155/65R16','155/70R13','155/70R14','155/70R15','155/70R16','155/80R13','155/80R14','155/80R15','155/80R16',
-  '165/60R13','165/60R14','165/60R15','165/60R16','165/65R13','165/65R14','165/65R15','165/65R16','165/70R13','165/70R14','165/70R15','165/70R16','165/80R13','165/80R14','165/80R15','165/80R16',
-  '175/60R13','175/60R14','175/60R15','175/60R16','175/65R13','175/65R14','175/65R15','175/65R16','175/70R13','175/70R14','175/70R15','175/70R16','175/80R13','175/80R14','175/80R15','175/80R16',
-  '185/55R13','185/55R14','185/55R15','185/55R16','185/55R17','185/60R13','185/60R14','185/60R15','185/60R16','185/60R17','185/65R13','185/65R14','185/65R15','185/65R16','185/65R17','185/70R13','185/70R14','185/70R15','185/70R16','185/70R17','185/80R13','185/80R14','185/80R15','185/80R16','185/80R17',
-  '195/50R13','195/50R14','195/50R15','195/50R16','195/50R17','195/55R13','195/55R14','195/55R15','195/55R16','195/55R17','195/60R13','195/60R14','195/60R15','195/60R16','195/60R17','195/65R13','195/65R14','195/65R15','195/65R16','195/65R17','195/70R13','195/70R14','195/70R15','195/70R16','195/70R17','195/75R13','195/75R14','195/75R15','195/75R16','195/75R17',
-  '205/45R15','205/45R16','205/45R17','205/45R18','205/50R13','205/50R14','205/50R15','205/50R16','205/50R17','205/50R18','205/55R13','205/55R14','205/55R15','205/55R16','205/55R17','205/55R18','205/60R13','205/60R14','205/60R15','205/60R16','205/60R17','205/60R18','205/65R13','205/65R14','205/65R15','205/65R16','205/65R17','205/65R18','205/70R13','205/70R14','205/70R15','205/70R16','205/70R17','205/70R18','205/75R13','205/75R14','205/75R15','205/75R16','205/75R17','205/75R18',
-  '215/40R15','215/40R16','215/40R17','215/40R18','215/45R15','215/45R16','215/45R17','215/45R18','215/50R13','215/50R14','215/50R15','215/50R16','215/50R17','215/50R18','215/55R13','215/55R14','215/55R15','215/55R16','215/55R17','215/55R18','215/60R13','215/60R14','215/60R15','215/60R16','215/60R17','215/60R18','215/65R13','215/65R14','215/65R15','215/65R16','215/65R17','215/65R18','215/70R13','215/70R14','215/70R15','215/70R16','215/70R17','215/70R18','215/75R13','215/75R14','215/75R15','215/75R16','215/75R17','215/75R18',
-  '225/35R16','225/35R17','225/35R18','225/35R19','225/35R20','225/40R15','225/40R16','225/40R17','225/40R18','225/40R19','225/45R15','225/45R16','225/45R17','225/45R18','225/45R19','225/50R13','225/50R14','225/50R15','225/50R16','225/50R17','225/50R18','225/50R19','225/55R13','225/55R14','225/55R15','225/55R16','225/55R17','225/55R18','225/55R19','225/60R13','225/60R14','225/60R15','225/60R16','225/60R17','225/60R18','225/60R19','225/65R13','225/65R14','225/65R15','225/65R16','225/65R17','225/65R18','225/65R19','225/70R13','225/70R14','225/70R15','225/70R16','225/70R17','225/70R18','225/70R19','225/75R13','225/75R14','225/75R15','225/75R16','225/75R17','225/75R18','225/75R19',
-  '235/30R17','235/30R18','235/30R19','235/35R16','235/35R17','235/35R18','235/35R19','235/35R20','235/40R15','235/40R16','235/40R17','235/40R18','235/40R19','235/45R15','235/45R16','235/45R17','235/45R18','235/45R19','235/50R13','235/50R14','235/50R15','235/50R16','235/50R17','235/50R18','235/50R19','235/55R13','235/55R14','235/55R15','235/55R16','235/55R17','235/55R18','235/55R19','235/60R13','235/60R14','235/60R15','235/60R16','235/60R17','235/60R18','235/60R19','235/65R13','235/65R14','235/65R15','235/65R16','235/65R17','235/65R18','235/65R19','235/70R13','235/70R14','235/70R15','235/70R16','235/70R17','235/70R18','235/70R19','235/75R13','235/75R14','235/75R15','235/75R16','235/75R17','235/75R18','235/75R19','235/80R13','235/80R14','235/80R15','235/80R16','235/80R17','235/80R18','235/80R19','235/85R13','235/85R14','235/85R15','235/85R16','235/85R17','235/85R18','235/85R19',
-  '245/30R17','245/30R18','245/30R19','245/30R20','245/35R16','245/35R17','245/35R18','245/35R19','245/35R20','245/35R21','245/40R15','245/40R16','245/40R17','245/40R18','245/40R19','245/40R20','245/40R21','245/45R15','245/45R16','245/45R17','245/45R18','245/45R19','245/45R20','245/45R21','245/50R13','245/50R14','245/50R15','245/50R16','245/50R17','245/50R18','245/50R19','245/50R20','245/55R13','245/55R14','245/55R15','245/55R16','245/55R17','245/55R18','245/55R19','245/55R20','245/60R13','245/60R14','245/60R15','245/60R16','245/60R17','245/60R18','245/60R19','245/60R20','245/65R13','245/65R14','245/65R15','245/65R16','245/65R17','245/65R18','245/65R19','245/65R20','245/70R13','245/70R14','245/70R15','245/70R16','245/70R17','245/70R18','245/70R19','245/70R20','245/75R13','245/75R14','245/75R15','245/75R16','245/75R17','245/75R18','245/75R19','245/75R20',
-  '255/25R19','255/25R20','255/30R17','255/30R18','255/30R19','255/30R20','255/30R22','255/35R16','255/35R17','255/35R18','255/35R19','255/35R20','255/35R21','255/40R15','255/40R16','255/40R17','255/40R18','255/40R19','255/40R20','255/40R21','255/45R15','255/45R16','255/45R17','255/45R18','255/45R19','255/45R20','255/50R13','255/50R14','255/50R15','255/50R16','255/50R17','255/50R18','255/50R19','255/50R20','255/55R13','255/55R14','255/55R15','255/55R16','255/55R17','255/55R18','255/55R19','255/55R20','255/60R13','255/60R14','255/60R15','255/60R16','255/60R17','255/60R18','255/60R19','255/60R20','255/65R13','255/65R14','255/65R15','255/65R16','255/65R17','255/65R18','255/65R19','255/65R20','255/70R13','255/70R14','255/70R15','255/70R16','255/70R17','255/70R18','255/70R19','255/70R20','255/75R13','255/75R14','255/75R15','255/75R16','255/75R17','255/75R18','255/75R19','255/75R20',
-  '265/30R17','265/30R18','265/30R19','265/30R20','265/30R21','265/30R22','265/35R16','265/35R17','265/35R18','265/35R19','265/35R20','265/35R21','265/35R22','265/40R15','265/40R16','265/40R17','265/40R18','265/40R19','265/40R20','265/40R21','265/40R22','265/45R15','265/45R16','265/45R17','265/45R18','265/45R19','265/45R20','265/45R21','265/45R22','265/50R13','265/50R14','265/50R15','265/50R16','265/50R17','265/50R18','265/50R19','265/50R20','265/50R21','265/50R22','265/55R13','265/55R14','265/55R15','265/55R16','265/55R17','265/55R18','265/55R19','265/55R20','265/55R21','265/55R22','265/60R13','265/60R14','265/60R15','265/60R16','265/60R17','265/60R18','265/60R19','265/60R20','265/60R21','265/60R22','265/65R13','265/65R14','265/65R15','265/65R16','265/65R17','265/65R18','265/65R19','265/65R20','265/65R21','265/65R22','265/70R13','265/70R14','265/70R15','265/70R16','265/70R17','265/70R18','265/70R19','265/70R20','265/70R21','265/70R22','265/75R13','265/75R14','265/75R15','265/75R16','265/75R17','265/75R18','265/75R19','265/75R20','265/75R21','265/75R22',
-  '275/25R19','275/25R20','275/25R21','275/25R22','275/30R17','275/30R18','275/30R19','275/30R20','275/30R21','275/30R22','275/35R16','275/35R17','275/35R18','275/35R19','275/35R20','275/35R21','275/35R22','275/40R15','275/40R16','275/40R17','275/40R18','275/40R19','275/40R20','275/40R21','275/40R22','275/45R15','275/45R16','275/45R17','275/45R18','275/45R19','275/45R20','275/45R21','275/45R22','275/50R13','275/50R14','275/50R15','275/50R16','275/50R17','275/50R18','275/50R19','275/50R20','275/50R21','275/50R22','275/55R13','275/55R14','275/55R15','275/55R16','275/55R17','275/55R18','275/55R19','275/55R20','275/55R21','275/55R22','275/60R13','275/60R14','275/60R15','275/60R16','275/60R17','275/60R18','275/60R19','275/60R20','275/60R21','275/60R22','275/65R13','275/65R14','275/65R15','275/65R16','275/65R17','275/65R18','275/65R19','275/65R20','275/65R21','275/65R22','275/70R13','275/70R14','275/70R15','275/70R16','275/70R17','275/70R18','275/70R19','275/70R20','275/70R21','275/70R22','275/75R13','275/75R14','275/75R15','275/75R16','275/75R17','275/75R18','275/75R19','275/75R20','275/75R21','275/75R22',
-  '285/25R19','285/25R20','285/25R21','285/25R22','285/30R17','285/30R18','285/30R19','285/30R20','285/30R21','285/30R22','285/35R16','285/35R17','285/35R18','285/35R19','285/35R20','285/35R21','285/35R22','285/40R15','285/40R16','285/40R17','285/40R18','285/40R19','285/40R20','285/40R21','285/40R22','285/45R15','285/45R16','285/45R17','285/45R18','285/45R19','285/45R20','285/45R21','285/45R22','285/50R13','285/50R14','285/50R15','285/50R16','285/50R17','285/50R18','285/50R19','285/50R20','285/50R21','285/50R22','285/55R13','285/55R14','285/55R15','285/55R16','285/55R17','285/55R18','285/55R19','285/55R20','285/55R21','285/55R22','285/60R13','285/60R14','285/60R15','285/60R16','285/60R17','285/60R18','285/60R19','285/60R20','285/60R21','285/60R22','285/65R13','285/65R14','285/65R15','285/65R16','285/65R17','285/65R18','285/65R19','285/65R20','285/65R21','285/65R22','285/70R13','285/70R14','285/70R15','285/70R16','285/70R17','285/70R18','285/70R19','285/70R20','285/70R21','285/70R22','285/75R13','285/75R14','285/75R15','285/75R16','285/75R17','285/75R18','285/75R19','285/75R20','285/75R21','285/75R22',
-  '295/25R19','295/25R20','295/25R21','295/25R22','295/30R17','295/30R18','295/30R19','295/30R20','295/30R21','295/30R22','295/35R16','295/35R17','295/35R18','295/35R19','295/35R20','295/35R21','295/35R22','295/40R15','295/40R16','295/40R17','295/40R18','295/40R19','295/40R20','295/40R21','295/40R22','295/45R15','295/45R16','295/45R17','295/45R18','295/45R19','295/45R20','295/45R21','295/45R22','295/50R13','295/50R14','295/50R15','295/50R16','295/50R17','295/50R18','295/50R19','295/50R20','295/50R21','295/50R22','295/55R13','295/55R14','295/55R15','295/55R16','295/55R17','295/55R18','295/55R19','295/55R20','295/55R21','295/55R22','295/60R13','295/60R14','295/60R15','295/60R16','295/60R17','295/60R18','295/60R19','295/60R20','295/60R21','295/60R22','295/65R13','295/65R14','295/65R15','295/65R16','295/65R17','295/65R18','295/65R19','295/65R20','295/65R21','295/65R22','295/70R13','295/70R14','295/70R15','295/70R16','295/70R17','295/70R18','295/70R19','295/70R20','295/70R21','295/70R22','295/75R13','295/75R14','295/75R15','295/75R16','295/75R17','295/75R18','295/75R19','295/75R20','295/75R21','295/75R22','295/80R13','295/80R14','295/80R15','295/80R16','295/80R17','295/80R18','295/80R19','295/80R20','295/80R21','295/80R22',
-  '305/25R19','305/25R20','305/25R21','305/25R22','305/30R17','305/30R18','305/30R19','305/30R20','305/30R21','305/30R22','305/35R16','305/35R17','305/35R18','305/35R19','305/35R20','305/35R21','305/35R22','305/40R15','305/40R16','305/40R17','305/40R18','305/40R19','305/40R20','305/40R21','305/40R22','305/45R15','305/45R16','305/45R17','305/45R18','305/45R19','305/45R20','305/45R21','305/45R22','305/50R13','305/50R14','305/50R15','305/50R16','305/50R17','305/50R18','305/50R19','305/50R20','305/50R21','305/50R22','305/55R13','305/55R14','305/55R15','305/55R16','305/55R17','305/55R18','305/55R19','305/55R20','305/55R21','305/55R22','305/60R13','305/60R14','305/60R15','305/60R16','305/60R17','305/60R18','305/60R19','305/60R20','305/60R21','305/60R22','305/65R13','305/65R14','305/65R15','305/65R16','305/65R17','305/65R18','305/65R19','305/65R20','305/65R21','305/65R22','305/70R13','305/70R14','305/70R15','305/70R16','305/70R17','305/70R18','305/70R19','305/70R20','305/70R21','305/70R22','305/75R13','305/75R14','305/75R15','305/75R16','305/75R17','305/75R18','305/75R19','305/75R20','305/75R21','305/75R22','305/80R13','305/80R14','305/80R15','305/80R16','305/80R17','305/80R18','305/80R19','305/80R20','305/80R21','305/80R22','305/85R13','305/85R14','305/85R15','305/85R16','305/85R17','305/85R18','305/85R19','305/85R20','305/85R21','305/85R22','305/90R13','305/90R14','305/90R15','305/90R16','305/90R17','305/90R18','305/90R19','305/90R20','305/90R21','305/90R22',
-  '315/25R19','315/25R20','315/25R21','315/25R22','315/30R17','315/30R18','315/30R19','315/30R20','315/30R21','315/30R22','315/35R16','315/35R17','315/35R18','315/35R19','315/35R20','315/35R21','315/35R22','315/40R15','315/40R16','315/40R17','315/40R18','315/40R19','315/40R20','315/40R21','315/40R22','315/45R15','315/45R16','315/45R17','315/45R18','315/45R19','315/45R20','315/45R21','315/45R22','315/50R13','315/50R14','315/50R15','315/50R16','315/50R17','315/50R18','315/50R19','315/50R20','315/50R21','315/50R22','315/55R13','315/55R14','315/55R15','315/55R16','315/55R17','315/55R18','315/55R19','315/55R20','315/55R21','315/55R22','315/60R13','315/60R14','315/60R15','315/60R16','315/60R17','315/60R18','315/60R19','315/60R20','315/60R21','315/60R22','315/65R13','315/65R14','315/65R15','315/65R16','315/65R17','315/65R18','315/65R19','315/65R20','315/65R21','315/65R22','315/70R13','315/70R14','315/70R15','315/70R16','315/70R17','315/70R18','315/70R19','315/70R20','315/70R21','315/70R22','315/75R13','315/75R14','315/75R15','315/75R16','315/75R17','315/75R18','315/75R19','315/75R20','315/75R21','315/75R22','315/80R13','315/80R14','315/80R15','315/80R16','315/80R17','315/80R18','315/80R19','315/80R20','315/80R21','315/80R22',
-  '325/25R19','325/25R20','325/25R21','325/25R22','325/30R17','325/30R18','325/30R19','325/30R20','325/30R21','325/30R22','325/35R16','325/35R17','325/35R18','325/35R19','325/35R20','325/35R21','325/35R22','325/40R15','325/40R16','325/40R17','325/40R18','325/40R19','325/40R20','325/40R21','325/40R22','325/45R15','325/45R16','325/45R17','325/45R18','325/45R19','325/45R20','325/45R21','325/45R22','325/50R13','325/50R14','325/50R15','325/50R16','325/50R17','325/50R18','325/50R19','325/50R20','325/50R21','325/50R22','325/55R13','325/55R14','325/55R15','325/55R16','325/55R17','325/55R18','325/55R19','325/55R20','325/55R21','325/55R22','325/60R13','325/60R14','325/60R15','325/60R16','325/60R17','325/60R18','325/60R19','325/60R20','325/60R21','325/60R22',
-  '335/25R19','335/25R20','335/25R21','335/25R22','335/30R17','335/30R18','335/30R19','335/30R20','335/30R21','335/30R22','335/35R16','335/35R17','335/35R18','335/35R19','335/35R20','335/35R21','335/35R22','335/40R15','335/40R16','335/40R17','335/40R18','335/40R19','335/40R20','335/40R21','335/40R22','335/45R15','335/45R16','335/45R17','335/45R18','335/45R19','335/45R20','335/45R21','335/45R22','335/50R13','335/50R14','335/50R15','335/50R16','335/50R17','335/50R18','335/50R19','335/50R20','335/50R21','335/50R22',
-  '345/25R19','345/25R20','345/25R21','345/25R22','345/30R17','345/30R18','345/30R19','345/30R20','345/30R21','345/30R22','345/35R16','345/35R17','345/35R18','345/35R19','345/35R20','345/35R21','345/35R22','345/40R15','345/40R16','345/40R17','345/40R18','345/40R19','345/40R20','345/40R21','345/40R22',
-  'LT245/70R17','LT245/75R16','LT265/60R20','LT265/65R18','LT265/70R17','LT265/75R16','LT275/55R20','LT275/55R22','LT275/65R18','LT275/65R20','LT285/45R22','LT285/55R20','LT285/65R18','LT285/70R17','LT285/75R16',
-];
-
-function parseSizes() {
-  const map = {};
-  TIRE_SIZES.forEach(sz => {
-    const m = sz.match(/^(?:LT)?(\d+)\/(\d+)R(\d+)$/);
-    if (!m) return;
-    const [,w,s,d] = m;
-    if (!map[w]) map[w] = {}; if (!map[w][s]) map[w][s] = [];
-    if (!map[w][s].includes(d)) map[w][s].push(d);
-  });
-  return map;
-}
-const SIZE_MAP = parseSizes();
-
-function initSizeDropdowns() {
-  const wEl = document.getElementById('sWidth');
-  wEl.innerHTML = '<option value="">Select Width</option>';
-  Object.keys(SIZE_MAP).sort((a,b)=>+a-+b).forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + ' mm'; wEl.appendChild(o); });
-  updateSizePreview();
-}
-
-function onWidthChange() {
-  const w = document.getElementById('sWidth').value;
-  const sEl = document.getElementById('sSidewall'), dEl = document.getElementById('sDiameter');
-  sEl.innerHTML = '<option value="">Select Sidewall</option>'; dEl.innerHTML = '<option value="">Select Sidewall first</option>';
-  sEl.disabled = !w; dEl.disabled = true;
-  setSizeSearchBtn(false);
-  if (w && SIZE_MAP[w]) Object.keys(SIZE_MAP[w]).sort((a,b)=>+a-+b).forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s + '%'; sEl.appendChild(o); });
-  updateSizePreview();
-}
-
-function onSidewallChange() {
-  const w = document.getElementById('sWidth').value, s = document.getElementById('sSidewall').value;
-  const dEl = document.getElementById('sDiameter');
-  dEl.innerHTML = '<option value="">Select Diameter</option>'; dEl.disabled = !s;
-  setSizeSearchBtn(false);
-  if (w && s && SIZE_MAP[w]?.[s]) SIZE_MAP[w][s].sort((a,b)=>+a-+b).forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = 'R' + d + '  (' + d + '")'; dEl.appendChild(o); });
-  updateSizePreview();
-}
-
-function onDiameterChange() { setSizeSearchBtn(!!document.getElementById('sDiameter').value); updateSizePreview(); }
-
-function setSizeSearchBtn(enabled) {
-  const btn = document.getElementById('sizeSearchBtn'); btn.disabled = !enabled;
-  btn.style.opacity = enabled ? '1' : '.5'; btn.style.cursor = enabled ? 'pointer' : 'not-allowed';
-}
-
-function updateSizePreview() {
-  const w = document.getElementById('sWidth').value, s = document.getElementById('sSidewall').value, d = document.getElementById('sDiameter').value;
-  const wEl = document.getElementById('sp-w'), sEl = document.getElementById('sp-s'), dEl = document.getElementById('sp-d');
-  wEl.textContent = w || '???'; wEl.className = 'sp-part' + (w ? '' : ' dim');
-  sEl.textContent = s || '??';  sEl.className = 'sp-part' + (s ? '' : ' dim');
-  dEl.textContent = d || '??';  dEl.className = 'sp-part' + (d ? '' : ' dim');
-}
-
-async function doSizeSearch() {
-  const width = document.getElementById('sWidth').value, sidewall = document.getElementById('sSidewall').value, diameter = document.getElementById('sDiameter').value;
-  if (!width || !sidewall || !diameter) return;
-  const tireSize = `${width}/${sidewall}R${diameter}`;
-  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
-  textEl.innerHTML = `Searching for <strong>${tireSize}</strong> tires…`; resultEl.classList.add('show');
-  switchCatalogType('tires');
-  await loadTires({ tireSizes: [tireSize] });
-  textEl.innerHTML = filteredTires.length > 0
-    ? `Found <strong>${filteredTires.length}</strong> tire${filteredTires.length!==1?'s':''} in size <strong>${tireSize}</strong>.`
-    : `No tires in stock for size <strong>${tireSize}</strong> right now — <a href="tel:5193805104" style="color:var(--yellow)">call us at 519-380-5104</a> and we'll source them for you.`;
-  setTimeout(() => smoothScroll('#catalog'), 300);
 }
 
 // ─────────────────────────────────────────────────
@@ -2209,7 +2311,6 @@ function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.su
 document.addEventListener('DOMContentLoaded', () => {
   initYears();
   initWheelYears();
-  initSizeDropdowns();
   initWheelDropdowns();
   initMemberState();
   initCookie();
