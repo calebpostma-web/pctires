@@ -1405,47 +1405,73 @@ async function loadTires(searchParams = null) {
     let products = [], inventoryMap = {};
     const extractData = r => {
       if (Array.isArray(r)) return r;
-      if (r?.data && Array.isArray(r.data)) return r.data;
-      if (r?.products && Array.isArray(r.products)) return r.products;
-      if (r?.items && Array.isArray(r.items)) return r.items;
-      if (r?.results && Array.isArray(r.results)) return r.results;
+      if (r && typeof r === 'object') {
+        // Check for named array properties
+        const keys = Object.keys(r);
+        for (const k of keys) {
+          if (Array.isArray(r[k])) return r[k];
+        }
+        // TDG returns numeric-keyed object {0:{...}, 1:{...}} — convert to array
+        const vals = Object.values(r);
+        if (vals.length > 0 && typeof vals[0] === 'object' && vals[0] !== null) return vals;
+      }
       return [];
     };
 
     if (searchParams) {
-      // Specific search (by size, vehicle, season)
-      console.log('[TDG] loadTires search:', searchParams);
+      console.log('[TDG] loadTires search params:', JSON.stringify(searchParams));
       const [prodRes, invRes] = await Promise.all([
         tdgFetch('search', searchParams),
         tdgFetch('inventory', searchParams),
       ]);
-      console.log('[TDG] search prodRes:', prodRes);
-      console.log('[TDG] search invRes:', invRes);
+      console.log('[TDG] search prodRes:', JSON.stringify(prodRes)?.slice(0,300));
+      console.log('[TDG] search invRes:', JSON.stringify(invRes)?.slice(0,300));
       products = extractData(prodRes);
       extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
     } else {
-      // Default: load entire catalog via product/all + inventory/all
-      console.log('[TDG] loadTires: fetching full catalog (all + inventoryAll)');
-      const [prodRes, invRes] = await Promise.all([
-        tdgFetch('all', {}),
-        tdgFetch('inventoryAll', {}),
-      ]);
-      console.log('[TDG] all prodRes type:', typeof prodRes, Array.isArray(prodRes) ? prodRes.length : JSON.stringify(prodRes)?.slice(0,200));
-      console.log('[TDG] all invRes type:', typeof invRes, Array.isArray(invRes) ? invRes.length : JSON.stringify(invRes)?.slice(0,200));
-      console.log('[TDG] prodRes keys:', prodRes ? Object.keys(prodRes) : 'null');
-      console.log('[TDG] prodRes full (first 500):', JSON.stringify(prodRes)?.slice(0,500));
-      products = extractData(prodRes);
-      extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
+      // Default: search a broad set of the most common Ontario tire sizes
+      // Split into batches to avoid oversized requests
+      console.log('[TDG] loadTires: default broad search');
+      const batches = [
+        ['225/65R17','235/65R17','245/65R17','275/65R18','265/70R17'],
+        ['215/55R17','225/60R17','235/60R17','245/60R18','275/60R20'],
+        ['205/55R16','225/50R17','235/45R18','255/55R20','245/70R17'],
+        ['215/60R16','235/55R17','225/45R17','245/45R18','265/65R18'],
+        ['195/65R15','205/60R16','225/70R16','235/70R16','265/60R18'],
+      ];
+      for (const sizes of batches) {
+        try {
+          const [prodRes, invRes] = await Promise.all([
+            tdgFetch('search', { tireSizes: sizes }),
+            tdgFetch('inventory', { tireSizes: sizes }),
+          ]);
+          extractData(prodRes).forEach(p => {
+            if (p?.itemNumber && !products.find(x => x.itemNumber === p.itemNumber)) products.push(p);
+          });
+          extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
+        } catch (batchErr) {
+          console.warn('[TDG] batch failed:', sizes[0], batchErr.message);
+        }
+      }
+      console.log('[TDG] default search total products:', products.length);
     }
 
     console.log('[TDG] raw products:', products.length);
+    if (products.length > 0) {
+      const types = [...new Set(products.map(p => p.type))];
+      console.log('[TDG] product types found:', types);
+      console.log('[TDG] sample product:', JSON.stringify(products[0])?.slice(0,400));
+    }
+
     allTires = products.filter(p => (p.type || '').toLowerCase() === 'tire').map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
     console.log('[TDG] allTires after filter:', allTires.length);
 
-    // If API returned products but none typed as Tire, log what types we got
-    if (products.length > 0 && allTires.length === 0) {
+    if (allTires.length === 0 && products.length > 0) {
       const types = [...new Set(products.map(p => p.type))];
-      console.warn('[TDG] Got', products.length, 'products but 0 tires. Types found:', types);
+      console.warn('[TDG] Got products but 0 tires. Types:', types, '— trying case-insensitive match');
+      // Fallback: accept any product if type filter is the problem
+      allTires = products.map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
+      console.log('[TDG] allTires after fallback (no type filter):', allTires.length);
     }
 
     applyFilter(activeFilter);
@@ -1473,10 +1499,12 @@ async function loadWheels(searchParams = null) {
     let products = [], inventoryMap = {};
     const extractData = r => {
       if (Array.isArray(r)) return r;
-      if (r?.data && Array.isArray(r.data)) return r.data;
-      if (r?.products && Array.isArray(r.products)) return r.products;
-      if (r?.items && Array.isArray(r.items)) return r.items;
-      if (r?.results && Array.isArray(r.results)) return r.results;
+      if (r && typeof r === 'object') {
+        const keys = Object.keys(r);
+        for (const k of keys) { if (Array.isArray(r[k])) return r[k]; }
+        const vals = Object.values(r);
+        if (vals.length > 0 && typeof vals[0] === 'object' && vals[0] !== null) return vals;
+      }
       return [];
     };
     if (searchParams) {
@@ -1655,7 +1683,7 @@ function renderWheels() {
 //  VEHICLE LOOKUP DATA
 // ─────────────────────────────────────────────────
 const VD = {
-  Honda:{Civic:["LX","Sport","EX","Touring"],"CR-V":["LX","EX","EX-L","Touring"],Accord:["LX","Sport","EX","Touring"]},
+  Honda:{Civic:["LX","Sport","EX","Touring"],"CR-V":["LX","EX","EX-L","Touring"],Accord:["LX","Sport","EX","Touring"],Odyssey:["LX","EX","EX-L","Touring","Elite"],Pilot:["LX","EX","EX-L","Touring","Elite"],"HR-V":["LX","EX","EX-L"],"Passport":["Sport","EX-L","Touring","Elite"],"Ridgeline":["Sport","EX-L","Touring","Black Edition"]},
   Toyota:{Camry:["LE","SE","XLE","TRD"],RAV4:["LE","XLE","Limited","TRD"],Corolla:["L","LE","SE","XSE"],Highlander:["L","LE","XLE","Limited"]},
   Ford:{"F-150":["XL","XLT","Lariat","Platinum"],Escape:["S","SE","SEL","Titanium"],Explorer:["Base","XLT","Limited","Platinum"]},
   Chevrolet:{Silverado:["WT","Custom","LT","LTZ"],Equinox:["LS","LT","RS","Premier"],Malibu:["LS","LT","RS","Premier"]},
@@ -1693,8 +1721,13 @@ const OEM_SIZES = {
 // Alternate OEM sizes per vehicle (e.g. different trim levels or staggered fitments)
 const OEM_ALT_SIZES = {
   "Honda Civic":          ["205/55R16","225/45R17"],
-  "Honda CR-V":           ["225/65R17"],
+  "Honda CR-V":           ["225/65R17","235/65R17"],
   "Honda Accord":         ["245/40R19","235/50R18"],
+  "Honda Odyssey":        ["235/60R18","245/60R18"],
+  "Honda Pilot":          ["235/65R18","245/60R18"],
+  "Honda HR-V":           ["215/55R17","215/60R16"],
+  "Honda Passport":       ["245/60R18","265/45R20"],
+  "Honda Ridgeline":      ["245/60R18","265/50R20"],
   "Toyota Camry":         ["215/55R17","225/50R17"],
   "Toyota RAV4":          ["225/65R17","255/55R18"],
   "Toyota Corolla":       ["195/65R15","215/45R17"],
