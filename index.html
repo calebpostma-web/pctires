@@ -907,11 +907,24 @@ function getRebateForBrand(brand) {
 
         <!-- Search by Size -->
         <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">📐 Search by Size</div>
-        <div class="wheel-size-row">
+        <div class="wheel-size-row" id="wheelSizeRow1">
           <div class="field"><label>Bolt Pattern</label><select id="wBoltPattern"><option value="">Select Bolt Pattern</option></select></div>
           <div class="field"><label>Diameter</label><select id="wDiameter"><option value="">Select Diameter</option></select></div>
           <div class="field"><label>Width</label><select id="wWidth"><option value="">Any Width</option></select></div>
           <button class="lookup-btn" onclick="doWheelSizeSearch()">Find Wheels →</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:10px;cursor:pointer">
+          <input type="checkbox" id="staggeredCheck" onchange="toggleStaggered()" style="accent-color:var(--yellow);width:14px;height:14px">
+          Add a second size (staggered fitment — different front &amp; rear)
+        </label>
+        <div id="staggeredRow" style="display:none;margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:2px;background:var(--raised)">
+          <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:10px">Rear Size</div>
+          <div class="wheel-size-row">
+            <div class="field"><label>Bolt Pattern</label><select id="wBoltPattern2"><option value="">Same as front</option></select></div>
+            <div class="field"><label>Diameter</label><select id="wDiameter2"><option value="">Same as front</option></select></div>
+            <div class="field"><label>Width</label><select id="wWidth2"><option value="">Any Width</option></select></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">Both sizes will be included in results. Common on sports cars with wider rears.</div>
         </div>
       </div>
 
@@ -1430,27 +1443,172 @@ const WHEEL_WIDTHS    = [5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,12.0
 
 // OEM bolt patterns — covers the most common vehicles in Ontario
 const OEM_BOLT_PATTERNS = {
-  "Honda Civic":          { bolt:'5x114.3', bore:64.1,  dia:16 },
+  // Honda
+  "Honda Civic":          { bolt:'5x114.3', bore:64.1,  dia:17 },
   "Honda CR-V":           { bolt:'5x114.3', bore:64.1,  dia:17 },
   "Honda Accord":         { bolt:'5x114.3', bore:64.1,  dia:18 },
+  "Honda Odyssey":        { bolt:'5x114.3', bore:64.1,  dia:18 },
+  "Honda Pilot":          { bolt:'5x120',   bore:64.1,  dia:18 },
+  "Honda HR-V":           { bolt:'5x114.3', bore:64.1,  dia:17 },
+  "Honda Passport":       { bolt:'5x120',   bore:64.1,  dia:18 },
+  "Honda Ridgeline":      { bolt:'5x120',   bore:64.1,  dia:18 },
+  // Toyota
   "Toyota Camry":         { bolt:'5x114.3', bore:60.1,  dia:18 },
-  "Toyota RAV4":          { bolt:'5x114.3', bore:60.1,  dia:17 },
   "Toyota Corolla":       { bolt:'5x100',   bore:54.1,  dia:16 },
+  "Toyota RAV4":          { bolt:'5x114.3', bore:60.1,  dia:17 },
   "Toyota Highlander":    { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota 4Runner":       { bolt:'6x139.7', bore:106.1, dia:17 },
+  "Toyota Tacoma":        { bolt:'6x139.7', bore:106.1, dia:16 },
+  "Toyota Tundra":        { bolt:'5x150',   bore:110.1, dia:18 },
+  "Toyota Sienna":        { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota Venza":         { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota C-HR":          { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota Prius":         { bolt:'5x114.3', bore:60.1,  dia:15 },
+  "Toyota Prius V":       { bolt:'5x114.3', bore:60.1,  dia:17 },
+  "Toyota Avalon":        { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota Land Cruiser":  { bolt:'5x150',   bore:110.1, dia:18 },
+  "Toyota Sequoia":       { bolt:'5x150',   bore:110.1, dia:18 },
+  "Toyota RAV4 Prime":    { bolt:'5x114.3', bore:60.1,  dia:18 },
+  "Toyota RAV4 Hybrid":   { bolt:'5x114.3', bore:60.1,  dia:17 },
+  "Toyota Highlander Hybrid": { bolt:'5x114.3', bore:60.1, dia:18 },
+  // Ford
   "Ford F-150":           { bolt:'6x135',   bore:87.1,  dia:18 },
+  "Ford F-250":           { bolt:'8x170',   bore:125.2, dia:18 },
+  "Ford F-350":           { bolt:'8x170',   bore:125.2, dia:18 },
   "Ford Escape":          { bolt:'5x108',   bore:63.4,  dia:17 },
   "Ford Explorer":        { bolt:'5x114.3', bore:70.5,  dia:18 },
-  "Chevrolet Silverado":  { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "Ford Bronco":          { bolt:'6x139.7', bore:93.1,  dia:17 },
+  "Ford Bronco Sport":    { bolt:'5x114.3', bore:63.4,  dia:17 },
+  "Ford Edge":            { bolt:'5x108',   bore:63.4,  dia:19 },
+  "Ford Expedition":      { bolt:'6x135',   bore:87.1,  dia:18 },
+  "Ford Maverick":        { bolt:'5x114.3', bore:63.4,  dia:17 },
+  "Ford Ranger":          { bolt:'6x139.7', bore:93.1,  dia:17 },
+  "Ford Mustang":         { bolt:'5x114.3', bore:70.5,  dia:19 },
+  "Ford Mustang Mach-E":  { bolt:'5x108',   bore:63.4,  dia:20 },
+  "Ford Fusion":          { bolt:'5x108',   bore:63.4,  dia:18 },
+  // Chevrolet
+  "Chevrolet Silverado 1500": { bolt:'6x139.7', bore:78.1, dia:18 },
+  "Chevrolet Silverado 2500": { bolt:'8x180',   bore:124.1,dia:18 },
+  "Chevrolet Silverado 3500": { bolt:'8x180',   bore:124.1,dia:17 },
   "Chevrolet Equinox":    { bolt:'5x115',   bore:70.3,  dia:17 },
-  "Hyundai Elantra":      { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Chevrolet Traverse":   { bolt:'6x132',   bore:78.1,  dia:18 },
+  "Chevrolet Tahoe":      { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "Chevrolet Suburban":   { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "Chevrolet Colorado":   { bolt:'6x139.7', bore:78.1,  dia:17 },
+  "Chevrolet Blazer":     { bolt:'5x120',   bore:70.3,  dia:19 },
+  "Chevrolet Trax":       { bolt:'5x105',   bore:56.6,  dia:17 },
+  "Chevrolet Trailblazer":{ bolt:'5x105',   bore:56.6,  dia:17 },
+  "Chevrolet Malibu":     { bolt:'5x115',   bore:70.3,  dia:18 },
+  "Chevrolet Camaro":     { bolt:'5x120',   bore:66.9,  dia:20 },
+  "Chevrolet Corvette":   { bolt:'5x120',   bore:70.3,  dia:19 },
+  "Chevrolet Spark":      { bolt:'4x100',   bore:56.6,  dia:15 },
+  // GMC
+  "GMC Sierra 1500":      { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "GMC Sierra 2500":      { bolt:'8x180',   bore:124.1, dia:18 },
+  "GMC Sierra 3500":      { bolt:'8x180',   bore:124.1, dia:17 },
+  "GMC Terrain":          { bolt:'5x115',   bore:70.3,  dia:17 },
+  "GMC Acadia":           { bolt:'6x132',   bore:78.1,  dia:18 },
+  "GMC Yukon":            { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "GMC Yukon XL":         { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "GMC Canyon":           { bolt:'6x139.7', bore:78.1,  dia:17 },
+  "GMC Envoy":            { bolt:'5x127',   bore:78.1,  dia:17 },
+  "GMC Envista":          { bolt:'5x105',   bore:56.6,  dia:17 },
+  // Dodge
+  "Dodge Durango":        { bolt:'5x139.7', bore:71.5,  dia:18 },
+  "Dodge Charger":        { bolt:'5x115',   bore:71.5,  dia:18 },
+  "Dodge Challenger":     { bolt:'5x115',   bore:71.5,  dia:18 },
+  "Dodge Grand Caravan":  { bolt:'5x127',   bore:71.5,  dia:17 },
+  "Dodge Hornet":         { bolt:'5x110',   bore:65.1,  dia:18 },
+  // RAM
+  "RAM 1500":             { bolt:'5x139.7', bore:77.8,  dia:18 },
+  "RAM 2500":             { bolt:'8x165.1', bore:116.9, dia:18 },
+  "RAM 3500":             { bolt:'8x165.1', bore:116.9, dia:17 },
+  "RAM ProMaster City":   { bolt:'5x108',   bore:65.1,  dia:16 },
+  "RAM 1500 Classic":     { bolt:'5x139.7', bore:77.8,  dia:17 },
+  // Hyundai
+  "Hyundai Elantra":      { bolt:'5x114.3', bore:67.1,  dia:17 },
   "Hyundai Tucson":       { bolt:'5x114.3', bore:67.1,  dia:17 },
   "Hyundai Santa Fe":     { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Hyundai Santa Cruz":   { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Hyundai Sonata":       { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Hyundai Kona":         { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Hyundai Palisade":     { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Hyundai Venue":        { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Hyundai Ioniq5":       { bolt:'5x114.3', bore:67.1,  dia:19 },
+  "Hyundai Ioniq6":       { bolt:'5x114.3', bore:67.1,  dia:18 },
+  // Kia
+  "Kia Sportage":         { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Kia Sorento":          { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Kia Telluride":        { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Kia Soul":             { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Kia Forte":            { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Kia K5":               { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Kia Carnival":         { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Kia EV6":              { bolt:'5x114.3', bore:67.1,  dia:19 },
+  "Kia Niro":             { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Kia Seltos":           { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Kia Stinger":          { bolt:'5x114.3', bore:67.1,  dia:18 },
+  // Nissan
   "Nissan Altima":        { bolt:'5x114.3', bore:66.1,  dia:17 },
   "Nissan Rogue":         { bolt:'5x114.3', bore:66.1,  dia:17 },
   "Nissan Frontier":      { bolt:'6x114.3', bore:66.1,  dia:16 },
+  "Nissan Titan":         { bolt:'6x139.7', bore:78.1,  dia:18 },
+  "Nissan Pathfinder":    { bolt:'5x114.3', bore:66.1,  dia:18 },
+  "Nissan Murano":        { bolt:'5x114.3', bore:66.1,  dia:18 },
+  "Nissan Sentra":        { bolt:'5x114.3', bore:66.1,  dia:16 },
+  "Nissan Kicks":         { bolt:'5x114.3', bore:66.1,  dia:16 },
+  "Nissan Armada":        { bolt:'6x139.7', bore:66.1,  dia:18 },
+  "Nissan Maxima":        { bolt:'5x114.3', bore:66.1,  dia:18 },
+  "Nissan Versa":         { bolt:'4x100',   bore:60.1,  dia:15 },
+  "Nissan Qashqai":       { bolt:'5x114.3', bore:66.1,  dia:17 },
+  // Subaru
   "Subaru Outback":       { bolt:'5x100',   bore:56.1,  dia:18 },
   "Subaru Forester":      { bolt:'5x100',   bore:56.1,  dia:17 },
+  "Subaru Crosstrek":     { bolt:'5x100',   bore:56.1,  dia:17 },
+  "Subaru Impreza":       { bolt:'5x100',   bore:56.1,  dia:16 },
+  "Subaru Legacy":        { bolt:'5x100',   bore:56.1,  dia:18 },
+  "Subaru Ascent":        { bolt:'5x114.3', bore:56.1,  dia:18 },
+  "Subaru WRX":           { bolt:'5x114.3', bore:56.1,  dia:17 },
+  "Subaru BRZ":           { bolt:'5x100',   bore:56.1,  dia:17 },
+  "Subaru Solterra":      { bolt:'5x114.3', bore:56.1,  dia:18 },
+  // Volkswagen
   "Volkswagen Jetta":     { bolt:'5x112',   bore:57.1,  dia:17 },
+  "Volkswagen Tiguan":    { bolt:'5x112',   bore:57.1,  dia:17 },
+  "Volkswagen Golf":      { bolt:'5x112',   bore:57.1,  dia:17 },
+  "Volkswagen Golf GTI":  { bolt:'5x112',   bore:57.1,  dia:18 },
+  "Volkswagen Golf R":    { bolt:'5x112',   bore:57.1,  dia:19 },
+  "Volkswagen Atlas":     { bolt:'5x112',   bore:57.1,  dia:18 },
+  "Volkswagen Atlas Cross Sport": { bolt:'5x112', bore:57.1, dia:18 },
+  "Volkswagen Taos":      { bolt:'5x112',   bore:57.1,  dia:17 },
+  "Volkswagen Arteon":    { bolt:'5x112',   bore:57.1,  dia:18 },
+  "Volkswagen ID4":       { bolt:'5x112',   bore:57.1,  dia:20 },
+  // Jeep
+  "Jeep Wrangler":        { bolt:'5x127',   bore:71.5,  dia:17 },
+  "Jeep Grand Cherokee":  { bolt:'5x127',   bore:71.5,  dia:18 },
+  "Jeep Grand Cherokee L":{ bolt:'5x127',   bore:71.5,  dia:18 },
+  "Jeep Cherokee":        { bolt:'5x127',   bore:71.5,  dia:17 },
+  "Jeep Compass":         { bolt:'5x110',   bore:65.1,  dia:17 },
+  "Jeep Renegade":        { bolt:'5x110',   bore:65.1,  dia:17 },
+  "Jeep Gladiator":       { bolt:'5x127',   bore:71.5,  dia:17 },
+  "Jeep Commander":       { bolt:'5x127',   bore:71.5,  dia:18 },
+  // Cadillac
+  "Cadillac Escalade":    { bolt:'6x139.7', bore:78.1,  dia:22 },
+  "Cadillac Escalade ESV":{ bolt:'6x139.7', bore:78.1,  dia:22 },
+  "Cadillac XT4":         { bolt:'5x114.3', bore:70.3,  dia:18 },
+  "Cadillac XT5":         { bolt:'5x114.3', bore:70.3,  dia:18 },
+  "Cadillac XT6":         { bolt:'5x114.3', bore:70.3,  dia:20 },
+  "Cadillac CT4":         { bolt:'5x114.3', bore:70.3,  dia:18 },
+  "Cadillac CT5":         { bolt:'5x114.3', bore:70.3,  dia:18 },
+  "Cadillac Lyriq":       { bolt:'5x114.3', bore:70.3,  dia:20 },
+  // Mazda
+  "Mazda CX-5":           { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Mazda CX-50":          { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Mazda CX-90":          { bolt:'5x114.3', bore:67.1,  dia:20 },
+  "Mazda CX-30":          { bolt:'5x114.3', bore:67.1,  dia:18 },
+  "Mazda Mazda3":         { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Mazda Mazda3 Sport":   { bolt:'5x114.3', bore:67.1,  dia:17 },
+  "Mazda MX-5 Miata":     { bolt:'5x114.3', bore:67.1,  dia:16 },
+  "Mazda CX-70":          { bolt:'5x114.3', bore:67.1,  dia:20 },
 };
 
 // ─────────────────────────────────────────────────
@@ -2004,7 +2162,12 @@ function filterWheels(type, btn) {
 function renderWheels() {
   const grid = document.getElementById('tireGrid');
   if (!filteredWheels.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);font-size:14px">No wheels found. Try adjusting the filter or search above.</div>`;
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px">
+      <div style="font-size:40px;margin-bottom:12px">🔩</div>
+      <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:8px">No wheels found for that search</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:20px">TDG's wheel inventory is more limited than tires — we may still be able to source what you need.</div>
+      <a href="tel:5193805104" style="display:inline-flex;align-items:center;gap:8px;background:var(--yellow);color:var(--black);padding:10px 20px;border-radius:2px;font-weight:700;font-size:13px;text-decoration:none">📞 Call us — 519-380-5104</a>
+    </div>`;
     return;
   }
   grid.innerHTML = filteredWheels.map((w, i) => {
@@ -2609,7 +2772,13 @@ async function doWheelVehicleLookup() {
     const params = { boltPatterns: [oemWheel.bolt], diameters: [oemWheel.dia] };
     if (cat) params.category = cat;
     await loadWheels(params);
-    textEl.innerHTML = `Showing <strong>${filteredWheels.length}</strong> compatible wheels for <strong>${y} ${mk} ${md}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>.`;
+    if (!filteredWheels.length) {
+      // Relax diameter constraint — show all for this bolt pattern
+      textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — no exact OEM size in stock. Showing all <strong>${oemWheel.bolt}</strong> wheels — call us to confirm fitment.`;
+      await loadWheels(cat ? { boltPatterns: [oemWheel.bolt], category: cat } : { boltPatterns: [oemWheel.bolt] });
+    } else {
+      textEl.innerHTML = `Showing <strong>${filteredWheels.length}</strong> compatible wheels for <strong>${y} ${mk} ${md}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>.`;
+    }
   } else {
     textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong>. Showing full wheel inventory — call us to confirm fitment.`;
     resultEl.classList.add('show');
@@ -2623,19 +2792,45 @@ async function doWheelSizeSearch() {
   const dia  = parseInt(document.getElementById('wDiameter').value) || null;
   const wid  = parseFloat(document.getElementById('wWidth').value) || null;
   const cat  = document.getElementById('wCategory').value || null;
+  const isStaggered = document.getElementById('staggeredCheck').checked;
+  const bolt2 = document.getElementById('wBoltPattern2').value;
+  const dia2  = parseInt(document.getElementById('wDiameter2').value) || null;
+  const wid2  = parseFloat(document.getElementById('wWidth2').value) || null;
   if (!bolt) { alert('Please select a bolt pattern.'); return; }
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
   let desc = `bolt pattern <strong>${bolt}</strong>`;
   if (dia) desc += `, <strong>${dia}"</strong> diameter`;
   if (wid) desc += `, <strong>${wid}"</strong> wide`;
+  if (isStaggered && (bolt2 || dia2)) desc += ` + rear size`;
   textEl.innerHTML = `Searching wheels — ${desc}…`;
   resultEl.classList.add('show');
   const params = { boltPatterns: [bolt] };
   if (dia) params.diameters = [dia];
   if (wid) params.widths = [wid];
   if (cat) params.category = cat;
+  // For staggered, merge both bolt patterns so API returns wheels for both sizes
+  if (isStaggered && (bolt2 || dia2)) {
+    const rearBolt = bolt2 || bolt;
+    if (rearBolt !== bolt) params.boltPatterns = [bolt, rearBolt];
+    if (dia2 && dia2 !== dia) { params.diameters = params.diameters || []; if (!params.diameters.includes(String(dia2))) params.diameters.push(String(dia2)); }
+    if (wid2 && wid2 !== wid) { params.widths = params.widths || []; if (!params.widths.includes(String(wid2))) params.widths.push(String(wid2)); }
+  }
   await loadWheels(params);
-  textEl.innerHTML = `Found <strong>${filteredWheels.length}</strong> wheel${filteredWheels.length!==1?'s':''} — ${desc}.`;
+  if (!filteredWheels.length) {
+    // Graceful fallback — relax to bolt pattern only
+    textEl.innerHTML = `No exact match for ${desc} — showing all <strong>${bolt}</strong> wheels instead. Call us to confirm fitment.`;
+    const fallback = { boltPatterns: [bolt] };
+    if (cat) fallback.category = cat;
+    await loadWheels(fallback);
+    if (!filteredWheels.length) {
+      // Last resort — show everything
+      textEl.innerHTML = `No wheels found for that size. Showing full inventory — <a href="tel:5193805104" style="color:var(--yellow)">call us at 519-380-5104</a> to find your fitment.`;
+      await loadWheels(null);
+    }
+  } else {
+    const staggeredNote = isStaggered ? ' (staggered set)' : '';
+    textEl.innerHTML = `Found <strong>${filteredWheels.length}</strong> wheel${filteredWheels.length!==1?'s':''} — ${desc}${staggeredNote}.`;
+  }
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
 
@@ -2649,6 +2844,18 @@ function initWheelDropdowns() {
   WHEEL_DIAMETERS.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d + '"'; dEl.appendChild(o); });
   const wEl = document.getElementById('wWidth');
   WHEEL_WIDTHS.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + '"'; wEl.appendChild(o); });
+  // Populate staggered dropdowns
+  const bp2 = document.getElementById('wBoltPattern2');
+  BOLT_PATTERNS.forEach(bp => { const o = document.createElement('option'); o.value = bp; o.textContent = bp; bp2.appendChild(o); });
+  const d2 = document.getElementById('wDiameter2');
+  WHEEL_DIAMETERS.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d + '"'; d2.appendChild(o); });
+  const w2 = document.getElementById('wWidth2');
+  WHEEL_WIDTHS.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + '"'; w2.appendChild(o); });
+}
+
+function toggleStaggered() {
+  const checked = document.getElementById('staggeredCheck').checked;
+  document.getElementById('staggeredRow').style.display = checked ? 'block' : 'none';
 }
 
 // ─────────────────────────────────────────────────
