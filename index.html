@@ -101,6 +101,16 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .chip.active,.chip:hover{background:var(--yellow);border-color:var(--yellow);color:var(--black)}
 .cat-meta{font-size:13px;color:var(--muted)}
 .cat-meta span{color:var(--light);font-weight:600}
+/* ── REFINE BAR ── */
+.refine-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:2px;font-size:13px}
+.refine-bar select{background:var(--raised);color:var(--white);border:1px solid var(--border);border-radius:2px;padding:5px 10px;font-size:13px;cursor:pointer;font-family:'Barlow',sans-serif}
+.refine-bar select:focus{outline:none;border-color:var(--yellow)}
+.refine-label{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.refine-divider{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.refine-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;color:var(--light);font-size:13px}
+.refine-toggle input{accent-color:var(--yellow);width:15px;height:15px;cursor:pointer}
+.refine-clear{margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);border-radius:2px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s}
+.refine-clear:hover{border-color:var(--yellow);color:var(--yellow)}
 .tire-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:2px}
 .tire-card{background:var(--card);border:1px solid var(--border);padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;animation:fadeUp .4s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -840,6 +850,39 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
         <button class="chip" onclick="filterTires('truck',this)">Truck &amp; SUV</button>
       </div>
       <div class="cat-meta">Showing <span id="tireCount">—</span> tires</div>
+    </div>
+    <!-- Refine bar -->
+    <div class="refine-bar" id="refineBar">
+      <label class="refine-toggle">
+        <input type="checkbox" id="inStockOnly" onchange="applyRefinements()">
+        <span>In Stock Only</span>
+      </label>
+      <div class="refine-divider"></div>
+      <label class="refine-label">Brand</label>
+      <select id="brandFilter" onchange="applyRefinements()">
+        <option value="">All Brands</option>
+      </select>
+      <div class="refine-divider"></div>
+      <label class="refine-label">Price</label>
+      <select id="priceFilter" onchange="applyRefinements()">
+        <option value="">Any Price</option>
+        <option value="0-100">Under $100</option>
+        <option value="100-150">$100 – $150</option>
+        <option value="150-200">$150 – $200</option>
+        <option value="200-300">$200 – $300</option>
+        <option value="300-500">$300 – $500</option>
+        <option value="500-9999">$500+</option>
+      </select>
+      <div class="refine-divider"></div>
+      <label class="refine-label">Sort</label>
+      <select id="sortOrder" onchange="applyRefinements()">
+        <option value="default">Default</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="brand">Brand A → Z</option>
+        <option value="name">Name A → Z</option>
+      </select>
+      <button class="refine-clear" onclick="clearRefinements()">✕ Clear filters</button>
     </div>
   </div>
 
@@ -1633,13 +1676,57 @@ function applyFilter(type) {
   activeFilter = type;
   filteredTires = type === 'all' ? allTires : allTires.filter(t => t.type === type);
   document.getElementById('tireCount').textContent = filteredTires.length;
+  populateBrandFilter();
   renderTires();
 }
 
 function filterTires(type, btn) {
   document.querySelectorAll('#tire-chips-row .chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
-  applyFilter(type);
+  activeFilter = type;
+  populateBrandFilter();
+  applyRefinements();
+}
+
+function populateBrandFilter() {
+  const sel = document.getElementById('brandFilter');
+  if (!sel) return;
+  const base = activeFilter === 'all' ? allTires : allTires.filter(t => t.type === activeFilter);
+  const brands = [...new Set(base.map(t => t.brand))].filter(Boolean).sort();
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Brands</option>' +
+    brands.map(b => `<option value="${b}"${b === current ? ' selected' : ''}>${b}</option>`).join('');
+}
+
+function applyRefinements() {
+  const inStockOnly = document.getElementById('inStockOnly')?.checked;
+  const brand       = document.getElementById('brandFilter')?.value  || '';
+  const price       = document.getElementById('priceFilter')?.value  || '';
+  const sort        = document.getElementById('sortOrder')?.value    || 'default';
+
+  let tires = activeFilter === 'all' ? allTires : allTires.filter(t => t.type === activeFilter);
+  if (inStockOnly) tires = tires.filter(t => t.stock !== 'out');
+  if (brand)       tires = tires.filter(t => t.brand === brand);
+  if (price) {
+    const [lo, hi] = price.split('-').map(Number);
+    tires = tires.filter(t => { const p = retailPrice(t); return p >= lo && p <= hi; });
+  }
+  if (sort === 'price-asc')  tires = [...tires].sort((a, b) => retailPrice(a) - retailPrice(b));
+  if (sort === 'price-desc') tires = [...tires].sort((a, b) => retailPrice(b) - retailPrice(a));
+  if (sort === 'brand')      tires = [...tires].sort((a, b) => a.brand.localeCompare(b.brand));
+  if (sort === 'name')       tires = [...tires].sort((a, b) => a.name.localeCompare(b.name));
+
+  filteredTires = tires;
+  document.getElementById('tireCount').textContent = filteredTires.length;
+  renderTires();
+}
+
+function clearRefinements() {
+  ['inStockOnly','brandFilter','priceFilter','sortOrder'].forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    if (el.type === 'checkbox') el.checked = false; else el.value = '';
+  });
+  applyRefinements();
 }
 
 // ─────────────────────────────────────────────────
