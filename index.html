@@ -1428,8 +1428,7 @@ async function loadTires(searchParams = null) {
 //  LOAD WHEELS FROM TDG
 // ─────────────────────────────────────────────────
 async function loadWheels(searchParams = null) {
-  catalogMode = 'wheels';
-  switchCatalogType('wheels');
+  if (searchParams) { catalogMode = 'wheels'; switchCatalogType('wheels'); }
   showCatalogLoading(true);
   try {
     let products = [], inventoryMap = {};
@@ -2201,7 +2200,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initMemberState();
   initCookie();
   loadTires();
-  loadWheels();
 });
 
 </script>
