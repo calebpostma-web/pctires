@@ -1429,15 +1429,10 @@ async function loadTires(searchParams = null) {
       products = extractData(prodRes);
       extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
     } else {
-      // Default: fetch full catalog via product/all + inventory/all
-      console.log('[TDG] loadTires: fetching full catalog');
-      const [prodRes, invRes] = await Promise.all([
-        tdgFetch('all', {}),
-        tdgFetch('inventoryAll', {}),
-      ]);
-      products = extractData(prodRes);
-      extractData(invRes).forEach(i => { if (i?.itemNumber) inventoryMap[i.itemNumber] = i; });
-      console.log('[TDG] default full catalog products:', products.length);
+      // No search params — show idle prompt, don't hit the API
+      allTires = [];
+      showCatalogIdle();
+      return;
     }
 
     console.log('[TDG] raw products:', products.length);
@@ -1554,6 +1549,18 @@ function showCatalogLoading(on) {
       document.head.appendChild(s);
     }
   }
+}
+
+function showCatalogIdle() {
+  document.getElementById('tireCount').textContent = '—';
+  document.getElementById('tireGrid').innerHTML = `
+    <div style="grid-column:1/-1;text-align:center;padding:64px 20px;color:var(--muted)">
+      <div style="font-size:48px;margin-bottom:16px">🔍</div>
+      <div style="font-size:18px;font-weight:700;color:var(--fg);margin-bottom:8px">Search to see results</div>
+      <div style="font-size:14px;max-width:360px;margin:0 auto;line-height:1.6">
+        Use <strong>Search by Vehicle</strong> or <strong>Search by Size</strong> above to find tires that fit.
+      </div>
+    </div>`;
 }
 
 // ─────────────────────────────────────────────────
