@@ -2090,30 +2090,43 @@ async function doLookup() {
   const mk = document.getElementById('vMake').value;
   const md = document.getElementById('vModel').value;
   const trim = document.getElementById('vTrim').value;
-  const tireOpt = document.getElementById('vTireOption').value;
+  const tireOptEl = document.getElementById('vTireOption');
+  const tireOpt = tireOptEl ? tireOptEl.value : '';
   if (!y || !mk || !md) { alert('Please select Year, Make and Model.'); return; }
   const vehicleKey = `${mk} ${md}`;
-  const tireSize = tireOpt || OEM_SIZES[vehicleKey] || null;
+
+  // Resolve tire size: explicit selection → OEM_SIZES → first OEM_ALT_SIZES entry
+  const altSizes = OEM_ALT_SIZES[vehicleKey] || [];
+  const tireSize = tireOpt || OEM_SIZES[vehicleKey] || altSizes[0] || null;
+
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
   const trimLabel = trim ? ` ${trim}` : '';
 
   const searchParams = {};
-  if (tireSize) searchParams.tireSizes = [tireSize];
+  // If we have a specific size use it; otherwise search all sizes for this vehicle from OEM_ALT_SIZES
+  if (tireSize) {
+    // Include all known sizes for this vehicle for broader results
+    const allSizes = [...new Set([tireSize, ...altSizes])].filter(Boolean);
+    searchParams.tireSizes = allSizes;
+  }
   const season = seasonToTDG(activeSeason);
   if (season) searchParams.tireSeason = season;
 
   if (tireSize) {
     textEl.innerHTML = `Searching for <strong>${y} ${mk} ${md}${trimLabel}</strong> — size <strong>${tireSize}</strong>…`;
   } else {
-    textEl.innerHTML = `Searching full inventory for <strong>${y} ${mk} ${md}${trimLabel}</strong>…`;
+    textEl.innerHTML = `Searching inventory for <strong>${y} ${mk} ${md}${trimLabel}</strong>…`;
   }
   resultEl.classList.add('show');
   switchCatalogType('tires');
-  await loadTires(Object.keys(searchParams).length ? searchParams : null);
+
+  // Always pass searchParams (even if only season filter) - never pass null from vehicle search
+  await loadTires(Object.keys(searchParams).length ? searchParams : { tireSizes: ['225/65R17','235/65R17','245/65R17'] });
+
   if (tireSize) {
     textEl.innerHTML = `<strong>${y} ${mk} ${md}${trimLabel}</strong> — showing <strong>${filteredTires.length}</strong> tires for size <strong>${tireSize}</strong>.`;
   } else {
-    textEl.innerHTML = `<strong>${y} ${mk} ${md}${trimLabel}</strong> — showing all available inventory.`;
+    textEl.innerHTML = `<strong>${y} ${mk} ${md}${trimLabel}</strong> — showing <strong>${filteredTires.length}</strong> tires.`;
   }
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
