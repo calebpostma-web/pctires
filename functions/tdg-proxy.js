@@ -1,6 +1,7 @@
 /**
  * Cloudflare Pages Function: /functions/tdg-proxy.js
  * Proxies requests to the TDG Access API
+ * Reads action + payload from POST JSON body.
  */
 
 const TDG_API_BASE = 'https://www.tdgaccess.ca/api';
@@ -13,17 +14,10 @@ const CORS = {
   'Content-Type': 'application/json',
 };
 
-const HEADERS = {
+const AUTH = {
   'Content-Type': 'application/json',
   'Authorization': `ApiKey ${TDG_API_KEY}`,
 };
-
-// Parse a param that might be a comma-separated string into an array
-function toArray(val) {
-  if (!val) return undefined;
-  if (Array.isArray(val)) return val;
-  return val.split(',').map(s => decodeURIComponent(s.trim())).filter(Boolean);
-}
 
 export async function onRequest(context) {
   const { request } = context;
@@ -33,101 +27,57 @@ export async function onRequest(context) {
   }
 
   try {
-    const url    = new URL(request.url);
-    const p      = Object.fromEntries(url.searchParams.entries());
-    const action = p.action || 'search';
+    let action = 'search';
+    let payload = {};
 
-    let tdgUrl, payload = {}, method = 'POST';
-
-    // Build shared search payload from query params
-    if (p.tireSizes)    payload.tireSizes    = toArray(p.tireSizes);
-    if (p.brands)       payload.brands       = toArray(p.brands);
-    if (p.tireSeason)   payload.tireSeason   = parseInt(p.tireSeason);
-    if (p.serviceType)  payload.serviceType  = p.serviceType;
-    if (p.itemnumbers)  payload.itemnumbers  = toArray(p.itemnumbers);
-    if (p.partnumbers)  payload.partnumbers  = toArray(p.partnumbers);
-    if (p.boltPatterns) payload.boltPatterns = toArray(p.boltPatterns);
-    if (p.diameters)    payload.diameters    = toArray(p.diameters);
-    if (p.widths)       payload.widths       = toArray(p.widths);
-
-    switch (action) {
-
-      // ── Product endpoints ──────────────────────────
-      case 'search':
-        tdgUrl = `${TDG_API_BASE}/product/search`;
-        break;
-
-      case 'all':
-        tdgUrl  = `${TDG_API_BASE}/product/all`;
-        break;
-
-      // ── Inventory endpoints ────────────────────────
-      case 'inventory':
-        tdgUrl = `${TDG_API_BASE}/inventory/search`;
-        break;
-
-      case 'inventoryAll':
-        tdgUrl  = `${TDG_API_BASE}/inventory/all`;
-        payload = null;
-        method  = 'GET';
-        break;
-
-      // ── Account endpoints (all GET, no body) ───────
-      case 'shippingAddresses':
-        tdgUrl  = `${TDG_API_BASE}/account/shippingAddresses`;
-        payload = null;
-        method  = 'GET';
-        break;
-
-      case 'shippingMethods':
-        tdgUrl  = `${TDG_API_BASE}/account/shippingMethods`;
-        payload = null;
-        method  = 'GET';
-        break;
-
-      case 'pickupLocations':
-        tdgUrl  = `${TDG_API_BASE}/account/pickupLocations`;
-        payload = null;
-        method  = 'GET';
-        break;
-
-      case 'paymentMethods':
-        tdgUrl  = `${TDG_API_BASE}/account/paymentMethods`;
-        payload = null;
-        method  = 'GET';
-        break;
-
-      // ── Order endpoints (POST with JSON body) ──────
-      case 'orderQuote': {
-        tdgUrl  = `${TDG_API_BASE}/order/quote`;
-        // Expect full order payload posted as JSON body
-        const body = await request.json().catch(() => ({}));
-        payload = body;
-        break;
+    if (request.method === 'POST') {
+      try {
+        const body = await request.json();
+        action  = body.path    || body.action || 'search';
+        payload = body.payload || {};
+      } catch {
+        // malformed body — fall through with defaults
       }
-
-      case 'orderCreate': {
-        tdgUrl  = `${TDG_API_BASE}/order/create`;
-        const body = await request.json().catch(() => ({}));
-        payload = body;
-        break;
-      }
-
-      case 'orderStatus': {
-        tdgUrl  = `${TDG_API_BASE}/order/status`;
-        const body = await request.json().catch(() => ({}));
-        payload = body;
-        break;
-      }
-
-      default:
-        return new Response(JSON.stringify({ error: 'Unknown action' }), { status: 400, headers: CORS });
+    } else {
+      const url = new URL(request.url);
+      const p   = Object.fromEntries(url.searchParams.entries());
+      action = p.action || 'search';
+      const toArray = v => v ? (Array.isArray(v) ? v : v.split(',').map(s => s.trim()).filter(Boolean)) : undefined;
+      if (p.tireSizes)    payload.tireSizes    = toArray(p.tireSizes);
+      if (p.brands)       payload.brands       = toArray(p.brands);
+      if (p.tireSeason)   payload.tireSeason   = parseInt(p.tireSeason);
+      if (p.serviceType)  payload.serviceType  = p.serviceType;
+      if (p.itemnumbers)  payload.itemnumbers  = toArray(p.itemnumbers);
+      if (p.partnumbers)  payload.partnumbers  = toArray(p.partnumbers);
+      if (p.boltPatterns) payload.boltPatterns = toArray(p.boltPatterns);
+      if (p.diameters)    payload.diameters    = toArray(p.diameters);
+      if (p.widths)       payload.widths       = toArray(p.widths);
     }
 
-    const res = await fetch(tdgUrl, {
+    let tdgUrl;
+    let method   = 'POST';
+    let sendBody = true;
+
+    switch (action) {
+      case 'search':        tdgUrl = `${TDG_API_BASE}/product/search`;           break;
+      case 'inventory':     tdgUrl = `${TDG_API_BASE}/inventory/search`;         break;
+      case 'all':           tdgUrl = `${TDG_API_BASE}/product/all`;              break;
+      case 'inventoryAll':  tdgUrl = `${TDG_API_BASE}/inventory/all`;  method = 'GET'; sendBody = false; break;
+      case 'shippingAddresses': tdgUrl = `${TDG_API_BASE}/account/shippingAddresses`; method = 'GET'; sendBody = false; break;
+      case 'shippingMethods':   tdgUrl = `${TDG_API_BASE}/account/shippingMethods`;   method = 'GET'; sendBody = false; break;
+      case 'paymentMethods':    tdgUrl = `${TDG_API_BASE}/account/paymentMethods`;    method = 'GET'; sendBody = false; break;
+      case 'pickupLocations':   tdgUrl = `${TDG_API_BASE}/account/pickuplocations`;   method = 'GET'; sendBody = false; break;
+      case 'quote':         tdgUrl = `${TDG_API_BASE}/order/quote`;              break;
+      case 'orderCreate':   tdgUrl = `${TDG_API_BASE}/order/create`;             break;
+      case 'orderStatus':   tdgUrl = `${TDG_API_BASE}/order/status`;             break;
+      default:
+        return new Response(JSON.stringify({ error: 'Unknown action', action }), { status: 400, headers: CORS });
+    }
+
+    const res  = await fetch(tdgUrl, {
       method,
-      headers: HEADERS,
-      ...(payload !== null ? { body: JSON.stringify(payload) } : {}),
+      headers: AUTH,
+      ...(sendBody ? { body: JSON.stringify(payload) } : {}),
     });
 
     const text = await res.text();
