@@ -472,35 +472,6 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .lookup-tab.active{color:var(--yellow);border-bottom-color:var(--yellow)}
 .lookup-tab:hover:not(.active){color:var(--light)}
 .lookup-panel{display:none}.lookup-panel.active{display:block}
-/* ── VIN LOOKUP ── */
-.vin-badge{display:inline-block;background:var(--yellow);color:var(--black);font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle}
-.vin-intro{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;margin-bottom:18px;font-size:13px;color:var(--light);line-height:1.6}
-.vin-intro-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-.vin-input-row{display:flex;gap:10px;align-items:flex-end}
-.vin-field-wrap{flex:1;position:relative}
-.vin-input{width:100%;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:12px 80px 12px 16px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:16px;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .2s}
-.vin-input:focus{border-color:var(--yellow)}
-.vin-input.valid{border-color:var(--green)}
-.vin-input.invalid{border-color:var(--red)}
-.vin-chars{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);pointer-events:none}
-.vin-result{margin-top:16px}
-.vin-card{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:18px 20px}
-.vin-card.success{border-color:rgba(34,197,94,.3);background:var(--green-dim)}
-.vin-card.error{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.05)}
-.vin-vehicle-title{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-.vin-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:14px}
-.vin-spec{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:8px 12px}
-.vin-spec-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
-.vin-spec-value{font-size:13px;font-weight:600;color:var(--white)}
-.vin-spec-value.highlight{color:var(--yellow);font-family:'IBM Plex Mono',monospace;font-size:15px}
-.vin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.vin-search-btn{background:var(--yellow);color:var(--black);border:none;padding:11px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
-.vin-search-btn:hover{background:var(--yellow-dark)}
-.vin-alt-btn{background:var(--raised);color:var(--light);border:1px solid var(--border);padding:11px 18px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-.vin-alt-btn:hover{border-color:var(--yellow);color:var(--yellow)}
-.vin-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;padding:16px 0}
-.vin-spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--yellow);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
-@media(max-width:600px){.vin-input-row{flex-direction:column}.vin-input{font-size:14px;letter-spacing:2px}}
 .size-search-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
 .size-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;flex:1;min-width:260px}
 .size-hint{font-size:13px;color:var(--light);margin-top:16px;line-height:1.8;background:var(--raised);border:1px solid var(--border);border-radius:3px;padding:12px 14px}
@@ -590,6 +561,70 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   .time-grid{grid-template-columns:repeat(3,1fr)}
   .time-slot{font-size:12px;padding:9px 4px}
 }
+
+/* ── TIRE DECISION GUIDE ── */
+.tdg-section{padding:80px 40px;background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.tdg-inner{max-width:860px;margin:0 auto}
+.tdg-intro{text-align:center;margin-bottom:48px}
+.tdg-steps{display:flex;gap:8px;margin-bottom:36px;justify-content:center}
+.tdg-step-dot{width:28px;height:4px;border-radius:2px;background:var(--border);transition:background .3s}
+.tdg-step-dot.done{background:var(--yellow-dark)}
+.tdg-step-dot.active{background:var(--yellow)}
+.tdg-question{font-family:'Barlow Condensed',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;text-align:center}
+.tdg-hint{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px}
+.tdg-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:32px}
+.tdg-option{background:var(--card);border:2px solid var(--border);border-radius:2px;padding:20px 18px;cursor:pointer;transition:all .2s;text-align:left}
+.tdg-option:hover{border-color:var(--mid);background:var(--raised)}
+.tdg-option.selected{border-color:var(--yellow);background:var(--yellow-dim)}
+.tdg-option-icon{font-size:26px;margin-bottom:10px;display:block}
+.tdg-option-label{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--white);margin-bottom:4px}
+.tdg-option-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.tdg-option.selected .tdg-option-label{color:var(--yellow)}
+.tdg-option.selected .tdg-option-desc{color:var(--light)}
+.tdg-nav{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.tdg-back{background:none;border:1px solid var(--border);color:var(--muted);padding:10px 22px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.tdg-back:hover{border-color:var(--mid);color:var(--light)}
+.tdg-next{background:var(--yellow);color:var(--black);border:none;padding:11px 32px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.tdg-next:hover{background:var(--yellow-dark)}
+.tdg-next:disabled{opacity:.4;cursor:not-allowed}
+.tdg-results-header{text-align:center;margin-bottom:28px}
+.tdg-results-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(26px,3.5vw,40px);font-weight:900;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.tdg-results-sub{font-size:14px;color:var(--muted)}
+.tdg-picks{display:grid;gap:12px}
+.tdg-pick{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:20px 22px;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;transition:border-color .2s}
+.tdg-pick:hover{border-color:var(--mid)}
+.tdg-pick.top-pick{border-color:rgba(245,197,24,.4);background:var(--yellow-dim)}
+.tdg-pick-rank{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--border);line-height:1;min-width:36px;text-align:center}
+.tdg-pick.top-pick .tdg-pick-rank{color:var(--yellow)}
+.tdg-pick-brand{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.tdg-pick-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--white);margin-bottom:4px}
+.tdg-pick-why{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.tdg-pick-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tdg-pick-tag{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:2px;background:var(--raised);border:1px solid var(--border);color:var(--muted)}
+.tdg-pick-tag.season{border-color:rgba(245,197,24,.3);color:var(--yellow);background:var(--yellow-dim)}
+.tdg-pick-right{text-align:right;flex-shrink:0}
+.tdg-pick-price{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--white);line-height:1}
+.tdg-pick-each{font-size:11px;color:var(--muted);margin-bottom:10px}
+.tdg-pick-add{background:var(--yellow);color:var(--black);border:none;padding:9px 18px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tdg-pick-add:hover{background:var(--yellow-dark)}
+.tdg-pick-add:disabled{opacity:.4;cursor:not-allowed;background:var(--mid)}
+.tdg-restart{display:block;margin:24px auto 0;background:none;border:1px solid var(--border);color:var(--muted);padding:10px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.tdg-restart:hover{border-color:var(--mid);color:var(--light)}
+.tdg-loading{text-align:center;padding:48px 0;color:var(--muted)}
+.tdg-spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--yellow);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+.tdg-no-results{text-align:center;padding:36px;color:var(--muted);font-size:14px}
+@media(max-width:600px){.tdg-section{padding:48px 24px}.tdg-options{grid-template-columns:1fr 1fr}.tdg-pick{grid-template-columns:1fr auto;grid-template-rows:auto auto}.tdg-pick-rank{display:none}}
+
+/* ── REFINE BAR ── */
+.refine-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:2px;font-size:13px}
+.refine-bar select{background:var(--raised);color:var(--white);border:1px solid var(--border);border-radius:2px;padding:5px 10px;font-size:13px;cursor:pointer;font-family:'Barlow',sans-serif}
+.refine-bar select:focus{outline:none;border-color:var(--yellow)}
+.refine-label{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.refine-divider{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.refine-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;color:var(--light);font-size:13px}
+.refine-toggle input{accent-color:var(--yellow);width:15px;height:15px;cursor:pointer}
+.refine-clear{margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);border-radius:2px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s}
+.refine-clear:hover{border-color:var(--yellow);color:var(--yellow)}
 </style>
 </head>
 <body>
@@ -681,30 +716,13 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 
       <!-- Three tabs -->
       <div class="lookup-tabs">
-        <button class="lookup-tab active" id="tab-vin" onclick="switchLookupTab('vin')">🔍 By VIN <span class="vin-badge">Most Accurate</span></button>
-        <button class="lookup-tab" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 By Vehicle</button>
+        <button class="lookup-tab active" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 By Vehicle</button>
         <button class="lookup-tab" id="tab-size" onclick="switchLookupTab('size')">📏 By Tire Size</button>
         <button class="lookup-tab" id="tab-wheels" onclick="switchLookupTab('wheels')">🔩 Shop Wheels</button>
       </div>
 
-      <!-- VIN panel -->
-      <div class="lookup-panel active" id="panel-vin">
-        <div class="vin-intro">
-          <span class="vin-intro-icon">📍</span>
-          <div>Find your VIN on the <strong>driver's door frame sticker</strong>, your <strong>dashboard (visible through windshield)</strong>, or your <strong>registration / insurance card</strong>. It's always 17 characters.</div>
-        </div>
-        <div class="vin-input-row">
-          <div class="vin-field-wrap">
-            <input type="text" id="vinInput" class="vin-input" placeholder="e.g. 2GCUKREC4P1234567" maxlength="17" oninput="onVinInput(this)" autocomplete="off" spellcheck="false">
-            <div class="vin-chars" id="vinChars">0 / 17</div>
-          </div>
-          <button class="lookup-btn" id="vinSearchBtn" onclick="doVinLookup()" disabled style="opacity:.5;cursor:not-allowed">Decode VIN →</button>
-        </div>
-        <div class="vin-result" id="vinResult"></div>
-      </div>
-
       <!-- Vehicle panel -->
-      <div class="lookup-panel" id="panel-vehicle">
+      <div class="lookup-panel active" id="panel-vehicle">
         <div class="lookup-row">
           <div class="field"><label>Year</label><select id="vYear" onchange="updateMakes()"><option value="">Select Year</option></select></div>
           <div class="field"><label>Make</label><select id="vMake" onchange="updateModels()"><option value="">Select Make</option></select></div>
@@ -813,6 +831,38 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
       </div>
       <div class="cat-meta">Showing <span id="tireCount">—</span> tires</div>
     </div>
+    <div class="refine-bar" id="refineBar">
+      <label class="refine-toggle">
+        <input type="checkbox" id="inStockOnly" onchange="applyRefinements()">
+        <span>In Stock Only</span>
+      </label>
+      <div class="refine-divider"></div>
+      <label class="refine-label">Brand</label>
+      <select id="brandFilter" onchange="applyRefinements()">
+        <option value="">All Brands</option>
+      </select>
+      <div class="refine-divider"></div>
+      <label class="refine-label">Price</label>
+      <select id="priceFilter" onchange="applyRefinements()">
+        <option value="">Any Price</option>
+        <option value="0-100">Under $100</option>
+        <option value="100-150">$100 – $150</option>
+        <option value="150-200">$150 – $200</option>
+        <option value="200-300">$200 – $300</option>
+        <option value="300-500">$300 – $500</option>
+        <option value="500-9999">$500+</option>
+      </select>
+      <div class="refine-divider"></div>
+      <label class="refine-label">Sort</label>
+      <select id="sortOrder" onchange="applyRefinements()">
+        <option value="default">Default</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="brand">Brand A → Z</option>
+        <option value="name">Name A → Z</option>
+      </select>
+      <button class="refine-clear" onclick="clearRefinements()">✕ Clear filters</button>
+    </div>
   </div>
 
   <!-- Wheel chips -->
@@ -852,6 +902,19 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
       <div class="bp-row sel"><span class="bp-icon">⏱️</span><div style="flex:1"><div class="bp-main">Est. time: ~60 minutes</div><div class="bp-sub">Mount · Balance · TPMS reset</div></div><span class="bp-check">✓</span></div>
       <div class="bp-row"><span class="bp-icon">💰</span><div><div class="bp-main">Installation: $25/tire</div><div class="bp-sub">Paid at checkout — no surprises</div></div></div>
     </div>
+  </div>
+</section>
+
+
+<!-- TIRE DECISION GUIDE -->
+<section class="tdg-section" id="decision-guide">
+  <div class="tdg-inner">
+    <div class="tdg-intro">
+      <div class="eyebrow">Not Sure What You Need?</div>
+      <div class="section-title">Tire Decision Guide</div>
+      <p class="section-sub">Answer 4 quick questions and we'll recommend the best tires from our live inventory &mdash; matched to how you drive.</p>
+    </div>
+    <div id="tdgWizard"></div>
   </div>
 </section>
 
@@ -1140,6 +1203,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 const TDG = {
   BASE_URL:  'https://www.tdgaccess.ca/api',
   API_KEY:   'rst715Wr18hFpHpbi346TGuMLBBQDZZbF5lHZQSi27hfpLGey3TH3YRHYWWPJRyi7rkx',
+  BACKEND_URL: 'https://glittery-banoffee-1b1d80.netlify.app',
   STRIPE_PK: 'pk_live_51T86uxRufNpmOxQPt6KAjj4Yb8UOOpJqJAQ2KIae2d9adLFF9Ty8hS4T38GHaGHCOfsFVzBEHWKVGCl2Jq99N5Np00oylz5jPV',
   INSTALL_PRICE:   25,
   MARKUP:          1.35,
@@ -1362,7 +1426,7 @@ function normaliseTire(product, inventory) {
     speed: sp.speedRating || '', loadIndex: sp.loadIndex || '', season: sp.season || TDG.SEASON_LABEL[sp.tireSeason] || 'All-Season',
     runFlat: sp.runFlat === 'Yes', evCompat: sp.eVCompatible === 'Yes', serviceType: sp.serviceType || '',
     map, imageUrl: product.productImageUrl || null,
-    stock: totalQty === 0 ? 'out' : (totalQty <= 4 ? 'low' : 'in'),
+    stock: locs.length === 0 ? 'in' : (bestAvail <= 1 ? 'in' : (bestAvail <= 2 ? 'low' : 'out')),
     qtyAvailable: totalQty, locations: locs,
   };
 }
@@ -1392,7 +1456,7 @@ function normaliseWheel(product, inventory) {
     offset:      parseFloat(sp.offset || 0),
     hubBore:     parseFloat(sp.hubBore || sp.hub_bore || 0),
     price: cost, msrp, map, imageUrl: product.productImageUrl || null,
-    stock: totalQty === 0 ? 'out' : (totalQty <= 4 ? 'low' : 'in'),
+    stock: locs.length === 0 ? 'in' : (bestAvail <= 1 ? 'in' : (bestAvail <= 2 ? 'low' : 'out')),
     qtyAvailable: totalQty, locations: locs,
   };
 }
@@ -1555,9 +1619,50 @@ function showCatalogLoading(on) {
 // ─────────────────────────────────────────────────
 function applyFilter(type) {
   activeFilter = type;
-  filteredTires = type === 'all' ? allTires : allTires.filter(t => t.type === type);
-  document.getElementById('tireCount').textContent = filteredTires.length;
+  populateBrandFilter();
+  applyRefinements();
+}
+
+function populateBrandFilter() {
+  const sel = document.getElementById('brandFilter');
+  if (!sel) return;
+  const base = activeFilter === 'all' ? allTires : allTires.filter(t => t.type === activeFilter);
+  const brands = [...new Set(base.map(t => t.brand))].filter(Boolean).sort();
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Brands</option>' +
+    brands.map(b => `<option value="${b}"${b === current ? ' selected' : ''}>${b}</option>`).join('');
+}
+
+function applyRefinements() {
+  const inStockOnly = document.getElementById('inStockOnly')?.checked;
+  const brand       = document.getElementById('brandFilter')?.value  || '';
+  const price       = document.getElementById('priceFilter')?.value  || '';
+  const sort        = document.getElementById('sortOrder')?.value    || 'default';
+
+  let tires = activeFilter === 'all' ? allTires : allTires.filter(t => t.type === activeFilter);
+  if (inStockOnly) tires = tires.filter(t => t.stock !== 'out');
+  if (brand)       tires = tires.filter(t => t.brand === brand);
+  if (price) {
+    const [lo, hi] = price.split('-').map(Number);
+    tires = tires.filter(t => { const p = retailPrice(t); return p >= lo && p <= hi; });
+  }
+  if (sort === 'price-asc')  tires = [...tires].sort((a, b) => retailPrice(a) - retailPrice(b));
+  if (sort === 'price-desc') tires = [...tires].sort((a, b) => retailPrice(b) - retailPrice(a));
+  if (sort === 'brand')      tires = [...tires].sort((a, b) => a.brand.localeCompare(b.brand));
+  if (sort === 'name')       tires = [...tires].sort((a, b) => a.name.localeCompare(b.name));
+
+  filteredTires = tires;
+  const countEl = document.getElementById('tireCount');
+  if (countEl) countEl.textContent = filteredTires.length;
   renderTires();
+}
+
+function clearRefinements() {
+  ['inStockOnly','brandFilter','priceFilter','sortOrder'].forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    if (el.type === 'checkbox') el.checked = false; else el.value = '';
+  });
+  applyRefinements();
 }
 
 function filterTires(type, btn) {
@@ -1700,7 +1805,7 @@ const OEM_SIZES = {
 //  LOOKUP TAB SWITCHING
 // ─────────────────────────────────────────────────
 function switchLookupTab(tab) {
-  ['vin','vehicle','size','wheels'].forEach(t => {
+  ['vehicle','size','wheels'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('panel-' + t).classList.toggle('active', t === tab);
   });
@@ -2082,7 +2187,7 @@ async function finishOrder(noInst) {
   try {
     await fetch(`/send-order-email`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ orderNumber: orderId, customerName: name.trim(), customerEmail: email, customerPhone: document.getElementById('phone')?.value || '', tires: cart.map(c=>({tdgId:c.tdgId,qty:c.qty,brand:c.brand,name:c.name,size:c.size||c.diameter+'"',price:c.price})), installation: !noInst, appointmentDate: selDate||'', appointmentTime: selTime||'', serviceName: selectedService?.label||'', subtotal: t.sub, installTotal: t.inst, shipping: 0, tax: t.tax, total: t.total }),
+      body: JSON.stringify({ orderNumber: orderId, customerName: name.trim(), customerEmail: email, customerPhone: document.getElementById('phone')?.value || '', tires: cart.map(c=>({qty:c.qty,brand:c.brand,name:c.name,size:c.size||c.diameter+'"',price:c.price})), installation: !noInst, appointmentDate: selDate||'', appointmentTime: selTime||'', serviceName: selectedService?.label||'', subtotal: t.sub, installTotal: t.inst, shipping: 0, tax: t.tax, total: t.total }),
     });
   } catch(e) { console.warn('Order email failed:', e.message); }
   cart = []; tdgQuote = null; updBadge();
@@ -2252,194 +2357,267 @@ function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.su
 //  PAGE INIT
 // ─────────────────────────────────────────────────
 
-// ─────────────────────────────────────────────────
-//  OEM ALT SIZES
-// ─────────────────────────────────────────────────
-const OEM_ALT_SIZES = {
-  "Honda Civic":          ["205/55R16","225/45R17"],
-  "Honda CR-V":           ["225/65R17","235/65R17"],
-  "Honda Accord":         ["245/40R19","235/50R18"],
-  "Honda Odyssey":        ["235/60R18","245/60R18"],
-  "Honda Pilot":          ["235/65R18","245/60R18"],
-  "Honda HR-V":           ["215/55R17","215/60R16"],
-  "Honda Passport":       ["245/60R18","265/45R20"],
-  "Honda Ridgeline":      ["245/60R18","265/50R20"],
-  "Toyota Camry":         ["215/55R17","225/50R17"],
-  "Toyota RAV4":          ["225/65R17","255/55R18"],
-  "Toyota Corolla":       ["195/65R15","215/45R17"],
-  "Toyota Highlander":    ["235/65R17","265/50R20"],
-  "Toyota 4Runner":       ["265/70R17","265/60R18"],
-  "Toyota Tacoma":        ["245/75R16","265/65R17","265/60R18"],
-  "Toyota Tundra":        ["275/65R18","275/55R20","285/55R20"],
-  "Toyota Sienna":        ["235/60R18","245/60R18"],
-  "Toyota Venza":         ["225/65R18","235/55R19"],
-  "Toyota Prius":         ["195/65R15","215/45R17"],
-  "Ford F-150":           ["265/60R18","275/60R20","265/70R17"],
-  "Ford Escape":          ["225/55R17","225/65R17"],
-  "Ford Explorer":        ["265/50R20","245/60R18"],
-  "Ford Bronco":          ["255/70R18","265/70R17","315/70R17"],
-  "Ford Bronco Sport":    ["225/65R17","235/55R17"],
-  "Ford Edge":            ["235/55R19","245/50R20"],
-  "Ford Expedition":      ["275/55R20","275/50R22"],
-  "Ford Ranger":          ["245/65R17","265/65R17","265/60R18"],
-  "Ford Mustang":         ["235/55R17","255/40R19","305/35R20"],
-  "Chevrolet Silverado":  ["265/65R18","265/70R17","275/60R20"],
-  "Chevrolet Silverado 1500": ["265/65R18","275/60R20","265/70R17"],
-  "Chevrolet Equinox":    ["235/55R17"],
-  "Chevrolet Traverse":   ["235/65R18","255/55R20"],
-  "Chevrolet Tahoe":      ["265/65R18","275/55R20"],
-  "Chevrolet Suburban":   ["265/65R18","275/55R20"],
-  "Chevrolet Colorado":   ["245/65R17","265/65R17","265/60R18"],
-  "Chevrolet Blazer":     ["235/55R19","255/45R20"],
-  "Hyundai Elantra":      ["215/50R17","225/45R17"],
-  "Hyundai Tucson":       ["235/65R17","235/60R18"],
-  "Hyundai Santa Fe":     ["235/65R17","255/50R19"],
-  "Hyundai Sonata":       ["225/50R17","235/45R18"],
-  "Hyundai Palisade":     ["245/60R18","255/45R20"],
-  "Nissan Altima":        ["225/50R17"],
-  "Nissan Rogue":         ["235/65R17"],
-  "Nissan Frontier":      ["265/70R16","265/65R17"],
-  "Nissan Pathfinder":    ["235/65R18","255/60R18"],
-  "Nissan Murano":        ["235/65R18","245/55R19"],
-  "Subaru Outback":       ["225/65R17"],
-  "Subaru Forester":      ["225/65R17"],
-  "Subaru Crosstrek":     ["215/60R16","225/55R17"],
-  "Volkswagen Jetta":     ["205/55R16","215/45R17"],
-  "Volkswagen Tiguan":    ["225/55R17"],
-  "Cadillac Escalade":    ["255/65R22","285/45R22"],
-  "Cadillac XT5":         ["255/55R19"],
-  "GMC Sierra 1500":      ["275/60R20","265/70R17"],
-  "GMC Terrain":          ["235/55R17"],
-  "GMC Yukon":            ["265/50R20","285/45R22"],
-  "GMC Acadia":           ["235/65R17","255/55R20"],
-  "RAM 1500":             ["265/70R17","265/60R18","285/45R22"],
-  "RAM 2500":             ["265/70R17","235/80R17"],
-  "Dodge Durango":        ["245/60R20","275/45R22"],
-  "Jeep Wrangler":        ["245/75R17","275/70R18"],
-  "Jeep Grand Cherokee":  ["255/55R20","265/50R20"],
-  "Kia Sorento":          ["235/60R18","255/45R20"],
-  "Kia Sportage":         ["225/60R17","255/45R19"],
-  "Kia Telluride":        ["265/45R21"],
-  "Mazda CX-5":           ["225/55R19"],
-  "Mazda CX-50":          ["255/45R20"],
-  "Mazda Mazda3":         ["205/60R16","215/45R18"],
-};
+// -------------------------------------------------
+//  TIRE DECISION GUIDE WIZARD
+// -------------------------------------------------
+const TDG_WIZARD_QUESTIONS = [
+  {
+    id: 'season',
+    question: 'What\u2019s your biggest driving challenge?',
+    hint: 'Choose the one that matters most to you.',
+    options: [
+      { value: 'winter',     icon: '&#10052;', label: 'Winter / Snow',      desc: 'You want maximum grip in ice, snow, and cold temps below -7&deg;C.' },
+      { value: 'allweather', icon: '&#127782;', label: 'Year-Round Safety',  desc: 'One set that handles all four seasons including light snow.' },
+      { value: 'allseason',  icon: '&#127780;', label: 'All-Season Value',   desc: 'Mild winters, mostly dry/wet roads. Reliable everyday performance.' },
+      { value: 'summer',     icon: '&#9728;',  label: 'Summer Performance', desc: 'Warm climate or performance car. Dry grip and handling first.' },
+    ]
+  },
+  {
+    id: 'usage',
+    question: 'How do you mostly drive?',
+    hint: 'Pick the one that best describes your typical day.',
+    options: [
+      { value: 'highway', icon: '&#128761;', label: 'Highway Commuter',    desc: 'Mostly highways. Low noise, fuel efficiency, long tread life.' },
+      { value: 'city',    icon: '&#127961;', label: 'City / Mixed',        desc: 'Stop-and-go, side streets, potholes. Durability and comfort.' },
+      { value: 'truck',   icon: '&#128666;', label: 'Truck / SUV / Van',   desc: 'Heavier vehicle. May tow, haul, or go off-road occasionally.' },
+      { value: 'sport',   icon: '&#127950;', label: 'Sport / Performance', desc: 'You enjoy spirited driving. Handling and dry grip come first.' },
+    ]
+  },
+  {
+    id: 'priority',
+    question: 'What matters most to you?',
+    hint: 'This helps us rank the results.',
+    options: [
+      { value: 'value',       icon: '&#128176;', label: 'Best Value',       desc: 'Great tire at the lowest possible price. No need to overspend.' },
+      { value: 'longevity',   icon: '&#9203;',   label: 'Long Tread Life',  desc: 'You want tires that last as long as possible.' },
+      { value: 'comfort',     icon: '&#128716;', label: 'Quiet &amp; Smooth', desc: 'Ride comfort and low road noise are important to you.' },
+      { value: 'performance', icon: '&#127919;', label: 'Top Performance',  desc: 'You want the best-performing tire regardless of price.' },
+    ]
+  },
+  {
+    id: 'budget',
+    question: 'What\u2019s your budget per tire?',
+    hint: 'We\u2019ll filter to tires in your range.',
+    options: [
+      { value: 'economy', icon: '&#128154;', label: 'Under $150',     desc: 'Budget-friendly options that still deliver solid performance.' },
+      { value: 'mid',     icon: '&#128155;', label: '$150 &ndash; $250', desc: 'The sweet spot. Great quality without overpaying.' },
+      { value: 'premium', icon: '&#128156;', label: '$250 &ndash; $350', desc: 'Premium tires from top brands with excellent reviews.' },
+      { value: 'ultra',   icon: '&#128153;', label: '$350+',           desc: 'No compromise. The best tires money can buy.' },
+    ]
+  },
+];
 
-// ─────────────────────────────────────────────────
-//  VIN DECODER (NHTSA free API)
-// ─────────────────────────────────────────────────
-let vinDecoded = null;
-let lastSearchMethod = null;
-let lastSearchVehicle = null;
+const WIZARD_BUDGET_RANGES = { economy:[0,150], mid:[150,250], premium:[250,350], ultra:[350,99999] };
+const WIZARD_SEASON_TYPES   = { winter:['winter'], allweather:['allweather'], allseason:['allseason','allweather'], summer:['summer','allseason'] };
+const WIZARD_SEASON_CODES   = { winter:4, allweather:3, allseason:2, summer:1 };
 
-function onVinInput(el) {
-  const v = el.value.replace(/[^A-HJ-NPR-Z0-9]/gi, '').toUpperCase().substr(0, 17);
-  el.value = v;
-  document.getElementById('vinChars').textContent = v.length + ' / 17';
-  el.classList.remove('valid','invalid');
-  const btn = document.getElementById('vinSearchBtn');
-  if (v.length === 17) {
-    el.classList.add('valid');
-    btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+let wizardAnswers = {};
+let wizardStep = 0;
+
+function initDecisionGuide() {
+  wizardAnswers = {};
+  wizardStep = 0;
+  renderWizardStep();
+}
+
+function renderWizardStep() {
+  const wizard = document.getElementById('tdgWizard');
+  if (!wizard) return;
+  const q = TDG_WIZARD_QUESTIONS[wizardStep];
+
+  const dots = TDG_WIZARD_QUESTIONS.map((_,i) =>
+    '<div class="tdg-step-dot' + (i < wizardStep ? ' done' : i === wizardStep ? ' active' : '') + '"></div>'
+  ).join('');
+
+  const opts = q.options.map(o => {
+    const sel = wizardAnswers[q.id] === o.value ? ' selected' : '';
+    return '<div class="tdg-option' + sel + '" onclick="wizardSelect(\'' + q.id + '\',\'' + o.value + '\',this)">'
+      + '<span class="tdg-option-icon">' + o.icon + '</span>'
+      + '<div class="tdg-option-label">' + o.label + '</div>'
+      + '<div class="tdg-option-desc">' + o.desc + '</div>'
+      + '</div>';
+  }).join('');
+
+  const isFirst = wizardStep === 0;
+  const isLast  = wizardStep === TDG_WIZARD_QUESTIONS.length - 1;
+  const hasAns  = !!wizardAnswers[q.id];
+
+  wizard.innerHTML =
+    '<div class="tdg-steps">' + dots + '</div>'
+    + '<div class="tdg-question">' + q.question + '</div>'
+    + '<div class="tdg-hint">' + q.hint + '</div>'
+    + '<div class="tdg-options">' + opts + '</div>'
+    + '<div class="tdg-nav">'
+    + '<button class="tdg-back" onclick="wizardBack()" style="' + (isFirst ? 'visibility:hidden' : '') + '">\u2190 Back</button>'
+    + '<button class="tdg-next" onclick="wizardNext()" ' + (hasAns ? '' : 'disabled') + '>'
+    + (isLast ? 'Find My Tires &#128269;' : 'Next \u2192')
+    + '</button></div>';
+}
+
+function wizardSelect(qid, val, el) {
+  wizardAnswers[qid] = val;
+  el.closest('.tdg-options').querySelectorAll('.tdg-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  el.closest('.tdg-options').nextElementSibling.querySelector('.tdg-next').disabled = false;
+}
+
+function wizardBack() {
+  if (wizardStep > 0) { wizardStep--; renderWizardStep(); }
+}
+
+async function wizardNext() {
+  const q = TDG_WIZARD_QUESTIONS[wizardStep];
+  if (!wizardAnswers[q.id]) return;
+  if (wizardStep < TDG_WIZARD_QUESTIONS.length - 1) {
+    wizardStep++;
+    renderWizardStep();
   } else {
-    if (v.length > 0) el.classList.add('invalid');
-    btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed';
+    await wizardShowResults();
   }
-  if (v.length < 17) document.getElementById('vinResult').innerHTML = '';
 }
 
-async function doVinLookup() {
-  const vin = document.getElementById('vinInput').value.trim().toUpperCase();
-  if (vin.length !== 17) return;
-  const resultEl = document.getElementById('vinResult');
-  resultEl.innerHTML = `<div class="vin-loading"><div class="vin-spinner"></div>Decoding VIN — checking NHTSA database…</div>`;
+async function wizardShowResults() {
+  const wizard = document.getElementById('tdgWizard');
+  wizard.innerHTML = '<div class="tdg-loading"><div class="tdg-spinner"></div>Searching live inventory for your perfect match\u2026</div>';
 
+  const { season, usage, priority, budget } = wizardAnswers;
+  const [bMin, bMax] = WIZARD_BUDGET_RANGES[budget];
+  const validTypes   = WIZARD_SEASON_TYPES[season] || ['allseason'];
+  const seasonCode   = WIZARD_SEASON_CODES[season];
+
+  let products = [], inventoryMap = {};
   try {
-    const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${vin}?format=json`);
-    const data = await res.json();
-    const r = data.Results?.[0];
-    if (!r || r.ErrorCode?.startsWith('8') || r.ErrorCode?.startsWith('11')) throw new Error('VIN not found');
-
-    const year  = r.ModelYear || '';
-    const makeRaw = r.Make || '';
-    const make  = makeRaw.charAt(0).toUpperCase() + makeRaw.slice(1).toLowerCase();
-    const model = r.Model || '';
-    const trim  = r.Trim || r.Series || '';
-    const body  = r.BodyClass || '';
-    const drive = r.DriveType || '';
-    const engine = r.DisplacementL ? parseFloat(r.DisplacementL).toFixed(1) + 'L' : '';
-    const cylinders = r.EngineCylinders ? r.EngineCylinders + '-cyl' : '';
-    const engineStr = [engine, cylinders].filter(Boolean).join(' ');
-
-    const vehicleKey = `${make} ${model}`;
-    const oemSize = OEM_SIZES[vehicleKey] || null;
-    const altSizes = OEM_ALT_SIZES?.[vehicleKey] || [];
-
-    vinDecoded = { year, make, model, trim, oemSize, altSizes, vin, vehicleKey };
-
-    const sizeHTML = oemSize
-      ? `<div class="vin-spec"><div class="vin-spec-label">OEM Tire Size</div><div class="vin-spec-value highlight">${oemSize}</div></div>
-         ${altSizes.length ? `<div class="vin-spec"><div class="vin-spec-label">Alt Sizes</div><div class="vin-spec-value" style="font-size:11px;color:var(--muted)">${altSizes.join(', ')}</div></div>` : ''}`
-      : `<div class="vin-spec" style="grid-column:1/-1"><div class="vin-spec-label">Tire Size</div><div class="vin-spec-value" style="color:var(--muted);font-size:12px">Not in our database — check door sticker</div></div>`;
-
-    const actionsHTML = oemSize
-      ? `<button class="vin-search-btn" onclick="vinSearchTires()">Search Tires for ${oemSize} →</button>
-         ${altSizes.length ? `<button class="vin-alt-btn" onclick="vinSearchAllSizes()">Search All Sizes</button>` : ''}`
-      : `<button class="vin-search-btn" onclick="smoothScroll('#catalog')">Browse Full Inventory →</button>`;
-
-    resultEl.innerHTML = `
-      <div class="vin-card success">
-        <div class="vin-vehicle-title">✅ ${year} ${make} ${model}${trim ? ' — ' + trim : ''}</div>
-        <div class="vin-specs-grid">
-          <div class="vin-spec"><div class="vin-spec-label">Year</div><div class="vin-spec-value">${year}</div></div>
-          <div class="vin-spec"><div class="vin-spec-label">Make</div><div class="vin-spec-value">${make}</div></div>
-          <div class="vin-spec"><div class="vin-spec-label">Model</div><div class="vin-spec-value">${model}</div></div>
-          ${trim ? `<div class="vin-spec"><div class="vin-spec-label">Trim</div><div class="vin-spec-value">${trim}</div></div>` : ''}
-          ${body ? `<div class="vin-spec"><div class="vin-spec-label">Body</div><div class="vin-spec-value">${body}</div></div>` : ''}
-          ${engineStr ? `<div class="vin-spec"><div class="vin-spec-label">Engine</div><div class="vin-spec-value">${engineStr}</div></div>` : ''}
-          ${drive ? `<div class="vin-spec"><div class="vin-spec-label">Drive</div><div class="vin-spec-value">${drive}</div></div>` : ''}
-          ${sizeHTML}
-        </div>
-        <div class="vin-actions">${actionsHTML}</div>
-      </div>`;
-
-  } catch(err) {
-    resultEl.innerHTML = `
-      <div class="vin-card error">
-        <div style="font-size:14px;font-weight:600;margin-bottom:6px">⚠️ Could not decode this VIN</div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:14px">This VIN wasn’t found in the NHTSA database. Double-check the number, or use the vehicle dropdowns below.</div>
-        <button class="vin-alt-btn" onclick="switchLookupTab('vehicle')">Try Vehicle Lookup Instead →</button>
-      </div>`;
+    const [prodRes, invRes] = await Promise.all([
+      tdgFetch('search', { tireSeason: seasonCode }),
+      tdgFetch('inventory', { tireSeason: seasonCode }),
+    ]);
+    const extract = r => {
+      if (Array.isArray(r)) return r;
+      if (r && r.data && Array.isArray(r.data)) return r.data;
+      if (r && r.products && Array.isArray(r.products)) return r.products;
+      if (r && typeof r === 'object') {
+        const vals = Object.values(r);
+        if (vals.length && vals[0] && typeof vals[0] === 'object') return vals;
+      }
+      return [];
+    };
+    products = extract(prodRes).filter(p => p.type === 'Tire' || p.type === 'tire');
+    extract(invRes).forEach(i => { if (i && i.itemNumber) inventoryMap[i.itemNumber] = i; });
+  } catch(e) {
+    // fallback to mock
+    products = MOCK_TIRES.map(t => ({
+      id: t.tdgId, itemNumber: t.itemNumber, partNumber: t.partNumber,
+      type: 'Tire', brandName: t.brand, productName: t.name,
+      specifications: { size: t.size, season: t.season, tireSeason: {winter:4,allseason:2,allweather:3,summer:1}[t.type]||2, serviceType: t.serviceType, speedRating: t.speed, loadIndex: t.loadIndex, sidewall: t.sidewall },
+      pricing: { price: t.price, msrp: t.msrp, map: t.map }, productImageUrl: null
+    }));
+    products.forEach(p => { inventoryMap[p.itemNumber] = { pricing: { price: p.pricing.price, msrp: p.pricing.msrp, map: null }, locations: [{ qtyAvailable: 20, availability: 1 }] }; });
   }
-  setTimeout(() => smoothScroll('#lookup'), 100);
+
+  // Normalise + filter
+  let tires = products.map(p => normaliseTire(p, inventoryMap[p.itemNumber]));
+  tires = tires.filter(t => {
+    if (t.stock === 'out') return false;
+    const p = retailPrice(t);
+    if (p < bMin || p > bMax) return false;
+    if (!validTypes.includes(t.type)) return false;
+    if (usage === 'truck' && t.type !== 'truck' && !t.serviceType.includes('LT') && t.type !== 'allseason' && t.type !== 'allweather' && t.type !== 'winter') return false;
+    return true;
+  });
+
+  // Score
+  const perfBrands    = ['michelin','bridgestone','continental','pirelli','yokohama','goodyear'];
+  const longBrands    = ['michelin','bridgestone','continental','goodyear','firestone'];
+  const comfortBrands = ['michelin','continental','pirelli','yokohama'];
+
+  tires = tires.map(t => {
+    let score = 0;
+    const p = retailPrice(t);
+    // season match
+    if (t.type === season || (season === 'allseason' && t.type === 'allseason') || (season === 'allweather' && t.type === 'allweather')) score += 30;
+    else score += 15;
+    // usage
+    if (usage === 'truck' && t.serviceType && t.serviceType.includes('LT')) score += 20;
+    if (usage === 'sport' && t.type === 'summer') score += 15;
+    if (usage === 'highway' && t.type === 'allseason') score += 10;
+    // priority
+    if (priority === 'value') score += Math.max(0, 20 - Math.floor(p / 15));
+    if (priority === 'performance' && perfBrands.includes(t.brand.toLowerCase())) score += 20;
+    if (priority === 'longevity'   && longBrands.includes(t.brand.toLowerCase()))  score += 15;
+    if (priority === 'comfort'     && comfortBrands.includes(t.brand.toLowerCase())) score += 15;
+    // stock
+    if (t.qtyAvailable >= 8) score += 5;
+    return Object.assign({}, t, { _score: score });
+  });
+
+  tires.sort((a, b) => b._score - a._score);
+
+  // Dedupe: max 2 per brand in top 5
+  const brandCount = {}, picks = [];
+  for (const t of tires) {
+    const b = t.brand.toLowerCase();
+    if ((brandCount[b] || 0) >= 2) continue;
+    brandCount[b] = (brandCount[b] || 0) + 1;
+    picks.push(t);
+    if (picks.length >= 5) break;
+  }
+
+  if (!picks.length) {
+    wizard.innerHTML = '<div class="tdg-results-header"><div class="tdg-results-title">No Exact Matches</div>'
+      + '<div class="tdg-results-sub">Try a different budget or browse the full catalog.</div></div>'
+      + '<div class="tdg-no-results">We couldn\'t find tires matching all your criteria right now. Call us at 519-380-5104 and we\'ll find the right fit.</div>'
+      + '<button class="tdg-restart" onclick="initDecisionGuide()">\u2190 Start Over</button>';
+    return;
+  }
+
+  const whyMap = {
+    winter:     { winter:'Purpose-built for ice, snow and cold \u2014 maximum winter grip', allweather:'Winter-certified with 3PMSF \u2014 handles ice and snow', allseason:'All-season with solid cold-weather capability' },
+    allweather: { allweather:'Year-round tire with full winter certification \u2014 one set does it all', allseason:'Reliable all-season for mild Ontario winters', winter:'Top-tier winter grip for serious cold weather' },
+    allseason:  { allseason:'Classic all-season \u2014 reliable, affordable, and widely available', allweather:'All-season upgraded with bonus winter capability', summer:'Performance-focused with excellent dry and wet grip' },
+    summer:     { summer:'Maximum dry and wet performance \u2014 the sporty choice', allseason:'Versatile all-season with strong warm-weather performance' },
+  };
+  const priorityLabels = { value:'Best Value', longevity:'Long-Wearing', comfort:'Quiet &amp; Comfortable', performance:'High Performance' };
+  const seasonLabels   = { winter:'Winter', allweather:'All-Weather', allseason:'All-Season', summer:'Summer', truck:'Truck/SUV' };
+  const budgetLabel    = { economy:'Under $150', mid:'$150\u2013$250', premium:'$250\u2013$350', ultra:'$350+' }[budget];
+
+  const picksHTML = picks.map((t, i) => {
+    const p = retailPrice(t);
+    const isTop = i === 0;
+    const why = (whyMap[season] && whyMap[season][t.type]) || 'Strong match for your driving profile';
+    const sLabel = seasonLabels[t.type] || t.season;
+    const prioTag = i === 0 ? priorityLabels[priority] : (i === 1 ? 'Runner-Up' : '');
+    const stockTag = t.stock === 'low'
+      ? '<span class="tdg-pick-tag" style="color:var(--yellow);border-color:rgba(245,197,24,.3)">Low Stock</span>'
+      : '<span class="tdg-pick-tag" style="color:var(--green);border-color:rgba(34,197,94,.3)">In Stock</span>';
+    return '<div class="tdg-pick' + (isTop ? ' top-pick' : '') + '">'
+      + '<div class="tdg-pick-rank">' + (i+1) + '</div>'
+      + '<div>'
+      + '<div class="tdg-pick-brand">' + t.brand + '</div>'
+      + '<div class="tdg-pick-name">' + t.name + '</div>'
+      + '<div class="tdg-pick-why">' + why + (t.size ? ' &middot; ' + t.size : '') + '</div>'
+      + '<div class="tdg-pick-tags">'
+      + '<span class="tdg-pick-tag season">' + sLabel + '</span>'
+      + stockTag
+      + (prioTag ? '<span class="tdg-pick-tag" style="color:var(--yellow);border-color:rgba(245,197,24,.3)">' + prioTag + '</span>' : '')
+      + (t.runFlat ? '<span class="tdg-pick-tag">Run-Flat</span>' : '')
+      + (t.evCompat ? '<span class="tdg-pick-tag">EV</span>' : '')
+      + '</div></div>'
+      + '<div class="tdg-pick-right">'
+      + '<div class="tdg-pick-price">$' + Math.floor(p) + '<span style="font-size:14px;font-weight:400;color:var(--muted)">.' + (p%1).toFixed(2).slice(2) + '</span></div>'
+      + '<div class="tdg-pick-each">per tire &middot; HST extra</div>'
+      + '<button class="tdg-pick-add" onclick="addToCart(\'' + t.itemNumber + '\',\'tire\')" ' + (t.stock==='out'?'disabled':'') + '>Add to Cart +</button>'
+      + '</div></div>';
+  }).join('');
+
+  wizard.innerHTML =
+    '<div class="tdg-results-header">'
+    + '<div class="tdg-results-title">Your Top ' + picks.length + ' Picks</div>'
+    + '<div class="tdg-results-sub">' + seasonLabels[season] + ' &middot; ' + priorityLabels[priority] + ' &middot; ' + budgetLabel + ' per tire</div>'
+    + '</div>'
+    + '<div class="tdg-picks">' + picksHTML + '</div>'
+    + '<button class="tdg-restart" onclick="initDecisionGuide()">\u2190 Start Over</button>';
 }
 
-function vinSearchTires() {
-  if (!vinDecoded?.oemSize) return;
-  lastSearchMethod = 'vin';
-  lastSearchVehicle = { year: vinDecoded.year, make: vinDecoded.make, model: vinDecoded.model, trim: vinDecoded.trim, vin: vinDecoded.vin };
-  switchCatalogType('tires');
-  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
-  textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make} ${vinDecoded.model}</strong> — searching tires for <strong>${vinDecoded.oemSize}</strong>…`;
-  resultEl.classList.add('show');
-  loadTires({ tireSizes: [vinDecoded.oemSize] }).then(() => {
-    textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> tires for size <strong>${vinDecoded.oemSize}</strong>.`;
-  });
-  setTimeout(() => smoothScroll('#catalog'), 300);
-}
-
-function vinSearchAllSizes() {
-  if (!vinDecoded) return;
-  const allSizes = [vinDecoded.oemSize, ...(vinDecoded.altSizes || [])].filter(Boolean);
-  switchCatalogType('tires');
-  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
-  textEl.innerHTML = `Showing all compatible sizes for <strong>${vinDecoded.year} ${vinDecoded.make} ${vinDecoded.model}</strong>…`;
-  resultEl.classList.add('show');
-  loadTires({ tireSizes: allSizes }).then(() => {
-    textEl.innerHTML = `<strong>${vinDecoded.year} ${vinDecoded.make} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> compatible tires across ${allSizes.length} sizes.`;
-  });
-  setTimeout(() => smoothScroll('#catalog'), 300);
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   initYears();
@@ -2448,6 +2626,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initWheelDropdowns();
   initMemberState();
   initCookie();
+  initDecisionGuide();
   loadTires();
 });
 
