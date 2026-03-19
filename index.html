@@ -452,6 +452,21 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .sg-next{flex:1;background:var(--yellow);color:var(--black);border:none;padding:11px 24px;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;transition:all .2s}
 .sg-next:hover{background:var(--yellow-dark)}
 .sg-next:disabled{opacity:.4;cursor:not-allowed}
+.sg-vehicle-fields{margin-bottom:24px}
+.sg-field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.sg-field-row-three{grid-template-columns:1fr 1fr 1fr}
+.sg-field-row.three{grid-template-columns:1fr 1fr 1fr}
+.sg-field-row .field select{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:11px 14px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .2s;appearance:none;cursor:pointer;width:100%}
+.sg-field-row .field select:focus{border-color:var(--yellow)}
+.sg-field-row .field select:disabled{opacity:.45;cursor:not-allowed}
+.sg-field-row .field label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
+.sg-size-result{background:var(--yellow-dim);border:1px solid rgba(245,197,24,.3);border-radius:2px;padding:10px 14px;font-size:13px;color:var(--light)}
+.sg-size-result strong{color:var(--yellow)}
+.sg-results-summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.25);border-radius:2px;margin-bottom:20px}
+.sg-sum-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--yellow);background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.2);border-radius:2px;padding:3px 9px;letter-spacing:.5px}
+.sg-sum-count{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--white)}
+.sg-sum-clear{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;font-family:'Barlow',sans-serif}
+.sg-sum-clear:hover{color:var(--light)}
 @media(max-width:600px){.sg-banner{padding:22px 20px}.sg-banner-inner{gap:20px}.sg-body{padding:20px 20px 24px}.sg-head{padding:18px 20px 14px}}
 
 /* REVIEWS */
@@ -1153,6 +1168,7 @@ function getRebateForBrand(brand) {
     </div>
   </div>
 
+  <div class="sg-results-summary" id="sgResultsSummary" style="display:none"></div>
   <div class="tire-grid" id="tireGrid"></div>
 </section>
 
@@ -1480,21 +1496,74 @@ function getRebateForBrand(brand) {
         <div class="sg-prog-dot" id="sgProg1"></div>
         <div class="sg-prog-dot" id="sgProg2"></div>
         <div class="sg-prog-dot" id="sgProg3"></div>
+        <div class="sg-prog-dot" id="sgProg4"></div>
       </div>
-      <div id="sgContextBar" style="display:none" class="sg-context">📐 <span id="sgContextSize"></span></div>
+
+      <!-- Step 0: How to find size -->
+      <div class="sg-step active" id="sgStep0">
+        <div class="sg-q">How would you like to find your tire?</div>
+        <div class="sg-sub">We'll use this to pull up the right options for your vehicle.</div>
+        <div class="sg-options">
+          <button class="sg-opt" onclick="sgSelectMethod('vehicle')">
+            <span class="sg-opt-icon">🚗</span>
+            <div class="sg-opt-text"><strong>By My Vehicle</strong><span>Enter your year, make and model — we'll look up the correct size automatically.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelectMethod('size')">
+            <span class="sg-opt-icon">📐</span>
+            <div class="sg-opt-text"><strong>I Know My Tire Size</strong><span>Found it on your sidewall or doorjamb — enter width, profile and rim diameter.</span></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 0a: Vehicle lookup -->
+      <div class="sg-step" id="sgStep0a">
+        <div class="sg-q">What vehicle are you shopping for?</div>
+        <div class="sg-sub">We'll look up the OEM tire size for your exact model.</div>
+        <div class="sg-vehicle-fields">
+          <div class="sg-field-row">
+            <div class="field"><label>Make</label>
+              <select id="sgMake" onchange="sgUpdateModels()"><option value="">Select Make</option></select>
+            </div>
+            <div class="field"><label>Model</label>
+              <select id="sgModel" onchange="sgUpdateSizeFromVehicle()" disabled><option value="">Select Model</option></select>
+            </div>
+          </div>
+          <div id="sgSizeResult" class="sg-size-result" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- Step 0b: Size lookup -->
+      <div class="sg-step" id="sgStep0b">
+        <div class="sg-q">What's your tire size?</div>
+        <div class="sg-sub">You'll find this on the sidewall — e.g. <strong style="color:var(--yellow)">205/55R16</strong></div>
+        <div class="sg-vehicle-fields">
+          <div class="sg-field-row sg-field-row-three">
+            <div class="field"><label>Width (mm)</label>
+              <select id="sgWidth" onchange="sgOnWidthChange()"><option value="">Select Width</option></select>
+            </div>
+            <div class="field"><label>Profile (%)</label>
+              <select id="sgProfile" onchange="sgOnProfileChange()" disabled><option value="">Width first</option></select>
+            </div>
+            <div class="field"><label>Rim (in)</label>
+              <select id="sgRim" onchange="sgOnRimChange()" disabled><option value="">Profile first</option></select>
+            </div>
+          </div>
+          <div id="sgSizeDisplay" class="sg-size-result" style="display:none"></div>
+        </div>
+      </div>
 
       <!-- Step 1: Season -->
-      <div class="sg-step active" id="sgStep1">
+      <div class="sg-step" id="sgStep1">
         <div class="sg-q">What season do you need?</div>
-        <div class="sg-sub">Ontario winters are serious. Two sets gives you the best grip and longest tire life — but one set is more convenient.</div>
+        <div class="sg-sub">Ontario winters are serious. Two sets gives the best grip and longest tire life — but one set is more convenient.</div>
         <div class="sg-options">
           <button class="sg-opt" onclick="sgSelect(this,'season','allweather')">
             <span class="sg-opt-icon">🌤️❄️</span>
-            <div class="sg-opt-text"><strong>All-Weather — Year Round</strong><span>One set for all seasons. Certified for winter (snowflake rated). Popular choice for Chatham-Kent drivers.</span></div>
+            <div class="sg-opt-text"><strong>All-Weather — Year Round</strong><span>One set for all seasons. Certified for winter (snowflake rated). Most popular choice in Chatham-Kent.</span></div>
           </button>
           <button class="sg-opt" onclick="sgSelect(this,'season','allseason')">
             <span class="sg-opt-icon">🌤️</span>
-            <div class="sg-opt-text"><strong>All-Season — 3 Season</strong><span>Great for spring through fall. Not rated for severe winter. Best if you switch to winters November–April.</span></div>
+            <div class="sg-opt-text"><strong>All-Season — 3 Season</strong><span>Great spring through fall. Not rated for severe winter. Best if you already have winter tires.</span></div>
           </button>
           <button class="sg-opt" onclick="sgSelect(this,'season','winter')">
             <span class="sg-opt-icon">❄️</span>
@@ -1510,7 +1579,7 @@ function getRebateForBrand(brand) {
       <!-- Step 2: Priority -->
       <div class="sg-step" id="sgStep2">
         <div class="sg-q">What's your biggest priority?</div>
-        <div class="sg-sub">This helps us sort results to what matters most to you.</div>
+        <div class="sg-sub">This helps us sort and highlight the best match for you.</div>
         <div class="sg-options">
           <button class="sg-opt" onclick="sgSelect(this,'priority','value')">
             <span class="sg-opt-icon">💰</span>
@@ -1534,7 +1603,7 @@ function getRebateForBrand(brand) {
       <!-- Step 3: Vehicle Type -->
       <div class="sg-step" id="sgStep3">
         <div class="sg-q">What type of vehicle?</div>
-        <div class="sg-sub">We'll narrow results to tires designed for your vehicle type.</div>
+        <div class="sg-sub">We'll narrow results to tires built for your vehicle type.</div>
         <div class="sg-options">
           <button class="sg-opt" onclick="sgSelect(this,'vehicle','car')">
             <span class="sg-opt-icon">🚗</span>
@@ -1552,6 +1621,15 @@ function getRebateForBrand(brand) {
             <span class="sg-opt-icon">🚐</span>
             <div class="sg-opt-text"><strong>Minivan / Cargo Van</strong><span>Odyssey, Sienna, Grand Caravan, Transit, etc.</span></div>
           </button>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      <div class="sg-step" id="sgStepLoading">
+        <div style="text-align:center;padding:32px 0">
+          <div style="font-size:48px;margin-bottom:16px">🔍</div>
+          <div class="sg-q" style="text-align:center">Searching inventory…</div>
+          <div class="sg-sub" style="text-align:center" id="sgLoadingMsg">Finding the best matches for you.</div>
         </div>
       </div>
 
@@ -3826,25 +3904,38 @@ function bgClose(e, id) { if (e.target === document.getElementById(id)) document
 //  TIRE SELECTION GUIDE
 // ─────────────────────────────────────────────────
 const sgAnswers = {};
-let sgCurrentStep = 1;
-const SG_TOTAL = 3;
+let sgCurrentStep = 'step0'; // step0 → step0a or step0b → step1 → step2 → step3
+const SG_STEPS = ['step0','step0sub','step1','step2','step3'];
 
 function openSelectionGuide() {
+  // Reset answers
   sgAnswers.season = null; sgAnswers.priority = null; sgAnswers.vehicle = null;
-  sgCurrentStep = 1;
+  sgAnswers.tireSize = null; sgAnswers.method = null;
+  sgCurrentStep = 'step0';
+
+  // Reset all steps
+  document.querySelectorAll('.sg-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('sgStep0').classList.add('active');
   document.querySelectorAll('.sg-opt').forEach(o => o.classList.remove('selected'));
-  document.querySelectorAll('.sg-step').forEach((s, i) => s.classList.toggle('active', i === 0));
+
+  // Reset dropdowns
+  sgPopulateMakes();
+  sgPopulateSizeWidths();
+  document.getElementById('sgModel').innerHTML = '<option value="">Select Model</option>';
+  document.getElementById('sgModel').disabled = true;
+  document.getElementById('sgSizeResult').style.display = 'none';
+  document.getElementById('sgSizeDisplay').style.display = 'none';
+  document.getElementById('sgProfile').innerHTML = '<option value="">Width first</option>';
+  document.getElementById('sgProfile').disabled = true;
+  document.getElementById('sgRim').innerHTML = '<option value="">Profile first</option>';
+  document.getElementById('sgRim').disabled = true;
+
+  // Buttons
   document.getElementById('sgNextBtn').disabled = true;
   document.getElementById('sgNextBtn').textContent = 'Next →';
   document.getElementById('sgBackBtn').style.display = 'none';
+
   updateSgProgress();
-  const ctx = document.getElementById('sgContextBar');
-  if (lastTireSearchSize) {
-    document.getElementById('sgContextSize').textContent = 'Searching in size: ' + lastTireSearchSize;
-    ctx.style.display = 'inline-flex';
-  } else {
-    ctx.style.display = 'none';
-  }
   document.getElementById('sgOverlay').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
@@ -3854,6 +3945,126 @@ function closeSelectionGuide() {
   document.body.style.overflow = '';
 }
 
+function updateSgProgress() {
+  const progressMap = { step0: 1, step0a: 1, step0b: 1, step1: 2, step2: 3, step3: 4 };
+  const filled = progressMap[sgCurrentStep] || 1;
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('sgProg' + i).classList.toggle('done', i <= filled);
+  }
+}
+
+function sgShowStep(stepId, showBack, nextText, nextDisabled) {
+  document.querySelectorAll('.sg-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('sgStep' + stepId).classList.add('active');
+  document.getElementById('sgBackBtn').style.display = showBack ? 'block' : 'none';
+  document.getElementById('sgNextBtn').textContent = nextText || 'Next →';
+  document.getElementById('sgNextBtn').disabled = !!nextDisabled;
+  sgCurrentStep = stepId === '0a' ? 'step0a' : stepId === '0b' ? 'step0b' : 'step' + stepId;
+  updateSgProgress();
+}
+
+// Step 0: choose method
+function sgSelectMethod(method) {
+  sgAnswers.method = method;
+  document.querySelectorAll('#sgStep0 .sg-opt').forEach(o => o.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  document.getElementById('sgNextBtn').disabled = false;
+}
+
+// Step 0a: vehicle dropdowns
+function sgPopulateMakes() {
+  const sel = document.getElementById('sgMake');
+  sel.innerHTML = '<option value="">Select Make</option>';
+  Object.keys(VD).sort().forEach(m => {
+    const o = document.createElement('option'); o.value = m; o.textContent = m; sel.appendChild(o);
+  });
+}
+
+function sgUpdateModels() {
+  const make = document.getElementById('sgMake').value;
+  const modelSel = document.getElementById('sgModel');
+  modelSel.innerHTML = '<option value="">Select Model</option>';
+  modelSel.disabled = !make;
+  if (!make) return;
+  Object.keys(VD[make] || {}).sort().forEach(m => {
+    const o = document.createElement('option'); o.value = m; o.textContent = m; modelSel.appendChild(o);
+  });
+  document.getElementById('sgSizeResult').style.display = 'none';
+  document.getElementById('sgNextBtn').disabled = true;
+}
+
+function sgUpdateSizeFromVehicle() {
+  const make = document.getElementById('sgMake').value;
+  const model = document.getElementById('sgModel').value;
+  const resultEl = document.getElementById('sgSizeResult');
+  if (!make || !model) { resultEl.style.display = 'none'; document.getElementById('sgNextBtn').disabled = true; return; }
+  const key = make + ' ' + model;
+  const size = OEM_SIZES[key] || null;
+  if (size) {
+    sgAnswers.tireSize = size;
+    resultEl.innerHTML = '✅ OEM size found: <strong>' + size + '</strong>';
+    resultEl.style.display = 'block';
+    document.getElementById('sgNextBtn').disabled = false;
+  } else {
+    sgAnswers.tireSize = null;
+    resultEl.innerHTML = '⚠️ Size not in our database for this model — try <strong>I Know My Size</strong> instead.';
+    resultEl.style.display = 'block';
+    document.getElementById('sgNextBtn').disabled = true;
+  }
+}
+
+// Step 0b: size dropdowns (reuse TIRE_SIZES data)
+function sgPopulateSizeWidths() {
+  const sel = document.getElementById('sgWidth');
+  sel.innerHTML = '<option value="">Select Width</option>';
+  const widths = [...new Set(TIRE_SIZES.map(s => s.split('/')[0]))].sort((a,b) => +a - +b);
+  widths.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + ' mm'; sel.appendChild(o); });
+}
+
+function sgOnWidthChange() {
+  const w = document.getElementById('sgWidth').value;
+  const profSel = document.getElementById('sgProfile');
+  profSel.innerHTML = '<option value="">Select Profile</option>';
+  profSel.disabled = !w;
+  document.getElementById('sgRim').innerHTML = '<option value="">Profile first</option>';
+  document.getElementById('sgRim').disabled = true;
+  document.getElementById('sgSizeDisplay').style.display = 'none';
+  document.getElementById('sgNextBtn').disabled = true;
+  sgAnswers.tireSize = null;
+  if (!w) return;
+  const profiles = [...new Set(TIRE_SIZES.filter(s => s.startsWith(w + '/')).map(s => s.split('/')[1].replace(/R.*/,'')))].sort((a,b) => +a - +b);
+  profiles.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; profSel.appendChild(o); });
+}
+
+function sgOnProfileChange() {
+  const w = document.getElementById('sgWidth').value;
+  const p = document.getElementById('sgProfile').value;
+  const rimSel = document.getElementById('sgRim');
+  rimSel.innerHTML = '<option value="">Select Rim</option>';
+  rimSel.disabled = !p;
+  document.getElementById('sgSizeDisplay').style.display = 'none';
+  document.getElementById('sgNextBtn').disabled = true;
+  sgAnswers.tireSize = null;
+  if (!w || !p) return;
+  const prefix = w + '/' + p + 'R';
+  const rims = [...new Set(TIRE_SIZES.filter(s => s.startsWith(prefix)).map(s => s.split('R')[1]))].sort((a,b) => +a - +b);
+  rims.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r + '"'; rimSel.appendChild(o); });
+}
+
+function sgOnRimChange() {
+  const w = document.getElementById('sgWidth').value;
+  const p = document.getElementById('sgProfile').value;
+  const r = document.getElementById('sgRim').value;
+  const dispEl = document.getElementById('sgSizeDisplay');
+  if (!w || !p || !r) { dispEl.style.display = 'none'; document.getElementById('sgNextBtn').disabled = true; return; }
+  const size = w + '/' + p + 'R' + r;
+  sgAnswers.tireSize = size;
+  dispEl.innerHTML = '✅ Tire size selected: <strong>' + size + '</strong>';
+  dispEl.style.display = 'block';
+  document.getElementById('sgNextBtn').disabled = false;
+}
+
+// Generic select for steps 1-3
 function sgSelect(btn, key, val) {
   btn.closest('.sg-options').querySelectorAll('.sg-opt').forEach(o => o.classList.remove('selected'));
   btn.classList.add('selected');
@@ -3861,43 +4072,57 @@ function sgSelect(btn, key, val) {
   document.getElementById('sgNextBtn').disabled = false;
 }
 
-function updateSgProgress() {
-  for (let i = 1; i <= SG_TOTAL; i++) {
-    document.getElementById('sgProg' + i).classList.toggle('done', i <= sgCurrentStep);
-  }
-}
-
 function sgNext() {
-  if (sgCurrentStep < SG_TOTAL) {
-    document.getElementById('sgStep' + sgCurrentStep).classList.remove('active');
-    sgCurrentStep++;
-    document.getElementById('sgStep' + sgCurrentStep).classList.add('active');
-    document.getElementById('sgBackBtn').style.display = 'block';
-    const stepKey = ['season', 'priority', 'vehicle'][sgCurrentStep - 1];
-    document.getElementById('sgNextBtn').disabled = !sgAnswers[stepKey];
-    document.getElementById('sgNextBtn').textContent = sgCurrentStep === SG_TOTAL ? 'Show My Tires →' : 'Next →';
-    updateSgProgress();
-  } else {
+  if (sgCurrentStep === 'step0') {
+    if (!sgAnswers.method) return;
+    if (sgAnswers.method === 'vehicle') {
+      sgShowStep('0a', true, 'Next →', !sgAnswers.tireSize);
+    } else {
+      sgShowStep('0b', true, 'Next →', !sgAnswers.tireSize);
+    }
+  } else if (sgCurrentStep === 'step0a' || sgCurrentStep === 'step0b') {
+    if (!sgAnswers.tireSize) return;
+    sgShowStep('1', true, 'Next →', !sgAnswers.season);
+  } else if (sgCurrentStep === 'step1') {
+    if (!sgAnswers.season) return;
+    sgShowStep('2', true, 'Next →', !sgAnswers.priority);
+  } else if (sgCurrentStep === 'step2') {
+    if (!sgAnswers.priority) return;
+    sgShowStep('3', true, 'Show My Tires →', !sgAnswers.vehicle);
+  } else if (sgCurrentStep === 'step3') {
+    if (!sgAnswers.vehicle) return;
     applySelectionGuideFilters();
   }
 }
 
 function sgBack() {
-  if (sgCurrentStep > 1) {
-    document.getElementById('sgStep' + sgCurrentStep).classList.remove('active');
-    sgCurrentStep--;
-    document.getElementById('sgStep' + sgCurrentStep).classList.add('active');
-    document.getElementById('sgBackBtn').style.display = sgCurrentStep === 1 ? 'none' : 'block';
-    document.getElementById('sgNextBtn').disabled = false;
-    document.getElementById('sgNextBtn').textContent = sgCurrentStep === SG_TOTAL ? 'Show My Tires →' : 'Next →';
-    updateSgProgress();
+  if (sgCurrentStep === 'step0a' || sgCurrentStep === 'step0b') {
+    sgShowStep('0', false, 'Next →', !sgAnswers.method);
+  } else if (sgCurrentStep === 'step1') {
+    if (sgAnswers.method === 'vehicle') sgShowStep('0a', true, 'Next →', !sgAnswers.tireSize);
+    else sgShowStep('0b', true, 'Next →', !sgAnswers.tireSize);
+  } else if (sgCurrentStep === 'step2') {
+    sgShowStep('1', true, 'Next →', !sgAnswers.season);
+  } else if (sgCurrentStep === 'step3') {
+    sgShowStep('2', true, 'Next →', !sgAnswers.priority);
   }
 }
 
-function applySelectionGuideFilters() {
-  closeSelectionGuide();
+async function applySelectionGuideFilters() {
+  // Show loading state
+  document.querySelectorAll('.sg-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('sgStepLoading').classList.add('active');
+  document.getElementById('sgBackBtn').style.display = 'none';
+  document.getElementById('sgNextBtn').style.display = 'none';
+  const seasonLabels = { allweather: 'All-Weather', allseason: 'All-Season', winter: 'Winter', summer: 'Summer / Performance' };
+  document.getElementById('sgLoadingMsg').textContent =
+    'Finding ' + (seasonLabels[sgAnswers.season] || '') + ' tires in size ' + sgAnswers.tireSize + '…';
+
+  // Run the search
   switchCatalogType('tires');
-  // Season chip
+  await loadTires({ tireSizes: [sgAnswers.tireSize] });
+
+  // Apply season chip
   const seasonMap = { allweather: 'all-weather', allseason: 'all-season', winter: 'winter', summer: 'summer' };
   const targetLabel = seasonMap[sgAnswers.season] || '';
   if (targetLabel) {
@@ -3905,24 +4130,41 @@ function applySelectionGuideFilters() {
       c.textContent.toLowerCase().includes(targetLabel)
     );
     if (chip) chip.click();
+  } else if (['truck','minivan'].includes(sgAnswers.vehicle)) {
+    const chip = [...document.querySelectorAll('#tire-chips-row .chip')].find(c =>
+      c.textContent.toLowerCase().includes('truck')
+    );
+    if (chip) chip.click();
   }
-  // Priority → sort
+
+  // Apply sort by priority
   const prioritySort = { value: 'price-asc', longevity: 'price-desc', performance: 'price-desc', comfort: 'price-asc' };
   const sortEl = document.getElementById('sortSelect');
   if (sortEl && prioritySort[sgAnswers.priority]) {
     sortEl.value = prioritySort[sgAnswers.priority];
     sortEl.dispatchEvent(new Event('change'));
   }
-  // Truck/van → Truck & SUV chip (only if no season filter was applied)
-  if (!targetLabel && ['truck', 'minivan'].includes(sgAnswers.vehicle)) {
-    const truckChip = [...document.querySelectorAll('#tire-chips-row .chip')].find(c =>
-      c.textContent.toLowerCase().includes('truck')
-    );
-    if (truckChip) truckChip.click();
+
+  // Show results summary banner
+  const count = filteredTires.length;
+  const summaryEl = document.getElementById('sgResultsSummary');
+  if (summaryEl) {
+    const vLabels = { car: 'Car', cuv: 'SUV/CUV', truck: 'Truck', minivan: 'Minivan' };
+    const pLabels = { value: 'Best Value', longevity: 'Long Tread Life', performance: 'Performance', comfort: 'Comfort' };
+    summaryEl.innerHTML =
+      '<span class="sg-sum-tag">' + (seasonLabels[sgAnswers.season] || 'All') + '</span>' +
+      '<span class="sg-sum-tag">📐 ' + sgAnswers.tireSize + '</span>' +
+      '<span class="sg-sum-tag">' + (pLabels[sgAnswers.priority] || '') + '</span>' +
+      '<span class="sg-sum-tag">' + (vLabels[sgAnswers.vehicle] || '') + '</span>' +
+      '<span class="sg-sum-count">' + count + ' result' + (count !== 1 ? 's' : '') + '</span>';
+    summaryEl.style.display = 'flex';
   }
-  const labels = { allweather: 'All-Weather', allseason: 'All-Season', winter: 'Winter', summer: 'Summer' };
-  showToast('Results filtered!', 'Showing ' + (labels[sgAnswers.season] || '') + ' tires for you');
-  setTimeout(() => smoothScroll('#catalog'), 300);
+
+  // Close and scroll
+  document.getElementById('sgNextBtn').style.display = 'block';
+  closeSelectionGuide();
+  setTimeout(() => smoothScroll('#catalog'), 200);
+  showToast(count + ' tire' + (count !== 1 ? 's' : '') + ' found', sgAnswers.tireSize + ' · ' + (seasonLabels[sgAnswers.season] || 'All seasons'));
 }
 
 function smoothScroll(sel) { document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' }); }
