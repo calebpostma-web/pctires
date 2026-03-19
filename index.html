@@ -24,7 +24,7 @@ body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--mid);border-radius:3px}
 
 .rebate-ticker{background:var(--yellow);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:7px 0;overflow:hidden;position:fixed;top:0;left:0;right:0;z-index:502}
-.rebate-ticker-inner{display:flex;animation:ticker 60s linear infinite;white-space:nowrap;width:max-content}
+.rebate-ticker-inner{display:flex;animation:ticker 120s linear infinite;white-space:nowrap;width:max-content}
 .rebate-ticker-inner:hover{animation-play-state:paused}
 .rebate-ticker-item{padding:0 40px;display:flex;align-items:center;gap:8px;flex-shrink:0}
 .rebate-ticker-sep{opacity:.4;margin:0 4px}
@@ -66,6 +66,11 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border);padding:14px 32px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
 .btn-ghost:hover{border-color:var(--mid)}
 .hero-trust{display:flex;gap:40px;padding-top:36px;border-top:1px solid var(--border)}
+.hero-guide-card{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.35);border-radius:2px;padding:14px 20px;margin-bottom:20px;cursor:pointer;transition:all .2s;flex-wrap:wrap}
+.hero-guide-card:hover{background:rgba(245,197,24,.18);border-color:rgba(245,197,24,.6)}
+.hgc-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--yellow);margin-bottom:3px}
+.hgc-text{font-size:13px;color:var(--light);font-weight:500}
+.hgc-arrow{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--yellow);white-space:nowrap;flex-shrink:0}
 .trust-item{display:flex;align-items:center;gap:10px}
 .trust-icon{font-size:20px}
 .trust-txt strong{display:block;color:var(--light);font-weight:600;font-size:13px}
@@ -402,6 +407,52 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .guide-ask{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:20px 24px;margin-top:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .guide-ask-text{flex:1;font-size:14px;color:var(--light)}
 .guide-ask-text strong{color:var(--white);display:block;margin-bottom:3px}
+
+/* SELECTION GUIDE BANNER */
+.sg-banner{background:linear-gradient(135deg,#141400 0%,#1a1a00 50%,#141400 100%);border-top:1px solid rgba(245,197,24,.2);border-bottom:1px solid rgba(245,197,24,.2);padding:28px 40px}
+.sg-banner-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+.sg-banner-icon{font-size:42px;flex-shrink:0;line-height:1}
+.sg-banner-text{flex:1;min-width:200px}
+.sg-banner-text h3{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--white);margin-bottom:4px}
+.sg-banner-text p{font-size:13px;color:var(--muted);line-height:1.5}
+.sg-banner-btn{background:var(--yellow);color:var(--black);border:none;padding:14px 32px;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.sg-banner-btn:hover{background:var(--yellow-dark);transform:translateY(-1px)}
+.sg-banner-tags{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.sg-banner-tag{font-size:11px;color:var(--yellow);background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;padding:2px 8px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px}
+
+/* SELECTION GUIDE MODAL */
+.sg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:800;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.sg-overlay.show{opacity:1;pointer-events:all}
+.sg-modal{background:var(--dark);border:1px solid var(--border);border-radius:2px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;transform:translateY(16px);transition:transform .25s}
+.sg-overlay.show .sg-modal{transform:translateY(0)}
+.sg-head{padding:22px 28px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--dark);z-index:2}
+.sg-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--yellow)}
+.sg-close{background:var(--raised);border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:2px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.sg-close:hover{color:var(--white);border-color:var(--mid)}
+.sg-body{padding:24px 28px 28px}
+.sg-step{display:none}
+.sg-step.active{display:block}
+.sg-q{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--white);margin-bottom:6px;line-height:1.2}
+.sg-sub{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.5}
+.sg-context{display:inline-flex;align-items:center;gap:8px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.25);border-radius:2px;padding:5px 12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--yellow);margin-bottom:16px}
+.sg-options{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.sg-opt{display:flex;align-items:flex-start;gap:14px;background:var(--card);border:2px solid var(--border);border-radius:2px;padding:14px 16px;cursor:pointer;transition:all .2s;text-align:left;width:100%}
+.sg-opt:hover{border-color:var(--mid);background:var(--raised)}
+.sg-opt.selected{border-color:var(--yellow);background:var(--yellow-dim)}
+.sg-opt-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+.sg-opt-text strong{display:block;font-size:14px;font-weight:600;color:var(--white);margin-bottom:2px}
+.sg-opt-text span{font-size:12px;color:var(--muted);line-height:1.4}
+.sg-opt.selected .sg-opt-text strong{color:var(--yellow)}
+.sg-progress{display:flex;gap:4px;margin-bottom:20px}
+.sg-prog-dot{flex:1;height:3px;background:var(--border);border-radius:1px;transition:background .3s}
+.sg-prog-dot.done{background:var(--yellow)}
+.sg-btns{display:flex;gap:10px;padding-top:16px;border-top:1px solid var(--border)}
+.sg-back{background:var(--raised);border:1px solid var(--border);color:var(--light);padding:11px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.sg-back:hover{border-color:var(--mid);color:var(--white)}
+.sg-next{flex:1;background:var(--yellow);color:var(--black);border:none;padding:11px 24px;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;transition:all .2s}
+.sg-next:hover{background:var(--yellow-dark)}
+.sg-next:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:600px){.sg-banner{padding:22px 20px}.sg-banner-inner{gap:20px}.sg-body{padding:20px 20px 24px}.sg-head{padding:18px 20px 14px}}
 
 /* REVIEWS */
 .reviews-section{background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 40px}
@@ -858,6 +909,13 @@ function getRebateForBrand(brand) {
       <span class="b">RIGHT.</span>
     </h1>
     <p class="hero-desc">Chatham-Kent's own tire shop — shop online, pay securely, and book your installation locally. No phone tag. No hidden fees. <strong>Just the right setup on your car.</strong></p>
+    <div class="hero-guide-card" onclick="openSelectionGuide()">
+      <div class="hgc-left">
+        <div class="hgc-label">NOT SURE WHICH TIRE?</div>
+        <div class="hgc-text">Answer 3 quick questions → we'll filter results for you</div>
+      </div>
+      <div class="hgc-arrow">Use Our Tire Selection Guide →</div>
+    </div>
     <div class="hero-btns">
       <button class="btn-primary" onclick="smoothScroll('#lookup')">Find Tires for My Vehicle</button>
       <button class="btn-ghost" onclick="smoothScroll('#catalog')">Browse All</button>
@@ -1201,9 +1259,9 @@ function getRebateForBrand(brand) {
       <div class="gpanel" id="gp-faq"><div style="display:flex;flex-direction:column;gap:2px" id="faqList"></div></div>
     </div>
     <div class="guide-ask">
-      <span style="font-size:28px">💬</span>
-      <div class="guide-ask-text"><strong>Still not sure? We'll tell you exactly what you need.</strong>Tell us your vehicle and how you drive, and we'll personally recommend the right tire.</div>
-      <a href="tel:5193805104" class="btn-primary" style="white-space:nowrap">Call Us Free →</a>
+      <span style="font-size:28px">🛞</span>
+      <div class="guide-ask-text"><strong>Not sure which tire is right for you?</strong>Answer 3 quick questions and we'll filter the catalog to your exact needs.</div>
+      <button class="btn-primary" style="white-space:nowrap" onclick="openSelectionGuide()">Use Tire Selection Guide →</button>
     </div>
   </div>
 </section>
@@ -1371,6 +1429,7 @@ function getRebateForBrand(brand) {
     <a href="sms:5193805104" class="chat-option"><span class="chat-option-icon">💬</span> Text us a question</a>
     <a href="/cdn-cgi/l/email-protection#5d0d322e29303c3e3233292f3c3e2934333a1d3a303c3431733e3230" class="chat-option"><span class="chat-option-icon">✉️</span> Email us</a>
     <button class="chat-option" onclick="smoothScroll('#guide');toggleChat()" style="border:none;cursor:pointer;text-align:left"><span class="chat-option-icon">📖</span> Browse tire guide</button>
+    <button class="chat-option" onclick="openSelectionGuide();toggleChat()" style="border:none;cursor:pointer;text-align:left"><span class="chat-option-icon">🛞</span> Tire Selection Guide</button>
   </div>
 </div>
 
@@ -1405,6 +1464,101 @@ function getRebateForBrand(brand) {
       <div class="sum-row total"><span>Total</span><span id="sumTotal">$0.00</span></div>
       <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout →</button>
       <div class="stripe-note">🔒 Secured by <strong style="color:var(--light);margin-left:3px">Stripe</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- SELECTION GUIDE MODAL -->
+<div class="sg-overlay" id="sgOverlay" onclick="if(event.target===this)closeSelectionGuide()">
+  <div class="sg-modal">
+    <div class="sg-head">
+      <div class="sg-title">🛞 Tire Selection Guide</div>
+      <button class="sg-close" onclick="closeSelectionGuide()">✕</button>
+    </div>
+    <div class="sg-body">
+      <div class="sg-progress">
+        <div class="sg-prog-dot" id="sgProg1"></div>
+        <div class="sg-prog-dot" id="sgProg2"></div>
+        <div class="sg-prog-dot" id="sgProg3"></div>
+      </div>
+      <div id="sgContextBar" style="display:none" class="sg-context">📐 <span id="sgContextSize"></span></div>
+
+      <!-- Step 1: Season -->
+      <div class="sg-step active" id="sgStep1">
+        <div class="sg-q">What season do you need?</div>
+        <div class="sg-sub">Ontario winters are serious. Two sets gives you the best grip and longest tire life — but one set is more convenient.</div>
+        <div class="sg-options">
+          <button class="sg-opt" onclick="sgSelect(this,'season','allweather')">
+            <span class="sg-opt-icon">🌤️❄️</span>
+            <div class="sg-opt-text"><strong>All-Weather — Year Round</strong><span>One set for all seasons. Certified for winter (snowflake rated). Popular choice for Chatham-Kent drivers.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelect(this,'season','allseason')">
+            <span class="sg-opt-icon">🌤️</span>
+            <div class="sg-opt-text"><strong>All-Season — 3 Season</strong><span>Great for spring through fall. Not rated for severe winter. Best if you switch to winters November–April.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelect(this,'season','winter')">
+            <span class="sg-opt-icon">❄️</span>
+            <div class="sg-opt-text"><strong>Winter / Snow Only</strong><span>Maximum cold-weather grip. Swap on in November, off in April. Best safety in ice and snow.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelect(this,'season','summer')">
+            <span class="sg-opt-icon">☀️</span>
+            <div class="sg-opt-text"><strong>Summer / Performance</strong><span>Optimized for warm weather grip and handling. Not for use below 7°C.</span></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Priority -->
+      <div class="sg-step" id="sgStep2">
+        <div class="sg-q">What's your biggest priority?</div>
+        <div class="sg-sub">This helps us sort results to what matters most to you.</div>
+        <div class="sg-options">
+          <button class="sg-opt" onclick="sgSelect(this,'priority','value')">
+            <span class="sg-opt-icon">💰</span>
+            <div class="sg-opt-text"><strong>Best Value</strong><span>Reliable quality at the best price. You want a solid tire without overpaying.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelect(this,'priority','longevity')">
+            <span class="sg-opt-icon">🔄</span>
+            <div class="sg-opt-text"><strong>Long Tread Life</strong><span>High-mileage tires that last. Great for high-km commuters and highway drivers.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelect(this,'priority','performance')">
+            <span class="sg-opt-icon">🏎️</span>
+            <div class="sg-opt-text"><strong>Performance &amp; Handling</strong><span>Sharper steering, better wet grip, premium feel. Worth the extra cost.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelect(this,'priority','comfort')">
+            <span class="sg-opt-icon">🛋️</span>
+            <div class="sg-opt-text"><strong>Ride Comfort &amp; Quiet</strong><span>Smooth, quiet highway cruising. Good for sedans and family vehicles.</span></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Vehicle Type -->
+      <div class="sg-step" id="sgStep3">
+        <div class="sg-q">What type of vehicle?</div>
+        <div class="sg-sub">We'll narrow results to tires designed for your vehicle type.</div>
+        <div class="sg-options">
+          <button class="sg-opt" onclick="sgSelect(this,'vehicle','car')">
+            <span class="sg-opt-icon">🚗</span>
+            <div class="sg-opt-text"><strong>Car / Sedan / Hatchback</strong><span>Corolla, Civic, Elantra, Jetta, etc.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelect(this,'vehicle','cuv')">
+            <span class="sg-opt-icon">🚙</span>
+            <div class="sg-opt-text"><strong>SUV / CUV / Crossover</strong><span>RAV4, Escape, CR-V, Tucson, Rogue, etc.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelect(this,'vehicle','truck')">
+            <span class="sg-opt-icon">🛻</span>
+            <div class="sg-opt-text"><strong>Truck / Full-Size SUV</strong><span>F-150, RAM 1500, Silverado, Tahoe, etc.</span></div>
+          </button>
+          <button class="sg-opt" onclick="sgSelect(this,'vehicle','minivan')">
+            <span class="sg-opt-icon">🚐</span>
+            <div class="sg-opt-text"><strong>Minivan / Cargo Van</strong><span>Odyssey, Sienna, Grand Caravan, Transit, etc.</span></div>
+          </button>
+        </div>
+      </div>
+
+      <div class="sg-btns">
+        <button class="sg-back" id="sgBackBtn" onclick="sgBack()" style="display:none">← Back</button>
+        <button class="sg-next" id="sgNextBtn" onclick="sgNext()" disabled>Next →</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1853,6 +2007,7 @@ let catalogMode   = 'tires'; // 'tires' or 'wheels'
 let cart          = [];
 let step          = 1;
 let selDate = null, selTime = null, tdgQuote = null;
+let lastTireSearchSize = null; // tracks most recent tire size searched
 let calY, calMo;
 const now = new Date(); calY = now.getFullYear(); calMo = now.getMonth();
 
@@ -1940,6 +2095,7 @@ function renderCatalog() {
 // ─────────────────────────────────────────────────
 async function loadTires(searchParams = null) {
   showCatalogLoading(true);
+  if (searchParams?.tireSizes?.length) lastTireSearchSize = searchParams.tireSizes[0];
   try {
     let products = [], inventoryMap = {};
     if (searchParams) {
@@ -3666,6 +3822,109 @@ document.addEventListener('click', e => { const h = document.getElementById('ham
 //  UTILS
 // ─────────────────────────────────────────────────
 function bgClose(e, id) { if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('show'); }
+// ─────────────────────────────────────────────────
+//  TIRE SELECTION GUIDE
+// ─────────────────────────────────────────────────
+const sgAnswers = {};
+let sgCurrentStep = 1;
+const SG_TOTAL = 3;
+
+function openSelectionGuide() {
+  sgAnswers.season = null; sgAnswers.priority = null; sgAnswers.vehicle = null;
+  sgCurrentStep = 1;
+  document.querySelectorAll('.sg-opt').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('.sg-step').forEach((s, i) => s.classList.toggle('active', i === 0));
+  document.getElementById('sgNextBtn').disabled = true;
+  document.getElementById('sgNextBtn').textContent = 'Next →';
+  document.getElementById('sgBackBtn').style.display = 'none';
+  updateSgProgress();
+  const ctx = document.getElementById('sgContextBar');
+  if (lastTireSearchSize) {
+    document.getElementById('sgContextSize').textContent = 'Searching in size: ' + lastTireSearchSize;
+    ctx.style.display = 'inline-flex';
+  } else {
+    ctx.style.display = 'none';
+  }
+  document.getElementById('sgOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSelectionGuide() {
+  document.getElementById('sgOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function sgSelect(btn, key, val) {
+  btn.closest('.sg-options').querySelectorAll('.sg-opt').forEach(o => o.classList.remove('selected'));
+  btn.classList.add('selected');
+  sgAnswers[key] = val;
+  document.getElementById('sgNextBtn').disabled = false;
+}
+
+function updateSgProgress() {
+  for (let i = 1; i <= SG_TOTAL; i++) {
+    document.getElementById('sgProg' + i).classList.toggle('done', i <= sgCurrentStep);
+  }
+}
+
+function sgNext() {
+  if (sgCurrentStep < SG_TOTAL) {
+    document.getElementById('sgStep' + sgCurrentStep).classList.remove('active');
+    sgCurrentStep++;
+    document.getElementById('sgStep' + sgCurrentStep).classList.add('active');
+    document.getElementById('sgBackBtn').style.display = 'block';
+    const stepKey = ['season', 'priority', 'vehicle'][sgCurrentStep - 1];
+    document.getElementById('sgNextBtn').disabled = !sgAnswers[stepKey];
+    document.getElementById('sgNextBtn').textContent = sgCurrentStep === SG_TOTAL ? 'Show My Tires →' : 'Next →';
+    updateSgProgress();
+  } else {
+    applySelectionGuideFilters();
+  }
+}
+
+function sgBack() {
+  if (sgCurrentStep > 1) {
+    document.getElementById('sgStep' + sgCurrentStep).classList.remove('active');
+    sgCurrentStep--;
+    document.getElementById('sgStep' + sgCurrentStep).classList.add('active');
+    document.getElementById('sgBackBtn').style.display = sgCurrentStep === 1 ? 'none' : 'block';
+    document.getElementById('sgNextBtn').disabled = false;
+    document.getElementById('sgNextBtn').textContent = sgCurrentStep === SG_TOTAL ? 'Show My Tires →' : 'Next →';
+    updateSgProgress();
+  }
+}
+
+function applySelectionGuideFilters() {
+  closeSelectionGuide();
+  switchCatalogType('tires');
+  // Season chip
+  const seasonMap = { allweather: 'all-weather', allseason: 'all-season', winter: 'winter', summer: 'summer' };
+  const targetLabel = seasonMap[sgAnswers.season] || '';
+  if (targetLabel) {
+    const chip = [...document.querySelectorAll('#tire-chips-row .chip')].find(c =>
+      c.textContent.toLowerCase().includes(targetLabel)
+    );
+    if (chip) chip.click();
+  }
+  // Priority → sort
+  const prioritySort = { value: 'price-asc', longevity: 'price-desc', performance: 'price-desc', comfort: 'price-asc' };
+  const sortEl = document.getElementById('sortSelect');
+  if (sortEl && prioritySort[sgAnswers.priority]) {
+    sortEl.value = prioritySort[sgAnswers.priority];
+    sortEl.dispatchEvent(new Event('change'));
+  }
+  // Truck/van → Truck & SUV chip (only if no season filter was applied)
+  if (!targetLabel && ['truck', 'minivan'].includes(sgAnswers.vehicle)) {
+    const truckChip = [...document.querySelectorAll('#tire-chips-row .chip')].find(c =>
+      c.textContent.toLowerCase().includes('truck')
+    );
+    if (truckChip) truckChip.click();
+  }
+  const labels = { allweather: 'All-Weather', allseason: 'All-Season', winter: 'Winter', summer: 'Summer' };
+  showToast('Results filtered!', 'Showing ' + (labels[sgAnswers.season] || '') + ' tires for you');
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
 function smoothScroll(sel) { document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' }); }
 
 // ─────────────────────────────────────────────────
