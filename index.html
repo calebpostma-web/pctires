@@ -1518,14 +1518,19 @@ function getRebateForBrand(brand) {
       <!-- Step 0a: Vehicle lookup -->
       <div class="sg-step" id="sgStep0a">
         <div class="sg-q">What vehicle are you shopping for?</div>
-        <div class="sg-sub">We'll look up the OEM tire size for your exact model.</div>
+        <div class="sg-sub">Select your make, model and trim — we'll hand you off to the vehicle lookup with everything pre-filled.</div>
         <div class="sg-vehicle-fields">
           <div class="sg-field-row">
             <div class="field"><label>Make</label>
               <select id="sgMake" onchange="sgUpdateModels()"><option value="">Select Make</option></select>
             </div>
             <div class="field"><label>Model</label>
-              <select id="sgModel" onchange="sgUpdateSizeFromVehicle()" disabled><option value="">Select Model</option></select>
+              <select id="sgModel" onchange="sgUpdateTrims()" disabled><option value="">Select Model</option></select>
+            </div>
+          </div>
+          <div class="sg-field-row">
+            <div class="field"><label>Trim <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+              <select id="sgTrim" disabled><option value="">Select Trim</option></select>
             </div>
           </div>
           <div id="sgSizeResult" class="sg-size-result" style="display:none"></div>
@@ -3101,9 +3106,37 @@ function updateTrims() {
 async function doLookup() {
   const y = document.getElementById('vYear').value, mk = document.getElementById('vMake').value, md = document.getElementById('vModel').value;
   if (!y || !mk || !md) { alert('Please select Year, Make and Model.'); return; }
+  await doLookupDirect(mk, md, document.getElementById('vTrim')?.value || '', y);
+}
+
+// Called directly from the Selection Guide — no dropdowns needed
+async function doLookupDirect(mk, md, trim, y) {
+  y = y || '2024';
+
+  // Visually pre-fill the dropdowns so the form reflects what was searched
+  // Make
+  const vMakeSel = document.getElementById('vMake');
+  if (vMakeSel.options.length <= 1) updateMakes(); // populate if empty
+  vMakeSel.value = mk;
+  // Model — populate options first, then set value
+  const vModelSel = document.getElementById('vModel');
+  vModelSel.innerHTML = '<option value="">Select Model</option>';
+  Object.keys(VD[mk] || {}).sort().forEach(m => {
+    const o = document.createElement('option'); o.value = m; o.textContent = m; vModelSel.appendChild(o);
+  });
+  vModelSel.value = md;
+  // Trim — populate then set
+  const vTrimSel = document.getElementById('vTrim');
+  vTrimSel.innerHTML = '<option value="">Select Trim</option>';
+  (VD[mk]?.[md] || []).forEach(t => {
+    const o = document.createElement('option'); o.value = t; o.textContent = t; vTrimSel.appendChild(o);
+  });
+  if (trim) vTrimSel.value = trim;
+  // Year
+  const vYearSel = document.getElementById('vYear');
+  if (vYearSel) vYearSel.value = y;
+
   const vehicleKey = `${mk} ${md}`;
-  const trim = document.getElementById('vTrim')?.value || '';
-  // Use the size picker if visible (multiple sizes), otherwise fall back to OEM_SIZES
   const sizeRow = document.getElementById('vTireSizeRow');
   const sizePicker = document.getElementById('vTireSize');
   const tireSize = (sizeRow && sizeRow.style.display !== 'none' && sizePicker?.value)
@@ -3113,13 +3146,13 @@ async function doLookup() {
   lastSearchVehicle = { year: y, make: mk, model: md, trim };
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
   if (tireSize) {
-    textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — OEM size: <strong>${tireSize}</strong>. Searching live TDG inventory…`;
+    textEl.innerHTML = `Found <strong>${mk} ${md}</strong> — OEM size: <strong>${tireSize}</strong>. Searching live TDG inventory…`;
     resultEl.classList.add('show');
     switchCatalogType('tires');
     await loadTires({ tireSizes: [tireSize] });
-    textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — showing <strong>${filteredTires.length}</strong> compatible tires for size <strong>${tireSize}</strong>.`;
+    textEl.innerHTML = `Found <strong>${mk} ${md}</strong> — showing <strong>${filteredTires.length}</strong> compatible tires for size <strong>${tireSize}</strong>.`;
   } else {
-    textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong>. Showing full inventory — <a onclick="smoothScroll('#guide')" style="color:var(--yellow);cursor:pointer">not sure what size you need?</a>`;
+    textEl.innerHTML = `Found <strong>${mk} ${md}</strong>. Showing full inventory — <a onclick="smoothScroll('#guide')" style="color:var(--yellow);cursor:pointer">not sure what size you need?</a>`;
     resultEl.classList.add('show');
     switchCatalogType('tires');
     await loadTires();
@@ -3904,35 +3937,37 @@ function bgClose(e, id) { if (e.target === document.getElementById(id)) document
 //  TIRE SELECTION GUIDE
 // ─────────────────────────────────────────────────
 const sgAnswers = {};
-let sgCurrentStep = 'step0'; // step0 → step0a or step0b → step1 → step2 → step3
-const SG_STEPS = ['step0','step0sub','step1','step2','step3'];
+let sgCurrentStep = 'step0';
 
 function openSelectionGuide() {
-  // Reset answers
   sgAnswers.season = null; sgAnswers.priority = null; sgAnswers.vehicle = null;
   sgAnswers.tireSize = null; sgAnswers.method = null;
+  sgAnswers.sgMake = null; sgAnswers.sgModel = null; sgAnswers.sgTrim = null;
   sgCurrentStep = 'step0';
 
-  // Reset all steps
   document.querySelectorAll('.sg-step').forEach(s => s.classList.remove('active'));
   document.getElementById('sgStep0').classList.add('active');
   document.querySelectorAll('.sg-opt').forEach(o => o.classList.remove('selected'));
 
-  // Reset dropdowns
+  // Reset vehicle dropdowns
   sgPopulateMakes();
-  sgPopulateSizeWidths();
   document.getElementById('sgModel').innerHTML = '<option value="">Select Model</option>';
   document.getElementById('sgModel').disabled = true;
+  document.getElementById('sgTrim').innerHTML = '<option value="">Select Trim</option>';
+  document.getElementById('sgTrim').disabled = true;
   document.getElementById('sgSizeResult').style.display = 'none';
-  document.getElementById('sgSizeDisplay').style.display = 'none';
+
+  // Reset size dropdowns
+  sgPopulateSizeWidths();
   document.getElementById('sgProfile').innerHTML = '<option value="">Width first</option>';
   document.getElementById('sgProfile').disabled = true;
   document.getElementById('sgRim').innerHTML = '<option value="">Profile first</option>';
   document.getElementById('sgRim').disabled = true;
+  document.getElementById('sgSizeDisplay').style.display = 'none';
 
-  // Buttons
   document.getElementById('sgNextBtn').disabled = true;
   document.getElementById('sgNextBtn').textContent = 'Next →';
+  document.getElementById('sgNextBtn').style.display = 'block';
   document.getElementById('sgBackBtn').style.display = 'none';
 
   updateSgProgress();
@@ -3946,6 +3981,8 @@ function closeSelectionGuide() {
 }
 
 function updateSgProgress() {
+  // Vehicle path: step0 → step0a → step1 → step2 → done (4 dots: find, season, priority, done)
+  // Size path:    step0 → step0b → step1 → step2 → step3 → done
   const progressMap = { step0: 1, step0a: 1, step0b: 1, step1: 2, step2: 3, step3: 4 };
   const filled = progressMap[sgCurrentStep] || 1;
   for (let i = 1; i <= 4; i++) {
@@ -3959,6 +3996,7 @@ function sgShowStep(stepId, showBack, nextText, nextDisabled) {
   document.getElementById('sgBackBtn').style.display = showBack ? 'block' : 'none';
   document.getElementById('sgNextBtn').textContent = nextText || 'Next →';
   document.getElementById('sgNextBtn').disabled = !!nextDisabled;
+  document.getElementById('sgNextBtn').style.display = 'block';
   sgCurrentStep = stepId === '0a' ? 'step0a' : stepId === '0b' ? 'step0b' : 'step' + stepId;
   updateSgProgress();
 }
@@ -3983,37 +4021,52 @@ function sgPopulateMakes() {
 function sgUpdateModels() {
   const make = document.getElementById('sgMake').value;
   const modelSel = document.getElementById('sgModel');
+  const trimSel = document.getElementById('sgTrim');
   modelSel.innerHTML = '<option value="">Select Model</option>';
   modelSel.disabled = !make;
+  trimSel.innerHTML = '<option value="">Select Trim</option>';
+  trimSel.disabled = true;
+  document.getElementById('sgSizeResult').style.display = 'none';
+  document.getElementById('sgNextBtn').disabled = true;
+  sgAnswers.sgMake = make || null;
+  sgAnswers.sgModel = null; sgAnswers.sgTrim = null;
   if (!make) return;
   Object.keys(VD[make] || {}).sort().forEach(m => {
     const o = document.createElement('option'); o.value = m; o.textContent = m; modelSel.appendChild(o);
   });
-  document.getElementById('sgSizeResult').style.display = 'none';
-  document.getElementById('sgNextBtn').disabled = true;
 }
 
-function sgUpdateSizeFromVehicle() {
+function sgUpdateTrims() {
   const make = document.getElementById('sgMake').value;
   const model = document.getElementById('sgModel').value;
+  const trimSel = document.getElementById('sgTrim');
+  trimSel.innerHTML = '<option value="">Select Trim (optional)</option>';
+  trimSel.disabled = !model;
+  sgAnswers.sgModel = model || null;
+  sgAnswers.sgTrim = null;
+  if (!make || !model) { document.getElementById('sgNextBtn').disabled = true; return; }
+  const trims = VD[make]?.[model] || [];
+  trims.forEach(t => {
+    const o = document.createElement('option'); o.value = t; o.textContent = t; trimSel.appendChild(o);
+  });
+  // Model selected is enough to proceed
+  document.getElementById('sgNextBtn').disabled = false;
+  // Show confirmation
   const resultEl = document.getElementById('sgSizeResult');
-  if (!make || !model) { resultEl.style.display = 'none'; document.getElementById('sgNextBtn').disabled = true; return; }
-  const key = make + ' ' + model;
-  const size = OEM_SIZES[key] || null;
-  if (size) {
-    sgAnswers.tireSize = size;
-    resultEl.innerHTML = '✅ OEM size found: <strong>' + size + '</strong>';
-    resultEl.style.display = 'block';
-    document.getElementById('sgNextBtn').disabled = false;
-  } else {
-    sgAnswers.tireSize = null;
-    resultEl.innerHTML = '⚠️ Size not in our database for this model — try <strong>I Know My Size</strong> instead.';
-    resultEl.style.display = 'block';
-    document.getElementById('sgNextBtn').disabled = true;
-  }
+  resultEl.innerHTML = '✅ <strong>' + make + ' ' + model + '</strong> — select trim if applicable, then click Next.';
+  resultEl.style.display = 'block';
 }
 
-// Step 0b: size dropdowns (reuse TIRE_SIZES data)
+// Infer vehicle type from model name
+function sgInferVehicleType(make, model) {
+  const m = (make + ' ' + model).toLowerCase();
+  if (/f-150|f-250|f-350|silverado|sierra|ram 1500|ram 2500|tundra|titan|ranger|colorado|canyon|ridgeline|tacoma/.test(m)) return 'truck';
+  if (/odyssey|sienna|grand caravan|pacifica|sedona|carnival|transit|express|savana/.test(m)) return 'minivan';
+  if (/rav4|escape|cr-v|tucson|rogue|equinox|compass|cherokee|explorer|pilot|4runner|highlander|pathfinder|terrain|traverse|tahoe|suburban|yukon|expedition|navigator|armada|sequoia|atlas|tiguan|edge|bronco|blazer|murano/.test(m)) return 'cuv';
+  return 'car';
+}
+
+// Step 0b: size dropdowns
 function sgPopulateSizeWidths() {
   const sel = document.getElementById('sgWidth');
   sel.innerHTML = '<option value="">Select Width</option>';
@@ -4076,19 +4129,30 @@ function sgNext() {
   if (sgCurrentStep === 'step0') {
     if (!sgAnswers.method) return;
     if (sgAnswers.method === 'vehicle') {
-      sgShowStep('0a', true, 'Next →', !sgAnswers.tireSize);
+      sgShowStep('0a', true, 'Next →', true); // disabled until model selected
     } else {
-      sgShowStep('0b', true, 'Next →', !sgAnswers.tireSize);
+      sgShowStep('0b', true, 'Next →', true);
     }
-  } else if (sgCurrentStep === 'step0a' || sgCurrentStep === 'step0b') {
+  } else if (sgCurrentStep === 'step0a') {
+    if (!sgAnswers.sgModel) return;
+    // Infer and store vehicle type — skip step 3
+    sgAnswers.vehicle = sgInferVehicleType(sgAnswers.sgMake || '', sgAnswers.sgModel || '');
+    sgAnswers.sgTrim = document.getElementById('sgTrim').value || null;
+    sgShowStep('1', true, 'Next →', !sgAnswers.season);
+  } else if (sgCurrentStep === 'step0b') {
     if (!sgAnswers.tireSize) return;
     sgShowStep('1', true, 'Next →', !sgAnswers.season);
   } else if (sgCurrentStep === 'step1') {
     if (!sgAnswers.season) return;
-    sgShowStep('2', true, 'Next →', !sgAnswers.priority);
+    sgShowStep('2', true, sgAnswers.method === 'vehicle' ? 'Show My Tires →' : 'Next →', !sgAnswers.priority);
   } else if (sgCurrentStep === 'step2') {
     if (!sgAnswers.priority) return;
-    sgShowStep('3', true, 'Show My Tires →', !sgAnswers.vehicle);
+    if (sgAnswers.method === 'vehicle') {
+      // Skip step 3, go straight to finish
+      applySelectionGuideFilters();
+    } else {
+      sgShowStep('3', true, 'Show My Tires →', !sgAnswers.vehicle);
+    }
   } else if (sgCurrentStep === 'step3') {
     if (!sgAnswers.vehicle) return;
     applySelectionGuideFilters();
@@ -4099,7 +4163,7 @@ function sgBack() {
   if (sgCurrentStep === 'step0a' || sgCurrentStep === 'step0b') {
     sgShowStep('0', false, 'Next →', !sgAnswers.method);
   } else if (sgCurrentStep === 'step1') {
-    if (sgAnswers.method === 'vehicle') sgShowStep('0a', true, 'Next →', !sgAnswers.tireSize);
+    if (sgAnswers.method === 'vehicle') sgShowStep('0a', true, 'Next →', !sgAnswers.sgModel);
     else sgShowStep('0b', true, 'Next →', !sgAnswers.tireSize);
   } else if (sgCurrentStep === 'step2') {
     sgShowStep('1', true, 'Next →', !sgAnswers.season);
@@ -4109,62 +4173,93 @@ function sgBack() {
 }
 
 async function applySelectionGuideFilters() {
-  // Show loading state
-  document.querySelectorAll('.sg-step').forEach(s => s.classList.remove('active'));
-  document.getElementById('sgStepLoading').classList.add('active');
-  document.getElementById('sgBackBtn').style.display = 'none';
-  document.getElementById('sgNextBtn').style.display = 'none';
   const seasonLabels = { allweather: 'All-Weather', allseason: 'All-Season', winter: 'Winter', summer: 'Summer / Performance' };
-  document.getElementById('sgLoadingMsg').textContent =
-    'Finding ' + (seasonLabels[sgAnswers.season] || '') + ' tires in size ' + sgAnswers.tireSize + '…';
 
-  // Run the search
-  switchCatalogType('tires');
-  await loadTires({ tireSizes: [sgAnswers.tireSize] });
+  if (sgAnswers.method === 'vehicle') {
+    // ── VEHICLE PATH: call doLookupDirect with the values we already have ──
+    closeSelectionGuide();
+    switchLookupTab('vehicle');
+    smoothScroll('#lookup');
 
-  // Apply season chip
-  const seasonMap = { allweather: 'all-weather', allseason: 'all-season', winter: 'winter', summer: 'summer' };
-  const targetLabel = seasonMap[sgAnswers.season] || '';
-  if (targetLabel) {
-    const chip = [...document.querySelectorAll('#tire-chips-row .chip')].find(c =>
-      c.textContent.toLowerCase().includes(targetLabel)
-    );
-    if (chip) chip.click();
-  } else if (['truck','minivan'].includes(sgAnswers.vehicle)) {
-    const chip = [...document.querySelectorAll('#tire-chips-row .chip')].find(c =>
-      c.textContent.toLowerCase().includes('truck')
-    );
-    if (chip) chip.click();
+    // Small delay to let the scroll start, then run the lookup
+    await new Promise(r => setTimeout(r, 300));
+    await doLookupDirect(sgAnswers.sgMake, sgAnswers.sgModel, sgAnswers.sgTrim || '');
+
+    // Apply season chip after results load
+    const seasonMap = { allweather: 'all-weather', allseason: 'all-season', winter: 'winter', summer: 'summer' };
+    const targetLabel = seasonMap[sgAnswers.season] || '';
+    if (targetLabel) {
+      const chip = [...document.querySelectorAll('#tire-chips-row .chip')].find(c =>
+        c.textContent.toLowerCase().includes(targetLabel)
+      );
+      if (chip) chip.click();
+    }
+
+    // Apply sort
+    const prioritySort = { value: 'price-asc', longevity: 'price-desc', performance: 'price-desc', comfort: 'price-asc' };
+    const sortEl = document.getElementById('sortSelect');
+    if (sortEl && prioritySort[sgAnswers.priority]) {
+      sortEl.value = prioritySort[sgAnswers.priority];
+      sortEl.dispatchEvent(new Event('change'));
+    }
+
+    showToast('Vehicle matched!', sgAnswers.sgMake + ' ' + sgAnswers.sgModel + ' · ' + (seasonLabels[sgAnswers.season] || ''));
+
+  } else {
+    // ── SIZE PATH: search TDG directly ──
+    document.querySelectorAll('.sg-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('sgStepLoading').classList.add('active');
+    document.getElementById('sgBackBtn').style.display = 'none';
+    document.getElementById('sgNextBtn').style.display = 'none';
+    document.getElementById('sgLoadingMsg').textContent =
+      'Finding ' + (seasonLabels[sgAnswers.season] || '') + ' tires in size ' + sgAnswers.tireSize + '…';
+
+    switchCatalogType('tires');
+    await loadTires({ tireSizes: [sgAnswers.tireSize] });
+
+    // Season chip
+    const seasonMap = { allweather: 'all-weather', allseason: 'all-season', winter: 'winter', summer: 'summer' };
+    const targetLabel = seasonMap[sgAnswers.season] || '';
+    if (targetLabel) {
+      const chip = [...document.querySelectorAll('#tire-chips-row .chip')].find(c =>
+        c.textContent.toLowerCase().includes(targetLabel)
+      );
+      if (chip) chip.click();
+    } else if (['truck','minivan'].includes(sgAnswers.vehicle)) {
+      const chip = [...document.querySelectorAll('#tire-chips-row .chip')].find(c =>
+        c.textContent.toLowerCase().includes('truck')
+      );
+      if (chip) chip.click();
+    }
+
+    // Sort
+    const prioritySort = { value: 'price-asc', longevity: 'price-desc', performance: 'price-desc', comfort: 'price-asc' };
+    const sortEl = document.getElementById('sortSelect');
+    if (sortEl && prioritySort[sgAnswers.priority]) {
+      sortEl.value = prioritySort[sgAnswers.priority];
+      sortEl.dispatchEvent(new Event('change'));
+    }
+
+    // Summary bar
+    const count = filteredTires.length;
+    const summaryEl = document.getElementById('sgResultsSummary');
+    if (summaryEl) {
+      const vLabels = { car: 'Car', cuv: 'SUV/CUV', truck: 'Truck', minivan: 'Minivan' };
+      const pLabels = { value: 'Best Value', longevity: 'Long Tread Life', performance: 'Performance', comfort: 'Comfort' };
+      summaryEl.innerHTML =
+        '<span class="sg-sum-tag">' + (seasonLabels[sgAnswers.season] || 'All') + '</span>' +
+        '<span class="sg-sum-tag">📐 ' + sgAnswers.tireSize + '</span>' +
+        '<span class="sg-sum-tag">' + (pLabels[sgAnswers.priority] || '') + '</span>' +
+        '<span class="sg-sum-tag">' + (vLabels[sgAnswers.vehicle] || '') + '</span>' +
+        '<span class="sg-sum-count">' + count + ' result' + (count !== 1 ? 's' : '') + '</span>';
+      summaryEl.style.display = 'flex';
+    }
+
+    document.getElementById('sgNextBtn').style.display = 'block';
+    closeSelectionGuide();
+    setTimeout(() => smoothScroll('#catalog'), 200);
+    showToast(count + ' tire' + (count !== 1 ? 's' : '') + ' found', sgAnswers.tireSize + ' · ' + (seasonLabels[sgAnswers.season] || 'All seasons'));
   }
-
-  // Apply sort by priority
-  const prioritySort = { value: 'price-asc', longevity: 'price-desc', performance: 'price-desc', comfort: 'price-asc' };
-  const sortEl = document.getElementById('sortSelect');
-  if (sortEl && prioritySort[sgAnswers.priority]) {
-    sortEl.value = prioritySort[sgAnswers.priority];
-    sortEl.dispatchEvent(new Event('change'));
-  }
-
-  // Show results summary banner
-  const count = filteredTires.length;
-  const summaryEl = document.getElementById('sgResultsSummary');
-  if (summaryEl) {
-    const vLabels = { car: 'Car', cuv: 'SUV/CUV', truck: 'Truck', minivan: 'Minivan' };
-    const pLabels = { value: 'Best Value', longevity: 'Long Tread Life', performance: 'Performance', comfort: 'Comfort' };
-    summaryEl.innerHTML =
-      '<span class="sg-sum-tag">' + (seasonLabels[sgAnswers.season] || 'All') + '</span>' +
-      '<span class="sg-sum-tag">📐 ' + sgAnswers.tireSize + '</span>' +
-      '<span class="sg-sum-tag">' + (pLabels[sgAnswers.priority] || '') + '</span>' +
-      '<span class="sg-sum-tag">' + (vLabels[sgAnswers.vehicle] || '') + '</span>' +
-      '<span class="sg-sum-count">' + count + ' result' + (count !== 1 ? 's' : '') + '</span>';
-    summaryEl.style.display = 'flex';
-  }
-
-  // Close and scroll
-  document.getElementById('sgNextBtn').style.display = 'block';
-  closeSelectionGuide();
-  setTimeout(() => smoothScroll('#catalog'), 200);
-  showToast(count + ' tire' + (count !== 1 ? 's' : '') + ' found', sgAnswers.tireSize + ' · ' + (seasonLabels[sgAnswers.season] || 'All seasons'));
 }
 
 function smoothScroll(sel) { document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' }); }
