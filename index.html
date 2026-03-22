@@ -2310,7 +2310,7 @@ function normaliseWheel(product, inventory) {
     category: cat,
     finish,
     boltPattern: sp.boltPattern || sp.bolt_pattern || '',
-    diameter:    parseFloat(sp.diameter || sp.size || 0),
+    diameter:    parseFloat(sp.diameter || (sp.size ? sp.size.toString().split(/[x×]/)[0] : 0) || 0),
     width:       parseFloat(sp.width || 0),
     offset:      parseFloat(sp.offset || 0),
     hubBore:     parseFloat(sp.hubBore || sp.hub_bore || 0),
@@ -2443,14 +2443,17 @@ async function loadWheels(searchParams = null) {
     if (allWheels.length === 0) throw new Error('No wheels returned from TDG');
     // Client-side post-filter — TDG API may return broader results than requested
     if (searchParams?.boltPatterns?.length) {
-      const bps = searchParams.boltPatterns;
-      const filtered = allWheels.filter(w => bps.includes(w.boltPattern));
+      const bps = searchParams.boltPatterns.map(b => b.trim().toLowerCase());
+      const filtered = allWheels.filter(w => bps.includes((w.boltPattern||'').trim().toLowerCase()));
       if (filtered.length) allWheels = filtered;
     }
     if (searchParams?.diameters?.length) {
-      const dias = searchParams.diameters.map(Number);
-      const filtered = allWheels.filter(w => dias.includes(Number(w.diameter)));
-      if (filtered.length) allWheels = filtered;
+      // Normalise both sides to integer string for bulletproof comparison
+      // e.g. 22, "22", 22.0, "22.0" all become "22"
+      const dias = searchParams.diameters.map(d => String(Math.round(Number(d))));
+      const filtered = allWheels.filter(w => dias.includes(String(Math.round(Number(w.diameter || 0)))));
+      // Always apply — even if 0 results, caller has fallback logic
+      allWheels = filtered;
     }
     if (searchParams?.category) {
       const filtered = allWheels.filter(w => w.category === searchParams.category);
@@ -2473,11 +2476,11 @@ async function loadWheels(searchParams = null) {
       const filtered = allWheels.filter(w => w.boltPattern === bp);
       if (filtered.length) allWheels = filtered;
     }
-    // Apply diameter filter
+    // Apply diameter filter — normalise to integer for safe comparison
     if (searchParams?.diameters?.length) {
-      const d = searchParams.diameters[0];
-      const filtered = allWheels.filter(w => w.diameter === d);
-      if (filtered.length) allWheels = filtered;
+      const dias = searchParams.diameters.map(d => Math.round(Number(d)));
+      const filtered = allWheels.filter(w => dias.includes(Math.round(Number(w.diameter || 0))));
+      allWheels = filtered; // always apply — caller handles empty result
     }
     populateWheelRefineDropdowns();
     applyWheelFilter(activeWheelFilter);
