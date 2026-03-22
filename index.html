@@ -2253,7 +2253,8 @@ let catalogMode   = 'tires'; // 'tires' or 'wheels'
 let cart          = [];
 let step          = 1;
 let selDate = null, selTime = null, tdgQuote = null;
-let lastTireSearchSize = null; // tracks most recent tire size searched
+let lastTireSearchSize  = null; // tracks most recent tire size searched (single)
+let lastTireSearchParams = null; // full params from most recent tire search (for chip re-queries)
 let calY, calMo;
 const now = new Date(); calY = now.getFullYear(); calMo = now.getMonth();
 
@@ -2347,6 +2348,14 @@ function renderCatalog() {
 async function loadTires(searchParams = null) {
   showCatalogLoading(true);
   if (searchParams?.tireSizes?.length) lastTireSearchSize = searchParams.tireSizes[0];
+  // Store base params (without season/serviceType) for chip re-queries
+  if (searchParams) {
+    const base = {};
+    if (searchParams.tireSizes)   base.tireSizes   = searchParams.tireSizes;
+    if (searchParams.brands)      base.brands      = searchParams.brands;
+    if (searchParams.itemnumbers) base.itemnumbers = searchParams.itemnumbers;
+    lastTireSearchParams = base;
+  }
   try {
     let products = [], inventoryMap = {};
     if (searchParams) {
@@ -2432,6 +2441,21 @@ async function loadWheels(searchParams = null) {
     }
     allWheels = products.filter(p => p.type === 'Wheel' || p.type === 'wheel' || p.type === 'Rim').map(p => normaliseWheel(p, inventoryMap[p.itemNumber]));
     if (allWheels.length === 0) throw new Error('No wheels returned from TDG');
+    // Client-side post-filter — TDG API may return broader results than requested
+    if (searchParams?.boltPatterns?.length) {
+      const bps = searchParams.boltPatterns;
+      const filtered = allWheels.filter(w => bps.includes(w.boltPattern));
+      if (filtered.length) allWheels = filtered;
+    }
+    if (searchParams?.diameters?.length) {
+      const dias = searchParams.diameters.map(Number);
+      const filtered = allWheels.filter(w => dias.includes(Number(w.diameter)));
+      if (filtered.length) allWheels = filtered;
+    }
+    if (searchParams?.category) {
+      const filtered = allWheels.filter(w => w.category === searchParams.category);
+      if (filtered.length) allWheels = filtered;
+    }
     populateWheelRefineDropdowns();
     applyWheelFilter(activeWheelFilter);
   } catch (err) {
@@ -2491,10 +2515,44 @@ function applyFilter(type) {
   renderTires();
 }
 
-function filterTires(type, btn) {
+// Map chip type → TDG API params
+const CHIP_TO_TDG = {
+  allseason:  { tireSeason: 2 },
+  allweather: { tireSeason: 3 },
+  winter:     { tireSeason: 4 },
+  summer:     { tireSeason: 1 },
+  truck:      { serviceType: 'LT' },
+};
+
+async function filterTires(type, btn) {
   document.querySelectorAll('#tire-chips-row .chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
   activeFilter = type;
+
+  // If we have a previous search context, re-query TDG server-side with the season/type filter
+  if (lastTireSearchParams && type !== 'all') {
+    const tdgFilter = CHIP_TO_TDG[type];
+    if (tdgFilter) {
+      const params = { ...lastTireSearchParams, ...tdgFilter };
+      await loadTires(params);
+      // Restore activeFilter after loadTires resets it via applyFilter('all')
+      activeFilter = type;
+      populateBrandFilter();
+      applyRefinements();
+      return;
+    }
+  }
+
+  // 'all' chip — re-query TDG with original params (no season/type filter)
+  if (lastTireSearchParams && type === 'all') {
+    await loadTires(lastTireSearchParams);
+    activeFilter = 'all';
+    populateBrandFilter();
+    applyRefinements();
+    return;
+  }
+
+  // No search context — just client-side filter
   populateBrandFilter();
   applyRefinements();
 }
@@ -3593,13 +3651,22 @@ async function vinSearchWheels() {
   resultEl.classList.add('show');
   if (oemWheel) {
     textEl.innerHTML = `<strong>${veh}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>, hub bore <strong>${oemWheel.bore}mm</strong>. Searching wheels…`;
-    const params = { boltPatterns: [oemWheel.bolt], diameters: [oemWheel.dia] };
-    await loadWheels(params);
+    // Try exact OEM diameter first
+    await loadWheels({ boltPatterns: [oemWheel.bolt], diameters: [oemWheel.dia] });
     if (!filteredWheels.length) {
-      textEl.innerHTML = `No exact OEM size in stock for <strong>${veh}</strong>. Showing all <strong>${oemWheel.bolt}</strong> wheels — call us to confirm fitment.`;
-      await loadWheels({ boltPatterns: [oemWheel.bolt] });
+      // Try adjacent sizes (±2")
+      const nearDias = [oemWheel.dia - 1, oemWheel.dia + 1, oemWheel.dia - 2, oemWheel.dia + 2].filter(d => d > 0);
+      await loadWheels({ boltPatterns: [oemWheel.bolt], diameters: nearDias });
+      if (filteredWheels.length) {
+        const shownDias = [...new Set(filteredWheels.map(w => w.diameter))].sort((a,b)=>a-b).map(d=>d+'"').join(', ');
+        textEl.innerHTML = `No ${oemWheel.dia}" wheels in stock for <strong>${veh}</strong>. Showing nearby sizes (${shownDias}) — <a href="tel:5193805104" style="color:var(--yellow)">call us</a> to confirm fitment.`;
+      } else {
+        // Last resort — all bolt-pattern matches with clear note
+        await loadWheels({ boltPatterns: [oemWheel.bolt] });
+        textEl.innerHTML = `No exact size in stock for <strong>${veh}</strong>. Showing all <strong>${oemWheel.bolt}</strong> wheels — <a href="tel:5193805104" style="color:var(--yellow)">call us at 519-380-5104</a> to confirm fitment.`;
+      }
     } else {
-      textEl.innerHTML = `Showing <strong>${filteredWheels.length}</strong> compatible wheels for <strong>${veh}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>.`;
+      textEl.innerHTML = `Showing <strong>${filteredWheels.length}</strong> compatible wheels for <strong>${veh}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>, ${oemWheel.dia}" diameter.`;
     }
   } else {
     textEl.innerHTML = `Showing full wheel inventory for <strong>${veh}</strong> — <a href="tel:5193805104" style="color:var(--yellow)">call us at 519-380-5104</a> to confirm fitment.`;
@@ -3751,15 +3818,26 @@ async function doWheelVehicleLookup() {
   if (oemWheel) {
     textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>, hub bore <strong>${oemWheel.bore}mm</strong>. Searching wheels…`;
     resultEl.classList.add('show');
-    const params = { boltPatterns: [oemWheel.bolt], diameters: [oemWheel.dia] };
-    if (cat) params.category = cat;
-    await loadWheels(params);
+    // Try exact OEM diameter first
+    const exactParams = { boltPatterns: [oemWheel.bolt], diameters: [oemWheel.dia] };
+    if (cat) exactParams.category = cat;
+    await loadWheels(exactParams);
     if (!filteredWheels.length) {
-      // Relax diameter constraint — show all for this bolt pattern
-      textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong> — no exact OEM size in stock. Showing all <strong>${oemWheel.bolt}</strong> wheels — call us to confirm fitment.`;
-      await loadWheels(cat ? { boltPatterns: [oemWheel.bolt], category: cat } : { boltPatterns: [oemWheel.bolt] });
+      // Try adjacent sizes (±2")
+      const nearDias = [oemWheel.dia - 1, oemWheel.dia + 1, oemWheel.dia - 2, oemWheel.dia + 2].filter(d => d > 0);
+      const nearParams = { boltPatterns: [oemWheel.bolt], diameters: nearDias };
+      if (cat) nearParams.category = cat;
+      await loadWheels(nearParams);
+      if (filteredWheels.length) {
+        const shownDias = [...new Set(filteredWheels.map(w => w.diameter))].sort((a,b)=>a-b).map(d=>d+'"').join(', ');
+        textEl.innerHTML = `No ${oemWheel.dia}" wheels in stock for <strong>${y} ${mk} ${md}</strong>. Showing nearby sizes (${shownDias}) — <a href="tel:5193805104" style="color:var(--yellow)">call us</a> to confirm fitment.`;
+      } else {
+        // Last resort — all bolt-pattern matches
+        await loadWheels(cat ? { boltPatterns: [oemWheel.bolt], category: cat } : { boltPatterns: [oemWheel.bolt] });
+        textEl.innerHTML = `No exact size in stock for <strong>${y} ${mk} ${md}</strong>. Showing all <strong>${oemWheel.bolt}</strong> wheels — <a href="tel:5193805104" style="color:var(--yellow)">call us at 519-380-5104</a> to confirm fitment.`;
+      }
     } else {
-      textEl.innerHTML = `Showing <strong>${filteredWheels.length}</strong> compatible wheels for <strong>${y} ${mk} ${md}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>.`;
+      textEl.innerHTML = `Showing <strong>${filteredWheels.length}</strong> compatible wheels for <strong>${y} ${mk} ${md}</strong> — bolt pattern <strong>${oemWheel.bolt}</strong>, ${oemWheel.dia}" diameter.`;
     }
   } else {
     textEl.innerHTML = `Found <strong>${y} ${mk} ${md}</strong>. Showing full wheel inventory — call us to confirm fitment.`;
