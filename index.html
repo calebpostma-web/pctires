@@ -22,7 +22,7 @@ body.light-mode{
   --green:#16a34a;--green-dim:rgba(22,163,74,0.1);--red:#dc2626;
 }
 html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;scroll-padding-top:129px}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--mid);border-radius:3px}
 
 .rebate-ticker{background:var(--yellow);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:7px 0;overflow:hidden;position:fixed;top:0;left:0;right:0;z-index:502}
@@ -34,7 +34,8 @@ body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;
 .rebate-badge{display:inline-flex;align-items:center;gap:4px;background:var(--yellow);color:var(--black);font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid rgba(0,0,0,.15);white-space:nowrap;flex-shrink:0}
 .rebate-badge.on-card{font-size:9px;padding:2px 6px}
 
-nav{position:fixed;top:33px;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+nav{position:fixed;top:71px;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+@media(max-width:960px){nav{top:33px}}
 .logo{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none}
 .logo .pc{color:var(--yellow)}
 .nav-links{display:flex;align-items:center;gap:28px}
@@ -46,6 +47,14 @@ nav{position:fixed;top:33px;left:0;right:0;z-index:500;display:flex;align-items:
 .cart-btn{display:flex;align-items:center;gap:9px;background:var(--yellow);color:var(--black);border:none;padding:9px 20px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s}
 .cart-btn:hover{background:var(--yellow-dark)}
 .cart-badge{background:var(--black);color:var(--yellow);border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+
+/* TRUST CHIP BAR */
+.trust-bar{position:fixed;top:33px;left:0;right:0;z-index:499;background:var(--dark);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:0;height:38px}
+.trust-chip{display:flex;align-items:center;gap:7px;padding:0 22px;font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--border);white-space:nowrap}
+.trust-chip:last-child{border-right:none}
+.trust-chip .tc-icon{font-size:13px}
+.trust-chip strong{color:var(--white)}
+@media(max-width:960px){.trust-bar{display:none}}
 
 /* HERO */
 .hero{min-height:100vh;padding:133px 40px 72px;display:flex;align-items:center;position:relative;overflow:hidden}
@@ -94,7 +103,7 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .step-card.hl .step-title{color:var(--yellow)}
 
 /* VEHICLE LOOKUP */
-.lookup-section{padding:64px 40px;background:var(--black)}
+.lookup-section{padding:155px 40px 56px;background:var(--black)}
 .lookup-inner{max-width:1100px;margin:0 auto}
 .lookup-box{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:32px;margin-top:28px}
 .lookup-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
@@ -618,7 +627,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .hamburger.open span:nth-child(2){opacity:0}
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.mobile-menu{display:none;position:fixed;top:58px;left:0;right:0;background:rgba(8,8,8,.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:490;padding:16px 20px;flex-direction:column;gap:4px}
+.mobile-menu{display:none;position:fixed;top:129px;left:0;right:0;background:rgba(8,8,8,.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:490;padding:16px 20px;flex-direction:column;gap:4px}
 .mobile-menu.open{display:flex}
 .mobile-menu-link{font-size:15px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--light);padding:12px 0;border-bottom:1px solid var(--border);background:none;border-left:none;border-right:none;border-top:none;cursor:pointer;text-align:left;font-family:'Barlow',sans-serif;transition:color .2s}
 .mobile-menu-link:last-child{border-bottom:none}
@@ -686,7 +695,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   .nav-links{display:none}
   .hamburger{display:flex}
   .phone-link{display:none}
-  .hero{padding:90px 24px 60px}
+  .lookup-section{padding:110px 24px 48px}
   .guide-section,.reviews-section,.location-section{padding:48px 24px}
   .guide-grid{grid-template-columns:1fr}
   .sidewall-grid{grid-template-columns:1fr 1fr}
@@ -711,8 +720,8 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   nav{padding:0 16px;height:54px}
   .logo{font-size:22px}
   .cart-btn{padding:8px 14px;font-size:12px}
-  .mobile-menu{top:54px}
-  .hero{padding:80px 16px 52px;min-height:auto}
+  .mobile-menu{top:87px}
+  .lookup-section{padding:100px 16px 40px}
   .hero-pattern{display:none}
   h1{font-size:clamp(54px,14vw,80px)}
   .hero-btns{flex-direction:column}
@@ -831,6 +840,15 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 <!-- REBATE TICKER -->
 <!-- ↓↓↓ UPDATE REBATES HERE — change dates, amounts, brands as needed ↓↓↓ -->
 <div class="rebate-ticker" id="rebateTicker"></div>
+
+<!-- TRUST CHIP BAR -->
+<div class="trust-bar">
+  <div class="trust-chip"><span class="tc-icon">⭐</span><span><strong>4.9</strong> Google Rating</span></div>
+  <div class="trust-chip"><span class="tc-icon">🔧</span><span><strong>$25/tire</strong> Local Install</span></div>
+  <div class="trust-chip"><span class="tc-icon">📍</span><span><strong>Chatham-Kent</strong> Based</span></div>
+  <div class="trust-chip"><span class="tc-icon">💰</span><span>Rebates up to <strong>$180</strong></span></div>
+  <div class="trust-chip"><span class="tc-icon">🔒</span><span><strong>Secure</strong> Stripe Checkout</span></div>
+</div>
 <script>
 // ── REBATE DATA — UPDATE THIS SECTION EACH SEASON ──────────────────────────
 const REBATES = [
@@ -904,77 +922,23 @@ function getRebateForBrand(brand) {
   <a class="mobile-menu-link" href="tel:5193805104" style="text-decoration:none">📞 519-380-5104</a>
 </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-pattern">
-    <svg viewBox="0 0 400 900" xmlns="http://www.w3.org/2000/svg">
-      <pattern id="tp" x="0" y="0" width="80" height="40" patternUnits="userSpaceOnUse">
-        <rect x="2" y="5" width="58" height="13" rx="2" fill="white"/>
-        <rect x="12" y="22" width="58" height="13" rx="2" fill="white"/>
-      </pattern>
-      <rect width="400" height="900" fill="url(#tp)"/>
-    </svg>
-  </div>
-  <div class="hero-content">
-    <div class="hero-pill"><span class="pill-dot"></span><span class="pill-text">Chatham-Kent's Online Tire & Wheel Shop</span></div>
-    <h1>
-      <span class="b">THE RIGHT</span>
-      <span class="b y">TIRE.</span>
-      <span class="b">INSTALLED</span>
-      <span class="b">RIGHT.</span>
-    </h1>
-    <p class="hero-desc">Chatham-Kent's own tire shop — shop online, pay securely, and book your installation locally. No phone tag. No hidden fees. <strong>Just the right setup on your car.</strong></p>
-    <div class="hero-guide-card" onclick="openSelectionGuide()">
-      <div class="hgc-left">
-        <div class="hgc-label">NOT SURE WHICH TIRE?</div>
-        <div class="hgc-text">Answer 3 quick questions → we'll filter results for you</div>
-      </div>
-      <div class="hgc-arrow">Use Our Tire Selection Guide →</div>
-    </div>
-    <div class="hero-btns">
-      <button class="btn-primary" onclick="smoothScroll('#lookup')">Find Tires for My Vehicle</button>
-      <button class="btn-ghost" onclick="smoothScroll('#catalog')">Browse All</button>
-      <button class="btn-ghost" onclick="smoothScroll('#services')" style="border-color:rgba(245,197,24,.35);color:var(--yellow)">🔧 Book a Service</button>
-    </div>
-    <div class="hero-trust">
-      <div class="trust-item"><span class="trust-icon">🔒</span><div class="trust-txt"><strong>Secure Checkout</strong><span>Powered by Stripe</span></div></div>
-      <div class="trust-item"><span class="trust-icon">🔧</span><div class="trust-txt"><strong>Local Install</strong><span>Book online instantly</span></div></div>
-      <div class="trust-item"><span class="trust-icon">✅</span><div class="trust-txt"><strong>Guaranteed Fit</strong><span>VIN-verified accuracy</span></div></div>
-    </div>
-  </div>
-</section>
 
-<!-- HOW IT WORKS -->
-<section class="how-section">
-  <div class="how-inner">
-    <div class="eyebrow">How It Works</div>
-    <div class="section-title">From Click to Installed — 4 Steps</div>
-    <p class="section-sub">Unlike online-only retailers, we close the loop. Unlike big chains, we let you do it all online.</p>
-    <div class="steps-row">
-      <div class="step-card"><div class="step-num">01</div><div class="step-icon">🚗</div><div class="step-title">Enter Your Vehicle</div><div class="step-desc">Year, make, model and trim — we match you to tires and wheels guaranteed to fit your exact vehicle.</div></div>
-      <div class="step-card"><div class="step-num">02</div><div class="step-icon">🏷️</div><div class="step-title">Choose Your Setup</div><div class="step-desc">Filter by season, brand, and price. Shop tires, wheels, or complete sets.</div></div>
-      <div class="step-card hl"><div class="step-num">03</div><div class="step-icon">💳</div><div class="step-title">Pay Securely Online</div><div class="step-desc">Stripe-powered checkout. Credit card, Apple Pay, Google Pay. No redirects, no surprises.</div></div>
-      <div class="step-card hl"><div class="step-num">04</div><div class="step-icon">📅</div><div class="step-title">Book Installation</div><div class="step-desc">Pick your date and time right in checkout. Certified techs mount, balance, and reset your TPMS.</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- VEHICLE / TIRE / WHEEL LOOKUP -->
+<!-- VEHICLE / TIRE / WHEEL LOOKUP — main hero -->
 <section class="lookup-section" id="lookup">
   <div class="lookup-inner">
-    <div class="eyebrow">Find Your Fit</div>
-    <div class="section-title">Search Tires &amp; Wheels</div>
-    <p class="section-sub">Search by your vehicle, tire size, or wheel specs — we'll show you exactly what fits.</p>
+    <div style="margin-bottom:24px">
+      <div class="section-title" style="font-size:clamp(26px,4vw,38px);margin-bottom:6px">Find the Right Tire or Wheel</div>
+      <p style="font-size:14px;color:var(--muted);margin:0">Search by VIN, vehicle, tire size, or wheel specs — we'll show exactly what fits.</p>
+    </div>
     <div class="lookup-box">
 
-      <!-- Three tabs -->
+      <!-- Tabs -->
       <div class="lookup-tabs">
         <button class="lookup-tab active" id="tab-vin" onclick="switchLookupTab('vin')">🔍 By VIN <span class="vin-badge">Most Accurate</span></button>
         <button class="lookup-tab" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 By Vehicle</button>
         <button class="lookup-tab" id="tab-size" onclick="switchLookupTab('size')">📏 By Tire Size</button>
         <button class="lookup-tab" id="tab-wheels" onclick="switchLookupTab('wheels')">🔩 Shop Wheels</button>
+        <button class="lookup-tab" id="tab-guide" onclick="openSelectionGuide()" style="color:var(--yellow);border-color:rgba(245,197,24,.35)">🎯 Tire Guide</button>
       </div>
 
       <!-- VIN panel -->
@@ -1239,6 +1203,20 @@ function getRebateForBrand(brand) {
   </div>
 </section>
 
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <div class="eyebrow">How It Works</div>
+    <div class="section-title">From Click to Installed — 4 Steps</div>
+    <p class="section-sub">Unlike online-only retailers, we close the loop. Unlike big chains, you can do it all online.</p>
+    <div class="steps-row">
+      <div class="step-card"><div class="step-num">01</div><div class="step-icon">🚗</div><div class="step-title">Enter Your Vehicle</div><div class="step-desc">VIN, year, make, model and trim — we match you to tires and wheels guaranteed to fit your exact vehicle.</div></div>
+      <div class="step-card"><div class="step-num">02</div><div class="step-icon">🏷️</div><div class="step-title">Choose Your Setup</div><div class="step-desc">Filter by season, brand, and price. Shop tires, wheels, or complete sets.</div></div>
+      <div class="step-card hl"><div class="step-num">03</div><div class="step-icon">💳</div><div class="step-title">Pay Securely Online</div><div class="step-desc">Stripe-powered checkout. Credit card, Apple Pay, Google Pay. No redirects, no surprises.</div></div>
+      <div class="step-card hl"><div class="step-num">04</div><div class="step-icon">📅</div><div class="step-title">Book Installation</div><div class="step-desc">Pick your date and time right in checkout. Certified techs mount, balance, and reset your TPMS.</div></div>
+    </div>
+  </div>
+</section>
 
 <!-- TIRE DECISION GUIDE -->
 <section class="tdg-section" id="decision-guide">
