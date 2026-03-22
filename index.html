@@ -1827,18 +1827,52 @@ const MOCK_TIRES = [
 //  MOCK WHEEL INVENTORY (TDG fallback)
 // ─────────────────────────────────────────────────
 const MOCK_WHEELS = [
-  {id:'W1',tdgId:'W1',itemNumber:'IKO-CRANK-17-5x114',partNumber:'CRANK17',brand:'Ikon',name:'Crank',category:'alloy',finish:'Gloss Black',boltPattern:'5x114.3',diameter:17,width:7.5,offset:40,hubBore:73.1,price:189,msrp:219,stock:'in',qtyAvailable:16,imageUrl:null},
-  {id:'W2',tdgId:'W2',itemNumber:'MGL-RAZOR-18-5x114',partNumber:'RAZOR18',brand:'Magellan',name:'Razor',category:'alloy',finish:'Machined w/ Black',boltPattern:'5x114.3',diameter:18,width:8.0,offset:38,hubBore:73.1,price:225,msrp:259,stock:'in',qtyAvailable:12,imageUrl:null},
-  {id:'W3',tdgId:'W3',itemNumber:'STL-STEEL-16-5x114',partNumber:'STEEL16',brand:'Steelcraft',name:'Winter Steel',category:'steel',finish:'Silver',boltPattern:'5x114.3',diameter:16,width:7.0,offset:45,hubBore:60.1,price:79,msrp:99,stock:'in',qtyAvailable:40,imageUrl:null},
-  {id:'W4',tdgId:'W4',itemNumber:'EVO-APEX-20-5x114',partNumber:'APEX20',brand:'Evo Corse',name:'Apex',category:'alloy',finish:'Gloss Black',boltPattern:'5x114.3',diameter:20,width:9.0,offset:35,hubBore:73.1,price:310,msrp:369,stock:'in',qtyAvailable:8,imageUrl:null},
-  {id:'W5',tdgId:'W5',itemNumber:'STL-STEEL-17-6x139',partNumber:'STEEL17T',brand:'Steelcraft',name:'Truck Steel',category:'steel',finish:'Silver',boltPattern:'6x139.7',diameter:17,width:7.5,offset:25,hubBore:78.1,price:99,msrp:119,stock:'in',qtyAvailable:32,imageUrl:null},
-  {id:'W6',tdgId:'W6',itemNumber:'MGL-BOSS-20-6x139',partNumber:'BOSS20',brand:'Magellan',name:'Boss',category:'alloy',finish:'Gloss Black',boltPattern:'6x139.7',diameter:20,width:9.0,offset:18,hubBore:106.1,price:285,msrp:329,stock:'in',qtyAvailable:10,imageUrl:null},
-  {id:'W7',tdgId:'W7',itemNumber:'IKO-SURGE-18-5x120',partNumber:'SURGE18',brand:'Ikon',name:'Surge',category:'alloy',finish:'Hyper Silver',boltPattern:'5x120',diameter:18,width:8.0,offset:40,hubBore:74.1,price:245,msrp:285,stock:'low',qtyAvailable:4,imageUrl:null},
-  {id:'W8',tdgId:'W8',itemNumber:'STL-STEEL-16-5x100',partNumber:'STEEL16S',brand:'Steelcraft',name:'Winter Steel',category:'steel',finish:'Silver',boltPattern:'5x100',diameter:16,width:6.5,offset:48,hubBore:54.1,price:74,msrp:89,stock:'in',qtyAvailable:28,imageUrl:null},
-  {id:'W9',tdgId:'W9',itemNumber:'EVO-TRACK-18-5x112',partNumber:'TRACK18',brand:'Evo Corse',name:'Track',category:'alloy',finish:'Matte Black',boltPattern:'5x112',diameter:18,width:8.5,offset:42,hubBore:66.6,price:265,msrp:309,stock:'in',qtyAvailable:12,imageUrl:null},
-  {id:'W10',tdgId:'W10',itemNumber:'MGL-XD-22-6x135',partNumber:'XD22',brand:'Magellan',name:'XD Series',category:'alloy',finish:'Chrome',boltPattern:'6x135',diameter:22,width:9.5,offset:20,hubBore:87.1,price:399,msrp:459,stock:'low',qtyAvailable:6,imageUrl:null},
-  {id:'W11',tdgId:'W11',itemNumber:'STL-STEEL-15-4x100',partNumber:'STEEL15',brand:'Steelcraft',name:'Economy Steel',category:'steel',finish:'Silver',boltPattern:'4x100',diameter:15,width:6.0,offset:45,hubBore:54.1,price:59,msrp:74,stock:'in',qtyAvailable:50,imageUrl:null},
-  {id:'W12',tdgId:'W12',itemNumber:'IKO-MATRIX-17-5x108',partNumber:'MATRIX17',brand:'Ikon',name:'Matrix',category:'alloy',finish:'Machined Silver',boltPattern:'5x108',diameter:17,width:7.5,offset:40,hubBore:63.4,price:199,msrp:229,stock:'in',qtyAvailable:14,imageUrl:null},
+  // ── 5x114.3 (Honda, Toyota, Hyundai, Kia, Nissan, Mazda, Subaru WRX, Dodge)
+  {id:'W1', tdgId:'W1', itemNumber:'IKO-CRANK-17-5x114',  partNumber:'CRANK17',   brand:'Ikon',       name:'Crank',          category:'alloy', finish:'Gloss Black',      boltPattern:'5x114.3',diameter:17,width:7.5, offset:40,hubBore:73.1, price:189,msrp:219,stock:'in', qtyAvailable:16,imageUrl:null},
+  {id:'W2', tdgId:'W2', itemNumber:'MGL-RAZOR-18-5x114',  partNumber:'RAZOR18',   brand:'Magellan',   name:'Razor',          category:'alloy', finish:'Machined w/ Black', boltPattern:'5x114.3',diameter:18,width:8.0, offset:38,hubBore:73.1, price:225,msrp:259,stock:'in', qtyAvailable:12,imageUrl:null},
+  {id:'W3', tdgId:'W3', itemNumber:'STL-STEEL-16-5x114',  partNumber:'STEEL16',   brand:'Steelcraft', name:'Winter Steel',   category:'steel', finish:'Silver',            boltPattern:'5x114.3',diameter:16,width:7.0, offset:45,hubBore:60.1, price:79, msrp:99, stock:'in', qtyAvailable:40,imageUrl:null},
+  {id:'W4', tdgId:'W4', itemNumber:'EVO-APEX-20-5x114',   partNumber:'APEX20',    brand:'Evo Corse',  name:'Apex',           category:'alloy', finish:'Gloss Black',      boltPattern:'5x114.3',diameter:20,width:9.0, offset:35,hubBore:73.1, price:310,msrp:369,stock:'in', qtyAvailable:8, imageUrl:null},
+  {id:'W4B',tdgId:'W4B',itemNumber:'IKO-VECTOR-19-5x114', partNumber:'VECTOR19',  brand:'Ikon',       name:'Vector',         category:'alloy', finish:'Matte Black',      boltPattern:'5x114.3',diameter:19,width:8.5, offset:40,hubBore:73.1, price:269,msrp:309,stock:'in', qtyAvailable:10,imageUrl:null},
+  {id:'W4C',tdgId:'W4C',itemNumber:'STL-STEEL-17-5x114',  partNumber:'STEEL17P',  brand:'Steelcraft', name:'Winter Steel',   category:'steel', finish:'Silver',            boltPattern:'5x114.3',diameter:17,width:7.0, offset:45,hubBore:60.1, price:85, msrp:105,stock:'in', qtyAvailable:36,imageUrl:null},
+  // ── 6x139.7 (Silverado, Sierra, Tahoe, Suburban, Yukon, RAM 1500, Cadillac Escalade, Lexus GX/LX, Infiniti QX80)
+  {id:'W5', tdgId:'W5', itemNumber:'STL-STEEL-17-6x139',  partNumber:'STEEL17T',  brand:'Steelcraft', name:'Truck Steel',    category:'steel', finish:'Silver',            boltPattern:'6x139.7',diameter:17,width:7.5, offset:25,hubBore:78.1, price:99, msrp:119,stock:'in', qtyAvailable:32,imageUrl:null},
+  {id:'W6', tdgId:'W6', itemNumber:'MGL-BOSS-20-6x139',   partNumber:'BOSS20',    brand:'Magellan',   name:'Boss',           category:'alloy', finish:'Gloss Black',      boltPattern:'6x139.7',diameter:20,width:9.0, offset:18,hubBore:78.1, price:285,msrp:329,stock:'in', qtyAvailable:10,imageUrl:null},
+  {id:'W6B',tdgId:'W6B',itemNumber:'EVO-TITAN-22-6x139',  partNumber:'TITAN22',   brand:'Evo Corse',  name:'Titan',          category:'alloy', finish:'Gloss Black',      boltPattern:'6x139.7',diameter:22,width:9.5, offset:15,hubBore:78.1, price:349,msrp:409,stock:'in', qtyAvailable:8, imageUrl:null},
+  {id:'W6C',tdgId:'W6C',itemNumber:'IKO-OUTLAW-18-6x139', partNumber:'OUTLAW18',  brand:'Ikon',       name:'Outlaw',         category:'alloy', finish:'Machined Silver',  boltPattern:'6x139.7',diameter:18,width:8.0, offset:20,hubBore:78.1, price:239,msrp:279,stock:'in', qtyAvailable:14,imageUrl:null},
+  {id:'W6D',tdgId:'W6D',itemNumber:'STL-STEEL-18-6x139',  partNumber:'STEEL18T',  brand:'Steelcraft', name:'Truck Steel',    category:'steel', finish:'Silver',            boltPattern:'6x139.7',diameter:18,width:8.0, offset:20,hubBore:78.1, price:109,msrp:129,stock:'in', qtyAvailable:24,imageUrl:null},
+  // ── 6x135 (Ford F-150, Expedition, Navigator, Lincoln, Tesla Cybertruck)
+  {id:'W7', tdgId:'W7', itemNumber:'MGL-XD-22-6x135',     partNumber:'XD22',      brand:'Magellan',   name:'XD Series',      category:'alloy', finish:'Chrome',            boltPattern:'6x135',  diameter:22,width:9.5, offset:20,hubBore:87.1, price:399,msrp:459,stock:'low',qtyAvailable:6, imageUrl:null},
+  {id:'W7B',tdgId:'W7B',itemNumber:'IKO-RAPTOR-18-6x135', partNumber:'RAPTOR18',  brand:'Ikon',       name:'Raptor',         category:'alloy', finish:'Matte Black',      boltPattern:'6x135',  diameter:18,width:8.5, offset:20,hubBore:87.1, price:259,msrp:299,stock:'in', qtyAvailable:12,imageUrl:null},
+  {id:'W7C',tdgId:'W7C',itemNumber:'STL-STEEL-17-6x135',  partNumber:'STEEL17F',  brand:'Steelcraft', name:'Winter Steel',   category:'steel', finish:'Silver',            boltPattern:'6x135',  diameter:17,width:7.5, offset:25,hubBore:87.1, price:95, msrp:115,stock:'in', qtyAvailable:28,imageUrl:null},
+  {id:'W7D',tdgId:'W7D',itemNumber:'EVO-RANGER-20-6x135', partNumber:'RANGER20',  brand:'Evo Corse',  name:'Ranger',         category:'alloy', finish:'Gloss Black',      boltPattern:'6x135',  diameter:20,width:9.0, offset:18,hubBore:87.1, price:319,msrp:369,stock:'in', qtyAvailable:10,imageUrl:null},
+  // ── 5x112 (BMW, Mercedes-Benz, Audi, VW, Porsche Macan)
+  {id:'W8', tdgId:'W8', itemNumber:'EVO-TRACK-18-5x112',  partNumber:'TRACK18',   brand:'Evo Corse',  name:'Track',          category:'alloy', finish:'Matte Black',      boltPattern:'5x112',  diameter:18,width:8.5, offset:42,hubBore:66.6, price:265,msrp:309,stock:'in', qtyAvailable:12,imageUrl:null},
+  {id:'W8B',tdgId:'W8B',itemNumber:'IKO-BLADE-19-5x112',  partNumber:'BLADE19',   brand:'Ikon',       name:'Blade',          category:'alloy', finish:'Gloss Black',      boltPattern:'5x112',  diameter:19,width:8.5, offset:45,hubBore:66.6, price:289,msrp:335,stock:'in', qtyAvailable:10,imageUrl:null},
+  {id:'W8C',tdgId:'W8C',itemNumber:'MGL-VORTE-20-5x112',  partNumber:'VORTEX20',  brand:'Magellan',   name:'Vortex',         category:'alloy', finish:'Machined w/ Black', boltPattern:'5x112',  diameter:20,width:9.0, offset:40,hubBore:66.6, price:329,msrp:379,stock:'in', qtyAvailable:8, imageUrl:null},
+  {id:'W8D',tdgId:'W8D',itemNumber:'EVO-APEX-21-5x112',   partNumber:'APEX21',    brand:'Evo Corse',  name:'Apex Sport',     category:'alloy', finish:'Gloss Black',      boltPattern:'5x112',  diameter:21,width:9.0, offset:40,hubBore:66.6, price:389,msrp:449,stock:'low',qtyAvailable:4, imageUrl:null},
+  // ── 5x120 (BMW older, Buick, Cadillac XT, Chevy Camaro, Tesla Model S/X, Volvo)
+  {id:'W9', tdgId:'W9', itemNumber:'IKO-SURGE-18-5x120',  partNumber:'SURGE18',   brand:'Ikon',       name:'Surge',          category:'alloy', finish:'Hyper Silver',     boltPattern:'5x120',  diameter:18,width:8.0, offset:40,hubBore:74.1, price:245,msrp:285,stock:'low',qtyAvailable:4, imageUrl:null},
+  {id:'W9B',tdgId:'W9B',itemNumber:'MGL-RUSH-19-5x120',   partNumber:'RUSH19',    brand:'Magellan',   name:'Rush',           category:'alloy', finish:'Gloss Black',      boltPattern:'5x120',  diameter:19,width:8.5, offset:40,hubBore:74.1, price:279,msrp:319,stock:'in', qtyAvailable:10,imageUrl:null},
+  {id:'W9C',tdgId:'W9C',itemNumber:'STL-STEEL-17-5x120',  partNumber:'STEEL17B',  brand:'Steelcraft', name:'Winter Steel',   category:'steel', finish:'Silver',            boltPattern:'5x120',  diameter:17,width:7.0, offset:40,hubBore:72.6, price:82, msrp:99, stock:'in', qtyAvailable:22,imageUrl:null},
+  // ── 5x108 (Volvo, Ford Edge/Fusion/Lincoln, Land Rover Evoque/Velar, Peugeot)
+  {id:'W10',tdgId:'W10',itemNumber:'IKO-MATRIX-17-5x108', partNumber:'MATRIX17',  brand:'Ikon',       name:'Matrix',         category:'alloy', finish:'Machined Silver',  boltPattern:'5x108',  diameter:17,width:7.5, offset:40,hubBore:63.4, price:199,msrp:229,stock:'in', qtyAvailable:14,imageUrl:null},
+  {id:'W10B',tdgId:'W10B',itemNumber:'EVO-COAST-19-5x108',partNumber:'COAST19',   brand:'Evo Corse',  name:'Coast',          category:'alloy', finish:'Gloss Black',      boltPattern:'5x108',  diameter:19,width:8.0, offset:40,hubBore:63.4, price:269,msrp:309,stock:'in', qtyAvailable:8, imageUrl:null},
+  {id:'W10C',tdgId:'W10C',itemNumber:'STL-STEEL-16-5x108',partNumber:'STEEL16V',  brand:'Steelcraft', name:'Winter Steel',   category:'steel', finish:'Silver',            boltPattern:'5x108',  diameter:16,width:6.5, offset:45,hubBore:63.4, price:76, msrp:92, stock:'in', qtyAvailable:20,imageUrl:null},
+  // ── 5x100 (Subaru, older VW, Toyota older)
+  {id:'W11',tdgId:'W11',itemNumber:'STL-STEEL-16-5x100',  partNumber:'STEEL16S',  brand:'Steelcraft', name:'Economy Steel',  category:'steel', finish:'Silver',            boltPattern:'5x100',  diameter:15,width:6.0, offset:45,hubBore:54.1, price:59, msrp:74, stock:'in', qtyAvailable:50,imageUrl:null},
+  {id:'W11B',tdgId:'W11B',itemNumber:'IKO-FLEX-17-5x100', partNumber:'FLEX17',    brand:'Ikon',       name:'Flex',           category:'alloy', finish:'Gloss Black',      boltPattern:'5x100',  diameter:17,width:7.0, offset:48,hubBore:56.1, price:175,msrp:209,stock:'in', qtyAvailable:16,imageUrl:null},
+  // ── 4x100 (Honda Fit, Toyota Yaris, VW Polo, Mazda Miata, Mitsubishi Mirage)
+  {id:'W12',tdgId:'W12',itemNumber:'STL-STEEL-15-4x100',  partNumber:'STEEL15',   brand:'Steelcraft', name:'Economy Steel',  category:'steel', finish:'Silver',            boltPattern:'4x100',  diameter:15,width:6.0, offset:45,hubBore:54.1, price:59, msrp:74, stock:'in', qtyAvailable:50,imageUrl:null},
+  {id:'W12B',tdgId:'W12B',itemNumber:'IKO-SPORT-16-4x100',partNumber:'SPORT16',   brand:'Ikon',       name:'Sport',          category:'alloy', finish:'Gloss Black',      boltPattern:'4x100',  diameter:16,width:6.5, offset:42,hubBore:54.1, price:145,msrp:175,stock:'in', qtyAvailable:18,imageUrl:null},
+  // ── 5x130 (Porsche Cayenne/911/Panamera/Taycan)
+  {id:'W13',tdgId:'W13',itemNumber:'EVO-SPORT-20-5x130',  partNumber:'SPORT20P',  brand:'Evo Corse',  name:'Sport',          category:'alloy', finish:'Gloss Black',      boltPattern:'5x130',  diameter:20,width:9.0, offset:50,hubBore:71.6, price:359,msrp:419,stock:'in', qtyAvailable:8, imageUrl:null},
+  {id:'W13B',tdgId:'W13B',itemNumber:'MGL-GRAND-21-5x130',partNumber:'GRAND21',   brand:'Magellan',   name:'Grand Sport',    category:'alloy', finish:'Machined w/ Black', boltPattern:'5x130',  diameter:21,width:9.5, offset:50,hubBore:71.6, price:449,msrp:519,stock:'low',qtyAvailable:4, imageUrl:null},
+  // ── 5x150 (Toyota Tundra, Toyota Land Cruiser, Lexus LX older)
+  {id:'W14',tdgId:'W14',itemNumber:'IKO-TRAIL-18-5x150',  partNumber:'TRAIL18',   brand:'Ikon',       name:'Trail',          category:'alloy', finish:'Machined Silver',  boltPattern:'5x150',  diameter:18,width:8.5, offset:25,hubBore:110.1,price:279,msrp:319,stock:'in', qtyAvailable:10,imageUrl:null},
+  {id:'W14B',tdgId:'W14B',itemNumber:'STL-STEEL-18-5x150',partNumber:'STEEL18T',  brand:'Steelcraft', name:'Winter Steel',   category:'steel', finish:'Silver',            boltPattern:'5x150',  diameter:18,width:8.0, offset:25,hubBore:110.1,price:115,msrp:139,stock:'in', qtyAvailable:18,imageUrl:null},
+  // ── 8x165.1 (Silverado 2500/3500, Ram 2500/3500 — heavy duty)
+  {id:'W15',tdgId:'W15',itemNumber:'STL-STEEL-17-8x165',  partNumber:'STEEL17HD', brand:'Steelcraft', name:'HD Steel',       category:'steel', finish:'Silver',            boltPattern:'8x165.1',diameter:17,width:7.5, offset:0, hubBore:116.9,price:119,msrp:145,stock:'in', qtyAvailable:20,imageUrl:null},
+  {id:'W15B',tdgId:'W15B',itemNumber:'EVO-FORCE-20-8x165',partNumber:'FORCE20',   brand:'Evo Corse',  name:'Force',          category:'alloy', finish:'Gloss Black',      boltPattern:'8x165.1',diameter:20,width:8.5, offset:0, hubBore:116.9,price:369,msrp:429,stock:'in', qtyAvailable:6, imageUrl:null},
 ];
 
 // ─────────────────────────────────────────────────
@@ -4032,17 +4066,73 @@ let lastSearchVehicle = null; // { year, make, model, trim, vin? }
 // ─────────────────────────────────────────────────
 //  CART
 // ─────────────────────────────────────────────────
+// Extract rim diameter from a tire size string e.g. "275/50R22" → 22
+function tireSizeRimDia(size) {
+  if (!size) return null;
+  const m = size.match(/R(\d+)/i);
+  return m ? parseInt(m[1]) : null;
+}
+
 function addToCart(itemNumber, itemType) {
   const pool = itemType === 'wheel' ? allWheels : allTires;
   const item = pool.find(t => t.itemNumber === itemNumber);
   if (!item) return;
+
+  // ── Rim/tire diameter mismatch check ──
+  if (itemType === 'wheel') {
+    // Adding a wheel — check against any tire already in cart
+    const cartTire = cart.find(c => c.itemType === 'tire');
+    if (cartTire) {
+      const tireDia = tireSizeRimDia(cartTire.size);
+      const wheelDia = Math.round(Number(item.diameter));
+      if (tireDia && wheelDia && tireDia !== wheelDia) {
+        const ok = confirm(
+          `⚠️ Size mismatch!
+
+` +
+          `Your cart has ${cartTire.brand} ${cartTire.name} tires (${cartTire.size}) — those fit a ${tireDia}" rim.
+
+` +
+          `You're adding a ${item.brand} ${item.name} wheel (${wheelDia}") — those sizes won't work together.
+
+` +
+          `Add anyway?`
+        );
+        if (!ok) return;
+      }
+    }
+  } else {
+    // Adding a tire — check against any wheel already in cart
+    const cartWheel = cart.find(c => c.itemType === 'wheel');
+    if (cartWheel) {
+      const tireDia = tireSizeRimDia(item.size);
+      const wheelDia = Math.round(Number(cartWheel.diameter));
+      if (tireDia && wheelDia && tireDia !== wheelDia) {
+        const ok = confirm(
+          `⚠️ Size mismatch!
+
+` +
+          `Your cart has ${cartWheel.brand} ${cartWheel.name} wheels (${wheelDia}") — those need ${wheelDia}" tires.
+
+` +
+          `You're adding ${item.brand} ${item.name} (${item.size}) — that's a ${tireDia}" tire.
+
+` +
+          `Add anyway?`
+        );
+        if (!ok) return;
+      }
+    }
+  }
+
   const ex = cart.find(c => c.itemNumber === itemNumber);
   const priceToCharge = displayedPrice(item);
   if (ex) ex.qty++;
-  else cart.push({ ...item, price: priceToCharge, qty: 4, install: true, itemType: itemType || 'tire' });
+  else cart.push({ ...item, price: priceToCharge, qty: itemType === 'wheel' ? 4 : 4, install: true, itemType: itemType || 'tire' });
   updBadge();
   const qty = ex ? ex.qty : 4;
-  showToast(item.brand + ' ' + item.name, `${qty} tires added to your cart`);
+  const label = itemType === 'wheel' ? 'wheels' : 'tires';
+  showToast(item.brand + ' ' + item.name, `${qty} ${label} added to your cart`);
 }
 
 function removeFromCart(itemNumber) { cart = cart.filter(c => c.itemNumber !== itemNumber); updBadge(); renderCart(); }
