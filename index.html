@@ -2514,6 +2514,15 @@ async function loadWheels(searchParams = null) {
 // ─────────────────────────────────────────────────
 //  LOADING / ERROR STATES
 // ─────────────────────────────────────────────────
+function showCatalogIdle() {
+  document.getElementById('tireGrid').innerHTML = `
+    <div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--muted)">
+      <div style="font-size:48px;margin-bottom:16px;opacity:0.4">🔍</div>
+      <div style="font-size:18px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;color:var(--fg);margin-bottom:8px">Search to see live inventory</div>
+      <div style="font-size:13px;max-width:320px;margin:0 auto;line-height:1.6">Enter your vehicle or tire size above, then hit <strong style="color:var(--yellow)">Find Tires</strong> to load real-time pricing and availability.</div>
+    </div>`;
+}
+
 function showCatalogLoading(on) {
   if (on) {
     document.getElementById('tireGrid').innerHTML = `
@@ -5487,7 +5496,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCookie();
   buildSvcGrid();
   initDecisionGuide();
-  loadTires();
+  showCatalogIdle();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTireDetail(); });
 
