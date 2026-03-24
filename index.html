@@ -2294,6 +2294,9 @@ function normaliseTire(product, inventory) {
     size: sp.size || '', type, price: cost, msrp, sidewall: sp.sidewall || 'Black Sidewall',
     speed: sp.speedRating || '', loadIndex: sp.loadIndex || '', season: sp.season || TDG.SEASON_LABEL[sp.tireSeason] || 'All-Season',
     runFlat: sp.runFlat === 'Yes', evCompat: sp.eVCompatible === 'Yes', serviceType: sp.serviceType || '',
+    treadwear: sp.treadwear || sp.treadWear || sp.treadwearRating || '',
+    traction: sp.traction || sp.tractionRating || '',
+    temperature: sp.temperature || sp.temperatureRating || '',
     map, imageUrl: product.productImageUrl || null,
     description: product.description || product.productDescription || '',
     features: Array.isArray(product.features) ? product.features : (Array.isArray(product.bulletPoints) ? product.bulletPoints : []),
@@ -2749,6 +2752,7 @@ function buildRecCard(t, tier) {
   <div class="rec-card ${cls}" style="animation-delay:.05s">
     <div class="rec-badge ${cls}">${label}</div>
     <div class="tc-top"><div class="tc-brand">${t.brand}</div><span class="stock-pill ${stockClass}">${stockLabel}</span></div>
+    ${t.imageUrl ? `<div style="text-align:center;margin:8px 0 4px"><img src="${t.imageUrl}" alt="${t.name}" style="height:90px;object-fit:contain;opacity:.92" onerror="this.parentNode.style.display='none'"></div>` : ''}
     <div class="tc-name">${t.name}</div>
     <div class="tc-size">${t.size}</div>
     <div class="rec-why">${why}</div>
@@ -2758,6 +2762,9 @@ function buildRecCard(t, tier) {
       <div><div class="spec-label">Load Index</div><div class="spec-value">${t.loadIndex||'—'}</div></div>
       <div><div class="spec-label">Sidewall</div><div class="spec-value" style="font-size:11px">${t.sidewall||'BSW'}</div></div>
       <div><div class="spec-label">Service</div><div class="spec-value" style="font-size:11px">${t.serviceType||'—'}</div></div>
+      ${t.treadwear ? `<div><div class="spec-label">Treadwear</div><div class="spec-value">${t.treadwear}</div></div>` : ''}
+      ${t.traction  ? `<div><div class="spec-label">Traction</div><div class="spec-value">${t.traction}</div></div>` : ''}
+      ${t.temperature ? `<div><div class="spec-label">Temperature</div><div class="spec-value">${t.temperature}</div></div>` : ''}
     </div>
     <div class="tc-foot">
       <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}${effectiveNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
@@ -5033,6 +5040,9 @@ function openTireDetail(itemNumber) {
     ['Season', t.season], ['Speed Rating', t.speed || '—'],
     ['Load Index', t.loadIndex || '—'], ['Service Type', t.serviceType || '—'],
     ['Run-Flat', t.runFlat ? 'Yes' : 'No'], ['EV Compatible', t.evCompat ? 'Yes' : 'No'],
+    ...(t.treadwear   ? [['Treadwear', t.treadwear]]     : []),
+    ...(t.traction    ? [['Traction', t.traction]]        : []),
+    ...(t.temperature ? [['Temperature', t.temperature]]  : []),
   ];
   document.getElementById('tdSpecs').innerHTML = specItems.map(([l,v]) =>
     `<div class="td-spec"><div class="td-spec-label">${l}</div><div class="td-spec-value">${v}</div></div>`
