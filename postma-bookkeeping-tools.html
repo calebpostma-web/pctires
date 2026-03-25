@@ -485,6 +485,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
   </div>
 </div>
 
+<div id="appContent" style="display:none">
 <header>
   <div class="brand"><div class="brand-dot"></div>Postma Contracting Inc. — Bookkeeping Tools</div>
   <div class="header-sub">ONTARIO HST 13% · FISCAL APR–MAR · <span id="sheetLink" style="cursor:pointer;text-decoration:underline" onclick="window.open('https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw','_blank')">OPEN SHEET ↗</span></div>
@@ -1589,6 +1590,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 </div><!-- /panel-taxfiling -->
 
 <div class="toast" id="toast"></div>
+</div><!-- /appContent -->
 
 <script>
 
@@ -2841,18 +2843,29 @@ function t4SumTotal(){
 // ════════════════════════════════════════════════════════════
 // LOCK SCREEN
 // ════════════════════════════════════════════════════════════
+const SESSION_KEY = 'postma_bk_auth';
+
+function lockUnlock(){
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('appContent').style.display = 'block';
+}
+
+function lockLock(){
+  document.getElementById('lockScreen').style.display = 'flex';
+  document.getElementById('appContent').style.display = 'none';
+}
+
+// On page load — check session immediately
 (function(){
-  // Check if already unlocked this session
-  const SESSION_KEY = 'postma_bk_auth';
   if(sessionStorage.getItem(SESSION_KEY) === 'unlocked'){
-    document.getElementById('lockScreen').classList.add('hidden');
-    return;
+    lockUnlock();
+  } else {
+    lockLock();
+    window.addEventListener('load', () => {
+      const inp = document.getElementById('lockPassword');
+      if(inp) setTimeout(() => inp.focus(), 100);
+    });
   }
-  // Focus password field
-  window.addEventListener('load', () => {
-    const inp = document.getElementById('lockPassword');
-    if(inp) inp.focus();
-  });
 })();
 
 async function lockSubmit(){
@@ -2876,8 +2889,8 @@ async function lockSubmit(){
     const d = await r.json();
 
     if(d.ok){
-      sessionStorage.setItem('postma_bk_auth', 'unlocked');
-      document.getElementById('lockScreen').classList.add('hidden');
+      sessionStorage.setItem(SESSION_KEY, 'unlocked');
+      lockUnlock();
     } else {
       err.textContent = 'Incorrect password — try again';
       inp.value = '';
