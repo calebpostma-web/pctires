@@ -1755,8 +1755,8 @@ async function callClaudeWithPDF(prompt, b64, maxTokens=4096){
 let impBank='AMEX', impRawRows=[], impTxns=[];
 let impPdfB64=null; // set when a PDF is loaded
 
-const EXP_CATS=['Meals & Entertainment','Professional Fees','Wages & Salaries','Small Tools','Supplies','Uniforms','Dues & Memberships','Vehicle Repairs','Fuel','Insurance','Interest & Bank Charges','Repairs & Maintenance','Property Tax','Telephone','Utilities','Conferences','Equipment Purchase','Other','SKIP — not a business expense'];
-const NO_HST=new Set(['Wages & Salaries','Insurance','Interest & Bank Charges','Property Tax','SKIP — not a business expense']);
+const EXP_CATS=['Meals & Entertainment','Professional Fees','Wages & Salaries','Small Tools','Supplies','Uniforms','Dues & Memberships','Vehicle Repairs','Fuel','Insurance','Interest & Bank Charges','Repairs & Maintenance','Property Tax','Telephone','Utilities','Conferences','Equipment Purchase','Other','Bill Payment / Transfer','Owner Draw / Distribution','Income Received','SKIP — not a business expense'];
+const NO_HST=new Set(['Wages & Salaries','Insurance','Interest & Bank Charges','Property Tax','Bill Payment / Transfer','Owner Draw / Distribution','Income Received','SKIP — not a business expense']);
 
 function setBank(b,el){
   impBank=b;
@@ -1976,14 +1976,35 @@ async function runImpAI(){
   for(let b=0;b<batches.length;b++){
     txt.textContent=`Analyzing batch ${b+1} of ${batches.length}…`;
     const batch=batches[b];
-    const prompt=`You are a Canadian corporate bookkeeper. Categorize each bank/credit card transaction for a small Ontario corp (consulting + lawn care).
+    // Build a bank-specific prompt so rules match the account being imported
+  const isBMO = impBank === 'BMO';
+  const bankContext = isBMO
+    ? `This is a BMO BANK ACCOUNT statement for Postma Contracting Inc. (Ontario corp).
+IMPORTANT BMO CONTEXT:
+- AMEX BILL PYMT / BILL PYMT entries = the company paying its AMEX credit card bill from BMO. Mark as "Bill Payment / Transfer" — the individual purchases are already captured in the AMEX statement. NEVER mark these as expenses.
+- POSTMA MSP/DIV or similar = owner distributions or intercompany transfers. Mark as "Owner Draw / Distribution".
+- Interac e-Transfer RCVD from clients = revenue coming into the company bank. Mark as "Income Received".
+- Interac e-Transfer SENT = could be paying a supplier — categorize by recipient name if recognizable, otherwise "Bill Payment / Transfer".
+- CRA / HST / TAX payments = "Interest & Bank Charges".
+- BMO fees, service charges = "Interest & Bank Charges".
+- Payroll debits = "Wages & Salaries".
+- Almost everything else flowing OUT of BMO is either a real expense or a transfer — use context to decide.`
+    : `This is an AMERICAN EXPRESS CREDIT CARD statement for Postma Contracting Inc. (Ontario corp).
+IMPORTANT AMEX CONTEXT:
+- Every charge is a real purchase made on the company credit card — categorize each one by what was bought.
+- PAYMENT RECEIVED / THANK YOU = the BMO bank account paying off this AMEX bill. Mark as "Bill Payment / Transfer" — skip it.
+- Virtually every debit here IS a legitimate business expense — fuel, supplies, meals, tools, software, etc.
+- HST is embedded in every purchase (divide total by 1.13 to get net, × 0.13 for HST).
+- Annual fees = "Interest & Bank Charges".`;
+
+  const prompt=`You are a Canadian corporate bookkeeper. ${bankContext}
 
 CATEGORIES (use exact names): ${EXP_CATS.join(', ')}
 
-RULES: HST/CRA payments→Interest & Bank Charges | Payroll→Wages & Salaries | Bank fees→Interest & Bank Charges | Gas stations→Fuel | Costco membership→Dues & Memberships | Costco purchases→Supplies | Restaurants/dining→Meals & Entertainment | Uniforms/workwear→Uniforms | Accounting/legal→Professional Fees | Tools under $500→Small Tools, over $500→Equipment Purchase | Rogers/Bell/Telus→Telephone | Hydro/utility→Utilities | Insurance→Insurance | Credit card payments/transfers→SKIP
+SHARED RULES: Gas/fuel stations→Fuel | Restaurants/cafes/dining→Meals & Entertainment | Costco membership→Dues & Memberships | Costco purchases→Supplies | Home Depot/Canadian Tire/hardware→Supplies | Uniforms/workwear/A Cut Above→Uniforms | MNP/accounting/legal→Professional Fees | Tools under $500→Small Tools | Equipment over $500→Equipment Purchase | Rogers/Bell/Telus→Telephone | Hydro/Enbridge/utilities→Utilities | Insurance→Insurance | Payroll→Wages & Salaries
 
 TRANSACTIONS:
-${batch.map((t,i)=>`${i+1}. ${t.date} | ${t.vendor} | $${Math.abs(t.amount).toFixed(2)} | ${t.amount>0?'CREDIT':'EXPENSE'}`).join('\n')}
+${batch.map((t,i)=>`${i+1}. ${t.date} | ${t.vendor} | $${Math.abs(t.amount).toFixed(2)} | ${t.amount>0?'CREDIT':'DEBIT'}`).join('\n')}
 
 Respond ONLY with JSON array: [{"i":1,"category":"...","confidence":"High|Medium|Low","reason":"brief"}]`;
     try{
@@ -1993,7 +2014,7 @@ Respond ONLY with JSON array: [{"i":1,"category":"...","confidence":"High|Medium
       const offset=b*BATCH;
       res.forEach(r=>{const idx=offset+r.i-1;if(idx>=0&&idx<impTxns.length){impTxns[idx].category=r.category||'Other';impTxns[idx].confidence=r.confidence||'Medium';impTxns[idx].reason=r.reason||''}});
     } catch(e){
-      batch.forEach((t,i)=>{const idx=b*BATCH+i;impTxns[idx].category=ruleCategory(t.description,t.amount);impTxns[idx].confidence='Rule-based'});
+      batch.forEach((t,i)=>{const idx=b*BATCH+i;impTxns[idx].category=ruleCategory(t.description,t.amount,impBank);impTxns[idx].confidence='Rule-based'});
     }
     done+=batch.length;
     const p=Math.round(done/impTxns.length*100);
@@ -2010,10 +2031,23 @@ function calcHST(){
   });
 }
 
-function ruleCategory(d,amt){
+function ruleCategory(d,amt,bank='AMEX'){
+  const isBMO=bank==='BMO';
   d=d.toUpperCase();
+  // BMO-specific: AMEX bill payment is always a transfer, not an expense
+  if(isBMO&&/AMEX.*BILL|BILL.*PYMT|BILL.*PMT/.test(d))return'Bill Payment / Transfer';
+  if(isBMO&&/MSP.*DIV|DIV.*MSP|POSTMA.*DIV/.test(d))return'Owner Draw / Distribution';
+  if(isBMO&&/INTERAC.*RCVD|ETRNSFR.*RCVD|E-TRANSFER.*RCVD/.test(d))return amt>0?'Income Received':'Bill Payment / Transfer';
+  if(isBMO&&amt>0&&/POSTMA|RCVD|RECEIVED|DEPOSIT/.test(d))return'Income Received';
+  // AMEX-specific: payment received = BMO paying the bill
+  if(!isBMO&&/PAYMENT.*RECEIVED|THANK YOU|ONLINE PAYMENT/.test(d))return'Bill Payment / Transfer';
+  // Credit card bill payments & internal transfers — always skip/flag
+  if(/AMEX.*BILL|BILL.*PYMT|BILL.*PMT|MSP.*DIV|DIV.*MSP/.test(d))return'Bill Payment / Transfer';
+  if(/INTERAC.*ETRNSFR.*RCVD|ETRNSFR.*RCVD/.test(d))return amt>0?'Income Received':'Bill Payment / Transfer';
   if(/PAYROLL|WAGES/.test(d))return'Wages & Salaries';
-  if(/CRA|HST|GST|BANK FEE|BMO FEE/.test(d))return'Interest & Bank Charges';
+  if(/CRA|HST PAYMENT|GST PAYMENT/.test(d))return'Interest & Bank Charges';
+  if(/BANK FEE|BMO FEE|BMO MONTHLY|SERVICE FEE/.test(d))return'Interest & Bank Charges';
+  if(/CANADA TXD|CANADA TAX/.test(d))return'Interest & Bank Charges';
   if(/SHELL|ESSO|PETRO|FUEL|GAS STATION/.test(d))return'Fuel';
   if(/ROGERS|BELL|TELUS|WIRELESS/.test(d))return'Telephone';
   if(/HYDRO|ENBRIDGE|UTILITY/.test(d))return'Utilities';
@@ -2021,10 +2055,13 @@ function ruleCategory(d,amt){
   if(/RESTAURANT|DINING|CAFE|PIZZA|MIKES PLACE/.test(d))return'Meals & Entertainment';
   if(/UNIFORM|CUT ABOVE|WORKWEAR/.test(d))return'Uniforms';
   if(/COSTCO.*MEMBER|MEMBERSHIP/.test(d))return'Dues & Memberships';
-  if(/COSTCO|STAPLES/.test(d))return'Supplies';
+  if(/COSTCO|STAPLES|HOME DEPOT|CANADIAN TIRE/.test(d))return'Supplies';
   if(/MNP|LLP|ACCOUNTING|LEGAL/.test(d))return'Professional Fees';
   if(/TOOL|TRACTOR|EQUIPMENT/.test(d))return Math.abs(amt)>5000?'Equipment Purchase':'Small Tools';
-  if(/PAYMENT|TRANSFER/.test(d))return'SKIP — not a business expense';
+  // Credits / positive amounts that look like income
+  if(amt>0&&/POSTMA|RCVD|RECEIVED|DEPOSIT/.test(d))return'Income Received';
+  // Generic transfer/payment catch-all
+  if(/PAYMENT|TRANSFER|PYMT|PMT/.test(d))return'Bill Payment / Transfer';
   return'Other';
 }
 
@@ -2065,7 +2102,8 @@ function impRenderStats(){
     <div class="stat-box"><div class="stat-lbl">CREDITS</div><div class="stat-val g">$${fmtMoney(totInc)}</div></div>`;
 }
 
-function impChangeCat(idx,cat){impTxns[idx].category=cat;impTxns[idx].excluded=cat==='SKIP — not a business expense';calcHST();impRenderStats()}
+const EXCLUDED_CATS=new Set(['SKIP — not a business expense','Bill Payment / Transfer','Income Received','Owner Draw / Distribution']);
+function impChangeCat(idx,cat){impTxns[idx].category=cat;impTxns[idx].excluded=EXCLUDED_CATS.has(cat);calcHST();impRenderStats()}
 function impToggleExcl(idx){impTxns[idx].excluded=!impTxns[idx].excluded;impRender();impRenderStats()}
 function impReset(){
   document.getElementById('imp-step2').classList.add('hidden');
@@ -2098,7 +2136,7 @@ function showExport(){
 }
 function showReview(){document.getElementById('imp-step3').classList.add('hidden');document.getElementById('imp-step2').classList.remove('hidden')}
 
-function getExpRows(){return impTxns.filter(tx=>!tx.excluded&&tx.category!=='SKIP — not a business expense'&&tx.category!=='')}
+function getExpRows(){return impTxns.filter(tx=>!tx.excluded&&!EXCLUDED_CATS.has(tx.category)&&tx.category!=='')}
 function expCSV(){
   const pay=impBank==='AMEX'?'AMEX':'BMO Bank Transfer';
   const amex=impBank==='AMEX'?'Yes':'No';
