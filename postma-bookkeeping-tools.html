@@ -471,6 +471,20 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 </head>
 <body>
 
+<div id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-logo">P</div>
+    <div class="lock-title">Postma Contracting</div>
+    <div class="lock-sub">Bookkeeping Tools · Enter password to continue</div>
+    <input class="lock-input" type="password" id="lockPassword"
+      placeholder="Enter password"
+      onkeydown="if(event.key==='Enter')lockSubmit()">
+    <button class="lock-btn" id="lockBtn" onclick="lockSubmit()">Unlock →</button>
+    <div class="lock-error" id="lockError"></div>
+    <div class="lock-footer">Postma Contracting Inc. · Private access only</div>
+  </div>
+</div>
+
 <header>
   <div class="brand"><div class="brand-dot"></div>Postma Contracting Inc. — Bookkeeping Tools</div>
   <div class="header-sub">ONTARIO HST 13% · FISCAL APR–MAR · <span id="sheetLink" style="cursor:pointer;text-decoration:underline" onclick="window.open('https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw','_blank')">OPEN SHEET ↗</span></div>
