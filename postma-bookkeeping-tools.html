@@ -593,7 +593,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Open the Receipt Scanner tab</div><div class="step-detail">Click <strong>📷 Receipt Scanner</strong> above. On a phone, this will open your camera directly. On a computer, you can upload the photo from your files.</div><button class="step-action" onclick="showTrackerFor('receipt')">Open Receipt Scanner →</button></div></div>
       <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Upload the photo and click "Scan receipt with AI"</div><div class="step-detail">Drag the photo in or click to browse. Then click <strong>Scan receipt with AI →</strong>. The AI reads the vendor, total, HST (or calculates it), date, and suggests a category.</div></div></div>
       <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Review and correct if needed</div><div class="step-detail">Check that the vendor name, amount, and category all look right. Use the <strong>Category</strong> dropdown to change it if the AI guessed wrong. Common corrections: Costco might come up as Supplies when it's actually a Membership.</div></div></div>
-      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Copy row to Google Sheets</div><div class="step-detail">Click <strong>→ Copy row for Google Sheets</strong>. Open your <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a>, go to <strong>Expenses</strong> tab, click the first empty row in column A, press <kbd>Ctrl+V</kbd>.</div></div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Send to Google Sheets</div><div class="step-detail">Click <strong>📊 Send to Google Sheets</strong>. The row goes directly into your Expenses tab. If you've already imported your AMEX statement, it will also match and verify the receipt against that transaction automatically.</div></div></div>
       <div class="step-tip">💡 <strong>Do this the same day.</strong> It takes 30 seconds. Letting receipts pile up turns a 5-minute job into a 3-hour nightmare at tax time.</div>
     </div>
   </div>
@@ -891,9 +891,10 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       </div>
       <div id="rcptExportWrap" class="hidden">
         <div class="btn-row">
-          <button class="btn btn-green" onclick="rcptCopySheets()">→ Copy row for Google Sheets</button>
-          <button class="btn btn-outline" onclick="rcptClear()">Clear</button>
+          <button class="btn btn-green" id="rcptSheetsBtn" onclick="rcptSendToSheets()">📊 Send to Google Sheets</button>
+          <button class="btn btn-outline" onclick="rcptClear()">Clear / Scan another</button>
         </div>
+        <div id="rcptSheetsStatus" style="font-size:.82rem;color:var(--ink3);margin-top:.5rem"></div>
       </div>
     </div>
   </div>
@@ -2474,11 +2475,74 @@ function rcptShowResult(){
   document.getElementById('rcptExportWrap').classList.remove('hidden');
 }
 
-function rcptCopySheets(){
-  const r=rcptResult;
-  const pay='AMEX';
-  const row=[r.date||'',esc(r.vendor||''),esc(r.notes||''),fmtMoney(r.total||0),r.category||'Other',fmtMoney(r.hst||0),fmtMoney(r.net||0),pay,'Yes',''].join('\t');
-  navigator.clipboard.writeText(row).then(()=>toast('Row copied — click B12 in Expenses tab then Ctrl+V'));
+async function rcptSendToSheets(){
+  const r = rcptResult;
+  const btn = document.getElementById('rcptSheetsBtn');
+  const status = document.getElementById('rcptSheetsStatus');
+  const cat = document.getElementById('rcptCatSel')?.value || r.category || 'Other';
+
+  // Try to match against any already-imported statement transactions
+  const matchedTxn = findMatchingTransaction(r);
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Sending…';
+  status.textContent = 'Sending to Google Sheets…';
+
+  const payload = {
+    bank: 'AMEX',
+    rows: [{
+      date: r.date || '',
+      vendor: r.vendor || '',
+      description: r.notes || r.vendor || '',
+      amount: -(parseFloat(r.total) || 0), // negative = expense
+      category: cat,
+      hst: parseFloat(r.hst) || 0,
+      net: -(parseFloat(r.net) || 0),
+      receiptVerified: true,
+      matchedStatement: matchedTxn ? matchedTxn.vendor : null
+    }]
+  };
+
+  try {
+    const resp = await fetch(SHEETS_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify(payload)
+    });
+    const d = await resp.json();
+
+    if(d.ok) {
+      btn.textContent = '✓ Sent!';
+      status.innerHTML = matchedTxn
+        ? `✓ Added to Expenses tab. <strong>Matches statement entry: ${esc(matchedTxn.vendor)} on ${matchedTxn.date}</strong> — that transaction is now receipt-verified.`
+        : '✓ Added to Expenses tab in your Google Sheet.';
+      if(matchedTxn) matchedTxn.receiptVerified = true; // mark in memory
+    } else {
+      status.textContent = '❌ Error: ' + (d.error || 'Unknown');
+      btn.disabled = false;
+      btn.textContent = '📊 Send to Google Sheets';
+    }
+  } catch(err) {
+    status.textContent = '❌ Connection error: ' + err.message;
+    btn.disabled = false;
+    btn.textContent = '📊 Send to Google Sheets';
+  }
+}
+
+// Try to find a matching transaction in the currently imported statement
+function findMatchingTransaction(receipt) {
+  if (!impTxns || !impTxns.length || !receipt.total) return null;
+  const amount = parseFloat(receipt.total);
+  const date = receipt.date;
+  // Match by amount (within $0.02) and optionally date (within 3 days)
+  return impTxns.find(tx => {
+    const amtMatch = Math.abs(Math.abs(tx.amount) - amount) < 0.03;
+    if (!amtMatch) return false;
+    if (!date || !tx.date) return amtMatch;
+    const d1 = new Date(date), d2 = new Date(tx.date);
+    const daysDiff = Math.abs((d1 - d2) / (1000 * 60 * 60 * 24));
+    return daysDiff <= 3;
+  }) || null;
 }
 function rcptClear(){
   rcptB64='';rcptMediaType='';rcptResult={};
