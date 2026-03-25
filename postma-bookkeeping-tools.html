@@ -57,6 +57,7 @@ header{
 .panel{display:none;animation:fadeIn .2s ease}
 .panel.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 
 /* ── SHARED STYLES ── */
 .page{max-width:1100px;margin:0 auto;padding:2rem 2rem 4rem}
@@ -408,6 +409,64 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
   .path-btns{flex-direction:column}
 }
 @media(max-width:480px){#home-tiles{grid-template-columns:1fr!important}}
+
+/* ── LOCK SCREEN ── */
+#lockScreen{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+}
+#lockScreen.hidden{display:none}
+.lock-box{
+  background:#1a2332;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;
+  padding:2.5rem 2rem;
+  width:100%;max-width:360px;
+  text-align:center;
+}
+.lock-logo{
+  width:52px;height:52px;
+  background:var(--green);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:1.5rem;color:white;
+  margin:0 auto 1.25rem;
+}
+.lock-title{
+  font-family:var(--serif);font-size:1.3rem;
+  color:white;margin-bottom:.25rem;
+}
+.lock-sub{font-size:.8rem;color:#7fa4c4;margin-bottom:1.75rem}
+.lock-input{
+  width:100%;padding:.75rem 1rem;
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  color:white;font-size:1rem;font-family:var(--sans);
+  text-align:center;letter-spacing:.15em;
+  margin-bottom:1rem;transition:border-color .2s;
+}
+.lock-input:focus{outline:none;border-color:var(--green)}
+.lock-input::placeholder{letter-spacing:normal;color:rgba(255,255,255,.3);font-size:.85rem}
+.lock-btn{
+  width:100%;padding:.75rem;
+  background:var(--green);color:white;
+  border:none;border-radius:8px;
+  font-family:var(--sans);font-size:.95rem;font-weight:600;
+  cursor:pointer;transition:background .2s;
+}
+.lock-btn:hover{background:var(--green2)}
+.lock-btn:disabled{opacity:.6;cursor:not-allowed}
+.lock-error{
+  color:#ff6b6b;font-size:.8rem;
+  margin-top:.75rem;min-height:1.1rem;
+}
+.lock-footer{
+  margin-top:1.25rem;font-size:.72rem;
+  color:rgba(255,255,255,.2);
+}
 </style>
 </head>
 <body>
@@ -1755,7 +1814,7 @@ async function callClaudeWithPDF(prompt, b64, maxTokens=4096){
 let impBank='AMEX', impRawRows=[], impTxns=[];
 let impPdfB64=null; // set when a PDF is loaded
 
-const EXP_CATS=['Meals & Entertainment','Professional Fees','Wages & Salaries','Small Tools','Supplies','Uniforms','Dues & Memberships','Vehicle Repairs','Fuel','Insurance','Interest & Bank Charges','Repairs & Maintenance','Property Tax','Telephone','Utilities','Conferences','Equipment Purchase','Other','Bill Payment / Transfer','Owner Draw / Distribution','Income Received','SKIP — not a business expense'];
+const EXP_CATS=['Meals & Entertainment','Professional Fees','Wages & Salaries','Small Tools','Supplies','Uniforms','Dues & Memberships','Vehicle Repairs','Fuel','Insurance','Interest & Bank Charges','Repairs & Maintenance','Property Tax','Telephone','Utilities','Conferences','Equipment Purchase','Inventory — Tires/Wheels (COGS)','Sales Revenue — Tires/Wheels','Other','Bill Payment / Transfer','Owner Draw / Distribution','Income Received','SKIP — not a business expense'];
 const NO_HST=new Set(['Wages & Salaries','Insurance','Interest & Bank Charges','Property Tax','Bill Payment / Transfer','Owner Draw / Distribution','Income Received','SKIP — not a business expense']);
 
 function setBank(b,el){
@@ -2001,7 +2060,7 @@ IMPORTANT AMEX CONTEXT:
 
 CATEGORIES (use exact names): ${EXP_CATS.join(', ')}
 
-SHARED RULES: Gas/fuel stations→Fuel | Restaurants/cafes/dining→Meals & Entertainment | Costco membership→Dues & Memberships | Costco purchases→Supplies | Home Depot/Canadian Tire/hardware→Supplies | Uniforms/workwear/A Cut Above→Uniforms | MNP/accounting/legal→Professional Fees | Tools under $500→Small Tools | Equipment over $500→Equipment Purchase | Rogers/Bell/Telus→Telephone | Hydro/Enbridge/utilities→Utilities | Insurance→Insurance | Payroll→Wages & Salaries
+SHARED RULES: TDG/tire purchases/wheel purchases→Inventory — Tires/Wheels (COGS) | Tire sales revenue→Sales Revenue — Tires/Wheels | Gas/fuel stations→Fuel | Restaurants/cafes/dining→Meals & Entertainment | Costco membership→Dues & Memberships | Costco purchases→Supplies | Home Depot/Canadian Tire/hardware→Supplies | Uniforms/workwear/A Cut Above→Uniforms | MNP/accounting/legal→Professional Fees | Tools under $500→Small Tools | Equipment over $500→Equipment Purchase | Rogers/Bell/Telus→Telephone | Hydro/Enbridge/utilities→Utilities | Insurance→Insurance | Payroll→Wages & Salaries
 
 TRANSACTIONS:
 ${batch.map((t,i)=>`${i+1}. ${t.date} | ${t.vendor} | $${Math.abs(t.amount).toFixed(2)} | ${t.amount>0?'CREDIT':'DEBIT'}`).join('\n')}
@@ -2055,6 +2114,7 @@ function ruleCategory(d,amt,bank='AMEX'){
   if(/RESTAURANT|DINING|CAFE|PIZZA|MIKES PLACE/.test(d))return'Meals & Entertainment';
   if(/UNIFORM|CUT ABOVE|WORKWEAR/.test(d))return'Uniforms';
   if(/COSTCO.*MEMBER|MEMBERSHIP/.test(d))return'Dues & Memberships';
+  if(/TDG|TIRE|WHEEL|TIRECRAFT|TIREMAN/.test(d)&&amt<0)return'Inventory — Tires/Wheels (COGS)';
   if(/COSTCO|STAPLES|HOME DEPOT|CANADIAN TIRE/.test(d))return'Supplies';
   if(/MNP|LLP|ACCOUNTING|LEGAL/.test(d))return'Professional Fees';
   if(/TOOL|TRACTOR|EQUIPMENT/.test(d))return Math.abs(amt)>5000?'Equipment Purchase':'Small Tools';
@@ -2763,6 +2823,63 @@ function t4SumTotal(){
   setBoxVal('t4sum_80',totEI.toFixed(2));
   setBoxVal('t4sum_82',totTax.toFixed(2));
 }
+
+// ════════════════════════════════════════════════════════════
+// LOCK SCREEN
+// ════════════════════════════════════════════════════════════
+(function(){
+  // Check if already unlocked this session
+  const SESSION_KEY = 'postma_bk_auth';
+  if(sessionStorage.getItem(SESSION_KEY) === 'unlocked'){
+    document.getElementById('lockScreen').classList.add('hidden');
+    return;
+  }
+  // Focus password field
+  window.addEventListener('load', () => {
+    const inp = document.getElementById('lockPassword');
+    if(inp) inp.focus();
+  });
+})();
+
+async function lockSubmit(){
+  const btn = document.getElementById('lockBtn');
+  const inp = document.getElementById('lockPassword');
+  const err = document.getElementById('lockError');
+  const pwd = inp.value.trim();
+
+  if(!pwd){ err.textContent = 'Please enter the password'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  err.textContent = '';
+
+  try {
+    const r = await fetch('/auth-check', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ password: pwd })
+    });
+    const d = await r.json();
+
+    if(d.ok){
+      sessionStorage.setItem('postma_bk_auth', 'unlocked');
+      document.getElementById('lockScreen').classList.add('hidden');
+    } else {
+      err.textContent = 'Incorrect password — try again';
+      inp.value = '';
+      inp.focus();
+      // Shake animation
+      inp.style.animation = 'none';
+      setTimeout(() => inp.style.animation = 'shake .4s ease', 10);
+    }
+  } catch(e) {
+    err.textContent = 'Connection error — are you on pctires.ca?';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Unlock →';
+}
+
 // Set today's date on HST filing date input once DOM is ready
 window.addEventListener('load',()=>{
   const fd=document.getElementById('hst_filingdate');
