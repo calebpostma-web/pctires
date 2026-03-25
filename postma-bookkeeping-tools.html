@@ -569,7 +569,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Open Statement Importer and select your bank</div><div class="step-detail">Click <strong>📥 Statement Importer</strong> above. Choose <em>AMEX Credit Card</em> or <em>BMO Bank Account</em> to match the statement you downloaded.</div><button class="step-action" onclick="showTrackerFor('bought-csv')">Open Statement Importer →</button></div></div>
       <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Upload the CSV and click Analyze with AI</div><div class="step-detail">Drag your CSV file into the upload box, or click to browse. Then click <strong>Analyze with AI →</strong>. The AI reads every transaction, assigns a category (Fuel, Supplies, Professional Fees, etc.), and extracts the HST automatically. This takes about 10–30 seconds.</div></div></div>
       <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Review the categories</div><div class="step-detail">Scan through the results. The AI is right about 90% of the time. For anything wrong, click the dropdown in the <strong>Category</strong> column and fix it. Click <strong>✕</strong> on any row that isn't a business expense (personal purchases, credit card payments, transfers between accounts).</div></div></div>
-      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Export to Google Sheets</div><div class="step-detail">Click <strong>Continue to export →</strong> then choose <strong>Copy to clipboard</strong>. Open your <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a>, go to the <strong>Expenses</strong> tab, click cell A in the first empty row, and press <kbd>Ctrl+V</kbd>. Done.</div></div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Export to Google Sheets</div><div class="step-detail">Click <strong>📊 Send to Google Sheets</strong>. Rows go directly into your sheet automatically — no copy-paste needed.</div></div></div>
       <div class="step-tip">💡 <strong>Do this monthly.</strong> The best habit is to import your AMEX and BMO statements on the 1st of every month. Takes about 5 minutes and keeps your books current.</div>
     </div>
     <div class="guide-steps hidden" id="steps-bought-manual">
@@ -664,7 +664,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Open Statement Importer and pick your bank</div><div class="step-detail">Click <strong>📥 Statement Importer</strong> above. Click <em>AMEX Credit Card</em> or <em>BMO Bank Account</em> to match your file. The format hint on the right shows you what the CSV should look like.</div><button class="step-action" onclick="showTrackerFor('statement')">Open Statement Importer →</button></div></div>
       <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Upload the CSV and let AI analyze it</div><div class="step-detail">Drag the CSV into the upload box. Click <strong>Analyze with AI →</strong>. The AI processes your transactions in batches. A progress bar shows how far along it is — takes about 10–30 seconds for a typical month.</div></div></div>
       <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Review, fix any wrong categories, exclude personal items</div><div class="step-detail">Scan the results. Fix any wrong categories using the dropdown. Click <strong>✕</strong> on personal purchases, credit card payments, and transfers between your own accounts — these are not business expenses.</div></div></div>
-      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Export to Google Sheets</div><div class="step-detail">Click <strong>Continue to export →</strong> then <strong>Copy to clipboard</strong>. Go to your <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a>, click the <strong>Expenses</strong> tab, click the first empty cell in column A, and press <kbd>Ctrl+V</kbd>. All rows paste in at once.</div></div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Export to Google Sheets</div><div class="step-detail">Click <strong>📊 Send to Google Sheets</strong>. Rows go directly into your sheet automatically — no copy-paste needed.</div></div></div>
       <div class="step-row"><div class="step-num">6</div><div class="step-body"><div class="step-title">Download the HST Summary for your records</div><div class="step-detail">Back in the export screen, click <strong>🏛 HST summary</strong> to download a CSV showing total HST paid by category. Save this — you'll use it when filing your quarterly HST return.</div></div></div>
       <div class="step-tip">💡 <strong>Best practice:</strong> Import AMEX and BMO on the 1st of every month. Takes 5–10 minutes and means your books are always current. Never face a year-end backlog again.</div>
     </div>
@@ -748,30 +748,24 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       </div>
     </div>
     <div class="btn-row">
-      <button class="btn btn-green" onclick="showExport()">Continue to export →</button>
+      <button class="btn btn-green" id="sendSheetsBtn" onclick="sendToSheets()">
+        📊 Send to Google Sheets
+      </button>
+      <span id="sendSheetsStatus" style="font-size:.82rem;color:var(--ink3);align-self:center"></span>
     </div>
   </div>
 
-  <!-- Step 3: Export -->
+  <!-- Step 3: Success -->
   <div id="imp-step3" class="hidden">
-    <div class="card">
-      <div class="card-title">Export <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="showReview()">← Back to review</button></div>
-      <div class="export-grid">
-        <div class="exp-card" onclick="expCSV()"><span class="exp-icon">📊</span><div class="exp-title">Google Sheets CSV</div><div class="exp-desc">Download CSV formatted for your Expenses tab. Import via File → Import.</div></div>
-        <div class="exp-card" onclick="expClipboard()"><span class="exp-icon">📋</span><div class="exp-title">Copy to clipboard</div><div class="exp-desc">Tab-separated rows — click cell B12 in Expenses tab then Ctrl+V.</div></div>
-        <div class="exp-card" onclick="expHSTSummary()"><span class="exp-icon">🏛</span><div class="exp-title">HST summary</div><div class="exp-desc">Category totals for your quarterly HST return filing.</div></div>
+    <div class="card" style="text-align:center;padding:2.5rem">
+      <div style="font-size:3rem;margin-bottom:.75rem">✅</div>
+      <div style="font-family:var(--serif);font-size:1.4rem;margin-bottom:.5rem" id="successTitle">Sent to Google Sheets</div>
+      <div style="font-size:.88rem;color:var(--ink3);margin-bottom:1.5rem" id="successDetail"></div>
+      <div class="btn-row" style="justify-content:center">
+        <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" class="btn btn-green">Open Google Sheet ↗</a>
+        <button class="btn btn-outline" onclick="expHSTSummary()">⬇ HST Summary CSV</button>
+        <button class="btn btn-outline" onclick="impReset()">Import another statement</button>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Export preview</div>
-      <div class="table-wrap">
-        <table><thead><tr><th>Date</th><th>Vendor</th><th>Description</th><th style="text-align:right">Total charged</th><th>Category</th><th style="text-align:right">HST paid</th><th style="text-align:right">Net</th><th>Payment</th></tr></thead>
-        <tbody id="expPreviewBody"></tbody></table>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-green" onclick="expCSV()">⬇ Download CSV</button>
-      <button class="btn btn-outline" onclick="expClipboard()">Copy to clipboard</button>
     </div>
   </div>
 </div>
@@ -2195,21 +2189,62 @@ function impReset(){
   const title=document.getElementById('impUploadTitle');if(title)title.textContent='Drop your statement here';
 }
 async function impRerun(){document.getElementById('impProgWrap').classList.remove('hidden');await runImpAI()}
-function showExport(){
-  document.getElementById('imp-step2').classList.add('hidden');
-  document.getElementById('imp-step3').classList.remove('hidden');
-  const pay=impBank==='AMEX'?'AMEX':'BMO Bank Transfer';
-  const rows=impTxns.filter(tx=>!tx.excluded&&tx.category!=='SKIP — not a business expense');
-  document.getElementById('expPreviewBody').innerHTML=rows.map(tx=>`<tr>
-    <td class="mono">${tx.date}</td><td>${esc(tx.vendor)}</td>
-    <td style="color:var(--ink3);font-size:.75rem">${esc(tx.description.slice(0,35))}</td>
-    <td class="mono right">$${fmtMoney(Math.abs(tx.amount))}</td>
-    <td><span class="badge badge-amber" style="font-size:.65rem">${tx.category}</span></td>
-    <td class="mono right">${tx.hst>0?'$'+fmtMoney(tx.hst):'—'}</td>
-    <td class="mono right">$${fmtMoney(Math.abs(tx.net))}</td>
-    <td style="font-size:.75rem;color:var(--ink3)">${pay}</td>
-  </tr>`).join('');
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxwgByFxCo9c-S_CDzq33-3eJMdYoNliHajhrRSTU5hPS_V8_9si4jZ7XFG9-YVAzpI/exec';
+
+async function sendToSheets(){
+  const btn = document.getElementById('sendSheetsBtn');
+  const status = document.getElementById('sendSheetsStatus');
+  const EXCLUDED = new Set(['SKIP — not a business expense','Bill Payment / Transfer','Owner Draw / Distribution']);
+  const rows = impTxns.filter(tx => !tx.excluded && tx.category && !EXCLUDED.has(tx.category));
+
+  if(!rows.length){
+    toast('No rows to send — all transactions are excluded or uncategorized');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Sending…';
+  status.textContent = `Sending ${rows.length} rows to Google Sheets…`;
+
+  const payload = {
+    bank: impBank,
+    rows: rows.map(tx => ({
+      date: tx.date,
+      vendor: tx.vendor,
+      description: tx.description,
+      amount: tx.amount,
+      category: tx.category,
+      hst: tx.hst,
+      net: tx.net
+    }))
+  };
+
+  try {
+    const r = await fetch(SHEETS_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain'}, // Apps Script requires text/plain for CORS
+      body: JSON.stringify(payload)
+    });
+    const d = await r.json();
+
+    if(d.ok){
+      // Show success screen
+      document.getElementById('imp-step2').classList.add('hidden');
+      document.getElementById('imp-step3').classList.remove('hidden');
+      document.getElementById('successDetail').textContent =
+        `${d.expenses || 0} expenses and ${d.income || 0} income rows added. ${d.skipped || 0} transfers skipped.`;
+    } else {
+      status.textContent = '❌ Error: ' + (d.error || 'Unknown error');
+      btn.disabled = false;
+      btn.textContent = '📊 Send to Google Sheets';
+    }
+  } catch(err) {
+    status.textContent = '❌ Could not reach Google Sheets: ' + err.message;
+    btn.disabled = false;
+    btn.textContent = '📊 Send to Google Sheets';
+  }
 }
+
 function showReview(){document.getElementById('imp-step3').classList.add('hidden');document.getElementById('imp-step2').classList.remove('hidden')}
 
 function getExpRows(){return impTxns.filter(tx=>!tx.excluded&&!EXCLUDED_CATS.has(tx.category)&&tx.category!=='')}
