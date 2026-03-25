@@ -1,0 +1,2762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Postma Contracting Inc. — Bookkeeping Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#151a18;--ink2:#3d4a44;--ink3:#7a8a82;
+  --paper:#f5f2ec;--paper2:#ede9e0;--paper3:#e2ddd2;
+  --green:#1a5c38;--green2:#2e7d52;--greenlt:#e8f5ee;
+  --red:#7f1d1d;--redlt:#fff0f0;
+  --blue:#0d3b66;--bluelt:#e3f0ff;
+  --amber:#7b4f00;--amberlt:#fff8e1;
+  --rule:#ccc8bc;--white:#fff;
+  --mono:'IBM Plex Mono',monospace;
+  --serif:'Lora',serif;
+  --sans:'DM Sans',sans-serif;
+  --radius:5px;
+}
+html{font-size:15px}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;font-weight:300}
+
+/* ── HEADER ── */
+header{
+  background:var(--ink);color:#f5f2ec;
+  padding:0 2rem;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+}
+.brand{font-family:var(--serif);font-size:1rem;font-weight:400;display:flex;align-items:center;gap:.6rem}
+.brand-dot{width:7px;height:7px;background:#4caf7d;border-radius:50%}
+.header-sub{font-family:var(--mono);font-size:.65rem;color:#6b8080;letter-spacing:.08em}
+
+/* ── TABS ── */
+.tabs{
+  display:flex;background:var(--paper2);border-bottom:1px solid var(--rule);
+  padding:0 1rem;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  padding:.85rem 1rem;font-size:.82rem;font-weight:400;color:var(--ink3);
+  cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;
+  display:flex;align-items:center;gap:.4rem;white-space:nowrap;
+  background:none;border-top:none;border-left:none;border-right:none;
+  -webkit-tap-highlight-color:transparent;min-height:44px;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--green);font-weight:500}
+.tab-icon{font-size:14px}
+
+/* ── PANELS ── */
+.panel{display:none;animation:fadeIn .2s ease}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SHARED STYLES ── */
+.page{max-width:1100px;margin:0 auto;padding:2rem 2rem 4rem}
+.page-header{margin-bottom:1.75rem}
+.page-title{font-family:var(--serif);font-size:1.8rem;font-weight:400;margin-bottom:.3rem}
+.page-sub{font-size:.88rem;color:var(--ink3);line-height:1.5}
+
+.card{background:var(--white);border:1px solid var(--rule);border-radius:var(--radius);padding:1.5rem 1.75rem;margin-bottom:1.25rem}
+.card-title{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
+
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;margin-bottom:.4rem}
+.field input,.field select,.field textarea{
+  width:100%;padding:.6rem .8rem;border:1px solid var(--rule);border-radius:var(--radius);
+  font-family:var(--sans);font-size:.9rem;font-weight:300;color:var(--ink);background:var(--white);
+  transition:border-color .15s;appearance:none;
+}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(30,92,56,.08)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a8a82' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;padding-right:2.2rem}
+.field textarea{resize:vertical;line-height:1.5;height:72px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+.btn{padding:.6rem 1.3rem;border-radius:var(--radius);font-family:var(--sans);font-size:.85rem;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .15s;display:inline-flex;align-items:center;gap:.4rem}
+.btn-primary{background:var(--ink);color:white}.btn-primary:hover{background:var(--ink2)}
+.btn-primary:disabled{background:var(--paper3);color:var(--ink3);cursor:not-allowed}
+.btn-green{background:var(--green);color:white}.btn-green:hover{background:var(--green2)}
+.btn-outline{background:white;border-color:var(--rule);color:var(--ink)}.btn-outline:hover{border-color:var(--ink2)}
+.btn-sm{padding:.35rem .85rem;font-size:.78rem}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.25rem}
+
+.badge{display:inline-block;padding:.15rem .55rem;border-radius:3px;font-family:var(--mono);font-size:.62rem;letter-spacing:.05em}
+.badge-green{background:var(--greenlt);color:var(--green)}
+.badge-amber{background:var(--amberlt);color:var(--amber)}
+.badge-blue{background:var(--bluelt);color:var(--blue)}
+.badge-red{background:var(--redlt);color:var(--red)}
+
+hr.divider{border:none;border-top:1px solid var(--rule);margin:1.25rem 0}
+
+/* toggle */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.7rem .85rem;border:1px solid var(--rule);border-radius:var(--radius);background:var(--white);margin-bottom:1.1rem}
+.toggle-lbl{font-size:.88rem;color:var(--ink2)}.toggle-lbl small{display:block;font-size:.74rem;color:var(--ink3)}
+.toggle-sw{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle-sw input{opacity:0;width:0;height:0;position:absolute}
+.t-track{position:absolute;inset:0;border-radius:10px;background:var(--paper3);cursor:pointer;transition:background .2s}
+.toggle-sw input:checked+.t-track{background:var(--green)}
+.t-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:white;transition:transform .2s;pointer-events:none}
+.toggle-sw input:checked~.t-knob{transform:translateX(16px)}
+
+/* bank tabs */
+.bank-tabs{display:flex;gap:.5rem;margin-bottom:1.25rem}
+.bank-tab{padding:.42rem 1.1rem;border:1px solid var(--rule);border-radius:20px;font-size:.82rem;cursor:pointer;background:white;color:var(--ink2);transition:all .15s}
+.bank-tab.active{background:var(--ink);color:white;border-color:var(--ink)}
+
+/* upload zone */
+.upload-zone{border:2px dashed var(--rule);border-radius:var(--radius);padding:1.75rem 1.5rem;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--green2);background:var(--greenlt)}
+.upload-zone.loaded{border-style:solid;border-color:var(--green);background:var(--greenlt)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-title{font-family:var(--serif);font-size:1rem;font-weight:600;display:block;margin-bottom:.3rem}
+.upload-hint{font-size:.78rem;color:var(--ink3);line-height:1.5}
+.upload-fname{font-family:var(--mono);font-size:.72rem;color:var(--green);margin-top:.4rem;display:block}
+
+/* progress */
+.prog-wrap{margin-bottom:1rem}
+.prog-lbl{font-family:var(--mono);font-size:.7rem;color:var(--ink3);display:flex;justify-content:space-between;margin-bottom:.4rem}
+.prog-bar{height:3px;background:var(--paper3);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width .3s ease}
+
+/* table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+thead tr{background:var(--ink);color:#f5f2ec}
+thead th{padding:.55rem .75rem;text-align:left;font-family:var(--mono);font-size:.65rem;letter-spacing:.07em;font-weight:500;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--rule);transition:background .1s}
+tbody tr:hover{background:var(--paper)}
+tbody tr.excluded{opacity:.35}
+td{padding:.5rem .75rem;vertical-align:middle}
+td.mono{font-family:var(--mono);font-size:.78rem}
+td.right{text-align:right}
+td.neg{color:var(--red);font-family:var(--mono);font-size:.82rem}
+td.pos{color:var(--green);font-family:var(--mono);font-size:.82rem}
+select.cat-sel{font-size:.75rem;padding:.2rem .4rem;border:1px solid var(--rule);border-radius:3px;background:white;color:var(--ink);max-width:180px}
+.excl-btn{background:none;border:none;cursor:pointer;color:var(--ink3);padding:.1rem .3rem;transition:color .15s}.excl-btn:hover{color:var(--red)}
+
+/* summary strip */
+.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-bottom:1.25rem}
+.stat-box{background:white;border:1px solid var(--rule);border-radius:var(--radius);padding:.85rem 1rem}
+.stat-lbl{font-family:var(--mono);font-size:.62rem;color:var(--ink3);letter-spacing:.06em;margin-bottom:.2rem}
+.stat-val{font-family:var(--serif);font-size:1.25rem;font-weight:400}
+.stat-val.g{color:var(--green)}.stat-val.r{color:var(--red)}.stat-val.a{color:var(--amber)}
+
+/* export cards */
+.export-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.75rem}
+.exp-card{border:1px solid var(--rule);border-radius:var(--radius);padding:1.1rem;cursor:pointer;transition:all .2s;text-align:center}
+.exp-card:hover{border-color:var(--green);background:var(--greenlt)}
+.exp-icon{font-size:1.6rem;margin-bottom:.35rem;display:block}
+.exp-title{font-family:var(--serif);font-size:.9rem;font-weight:600;margin-bottom:.2rem}
+.exp-desc{font-size:.74rem;color:var(--ink3);line-height:1.4}
+
+/* ── INVOICE ── */
+.inv-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+.inv-num-row{display:flex;align-items:center;gap:.6rem;margin-bottom:1.1rem}
+.inv-num-disp{font-family:var(--mono);font-size:.95rem;font-weight:500;color:var(--green);background:var(--greenlt);padding:.48rem .9rem;border-radius:var(--radius);border:1px solid #b8ddc8;flex:1;text-align:center}
+.btn-regen{background:none;border:1px solid var(--rule);border-radius:var(--radius);padding:.48rem .7rem;cursor:pointer;font-size:.78rem;color:var(--ink3);transition:all .15s;white-space:nowrap}
+.btn-regen:hover{border-color:var(--ink);color:var(--ink)}
+.line-item-row{display:grid;grid-template-columns:1fr 60px 90px 70px 24px;gap:.4rem;align-items:center;margin-bottom:.4rem}
+.line-item-row input{margin-bottom:0}
+.li-tot{font-family:var(--mono);font-size:.78rem;color:var(--ink3);text-align:right;padding:.6rem .3rem}
+.btn-rm{background:none;border:none;cursor:pointer;color:var(--ink3);font-size:1.1rem;transition:color .15s}.btn-rm:hover{color:var(--red)}
+.btn-add-li{background:none;border:1px dashed var(--rule);border-radius:var(--radius);padding:.45rem 1rem;font-size:.78rem;color:var(--ink3);cursor:pointer;width:100%;transition:all .15s;margin-bottom:1.1rem}
+.btn-add-li:hover{border-color:var(--green);color:var(--green)}
+.totals-box{background:var(--paper2);border:1px solid var(--rule);border-radius:var(--radius);padding:.9rem 1rem;margin-top:1.1rem}
+.tot-row{display:flex;justify-content:space-between;padding:.28rem 0;font-size:.87rem}
+.tot-row.final{border-top:1px solid var(--rule);margin-top:.35rem;padding-top:.65rem;font-family:var(--serif);font-size:1rem;font-weight:600}
+.tot-lbl{color:var(--ink3)}.tot-val{font-family:var(--mono);font-weight:500}
+.tot-val.big{font-size:1.15rem;color:var(--green)}
+
+/* invoice preview doc */
+.inv-doc{background:white;border:1px solid var(--rule);border-radius:var(--radius);padding:2rem 2rem 2.5rem;font-family:var(--sans);font-size:.85rem}
+.inv-doc-header{display:flex;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:2px solid var(--ink)}
+.inv-co-name{font-family:var(--serif);font-size:1.25rem;font-weight:600}
+.inv-co-detail{font-size:.74rem;color:var(--ink3);line-height:1.7;margin-top:.15rem}
+.inv-doc-title{font-family:var(--serif);font-size:1.6rem;font-weight:400;text-align:right}
+.inv-doc-num{font-family:var(--mono);font-size:.75rem;color:var(--green);text-align:right;margin-top:.2rem}
+.inv-meta{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem}
+.inv-meta-blk label{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.25rem}
+.inv-meta-blk p{font-size:.84rem;line-height:1.6}
+.inv-tbl{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:1.25rem}
+.inv-tbl thead tr{border-bottom:1px solid var(--ink)}
+.inv-tbl th{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:.45rem .4rem .45rem 0;text-align:left;font-weight:400}
+.inv-tbl th:last-child,.inv-tbl td:last-child{text-align:right;padding-right:0}
+.inv-tbl tbody tr{border-bottom:1px solid var(--paper2)}
+.inv-tbl td{padding:.55rem .4rem .55rem 0;vertical-align:top}
+.inv-tbl tfoot td{padding:.35rem .4rem .35rem 0;font-size:.8rem}
+.inv-tbl tfoot tr.gtotal td{border-top:2px solid var(--ink);padding-top:.55rem;font-family:var(--serif);font-size:.92rem;font-weight:600}
+.inv-tbl .flbl{color:var(--ink3);font-family:var(--mono);font-size:.68rem;letter-spacing:.06em}
+.inv-doc-footer{border-top:1px solid var(--rule);padding-top:1rem;display:flex;justify-content:space-between;font-size:.74rem;color:var(--ink3)}
+.inv-thanks{font-family:var(--serif);font-style:italic;color:var(--ink2);font-size:.85rem}
+.due-badge{display:inline-block;padding:.15rem .5rem;border-radius:3px;font-family:var(--mono);font-size:.62rem;background:var(--greenlt);color:var(--green);margin-top:.2rem}
+
+/* ── RECEIPT ── */
+.receipt-upload{border:2px dashed var(--rule);border-radius:var(--radius);padding:2.5rem;text-align:center;cursor:pointer;position:relative;transition:all .2s}
+.receipt-upload:hover,.receipt-upload.drag-over{border-color:var(--green2);background:var(--greenlt)}
+.receipt-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.receipt-icon{font-size:2.5rem;margin-bottom:.5rem;display:block}
+.receipt-preview{max-width:100%;max-height:280px;border-radius:var(--radius);border:1px solid var(--rule);margin-top:.75rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+.result-box{background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);padding:1rem}
+.result-lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--ink3);text-transform:uppercase;margin-bottom:.3rem}
+.result-val{font-size:1rem;font-weight:500;color:var(--ink)}
+
+/* toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:white;padding:.7rem 1.2rem;border-radius:var(--radius);font-size:.84rem;opacity:0;transform:translateY(6px);transition:all .25s;pointer-events:none;z-index:999;max-width:340px}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* paste area */
+.paste-toggle{background:none;border:none;font-size:.8rem;color:var(--ink3);cursor:pointer;text-decoration:underline;text-underline-offset:3px;margin-bottom:.6rem;display:block}
+.paste-box{width:100%;height:110px;border:1px solid var(--rule);border-radius:var(--radius);padding:.65rem .85rem;font-family:var(--mono);font-size:.72rem;color:var(--ink);resize:vertical;background:var(--paper);line-height:1.6}
+.paste-box:focus{outline:none;border-color:var(--green)}
+
+.hidden{display:none!important}
+@media(max-width:800px){
+  .inv-layout{grid-template-columns:1fr}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .export-grid{grid-template-columns:1fr}
+  .result-grid{grid-template-columns:1fr}
+  .page{padding:1.25rem 1rem 3rem}
+  .field-row{grid-template-columns:1fr}
+  .inv-meta{grid-template-columns:1fr}
+  .inv-parties{grid-template-columns:1fr}
+  .line-item-row{grid-template-columns:1fr 50px 80px 60px 24px}
+  .cra-form-header{flex-direction:column;gap:.5rem}
+  .t2-line{flex-wrap:wrap;gap:.4rem}
+  .t2-input{width:100%}
+}
+@media(max-width:600px){
+  .page-title{font-size:1.4rem}
+  .tab{padding:.75rem .7rem;font-size:.75rem}
+  .tab-icon{display:none}
+  .btn{padding:.55rem 1rem;font-size:.8rem}
+  .btn-row{gap:.5rem}
+  .cra-sub-tabs{gap:.3rem}
+  .cra-sub-tab{padding:.4rem .75rem;font-size:.75rem}
+  .box-grid{grid-template-columns:1fr!important}
+@media(max-width:400px){.step-row{flex-direction:column;gap:.5rem}.step-num{width:100%;height:28px;border-radius:var(--radius);line-height:28px}}
+  .cra-box{border-right:none}
+  .hst-period-grid{grid-template-columns:1fr 1fr}
+  header{padding:0 1rem}
+  .header-sub{display:none}
+}
+
+/* ── CRA TAX FILING STYLES ── */
+.cra-sub-tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.cra-sub-tab{
+  padding:.48rem 1.1rem;border:1px solid var(--rule);border-radius:20px;
+  font-size:.8rem;cursor:pointer;background:white;color:var(--ink2);
+  transition:all .15s;font-family:var(--sans);
+}
+.cra-sub-tab.active{background:var(--ink);color:white;border-color:var(--ink)}
+.cra-panel{display:none}.cra-panel.active{display:block}
+
+/* CRA Form Container */
+.cra-form{border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden;margin-bottom:1.5rem}
+.cra-form-header{
+  background:var(--ink);color:#f5f2ec;
+  padding:1rem 1.5rem;
+  display:flex;justify-content:space-between;align-items:flex-start
+}
+.cra-form-title{font-family:var(--serif);font-size:1rem;font-weight:600}
+.cra-form-ref{font-family:var(--mono);font-size:.65rem;color:#4caf7d;margin-top:.2rem}
+.cra-form-tag{font-family:var(--mono);font-size:.62rem;background:rgba(255,255,255,.1);padding:.2rem .5rem;border-radius:3px}
+
+/* Section separator inside form */
+.cra-section-label{
+  background:var(--paper2);padding:.5rem 1rem;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink3);
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+}
+
+/* Box grid */
+.box-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+@media(max-width:700px){.box-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.box-grid{grid-template-columns:1fr}}
+
+.cra-box{
+  padding:1rem 1.1rem;
+  border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);
+}
+.cra-box:nth-child(3n){border-right:none}
+.cra-box-wide{grid-column:span 2;border-right:none}
+.cra-box-full{grid-column:span 3;border-right:none}
+
+.box-code{
+  font-family:var(--mono);font-size:.62rem;font-weight:500;
+  color:var(--green);letter-spacing:.06em;margin-bottom:.25rem
+}
+.box-name{
+  font-size:.74rem;color:var(--ink2);line-height:1.35;
+  margin-bottom:.5rem;min-height:2.2em
+}
+.box-input{
+  width:100%;padding:.45rem .65rem;
+  border:1px solid var(--rule);border-radius:var(--radius);
+  font-family:var(--mono);font-size:.88rem;font-weight:500;
+  color:var(--ink);background:var(--white);
+  text-align:right;transition:border-color .15s
+}
+.box-input:focus{outline:none;border-color:var(--green);background:var(--greenlt)}
+.box-input.auto{background:var(--greenlt);border-color:#b8ddc8;color:var(--green)}
+.box-input.calc{background:var(--bluelt);border-color:#b8cfe8;color:var(--blue)}
+.box-input.owing{background:var(--redlt);border-color:#e8b8b8;color:var(--red);font-size:1rem;font-weight:600}
+.box-input.refund{background:var(--greenlt);border-color:#b8ddc8;color:var(--green);font-size:1rem;font-weight:600}
+.box-note{font-size:.68rem;color:var(--ink3);margin-top:.3rem;font-style:italic;line-height:1.4}
+
+/* Result bar */
+.cra-result-bar{
+  background:var(--ink);color:white;
+  padding:1rem 1.5rem;
+  display:flex;justify-content:space-between;align-items:center
+}
+.cra-result-label{font-size:.85rem}
+.cra-result-amount{font-family:var(--serif);font-size:1.4rem}
+.cra-result-amount.owing{color:#ff6b6b}
+.cra-result-amount.refund{color:#4caf7d}
+
+/* Auto-fill hint */
+.autofill-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bluelt);border:1px solid #b8cfe8;border-radius:var(--radius);
+  padding:.65rem 1rem;margin-bottom:1.25rem;gap:.75rem
+}
+.autofill-text{font-size:.8rem;color:var(--blue)}
+
+/* Tax tips */
+.tip-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+@media(max-width:600px){.tip-grid{grid-template-columns:1fr}}
+.tax-tip{
+  border:1px solid var(--amberlt);background:var(--amberlt);
+  border-radius:var(--radius);padding:.9rem 1rem
+}
+.tax-tip-icon{font-size:1.2rem;margin-bottom:.3rem}
+.tax-tip-title{font-weight:500;font-size:.82rem;color:var(--amber);margin-bottom:.25rem}
+.tax-tip-body{font-size:.78rem;color:var(--ink2);line-height:1.5}
+
+/* Corp tax schedule */
+.t2-line{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.6rem .75rem;border-bottom:1px solid var(--rule)
+}
+.t2-line:last-child{border-bottom:none}
+.t2-code{font-family:var(--mono);font-size:.7rem;color:var(--ink3);min-width:60px}
+.t2-desc{font-size:.82rem;color:var(--ink);flex:1;padding:0 .75rem}
+.t2-input{
+  width:130px;padding:.38rem .6rem;
+  border:1px solid var(--rule);border-radius:var(--radius);
+  font-family:var(--mono);font-size:.84rem;
+  text-align:right;color:var(--ink);background:var(--white)
+}
+.t2-input:focus{outline:none;border-color:var(--green)}
+.t2-input.auto{background:var(--greenlt);border-color:#b8ddc8;color:var(--green)}
+
+/* Print styles */
+@media print{
+  header,.tabs,nav,.btn,.btn-row{display:none!important}
+  .panel{display:block!important}
+  .cra-form{page-break-inside:avoid}
+}
+
+/* ── HOME / WHAT HAPPENED TODAY ── */
+.home-tile{
+  background:var(--white);border:1.5px solid var(--rule);border-radius:var(--radius);
+  padding:1.5rem 1.25rem;cursor:pointer;transition:all .18s;text-align:center;
+}
+.home-tile:hover{border-color:var(--green);background:var(--greenlt);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.tile-icon{font-size:2rem;margin-bottom:.5rem}
+.tile-title{font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:.25rem}
+.tile-sub{font-size:.75rem;color:var(--ink3);line-height:1.4}
+
+.home-guide{background:var(--white);border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden;margin-bottom:1.5rem}
+.guide-header{background:var(--ink);color:#f5f2ec;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:1rem}
+.guide-icon{font-size:2rem;line-height:1;flex-shrink:0}
+.guide-title{font-family:var(--serif);font-size:1.1rem;font-weight:600;margin-bottom:.2rem}
+.guide-desc{font-size:.8rem;color:#b0c4b8;line-height:1.4}
+.guide-close{margin-left:auto;flex-shrink:0;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:var(--radius);padding:.4rem .85rem;color:#f5f2ec;cursor:pointer;font-size:.78rem;transition:all .15s;white-space:nowrap}
+.guide-close:hover{background:rgba(255,255,255,.25)}
+
+.guide-path{padding:1rem 1.5rem;background:var(--paper2);border-bottom:1px solid var(--rule)}
+.path-q{font-size:.82rem;color:var(--ink2);font-weight:500;margin-bottom:.6rem}
+.path-btns{display:flex;gap:.5rem;flex-wrap:wrap}
+.path-btn{background:var(--white);border:1px solid var(--rule);border-radius:20px;padding:.38rem 1rem;font-size:.78rem;cursor:pointer;color:var(--ink2);transition:all .15s;font-family:var(--sans)}
+.path-btn:hover{border-color:var(--ink);color:var(--ink)}
+.path-btn.path-active{background:var(--ink);color:white;border-color:var(--ink)}
+
+.guide-steps{padding:1.25rem 1.5rem}
+.step-row{display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start}
+.step-row:last-of-type{margin-bottom:.75rem}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:white;font-family:var(--mono);font-size:.75rem;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
+.step-body{flex:1}
+.step-title{font-weight:500;font-size:.9rem;color:var(--ink);margin-bottom:.3rem}
+.step-detail{font-size:.82rem;color:var(--ink2);line-height:1.7}
+.step-action{display:inline-block;margin-top:.6rem;padding:.38rem .95rem;background:var(--green);color:white;border:none;border-radius:var(--radius);font-size:.78rem;font-family:var(--sans);cursor:pointer;transition:background .15s}
+.step-action:hover{background:var(--green2)}
+.step-tip{background:var(--amberlt);border:1px solid #e6c97a;border-radius:var(--radius);padding:.75rem 1rem;font-size:.8rem;color:var(--amber);line-height:1.6;margin-top:.25rem}
+kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padding:.1rem .4rem;font-family:var(--mono);font-size:.75rem;color:var(--ink2)}
+@media(max-width:700px){
+  #home-tiles{grid-template-columns:1fr 1fr!important}
+  .guide-header{flex-wrap:wrap}
+  .path-btns{flex-direction:column}
+}
+@media(max-width:480px){#home-tiles{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><div class="brand-dot"></div>Postma Contracting Inc. — Bookkeeping Tools</div>
+  <div class="header-sub">ONTARIO HST 13% · FISCAL APR–MAR · <span id="sheetLink" style="cursor:pointer;text-decoration:underline" onclick="window.open('https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw','_blank')">OPEN SHEET ↗</span></div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('home')"><span class="tab-icon">🏠</span>What happened today?</button>
+  <button class="tab" onclick="showTab('importer')"><span class="tab-icon">📥</span>Statement Importer</button>
+  <button class="tab" onclick="showTab('invoice')"><span class="tab-icon">🧾</span>Invoice Wizard</button>
+  <button class="tab" onclick="showTab('receipt')"><span class="tab-icon">📷</span>Receipt Scanner</button>
+  <button class="tab" onclick="showTab('taxfiling')"><span class="tab-icon">🗂</span>CRA Tax Filing</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     TAB 0 — WHAT HAPPENED TODAY? (HOME)
+════════════════════════════════════════════════════════════ -->
+<div class="panel active" id="panel-home">
+<div class="page">
+
+  <div class="page-header">
+    <h1 class="page-title">What happened today?</h1>
+    <p class="page-sub">Pick what you did — we'll walk you through exactly what to record, step by step.</p>
+  </div>
+
+  <div id="home-tiles" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem">
+    <div class="home-tile" onclick="homeShow('sold')"><div class="tile-icon">💰</div><div class="tile-title">I sold something</div><div class="tile-sub">Client paid me · Invoice · Deposit received</div></div>
+    <div class="home-tile" onclick="homeShow('bought')"><div class="tile-icon">🛒</div><div class="tile-title">I bought something</div><div class="tile-sub">Business expense · AMEX charge · BMO purchase</div></div>
+    <div class="home-tile" onclick="homeShow('receipt')"><div class="tile-icon">🧾</div><div class="tile-title">I have a receipt</div><div class="tile-sub">Paper or photo receipt · Log a single expense</div></div>
+    <div class="home-tile" onclick="homeShow('wage')"><div class="tile-icon">👥</div><div class="tile-title">I paid an employee</div><div class="tile-sub">Payroll run · Salary · Hourly wages</div></div>
+    <div class="home-tile" onclick="homeShow('tax')"><div class="tile-icon">🏛</div><div class="tile-title">I need to file / pay tax</div><div class="tile-sub">Quarterly HST · Corporate T2 · Payroll remittance</div></div>
+    <div class="home-tile" onclick="homeShow('statement')"><div class="tile-icon">🏦</div><div class="tile-title">I have a bank statement</div><div class="tile-sub">AMEX PDF/CSV · BMO PDF/CSV · End-of-month catchup</div></div>
+  </div>
+
+  <!-- SOLD SOMETHING -->
+  <div class="home-guide hidden" id="guide-sold">
+    <div class="guide-header">
+      <span class="guide-icon">💰</span>
+      <div><div class="guide-title">You sold something — here's what to record</div><div class="guide-desc">Every sale needs an invoice and an income entry in your Google Sheet.</div></div>
+      <button class="guide-close" onclick="homeClose()">✕ Back</button>
+    </div>
+    <div class="guide-path">
+      <div class="path-q">Did the client already pay, or are you billing them now?</div>
+      <div class="path-btns">
+        <button class="path-btn path-active" onclick="pathSwitch('sold','invoice')">Billing them now (create invoice)</button>
+        <button class="path-btn" onclick="pathSwitch('sold','paid')">They already paid me</button>
+      </div>
+    </div>
+    <div class="guide-steps" id="steps-sold-invoice">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Go to Invoice Wizard</div><div class="step-detail">Click <strong>🧾 Invoice Wizard</strong> in the top navigation. This creates a professional PDF invoice to send to your client.</div><button class="step-action" onclick="showTrackerFor('sold-invoice')">Open Invoice Wizard →</button></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Enter client details</div><div class="step-detail">Type the client name (e.g. <em>Postma Heating Ltd.</em>), their address and email. The invoice number auto-generates — leave it unless you need a specific number.</div></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Add your line items</div><div class="step-detail">Click <strong>+ Add line item</strong>. Enter a description (e.g. <em>Consulting — November 2025</em>), quantity (usually 1), and rate (dollar amount). The total calculates automatically.</div></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Check the HST toggle</div><div class="step-detail"><strong>For most business clients, leave HST ON.</strong> Ontario 13% HST is added automatically. You collect this on behalf of CRA and remit it quarterly. Only turn it OFF if the client is HST-exempt.</div></div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Download PDF and send to client</div><div class="step-detail">Click <strong>⬇ Download PDF</strong> to save the invoice, then email it. Most clients pay by e-transfer.</div></div></div>
+      <div class="step-row"><div class="step-num">6</div><div class="step-body"><div class="step-title">Copy the row to your Google Sheet</div><div class="step-detail">Click <strong>→ Copy for Google Sheets</strong>. Open your <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a>, go to the <strong>Invoices</strong> tab, click the first empty row in column A, press <kbd>Ctrl+V</kbd>. Then go to the <strong>Income</strong> tab and paste again.</div></div></div>
+      <div class="step-tip">💡 <strong>HST reminder:</strong> The HST you charge (e.g. $433 on a $3,333 invoice) is not your money — you're holding it for CRA. Set it aside and pay it quarterly.</div>
+    </div>
+    <div class="guide-steps hidden" id="steps-sold-paid">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Create the invoice anyway</div><div class="step-detail">Even if they've already paid, create the invoice in the <strong>Invoice Wizard</strong>. It's your official paper trail — CRA requires documentation for every dollar of income.</div><button class="step-action" onclick="showTrackerFor('sold-paid')">Open Invoice Wizard →</button></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Note the payment in the Notes field</div><div class="step-detail">At the bottom of the Invoice Wizard, in the <strong>Notes</strong> field write: <em>Paid via e-transfer [date of payment]</em>. This creates a record of when money was received.</div></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Paste into Google Sheet and mark Paid</div><div class="step-detail">Copy to Sheets, paste into the <strong>Invoices</strong> tab. In the <strong>Status</strong> column, change <em>Unpaid</em> to <em>Paid</em> and enter the payment date. Paste into <strong>Income</strong> tab too.</div></div></div>
+      <div class="step-tip">💡 <strong>Why create an invoice if they already paid?</strong> CRA can audit any transaction. An invoice proves the income was legitimate business revenue, not a personal gift or loan. It also helps you track who owes you money.</div>
+    </div>
+  </div>
+
+  <!-- BOUGHT SOMETHING -->
+  <div class="home-guide hidden" id="guide-bought">
+    <div class="guide-header">
+      <span class="guide-icon">🛒</span>
+      <div><div class="guide-title">You bought something — here's what to record</div><div class="guide-desc">Business expenses reduce your taxable income and let you recover the HST you paid (ITCs).</div></div>
+      <button class="guide-close" onclick="homeClose()">✕ Back</button>
+    </div>
+    <div class="guide-path">
+      <div class="path-q">How are you recording this?</div>
+      <div class="path-btns">
+        <button class="path-btn path-active" onclick="pathSwitch('bought','csv')">From AMEX/BMO statement (bulk)</button>
+        <button class="path-btn" onclick="pathSwitch('bought','manual')">Single purchase, entering manually</button>
+      </div>
+    </div>
+    <div class="guide-steps" id="steps-bought-csv">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Download your statement (PDF or CSV)</div><div class="step-detail"><strong>AMEX:</strong> americanexpress.com → Statements → Download → PDF or CSV.<br><strong>BMO:</strong> bmo.com → Accounts → Download transactions → CSV.<br>Save to Desktop or Downloads.</div></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Open Statement Importer and select your bank</div><div class="step-detail">Click <strong>📥 Statement Importer</strong> above. Choose <em>AMEX Credit Card</em> or <em>BMO Bank Account</em> to match the statement you downloaded.</div><button class="step-action" onclick="showTrackerFor('bought-csv')">Open Statement Importer →</button></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Upload the CSV and click Analyze with AI</div><div class="step-detail">Drag your CSV file into the upload box, or click to browse. Then click <strong>Analyze with AI →</strong>. The AI reads every transaction, assigns a category (Fuel, Supplies, Professional Fees, etc.), and extracts the HST automatically. This takes about 10–30 seconds.</div></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Review the categories</div><div class="step-detail">Scan through the results. The AI is right about 90% of the time. For anything wrong, click the dropdown in the <strong>Category</strong> column and fix it. Click <strong>✕</strong> on any row that isn't a business expense (personal purchases, credit card payments, transfers between accounts).</div></div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Export to Google Sheets</div><div class="step-detail">Click <strong>Continue to export →</strong> then choose <strong>Copy to clipboard</strong>. Open your <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a>, go to the <strong>Expenses</strong> tab, click cell A in the first empty row, and press <kbd>Ctrl+V</kbd>. Done.</div></div></div>
+      <div class="step-tip">💡 <strong>Do this monthly.</strong> The best habit is to import your AMEX and BMO statements on the 1st of every month. Takes about 5 minutes and keeps your books current.</div>
+    </div>
+    <div class="guide-steps hidden" id="steps-bought-manual">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Have your receipt ready</div><div class="step-detail">You need: the date, vendor name, total amount paid (including HST), and what it was for. If you have a physical receipt, check if it shows HST separately — if not, it's still included in the total.</div></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Open your Google Sheet — Expenses tab</div><div class="step-detail">Go to your <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a> and click the <strong>Expenses</strong> tab. Find the first empty row.</div></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Enter the date, vendor, and total amount</div><div class="step-detail">Fill in columns: Date, Vendor/Payee, Description, and Total Charged (the full amount including HST).</div></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Pick the right category and let the sheet calculate HST</div><div class="step-detail">Select the expense category from the dropdown. The sheet will automatically extract the HST (Total ÷ 1.13 × 0.13) and calculate the net amount. You don't need to do the math.</div></div></div>
+      <div class="step-tip">💡 <strong>Keep your receipts.</strong> CRA requires receipts for any expense over $30. Take a photo with your phone right away — the Receipt Scanner tab can log it digitally.</div>
+    </div>
+  </div>
+
+  <!-- RECEIPT -->
+  <div class="home-guide hidden" id="guide-receipt">
+    <div class="guide-header">
+      <span class="guide-icon">🧾</span>
+      <div><div class="guide-title">You have a receipt — here's how to log it</div><div class="guide-desc">The Receipt Scanner reads the merchant, amount, and date from a photo and suggests the right category.</div></div>
+      <button class="guide-close" onclick="homeClose()">✕ Back</button>
+    </div>
+    <div class="guide-steps" id="steps-receipt-main">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Take a clear photo of the receipt</div><div class="step-detail">Lay the receipt flat on a surface. Make sure the <strong>total amount, store name, and date</strong> are all visible and in focus. Good lighting helps a lot — near a window works well.</div></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Open the Receipt Scanner tab</div><div class="step-detail">Click <strong>📷 Receipt Scanner</strong> above. On a phone, this will open your camera directly. On a computer, you can upload the photo from your files.</div><button class="step-action" onclick="showTrackerFor('receipt')">Open Receipt Scanner →</button></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Upload the photo and click "Scan receipt with AI"</div><div class="step-detail">Drag the photo in or click to browse. Then click <strong>Scan receipt with AI →</strong>. The AI reads the vendor, total, HST (or calculates it), date, and suggests a category.</div></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Review and correct if needed</div><div class="step-detail">Check that the vendor name, amount, and category all look right. Use the <strong>Category</strong> dropdown to change it if the AI guessed wrong. Common corrections: Costco might come up as Supplies when it's actually a Membership.</div></div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Copy row to Google Sheets</div><div class="step-detail">Click <strong>→ Copy row for Google Sheets</strong>. Open your <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a>, go to <strong>Expenses</strong> tab, click the first empty row in column A, press <kbd>Ctrl+V</kbd>.</div></div></div>
+      <div class="step-tip">💡 <strong>Do this the same day.</strong> It takes 30 seconds. Letting receipts pile up turns a 5-minute job into a 3-hour nightmare at tax time.</div>
+    </div>
+  </div>
+
+  <!-- PAID AN EMPLOYEE -->
+  <div class="home-guide hidden" id="guide-wage">
+    <div class="guide-header">
+      <span class="guide-icon">👥</span>
+      <div><div class="guide-title">You paid an employee — here's what to record</div><div class="guide-desc">Every payroll payment needs to be recorded as a Wages expense and CRA remittances need to be calculated.</div></div>
+      <button class="guide-close" onclick="homeClose()">✕ Back</button>
+    </div>
+    <div class="guide-steps" id="steps-wage-main">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Record the payment in your Google Sheet</div><div class="step-detail">Open the <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a> → <strong>Expenses</strong> tab. Add a new row:<br>• Date: today's date<br>• Vendor/Payee: Employee's name (e.g. <em>Avienda Postma</em>)<br>• Description: <em>Payroll — [month]</em><br>• Total: gross wages paid<br>• Category: <em>Wages &amp; Salaries</em><br>• HST: $0 (wages are not subject to HST)</div></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Calculate CPP, EI, and income tax deductions</div><div class="step-detail">Go to the <strong>🗂 CRA Tax Filing</strong> tab → <strong>👥 Payroll (PD7A)</strong>. Enter each employee's gross wages in the Employee Roster. The tool calculates CPP (5.95%), EI (1.66%), and estimated income tax automatically.</div><button class="step-action" onclick="showTrackerFor('payroll')">Open CRA Payroll →</button></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Remit deductions to CRA by the 15th</div><div class="step-detail">The total shown in the PD7A section is what you owe CRA. Pay via BMO online banking: add payee <strong>"Canada Revenue Agency – Payroll"</strong>, use your Business Number. <strong>Due date: 15th of the following month</strong> (e.g. January wages → remit by February 15).</div></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Issue T4 slips by end of February each year</div><div class="step-detail">At year-end (or by Feb 28), go to <strong>🗂 CRA Tax Filing → 📋 T4 Slips</strong>. The T4 slips auto-fill from your Employee Roster. Print or email one to each employee — they need it to file their personal taxes.</div></div></div>
+      <div class="step-tip">💡 <strong>No HST on wages.</strong> Unlike most expenses, wages do not have HST. Do not extract HST from payroll amounts — the full gross wage is the expense, no HST component.</div>
+    </div>
+  </div>
+
+  <!-- FILE / PAY TAX -->
+  <div class="home-guide hidden" id="guide-tax">
+    <div class="guide-header">
+      <span class="guide-icon">🏛</span>
+      <div><div class="guide-title">You need to file or pay tax — here's what to do</div><div class="guide-desc">There are three types of tax filings for Postma Contracting Inc. Here's when and how to handle each one.</div></div>
+      <button class="guide-close" onclick="homeClose()">✕ Back</button>
+    </div>
+    <div class="guide-path">
+      <div class="path-q">Which tax are you dealing with?</div>
+      <div class="path-btns">
+        <button class="path-btn path-active" onclick="pathSwitch('tax','hst')">HST Return (quarterly)</button>
+        <button class="path-btn" onclick="pathSwitch('tax','t2')">Corporate Tax (T2, annual)</button>
+        <button class="path-btn" onclick="pathSwitch('tax','payroll')">Payroll Remittance (monthly)</button>
+      </div>
+    </div>
+    <div class="guide-steps" id="steps-tax-hst">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Know your due dates</div><div class="step-detail">Your HST quarters align with your April 1 fiscal year:<br>• <strong>Q1</strong> Apr–Jun → due <strong>Jul 31</strong><br>• <strong>Q2</strong> Jul–Sep → due <strong>Oct 31</strong><br>• <strong>Q3</strong> Oct–Dec → due <strong>Jan 31</strong><br>• <strong>Q4</strong> Jan–Mar → due <strong>Apr 30</strong></div></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Import all statements for the quarter first</div><div class="step-detail">Before filling the HST form, make sure all your AMEX and BMO transactions for the quarter are imported in the Statement Importer. This gives you accurate expense HST (ITC) totals.</div><button class="step-action" onclick="showTrackerFor('bought-csv')">Open Statement Importer →</button></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Open the HST Return form</div><div class="step-detail">Go to <strong>🗂 CRA Tax Filing → HST Return (GST34)</strong>. Click <strong>⬇ Auto-Fill from Importer</strong> to pull your totals automatically, or enter them manually from your Google Sheet.</div><button class="step-action" onclick="showTrackerFor('hst')">Open HST Return →</button></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Copy the numbers into CRA My Business Account</div><div class="step-detail">Click <strong>📋 Copy summary</strong> in the HST form. Then log in to <a href="https://www.canada.ca/en/revenue-agency/services/e-services/e-services-businesses/business-account.html" target="_blank" style="color:var(--green)">CRA My Business Account ↗</a> → GST/HST → File a Return. Enter the line numbers exactly as shown.</div></div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Pay the amount owing via BMO</div><div class="step-detail">Log in to BMO online banking. Add payee <strong>"Receiver General for Canada"</strong> (or "CRA – GST/HST"). Your account number is your HST number: <strong>RT 0001</strong>. Pay the amount shown on Line 112.</div></div></div>
+      <div class="step-tip">💡 <strong>Always file on time even if you can't pay.</strong> Late filing penalty is 5% of what you owe + 1%/month. Late payment is just interest (~8%/yr). Filing late is always more expensive than paying late.</div>
+    </div>
+    <div class="guide-steps hidden" id="steps-tax-t2">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Know your deadlines</div><div class="step-detail">Year-end is <strong>March 31</strong>.<br>• <strong>Tax payment due: June 30</strong> (3 months after year-end)<br>• <strong>T2 return filing due: September 30</strong> (6 months after year-end)<br>Pay the tax first even if you're not ready to file the full return.</div></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Compile your full year from the Google Sheet</div><div class="step-detail">Open your <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a>. You need the annual totals from the <strong>Income</strong> and <strong>Expenses</strong> tabs by category for the full April 1 – March 31 period.</div></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Fill in the T2 Schedule 1 form</div><div class="step-detail">Go to <strong>🗂 CRA Tax Filing → Corporate Tax (T2)</strong>. Enter revenue by type (consulting, lawn care) and expenses by CRA line number. The estimated tax calculates automatically at the 12.2% combined rate.</div><button class="step-action" onclick="showTrackerFor('yearend')">Open T2 Form →</button></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Pay the balance owing by June 30</div><div class="step-detail">BMO online banking → payee <strong>"CRA – Corporate Tax"</strong> → account number is your Business Number (15 digits ending in RC0001). Pay the estimated amount shown in the tool.</div></div></div>
+      <div class="step-tip">💡 <strong>The T2 return itself is complex.</strong> The CRA Tax Filing tab gives you a solid estimate and prepares your numbers — but for your first few years, having an accountant review the actual T2 filing once is worth it. After that you'll have the template.</div>
+    </div>
+    <div class="guide-steps hidden" id="steps-tax-payroll">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Calculate what you owe</div><div class="step-detail">Go to <strong>🗂 CRA Tax Filing → Payroll (PD7A)</strong>. Update the Employee Roster with each employee's gross wages for the pay period. The tool calculates employee CPP + EI + income tax, plus employer's share.</div><button class="step-action" onclick="showTrackerFor('payroll')">Open Payroll (PD7A) →</button></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Pay via BMO by the 15th</div><div class="step-detail">Log in to BMO online banking. Add payee <strong>"Canada Revenue Agency – Payroll Deductions"</strong>. Your account number is your Business Number + <strong>RP0001</strong>. Pay the total shown on the PD7A form.</div></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Record the remittance in your Google Sheet</div><div class="step-detail">Add a row in the <strong>Expenses</strong> tab: Date = payment date, Payee = <em>CRA Payroll Remittance</em>, Category = <em>Wages &amp; Salaries</em>, Amount = total remitted. No HST.</div></div></div>
+      <div class="step-tip">💡 <strong>Due the 15th, every month.</strong> Set a recurring reminder. A 10% penalty applies for late remittances — it's one of CRA's strictest penalties.</div>
+    </div>
+  </div>
+
+  <!-- BANK STATEMENT -->
+  <div class="home-guide hidden" id="guide-statement">
+    <div class="guide-header">
+      <span class="guide-icon">🏦</span>
+      <div><div class="guide-title">You have a bank statement — here's how to import it</div><div class="guide-desc">Import your full AMEX or BMO statement in one shot. The AI categorizes everything and extracts HST automatically.</div></div>
+      <button class="guide-close" onclick="homeClose()">✕ Back</button>
+    </div>
+    <div class="guide-steps" id="steps-statement-main">
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><div class="step-title">Download your statement (PDF or CSV) file</div><div class="step-detail"><strong>AMEX:</strong> Log in at americanexpress.com → Statements &amp; Activity → Download → choose date range → CSV format.<br><strong>BMO:</strong> Log in at bmo.com → My Accounts → select account → Download transactions → CSV format.<br>Save to a place you can find it (Desktop).</div></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><div class="step-title">Open Statement Importer and pick your bank</div><div class="step-detail">Click <strong>📥 Statement Importer</strong> above. Click <em>AMEX Credit Card</em> or <em>BMO Bank Account</em> to match your file. The format hint on the right shows you what the CSV should look like.</div><button class="step-action" onclick="showTrackerFor('statement')">Open Statement Importer →</button></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><div class="step-title">Upload the CSV and let AI analyze it</div><div class="step-detail">Drag the CSV into the upload box. Click <strong>Analyze with AI →</strong>. The AI processes your transactions in batches. A progress bar shows how far along it is — takes about 10–30 seconds for a typical month.</div></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><div class="step-title">Review, fix any wrong categories, exclude personal items</div><div class="step-detail">Scan the results. Fix any wrong categories using the dropdown. Click <strong>✕</strong> on personal purchases, credit card payments, and transfers between your own accounts — these are not business expenses.</div></div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><div class="step-title">Export to Google Sheets</div><div class="step-detail">Click <strong>Continue to export →</strong> then <strong>Copy to clipboard</strong>. Go to your <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Google Sheet ↗</a>, click the <strong>Expenses</strong> tab, click the first empty cell in column A, and press <kbd>Ctrl+V</kbd>. All rows paste in at once.</div></div></div>
+      <div class="step-row"><div class="step-num">6</div><div class="step-body"><div class="step-title">Download the HST Summary for your records</div><div class="step-detail">Back in the export screen, click <strong>🏛 HST summary</strong> to download a CSV showing total HST paid by category. Save this — you'll use it when filing your quarterly HST return.</div></div></div>
+      <div class="step-tip">💡 <strong>Best practice:</strong> Import AMEX and BMO on the 1st of every month. Takes 5–10 minutes and means your books are always current. Never face a year-end backlog again.</div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+</div><!-- /panel-home -->
+
+
+<!-- ════════════════════════════════════════════════════════════
+     TAB 1 — STATEMENT IMPORTER
+═════════════════════════════════════════════════════════════ -->
+<div class="panel" id="panel-importer">
+<div class="page">
+  <div class="step-tracker" id="tracker-importer"></div>
+  <div class="page-header">
+    <h1 class="page-title">Statement Importer</h1>
+    <p class="page-sub">Upload your AMEX or BMO statement — PDF or CSV both work. AI reads every transaction, categorizes it, and extracts HST automatically.</p>
+  </div>
+
+  <!-- Step 1: Upload -->
+  <div id="imp-step1">
+    <div class="card">
+      <div class="card-title">Select bank & upload statement</div>
+      <div class="bank-tabs">
+        <button class="bank-tab active" onclick="setBank('AMEX',this)">AMEX Credit Card</button>
+        <button class="bank-tab" onclick="setBank('BMO',this)">BMO Bank Account</button>
+      </div>
+      <div class="upload-zone" id="impUploadZone" ondragover="impDragOver(event)" ondragleave="impDragLeave()" ondrop="impDrop(event)" style="margin-bottom:.75rem">
+        <input type="file" accept=".pdf,.csv,.txt,application/pdf" onchange="impFileChosen(event)">
+        <span id="impUploadIcon" style="font-size:2.5rem;display:block;margin-bottom:.5rem">📄</span>
+        <span class="upload-title" id="impUploadTitle">Drop your statement here</span>
+        <span class="upload-hint">PDF or CSV · AMEX &amp; BMO both supported · drag or click to browse</span>
+        <span class="upload-fname" id="impFname" style="margin-top:.4rem;display:block"></span>
+      </div>
+      <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:.5rem">
+        <button class="btn btn-outline btn-sm" onclick="loadSample()">↗ Load sample data</button>
+        <button class="paste-toggle" style="margin:0" onclick="togglePaste()">Or paste CSV text ↓</button>
+      </div>
+      <div id="pasteWrap" class="hidden" style="margin-bottom:.5rem">
+        <textarea class="paste-box" id="pasteBox" placeholder="Paste CSV rows here..."></textarea>
+        <button class="btn btn-outline btn-sm" style="margin-top:.4rem" onclick="loadPasted()">Load →</button>
+      </div>
+      <div id="impPdfNote" class="hidden" style="background:var(--bluelt);border:1px solid #b8cfe8;border-radius:var(--radius);padding:.65rem 1rem;font-size:.8rem;color:var(--blue);margin-top:.5rem">
+        📄 <strong>PDF detected</strong> — Claude will read the statement directly. No CSV conversion needed. Click <strong>Analyze with AI →</strong> to extract all transactions.
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="impAnalyzeBtn" onclick="impAnalyze()" disabled>Analyze with AI →</button>
+      <span id="impStatus" style="font-size:.82rem;color:var(--ink3);align-self:center"></span>
+    </div>
+  </div>
+
+  <!-- Step 2: Review -->
+  <div id="imp-step2" class="hidden">
+    <div class="stat-grid" id="impStats"></div>
+    <div class="card">
+      <div class="card-title">
+        Categorized transactions <span class="badge badge-green">AI</span>
+        <span style="margin-left:auto;display:flex;gap:.75rem;align-items:center">
+          <label style="font-size:.78rem;color:var(--ink3);display:flex;align-items:center;gap:.35rem">
+            <input type="checkbox" id="hideSkip" onchange="impRender()" style="accent-color:var(--green)"> Hide skipped
+          </label>
+          <button class="btn btn-outline btn-sm" onclick="impRerun()">↻ Re-run AI</button>
+          <button class="btn btn-outline btn-sm" onclick="impReset()">← New import</button>
+        </span>
+      </div>
+      <div id="impProgWrap" class="hidden prog-wrap">
+        <div class="prog-lbl"><span id="impProgTxt">Analyzing...</span><span id="impProgPct">0%</span></div>
+        <div class="prog-bar"><div class="prog-fill" id="impProgFill" style="width:0%"></div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th style="width:28px"></th><th>Date</th><th>Vendor</th>
+            <th style="text-align:right">Amount</th><th>Category</th>
+            <th style="text-align:right">HST paid</th><th style="text-align:right">Net</th><th>Confidence</th>
+          </tr></thead>
+          <tbody id="impTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-green" onclick="showExport()">Continue to export →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Export -->
+  <div id="imp-step3" class="hidden">
+    <div class="card">
+      <div class="card-title">Export <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="showReview()">← Back to review</button></div>
+      <div class="export-grid">
+        <div class="exp-card" onclick="expCSV()"><span class="exp-icon">📊</span><div class="exp-title">Google Sheets CSV</div><div class="exp-desc">Download CSV formatted for your Expenses tab. Import via File → Import.</div></div>
+        <div class="exp-card" onclick="expClipboard()"><span class="exp-icon">📋</span><div class="exp-title">Copy to clipboard</div><div class="exp-desc">Tab-separated rows — click cell B12 in Expenses tab then Ctrl+V.</div></div>
+        <div class="exp-card" onclick="expHSTSummary()"><span class="exp-icon">🏛</span><div class="exp-title">HST summary</div><div class="exp-desc">Category totals for your quarterly HST return filing.</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Export preview</div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Date</th><th>Vendor</th><th>Description</th><th style="text-align:right">Total charged</th><th>Category</th><th style="text-align:right">HST paid</th><th style="text-align:right">Net</th><th>Payment</th></tr></thead>
+        <tbody id="expPreviewBody"></tbody></table>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-green" onclick="expCSV()">⬇ Download CSV</button>
+      <button class="btn btn-outline" onclick="expClipboard()">Copy to clipboard</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     TAB 2 — INVOICE WIZARD
+═════════════════════════════════════════════════════════════ -->
+<div class="panel" id="panel-invoice">
+<div class="page">
+  <div class="step-tracker" id="tracker-invoice"></div>
+  <div class="page-header">
+    <h1 class="page-title">Invoice Wizard</h1>
+    <p class="page-sub">Fill in the fields — the invoice builds live on the right.</p>
+  </div>
+  <div class="inv-layout">
+
+    <!-- Left: Form -->
+    <div>
+      <div class="card">
+        <div class="card-title">Invoice details</div>
+        <div style="margin-bottom:1.1rem">
+          <label style="font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.4rem">Invoice number</label>
+          <div class="inv-num-row">
+            <div class="inv-num-disp" id="invNumDisp">342266</div>
+            <button class="btn-regen" onclick="regenInv()">↺ New #</button>
+            <input type="number" style="width:85px;padding:.48rem .6rem;border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--mono);font-size:.85rem" placeholder="Custom" oninput="customInv(this.value)">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Invoice date</label><input type="date" id="invDate" oninput="invUpdate()"></div>
+          <div class="field"><label>Due date</label><input type="date" id="invDue" oninput="invUpdate()"></div>
+        </div>
+        <hr class="divider">
+        <div class="field"><label>Client name</label><input type="text" id="invClient" placeholder="Postma Heating Ltd." oninput="invUpdate()" list="clientSugg"><datalist id="clientSugg"><option value="Postma Heating Ltd."><option value="42 Braemer"></datalist></div>
+        <div class="field"><label>Client address (optional)</label><textarea id="invAddr" placeholder="123 Main St&#10;Chatham, ON" oninput="invUpdate()"></textarea></div>
+        <div class="field"><label>Client email (optional)</label><input type="email" id="invEmail" placeholder="billing@client.com" oninput="invUpdate()"></div>
+        <hr class="divider">
+        <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;margin-bottom:.6rem">Line items</div>
+        <div id="lineItemsWrap"></div>
+        <button class="btn-add-li" onclick="addLine()">+ Add line item</button>
+        <div class="toggle-row">
+          <div class="toggle-lbl">Charge HST (13%)<small>Ontario — RT 0001</small></div>
+          <label class="toggle-sw"><input type="checkbox" id="invHST" checked onchange="invUpdate()"><div class="t-track"></div><div class="t-knob"></div></label>
+        </div>
+        <div class="totals-box" id="invTotalsBox"></div>
+        <div class="field" style="margin-top:1.1rem"><label>Notes (optional)</label><textarea id="invNotes" placeholder="Payment due within 30 days. E-transfer to calebpostma [at] gmail.com" oninput="invUpdate()"></textarea></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="invPrint()">⬇ Download PDF</button>
+          <button class="btn btn-green" onclick="invCopySheets()">→ Copy for Google Sheets</button>
+          <button class="btn btn-outline" onclick="invClear()">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Preview -->
+    <div>
+      <div style="font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;margin-bottom:.75rem">Live preview</div>
+      <div class="inv-doc" id="invDoc">
+        <div class="inv-doc-header">
+          <div><div class="inv-co-name">Postma Contracting Inc.</div><div class="inv-co-detail">Chatham, Ontario<br>caleb&#112;ostma&#64;gmail&#46;com<br>HST# RT 0001</div></div>
+          <div><div class="inv-doc-title">Invoice</div><div class="inv-doc-num" id="prevNum">#342266</div></div>
+        </div>
+        <div class="inv-meta">
+          <div class="inv-meta-blk"><label>Bill to</label><p id="prevBillTo"><em style="color:var(--ink3)">Client name</em></p></div>
+          <div class="inv-meta-blk" style="text-align:right"><label>Invoice date</label><p id="prevDate" style="font-weight:500">—</p><label style="margin-top:.5rem">Due date</label><p id="prevDueDate">—</p><div class="due-badge" id="prevDueBadge" style="display:none">DUE</div></div>
+        </div>
+        <table class="inv-tbl">
+          <thead><tr><th style="width:46%">Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+          <tbody id="prevLines"></tbody>
+          <tfoot id="prevFoot"></tfoot>
+        </table>
+        <div id="prevNotes"></div>
+        <div class="inv-doc-footer"><div><div style="font-family:var(--mono);font-size:.68rem">HST Registration: RT 0001</div><div style="font-size:.7rem;margin-top:.15rem">Postma Contracting Inc. · Chatham, ON</div></div><div class="inv-thanks">Thank you for your business.</div></div>
+      </div>
+      <div class="btn-row" style="margin-top:.75rem">
+        <button class="btn btn-primary btn-sm" onclick="invPrint()">⬇ Save as PDF</button>
+        <button class="btn btn-outline btn-sm" onclick="invCopySheets()">Copy rows for Sheets</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     TAB 3 — RECEIPT SCANNER
+═════════════════════════════════════════════════════════════ -->
+<div class="panel" id="panel-receipt">
+<div class="page">
+  <div class="step-tracker" id="tracker-receipt"></div>
+  <div class="page-header">
+    <h1 class="page-title">Receipt Scanner</h1>
+    <p class="page-sub">Upload a photo of a receipt — AI reads the merchant, amount, date and suggests a category.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
+    <div>
+      <div class="card">
+        <div class="card-title">Upload receipt photo</div>
+        <div class="receipt-upload" id="rcptZone" ondragover="rcptDragOver(event)" ondragleave="rcptDragLeave()" ondrop="rcptDrop(event)">
+          <input type="file" accept="image/*,application/pdf,.pdf" id="rcptInput" onchange="rcptChosen(event)">
+          <span class="receipt-icon">📷</span>
+          <span class="upload-title" style="font-size:.95rem">Drop receipt photo here</span>
+          <span class="upload-hint">JPG, PNG, HEIC, PDF · Takes a photo on mobile</span>
+          <span id="rcptFname" style="font-family:var(--mono);font-size:.7rem;color:var(--green);margin-top:.3rem;display:block"></span>
+          <img id="rcptPreview" class="receipt-preview hidden" alt="Receipt preview">
+        </div>
+        <div id="rcptAnalyzeWrap" class="hidden" style="margin-top:1rem">
+          <button class="btn btn-primary" id="rcptAnalyzeBtn" onclick="rcptAnalyze()" style="width:100%">
+            <span id="rcptBtnTxt">Scan receipt with AI →</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" id="rcptResultCard">
+        <div class="card-title">Extracted details <span class="badge badge-green" id="rcptBadge" style="display:none">AI read</span></div>
+        <div id="rcptResultContent">
+          <div style="text-align:center;padding:2rem;color:var(--ink3)">
+            <div style="font-size:2rem;margin-bottom:.5rem">🧾</div>
+            <div style="font-size:.85rem">Upload a receipt to get started</div>
+          </div>
+        </div>
+      </div>
+      <div id="rcptExportWrap" class="hidden">
+        <div class="btn-row">
+          <button class="btn btn-green" onclick="rcptCopySheets()">→ Copy row for Google Sheets</button>
+          <button class="btn btn-outline" onclick="rcptClear()">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     TAB 4 — CRA TAX FILING
+═════════════════════════════════════════════════════════════ -->
+<div class="panel" id="panel-taxfiling">
+<div class="page">
+  <div class="step-tracker" id="tracker-taxfiling"></div>
+  <div class="page-header">
+    <h1 class="page-title">CRA Tax Filing</h1>
+    <p class="page-sub">Pre-filled CRA form boxes for Postma Contracting Inc. · HST returns, corporate T2, and payroll remittances. Enter amounts and download/print your completed forms.</p>
+  </div>
+
+  <!-- Sub-tabs -->
+  <div class="cra-sub-tabs">
+    <button class="cra-sub-tab active" onclick="craShowPanel('hst')">🏦 HST Return (GST34)</button>
+    <button class="cra-sub-tab" onclick="craShowPanel('t2')">🏢 Corporate Tax (T2)</button>
+    <button class="cra-sub-tab" onclick="craShowPanel('payroll')">👥 Payroll (PD7A)</button>
+    <button class="cra-sub-tab" onclick="craShowPanel('t4')">📋 T4 Slips</button>
+    <button class="cra-sub-tab" onclick="craShowPanel('tips')">💡 Tax-Saving Ideas</button>
+  </div>
+
+  <!-- ── HST / GST34 ── -->
+  <div class="cra-panel active" id="cra-panel-hst">
+
+    <div class="autofill-bar">
+      <span class="autofill-text">🔗 If you've already run the Statement Importer, click Auto-Fill to pull your HST totals directly into this form.</span>
+      <button class="btn btn-outline btn-sm" onclick="craAutoFillHST()">⬇ Auto-Fill from Importer</button>
+    </div>
+
+    <!-- Period selector -->
+    <div class="card">
+      <div class="card-title">Select Filing Period</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem">
+        <div onclick="craSetPeriod('Q1',this)" style="border:1px solid var(--rule);border-radius:var(--radius);padding:.85rem;cursor:pointer;text-align:center;transition:all .15s" class="period-card">
+          <div style="font-family:var(--mono);font-size:.65rem;color:var(--ink3)">Q1</div>
+          <div style="font-weight:500;font-size:.82rem;margin:.2rem 0">Apr 1 – Jun 30</div>
+          <div style="font-size:.72rem;color:var(--red)">Due Jul 31</div>
+        </div>
+        <div onclick="craSetPeriod('Q2',this)" style="border:1px solid var(--rule);border-radius:var(--radius);padding:.85rem;cursor:pointer;text-align:center;transition:all .15s" class="period-card">
+          <div style="font-family:var(--mono);font-size:.65rem;color:var(--ink3)">Q2</div>
+          <div style="font-weight:500;font-size:.82rem;margin:.2rem 0">Jul 1 – Sep 30</div>
+          <div style="font-size:.72rem;color:var(--red)">Due Oct 31</div>
+        </div>
+        <div onclick="craSetPeriod('Q3',this)" style="border:2px solid var(--green);border-radius:var(--radius);padding:.85rem;cursor:pointer;text-align:center;transition:all .15s;background:var(--greenlt)" class="period-card active-period">
+          <div style="font-family:var(--mono);font-size:.65rem;color:var(--green)">Q3 ← CURRENT</div>
+          <div style="font-weight:500;font-size:.82rem;margin:.2rem 0">Oct 1 – Dec 31</div>
+          <div style="font-size:.72rem;color:var(--red)">Due Jan 31, 2026</div>
+        </div>
+        <div onclick="craSetPeriod('Q4',this)" style="border:1px solid var(--rule);border-radius:var(--radius);padding:.85rem;cursor:pointer;text-align:center;transition:all .15s" class="period-card">
+          <div style="font-family:var(--mono);font-size:.65rem;color:var(--ink3)">Q4</div>
+          <div style="font-weight:500;font-size:.82rem;margin:.2rem 0">Jan 1 – Mar 31</div>
+          <div style="font-size:.72rem;color:var(--red)">Due Apr 30</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GST34 Form -->
+    <div class="cra-form">
+      <div class="cra-form-header">
+        <div>
+          <div class="cra-form-title">GST/HST Return — Form GST34-2</div>
+          <div class="cra-form-ref">Business: Postma Contracting Inc. · HST# RT 0001 · Ontario · Reporting Period: <span id="hstPeriodLabel">Oct 1 – Dec 31, 2025</span></div>
+        </div>
+        <span class="cra-form-tag">GST34-2</span>
+      </div>
+
+      <!-- PART A: SALES & OTHER REVENUE -->
+      <div class="cra-section-label">Part A — Sales &amp; Revenue (what you charged HST on)</div>
+      <div class="box-grid">
+        <div class="cra-box">
+          <div class="box-code">LINE 101</div>
+          <div class="box-name">Total sales and other revenue (include HST-exempt and zero-rated)</div>
+          <input class="box-input" id="hst_101" type="text" placeholder="0.00" oninput="craCalcHST()">
+          <div class="box-note">Your total invoiced amount including HST collected. From the Income tab.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">LINE 103</div>
+          <div class="box-name">GST/HST collected or collectible (13% of taxable revenue)</div>
+          <input class="box-input auto" id="hst_103" type="text" placeholder="0.00" oninput="craCalcHST()">
+          <div class="box-note">Auto-calculated: Line 101 ÷ 1.13 × 0.13. Override if needed.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">LINE 104</div>
+          <div class="box-name">Adjustments to HST collected (corrections, bad debts recovered)</div>
+          <input class="box-input" id="hst_104" type="text" placeholder="0.00" oninput="craCalcHST()">
+          <div class="box-note">Usually $0 for most quarters. Enter positively.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">LINE 105</div>
+          <div class="box-name">Total HST and adjustments (Line 103 + Line 104)</div>
+          <input class="box-input calc" id="hst_105" type="text" readonly placeholder="0.00">
+          <div class="box-note">Calculated automatically.</div>
+        </div>
+        <div class="cra-box cra-box-wide">
+          <div class="box-code">NOTE — ZERO-RATED / EXEMPT</div>
+          <div class="box-name">Does Postma Contracting Inc. have any zero-rated or HST-exempt sales? (e.g., basic groceries, financial services)</div>
+          <input class="box-input" id="hst_exempt" type="text" placeholder="0.00 (usually $0 for consulting/lawn care)">
+          <div class="box-note">Most consulting and lawn care revenue is fully taxable at 13% HST. Enter 0 unless you have specific exempt revenue.</div>
+        </div>
+      </div>
+
+      <!-- PART B: INPUT TAX CREDITS -->
+      <div class="cra-section-label">Part B — Input Tax Credits (HST you paid on business expenses)</div>
+      <div class="box-grid">
+        <div class="cra-box">
+          <div class="box-code">LINE 106</div>
+          <div class="box-name">Input tax credits (ITCs) — HST paid on eligible business purchases</div>
+          <input class="box-input auto" id="hst_106" type="text" placeholder="0.00" oninput="craCalcHST()">
+          <div class="box-note">From Expenses tab: sum of all HST Paid (extracted) column. Auto-filled if Importer was used.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">LINE 107</div>
+          <div class="box-name">Adjustments for ITCs (bad debt write-offs, corrections)</div>
+          <input class="box-input" id="hst_107" type="text" placeholder="0.00" oninput="craCalcHST()">
+          <div class="box-note">Usually $0. Only enter if you're adjusting a prior claim.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">LINE 108</div>
+          <div class="box-name">Total ITCs and adjustments (Line 106 + Line 107)</div>
+          <input class="box-input calc" id="hst_108" type="text" readonly placeholder="0.00">
+          <div class="box-note">Calculated automatically.</div>
+        </div>
+      </div>
+
+      <!-- PART C: NET TAX -->
+      <div class="cra-section-label">Part C — Net Tax</div>
+      <div class="box-grid">
+        <div class="cra-box">
+          <div class="box-code">LINE 109</div>
+          <div class="box-name">Net tax owing or refund (Line 105 − Line 108)</div>
+          <input class="box-input calc" id="hst_109" type="text" readonly placeholder="0.00">
+          <div class="box-note">Positive = you owe CRA. Negative = CRA owes you a refund.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">LINE 110</div>
+          <div class="box-name">Instalments and other annual filer amounts paid this period</div>
+          <input class="box-input" id="hst_110" type="text" placeholder="0.00" oninput="craCalcHST()">
+          <div class="box-note">Enter any HST instalments already paid to CRA this quarter.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">LINE 111</div>
+          <div class="box-name">Rebates claimed (qualifying rebate programs)</div>
+          <input class="box-input" id="hst_111" type="text" placeholder="0.00" oninput="craCalcHST()">
+          <div class="box-note">Usually $0. Only if you have an approved CRA rebate program.</div>
+        </div>
+      </div>
+
+      <!-- PART D: PAYMENT -->
+      <div class="cra-section-label">Part D — Payment / Refund Summary</div>
+      <div class="box-grid">
+        <div class="cra-box">
+          <div class="box-code">LINE 112</div>
+          <div class="box-name">Amount owing (if Line 109 minus Lines 110–111 is positive)</div>
+          <input class="box-input" id="hst_112" type="text" readonly placeholder="0.00">
+          <div class="box-note">This is what you pay to CRA. Pay via My Business Account or bank.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">LINE 114</div>
+          <div class="box-name">Refund claimed (if Line 109 minus Lines 110–111 is negative)</div>
+          <input class="box-input" id="hst_114" type="text" readonly placeholder="0.00">
+          <div class="box-note">CRA will issue a refund to your bank account on file.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">FILING DATE</div>
+          <div class="box-name">Date return is being filed</div>
+          <input class="box-input" id="hst_filingdate" type="date">
+          <div class="box-note">Must be on or before the due date to avoid penalties.</div>
+        </div>
+      </div>
+
+      <div class="cra-result-bar" id="hstResultBar">
+        <div class="cra-result-label">Estimated <span id="hstResultType">Net Tax</span></div>
+        <div class="cra-result-amount" id="hstResultAmt">$0.00</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save as PDF</button>
+      <button class="btn btn-outline" onclick="craCopyHSTSummary()">📋 Copy summary for CRA My Business Account</button>
+      <button class="btn btn-outline" onclick="craResetHST()">↺ Clear form</button>
+    </div>
+
+    <div class="card" style="margin-top:1.25rem">
+      <div class="card-title">HST Filing Instructions</div>
+      <div style="font-size:.83rem;color:var(--ink2);line-height:1.8">
+        <strong>1. Where to file:</strong> CRA My Business Account → GST/HST → File a return. Use the line numbers above.<br>
+        <strong>2. Payment:</strong> Pay via your BMO online banking — add "Receiver General for Canada" as a payee. Use your HST# RT 0001.<br>
+        <strong>3. Late filing penalty:</strong> 1% of amount owing + 0.25%/month up to 12 months. Always file on time even if you can't pay.<br>
+        <strong>4. Record retention:</strong> Keep all receipts and records for 6 years.<br>
+        <strong>5. ITCs for vehicles:</strong> If using a personal vehicle for business, only claim the business-use portion of HST.
+      </div>
+    </div>
+  </div><!-- /cra-panel-hst -->
+
+  <!-- ── CORPORATE TAX T2 ── -->
+  <div class="cra-panel" id="cra-panel-t2">
+
+    <div class="autofill-bar">
+      <span class="autofill-text">📊 T2 Schedule 1 maps directly to your Expenses tab categories. Fill in totals from your Google Sheet year-end columns.</span>
+      <button class="btn btn-outline btn-sm" onclick="craAutoFillT2()">⬇ Pull from Sheet totals</button>
+    </div>
+
+    <!-- T2 General Info -->
+    <div class="cra-form">
+      <div class="cra-form-header">
+        <div>
+          <div class="cra-form-title">T2 Corporate Income Tax Return — Key Schedules</div>
+          <div class="cra-form-ref">Postma Contracting Inc. · Fiscal Year: April 1 – March 31 · Ontario resident corporation</div>
+        </div>
+        <span class="cra-form-tag">T2 / SCH 1 / SCH 4</span>
+      </div>
+
+      <!-- Schedule 1 — Income from operations -->
+      <div class="cra-section-label">Schedule 1 — Net Income for Tax Purposes (mapped to your expense categories)</div>
+
+      <div style="background:var(--white)">
+        <!-- Revenue lines -->
+        <div class="t2-line" style="background:var(--paper2)">
+          <span class="t2-code" style="color:var(--ink3)">REVENUE</span>
+          <span class="t2-desc" style="font-weight:500">Income Lines</span>
+          <span class="t2-input" style="border:none;background:transparent;text-align:right;font-size:.72rem;color:var(--ink3)">Amount $</span>
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8000</span>
+          <span class="t2-desc">Consulting revenue (management/professional fees)</span>
+          <input class="t2-input auto" id="t2_8000" type="text" placeholder="0.00">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8090</span>
+          <span class="t2-desc">Lawn care / contract revenue</span>
+          <input class="t2-input" id="t2_8090" type="text" placeholder="0.00">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8230</span>
+          <span class="t2-desc">Other revenue (interest, HST refunds received, etc.)</span>
+          <input class="t2-input" id="t2_8230" type="text" placeholder="0.00">
+        </div>
+        <div class="t2-line" style="background:var(--paper)">
+          <span class="t2-code" style="color:var(--green);font-weight:500">TOTAL</span>
+          <span class="t2-desc" style="font-weight:500">Total Gross Revenue</span>
+          <input class="t2-input calc" id="t2_totalrev" type="text" readonly placeholder="0.00">
+        </div>
+
+        <!-- Expense lines -->
+        <div class="t2-line" style="background:var(--paper2)">
+          <span class="t2-code" style="color:var(--ink3)">EXPENSES</span>
+          <span class="t2-desc" style="font-weight:500">Deductible Expense Lines (Schedule 1)</span>
+          <span style="font-size:.7rem;color:var(--ink3);min-width:130px;text-align:right">Amount $</span>
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">9060</span>
+          <span class="t2-desc">Salaries, wages and benefits (Avienda, Akiya, Ezra payroll)</span>
+          <input class="t2-input auto" id="t2_9060" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8810</span>
+          <span class="t2-desc">Professional fees — accounting, legal (MNP LLP etc.)</span>
+          <input class="t2-input auto" id="t2_8810" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8960</span>
+          <span class="t2-desc">Meals &amp; entertainment (50% deductible for tax)</span>
+          <input class="t2-input auto" id="t2_8960" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code" style="color:var(--amber);font-size:.6rem">50%</span>
+          <span class="t2-desc" style="color:var(--amber);font-size:.78rem">Deductible portion of meals &amp; entertainment (50% of above)</span>
+          <input class="t2-input" id="t2_8960_ded" type="text" readonly placeholder="0.00" style="color:var(--amber);background:var(--amberlt);border-color:var(--amberlt)">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">9281</span>
+          <span class="t2-desc">Motor vehicle expenses / fuel (business-use portion)</span>
+          <input class="t2-input auto" id="t2_9281" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8520</span>
+          <span class="t2-desc">Advertising and promotion</span>
+          <input class="t2-input" id="t2_8520" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">9270</span>
+          <span class="t2-desc">Telephone &amp; utilities (Rogers, Hydro, etc.)</span>
+          <input class="t2-input auto" id="t2_9270" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8690</span>
+          <span class="t2-desc">Insurance premiums</span>
+          <input class="t2-input auto" id="t2_8690" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">9220</span>
+          <span class="t2-desc">Repairs &amp; maintenance</span>
+          <input class="t2-input auto" id="t2_9220" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">9040</span>
+          <span class="t2-desc">Supplies &amp; uniforms (Costco supplies, A Cut Above, etc.)</span>
+          <input class="t2-input auto" id="t2_9040" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8760</span>
+          <span class="t2-desc">Dues &amp; memberships (Costco membership, associations)</span>
+          <input class="t2-input auto" id="t2_8760" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">9180</span>
+          <span class="t2-desc">Property taxes</span>
+          <input class="t2-input auto" id="t2_9180" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8710</span>
+          <span class="t2-desc">Interest &amp; bank charges (BMO fees, CRA interest)</span>
+          <input class="t2-input auto" id="t2_8710" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">9936</span>
+          <span class="t2-desc">Small tools (under $1,500 — deducted in current year)</span>
+          <input class="t2-input auto" id="t2_9936" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">8200</span>
+          <span class="t2-desc">Equipment &amp; capital purchases (see CCA Schedule 8 note)</span>
+          <input class="t2-input auto" id="t2_8200" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line">
+          <span class="t2-code">9270</span>
+          <span class="t2-desc">Other deductible expenses</span>
+          <input class="t2-input" id="t2_other" type="text" placeholder="0.00" oninput="craCalcT2()">
+        </div>
+        <div class="t2-line" style="background:var(--paper)">
+          <span class="t2-code" style="color:var(--red);font-weight:500">TOTAL</span>
+          <span class="t2-desc" style="font-weight:500">Total Deductible Expenses</span>
+          <input class="t2-input calc" id="t2_totalexp" type="text" readonly placeholder="0.00">
+        </div>
+      </div>
+
+      <!-- Net income / taxable income -->
+      <div class="cra-section-label">Net Income &amp; Corporate Tax Estimate</div>
+      <div class="box-grid">
+        <div class="cra-box">
+          <div class="box-code">LINE 300 — NET INCOME</div>
+          <div class="box-name">Net income before tax (Revenue minus Expenses)</div>
+          <input class="box-input calc" id="t2_netincome" type="text" readonly placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">SCH 7 — SBD</div>
+          <div class="box-name">Small Business Deduction limit (up to $500,000 active business income)</div>
+          <input class="box-input" id="t2_sbd" type="text" placeholder="500000.00">
+          <div class="box-note">Ontario corps: SBD reduces federal rate from 15% → 9%. Claim full $500K unless associated corp rules apply.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">FEDERAL TAX</div>
+          <div class="box-name">Estimated federal corporate tax (9% SBD rate on active income)</div>
+          <input class="box-input calc" id="t2_fedtax" type="text" readonly placeholder="0.00">
+          <div class="box-note">9% on first $500K of active business income (after SBD). 15% on any amount above.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">ONTARIO TAX</div>
+          <div class="box-name">Estimated Ontario corporate tax (3.2% small business rate)</div>
+          <input class="box-input calc" id="t2_ontax" type="text" readonly placeholder="0.00">
+          <div class="box-note">Ontario rate: 3.2% on first $500K (SBD rate). 11.5% on income above $500K.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">LINE 700 — TOTAL TAX</div>
+          <div class="box-name">Total estimated corporate tax (Federal + Ontario)</div>
+          <input class="box-input calc" id="t2_totaltax" type="text" readonly placeholder="0.00">
+          <div class="box-note">Combined rate ≈ 12.2% on active income under $500K.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">T2 DUE DATE</div>
+          <div class="box-name">T2 filing deadline (6 months after year-end)</div>
+          <input class="box-input" id="t2_duedate" type="text" value="September 30, 2026" readonly style="background:var(--paper2)">
+          <div class="box-note">Year-end March 31 → T2 due September 30. Tax balance due: June 30.</div>
+        </div>
+      </div>
+
+      <!-- CCA Schedule 8 -->
+      <div class="cra-section-label">Schedule 8 — Capital Cost Allowance (CCA) — Depreciation on Equipment</div>
+      <div class="box-grid">
+        <div class="cra-box">
+          <div class="box-code">CLASS 8 (20%)</div>
+          <div class="box-name">Miscellaneous equipment, tools &gt;$1,500, trailers (tractor)</div>
+          <input class="box-input" id="cca_cl8" type="text" placeholder="0.00" oninput="craCalcCCA()">
+          <div class="box-note">Tractor purchased Nov 2025 for $33,900 likely Class 8 or 10. CRA allows 20%/yr declining balance.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">CLASS 10 (30%)</div>
+          <div class="box-name">Motor vehicles, certain equipment</div>
+          <input class="box-input" id="cca_cl10" type="text" placeholder="0.00" oninput="craCalcCCA()">
+          <div class="box-note">30% declining balance on motor vehicles used for business.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">CLASS 50 (55%)</div>
+          <div class="box-name">Computer equipment, software, data storage</div>
+          <input class="box-input" id="cca_cl50" type="text" placeholder="0.00" oninput="craCalcCCA()">
+          <div class="box-note">55% declining balance on computers and qualifying tech.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">HALF-YEAR RULE</div>
+          <div class="box-name">Year of acquisition: only 50% of normal CCA allowed</div>
+          <input class="box-input" id="cca_halfyear" type="text" readonly placeholder="Calculated" style="background:var(--amberlt);border-color:var(--amberlt);color:var(--amber)">
+          <div class="box-note">For assets acquired in 2025/26, CRA limits CCA to 50% in the acquisition year.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">TOTAL CCA</div>
+          <div class="box-name">Total CCA deduction for the year (reduces taxable income)</div>
+          <input class="box-input calc" id="cca_total" type="text" readonly placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">⚡ ACCEL. (CL 14.1)</div>
+          <div class="box-name">Accelerated Investment Incentive — bonus first-year CCA (1.5× multiplier on new assets)</div>
+          <input class="box-input" id="cca_accel" type="text" placeholder="0.00">
+          <div class="box-note">Canada's AII program may allow 1.5× CCA in year of acquisition for eligible property. Ask CRA or check my.business.account.</div>
+        </div>
+      </div>
+
+      <div class="cra-result-bar">
+        <div class="cra-result-label">Estimated Total Corporate Tax Payable</div>
+        <div class="cra-result-amount" id="t2ResultAmt">$0.00</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save as PDF</button>
+      <button class="btn btn-outline" onclick="craCopyT2Summary()">📋 Copy T2 summary</button>
+    </div>
+
+    <div class="card" style="margin-top:1.25rem">
+      <div class="card-title">T2 Important Notes</div>
+      <div style="font-size:.83rem;color:var(--ink2);line-height:1.8">
+        <strong>Balance due date:</strong> June 30 (3 months after year-end March 31) — pay any tax owing to avoid arrears interest.<br>
+        <strong>T2 filing date:</strong> September 30 (6 months after year-end) — late filing penalty is 5% + 1%/month up to 12 months.<br>
+        <strong>Tractor CCA:</strong> Your $33,900 tractor (Nov 2025) goes on Schedule 8. Confirm class with CRA — likely Class 8 (20%) or Class 10 (30%). With half-year rule and AII, year 1 CCA could be $5,085–$14,850.<br>
+        <strong>Paying yourself:</strong> Salary (deductible for corp, taxable for you personally) vs. dividends (corp pays tax first, then lower personal rate). Worth optimizing with an accountant once annually.<br>
+        <strong>Small Business Deduction:</strong> As long as Postma Contracting Inc. is Canadian-controlled and active income is under $500K, the 9% + 3.2% = 12.2% combined rate applies.
+      </div>
+    </div>
+  </div><!-- /cra-panel-t2 -->
+
+  <!-- ── PAYROLL PD7A ── -->
+  <div class="cra-panel" id="cra-panel-payroll">
+
+    <!-- EMPLOYEE ROSTER MANAGER -->
+    <div class="card">
+      <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Employee Roster</span>
+        <button class="btn btn-green btn-sm" onclick="empAddRow()">+ Add Employee</button>
+      </div>
+      <p style="font-size:.8rem;color:var(--ink3);margin-bottom:1rem">Manage your team here. Changes sync automatically to the PD7A and T4 sections.</p>
+      <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 80px;gap:.6rem;font-family:var(--mono);font-size:.62rem;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;padding:.4rem .2rem;border-bottom:1px solid var(--rule);margin-bottom:.5rem">
+        <span>Full Name</span><span>Role / Title</span><span>Pay Type</span><span>Gross / Period</span><span style="text-align:center">Remove</span>
+      </div>
+      <div id="empRosterRows"></div>
+      <div style="margin-top:1rem;padding:.75rem 1rem;background:var(--paper);border-radius:var(--radius);font-size:.78rem;color:var(--ink3)">
+        <strong style="color:var(--ink2)">Note:</strong> "Gross / Period" is the amount paid each pay run. For monthly payroll, enter the monthly gross. Use CRA PDOC for exact tax deductions.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Payroll Remittance — Form PD7A</div>
+      <p class="page-sub" style="margin-bottom:1rem">CRA payroll deductions must be remitted by the 15th of the month following payroll. Postma Contracting Inc. is a regular remitter.</p>
+      <div class="autofill-bar" style="background:var(--greenlt);border-color:#b8ddc8">
+        <span style="font-size:.8rem;color:var(--green)">Amounts below are pulled from your Employee Roster above. Edit the roster to update.</span>
+      </div>
+    </div>
+
+    <div class="cra-form">
+      <div class="cra-form-header">
+        <div>
+          <div class="cra-form-title">PD7A — Payroll Deductions Remittance</div>
+          <div class="cra-form-ref">Postma Contracting Inc. · Business Number: [Your BN]15 · Regular remitter — due 15th of following month</div>
+        </div>
+        <span class="cra-form-tag">PD7A</span>
+      </div>
+
+      <!-- Employee entries — driven by roster above -->
+      <div class="cra-section-label">Pay Period Summary — From Employee Roster</div>
+      <div style="padding:1rem 1.25rem;background:var(--white)">
+        <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:.5rem;font-family:var(--mono);font-size:.62rem;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;padding-bottom:.5rem;border-bottom:1px solid var(--rule);margin-bottom:.5rem">
+          <span>Employee</span><span>Gross Wages</span><span>CPP (5.95%)</span><span>EI (1.66%)</span><span>Est. Income Tax</span>
+        </div>
+        <div id="payrollRows" style="display:flex;flex-direction:column;gap:.4rem"></div>
+      </div>
+
+      <!-- PD7A Boxes -->
+      <div class="cra-section-label">PD7A Box Totals — What to Remit to CRA</div>
+      <div class="box-grid">
+        <div class="cra-box">
+          <div class="box-code">BOX 14 — TOTAL INSURABLE EARNINGS</div>
+          <div class="box-name">Total insurable earnings (gross wages subject to EI)</div>
+          <input class="box-input auto" id="pd7a_14" type="text" readonly placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 16 — CPP CONTRIBUTIONS</div>
+          <div class="box-name">Total employee CPP deducted + employer CPP match</div>
+          <input class="box-input auto" id="pd7a_16" type="text" readonly placeholder="0.00">
+          <div class="box-note">Employer matches employee CPP 1:1. Total = employee CPP × 2.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 18 — EI PREMIUMS</div>
+          <div class="box-name">Total EI deducted (employee 1.66%) + employer (1.66% × 1.4 = 2.324%)</div>
+          <input class="box-input auto" id="pd7a_18" type="text" readonly placeholder="0.00">
+          <div class="box-note">Employer pays 1.4× employee EI. Total = employee EI × 2.4.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 22 — INCOME TAX</div>
+          <div class="box-name">Total federal + provincial income tax deducted from all employees</div>
+          <input class="box-input auto" id="pd7a_22" type="text" readonly placeholder="0.00">
+          <div class="box-note">Use CRA's Payroll Deductions Online Calculator (pdoc.cra-arc.gc.ca) for exact amounts.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">TOTAL REMITTANCE</div>
+          <div class="box-name">Total amount to remit to CRA (CPP + EI + Income Tax)</div>
+          <input class="box-input owing" id="pd7a_total" type="text" readonly placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">DUE DATE</div>
+          <div class="box-name">Remittance due date (15th of following month)</div>
+          <input class="box-input" id="pd7a_due" type="text" placeholder="e.g. Feb 15, 2026">
+          <div class="box-note">Regular remitters: 15th of month following payroll. Late = 10% penalty.</div>
+        </div>
+      </div>
+
+      <div class="cra-result-bar">
+        <div class="cra-result-label">Total Payroll Remittance to CRA</div>
+        <div class="cra-result-amount owing" id="pd7aResultAmt">$0.00</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print remittance</button>
+    </div>
+
+    <div class="card" style="margin-top:1.25rem">
+      <div class="card-title">Payroll Remittance Quick Reference</div>
+      <div style="font-size:.83rem;color:var(--ink2);line-height:1.9">
+        <strong>CPP 2025:</strong> Employee rate 5.95% · Max annual contribution $3,867.50 · Exemption $3,500<br>
+        <strong>EI 2025:</strong> Employee rate 1.66% · Max annual premium $1,049.12 · Employer pays 1.4× employee<br>
+        <strong>Due date:</strong> Regular remitter — 15th of following month (e.g., December payroll → January 15)<br>
+        <strong>How to pay:</strong> BMO Online → Add payee → "Canada Revenue Agency – Payroll" → Use your Business Number + RT0001<br>
+        <strong>PDOC tool:</strong> Use CRA's free Payroll Deductions Online Calculator at pdoc.cra-arc.gc.ca for exact tax withholdings<br>
+        <strong>T4 slips:</strong> Issue to all employees by last day of February following the calendar year
+      </div>
+    </div>
+  </div><!-- /cra-panel-payroll -->
+
+  <!-- ── T4 SLIPS ── -->
+  <div class="cra-panel" id="cra-panel-t4">
+    <div class="card">
+      <div class="card-title">T4 Slip — Statement of Remuneration Paid</div>
+      <p class="page-sub" style="margin-bottom:1rem">Issue a T4 for each employee paid in the calendar year. T4 Summary and slips due to CRA by last day of February.</p>
+    </div>
+
+    <!-- T4 form for each employee -->
+    <div id="t4SlipsContainer"></div>
+    <button class="btn btn-outline" onclick="craAddT4Slip()" style="margin-bottom:1.25rem">+ Add employee T4</button>
+
+    <!-- T4 Summary -->
+    <div class="cra-form">
+      <div class="cra-form-header">
+        <div>
+          <div class="cra-form-title">T4 Summary — Employer Summary of Remuneration Paid</div>
+          <div class="cra-form-ref">Postma Contracting Inc. · Due: Last day of February following the tax year</div>
+        </div>
+        <span class="cra-form-tag">T4 SUMMARY</span>
+      </div>
+      <div class="box-grid">
+        <div class="cra-box">
+          <div class="box-code">BOX 88 — CALENDAR YEAR</div>
+          <div class="box-name">Calendar year for which T4s are being filed</div>
+          <input class="box-input" id="t4sum_year" type="text" value="2025">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 76 — TOTAL EMPLOYMENT INCOME</div>
+          <div class="box-name">Total Box 14 from all T4 slips (gross wages)</div>
+          <input class="box-input auto" id="t4sum_76" type="text" readonly placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 78 — TOTAL CPP CONTRIBUTIONS</div>
+          <div class="box-name">Total Box 16 from all T4 slips (employee CPP)</div>
+          <input class="box-input auto" id="t4sum_78" type="text" readonly placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 80 — TOTAL EI PREMIUMS</div>
+          <div class="box-name">Total Box 18 from all T4 slips (employee EI)</div>
+          <input class="box-input auto" id="t4sum_80" type="text" readonly placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 82 — TOTAL INCOME TAX DEDUCTED</div>
+          <div class="box-name">Total Box 22 from all T4 slips (income tax withheld)</div>
+          <input class="box-input auto" id="t4sum_82" type="text" readonly placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 84 — EMPLOYER ACCOUNT NUMBER</div>
+          <div class="box-name">CRA Business Number (payroll account)</div>
+          <input class="box-input" id="t4sum_bn" type="text" placeholder="123456789 RP 0001">
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print all T4 slips</button>
+    </div>
+  </div><!-- /cra-panel-t4 -->
+
+  <!-- ── TAX SAVING TIPS ── -->
+  <div class="cra-panel" id="cra-panel-tips">
+    <div class="card">
+      <div class="card-title">Tax-Saving Ideas for Postma Contracting Inc.</div>
+      <p class="page-sub" style="margin-bottom:1rem">Legitimate tax strategies for an Ontario corporation in consulting + lawn care. These are ideas to explore — always confirm with CRA or a tax professional.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+
+      <div style="background:var(--amberlt);border:1px solid #e6c97a;border-radius:var(--radius);padding:1.1rem">
+        <div style="font-size:1.1rem;margin-bottom:.35rem">💼</div>
+        <div style="font-weight:600;font-size:.88rem;color:var(--amber);margin-bottom:.35rem">Income Splitting via Salary</div>
+        <div style="font-size:.8rem;color:var(--ink2);line-height:1.6">Pay reasonable salaries to family members (Andrea, Avienda, Akiya, Ezra) who perform real services. Their income is taxed at their lower personal rate. Postma Contracting Inc. deducts the salary. <strong>Ensure work is real and salary is reasonable.</strong></div>
+      </div>
+
+      <div style="background:var(--amberlt);border:1px solid #e6c97a;border-radius:var(--radius);padding:1.1rem">
+        <div style="font-size:1.1rem;margin-bottom:.35rem">🚗</div>
+        <div style="font-weight:600;font-size:.88rem;color:var(--amber);margin-bottom:.35rem">Vehicle Expenses (Log Required)</div>
+        <div style="font-size:.8rem;color:var(--ink2);line-height:1.6">Keep a mileage log for any vehicle used for business. Deduct the business-use percentage of gas, insurance, repairs, and CCA. For a vehicle used 70% for business, claim 70% of costs. CRA requires a logbook to support the claim.</div>
+      </div>
+
+      <div style="background:var(--amberlt);border:1px solid #e6c97a;border-radius:var(--radius);padding:1.1rem">
+        <div style="font-size:1.1rem;margin-bottom:.35rem">🏠</div>
+        <div style="font-weight:600;font-size:.88rem;color:var(--amber);margin-bottom:.35rem">Home Office Deduction</div>
+        <div style="font-size:.8rem;color:var(--ink2);line-height:1.6">If you use a dedicated home office space for Postma Contracting Inc., claim a portion of rent/mortgage interest, utilities, and internet. Calculate by area (e.g., 10% of home = 10% of eligible expenses). Must be the principal place of business.</div>
+      </div>
+
+      <div style="background:var(--amberlt);border:1px solid #e6c97a;border-radius:var(--radius);padding:1.1rem">
+        <div style="font-size:1.1rem;margin-bottom:.35rem">📱</div>
+        <div style="font-weight:600;font-size:.88rem;color:var(--amber);margin-bottom:.35rem">Technology & Equipment</div>
+        <div style="font-size:.8rem;color:var(--ink2);line-height:1.6">Laptops, tablets, phones, software used for business are deductible. Phones are typically 50–100% deductible if used mainly for business. Equipment over $1,500 goes on Schedule 8 CCA. The Accelerated Investment Incentive allows 1.5× first-year CCA on new eligible property.</div>
+      </div>
+
+      <div style="background:var(--amberlt);border:1px solid #e6c97a;border-radius:var(--radius);padding:1.1rem">
+        <div style="font-size:1.1rem;margin-bottom:.35rem">📈</div>
+        <div style="font-weight:600;font-size:.88rem;color:var(--amber);margin-bottom:.35rem">Defer Income / Accelerate Expenses</div>
+        <div style="font-size:.8rem;color:var(--ink2);line-height:1.6">Near year-end (March 31): delay issuing invoices until April if possible (defers tax one year). Also prepay or incur deductible expenses before March 31 — prepaid insurance, supplies, conference fees, professional development. Every dollar of expense = ~12.2 cents of corporate tax saved.</div>
+      </div>
+
+      <div style="background:var(--amberlt);border:1px solid #e6c97a;border-radius:var(--radius);padding:1.1rem">
+        <div style="font-size:1.1rem;margin-bottom:.35rem">🏋️</div>
+        <div style="font-weight:600;font-size:.88rem;color:var(--amber);margin-bottom:.35rem">EPSP / Bonuses to Reduce Corp Income</div>
+        <div style="font-size:.8rem;color:var(--ink2);line-height:1.6">The corporation can declare a bonus to you (Caleb) payable within 179 days of year-end, deducting it in the current corp year. You'd pay personal tax on it, but it reduces corp income. Useful if corp income is near $500K SBD limit or if your personal rate is lower.</div>
+      </div>
+
+      <div style="background:var(--amberlt);border:1px solid #e6c97a;border-radius:var(--radius);padding:1.1rem">
+        <div style="font-size:1.1rem;margin-bottom:.35rem">🌱</div>
+        <div style="font-weight:600;font-size:.88rem;color:var(--amber);margin-bottom:.35rem">Charitable Donations via Corp</div>
+        <div style="font-size:.8rem;color:var(--ink2);line-height:1.6">Donations made by the corporation give a federal tax credit of ~38.33% (vs. only ~15% for personal donation in low-income years). Make charitable gifts through the company to maximize the benefit.</div>
+      </div>
+
+      <div style="background:var(--amberlt);border:1px solid #e6c97a;border-radius:var(--radius);padding:1.1rem">
+        <div style="font-size:1.1rem;margin-bottom:.35rem">🏛</div>
+        <div style="font-weight:600;font-size:.88rem;color:var(--amber);margin-bottom:.35rem">Scientific Research / SR&amp;ED</div>
+        <div style="font-size:.8rem;color:var(--ink2);line-height:1.6">If any work involves technological advancement or developing new systems (e.g., your bookkeeping app development), it may qualify for SR&ED credits — 35% federal ITC on qualifying R&D expenses. Worth reviewing with a SR&ED consultant for the app development costs.</div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="card-title">Year-End Tax Checklist (Before March 31)</div>
+      <div style="font-size:.83rem;color:var(--ink2);line-height:2">
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> Confirm all deductible expenses are paid and recorded before March 31</label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> Maximize family member salaries (ensure reasonableness)</label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> Review CCA schedule — decide how much to claim on tractor and other assets</label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> Consider prepaying dues, subscriptions, insurance premiums</label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> Declare shareholder bonus (if reducing corp income is beneficial)</label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> Review outstanding receivables — write off any uncollectible amounts</label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> Pay corporate tax balance owing by June 30 to avoid arrears interest</label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> File T4 slips by last day of February</label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> File T2 return by September 30</label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox"> Back up all receipts and records (retain 6 years)</label>
+      </div>
+    </div>
+  </div><!-- /cra-panel-tips -->
+
+</div><!-- /page taxfiling -->
+</div><!-- /panel-taxfiling -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+// ════════════════════════════════════════════════════════════
+// STEP TRACKER — shows progress checklist on tool tabs
+// ════════════════════════════════════════════════════════════
+const TRACKERS = {
+  'sold-invoice': {
+    tab: 'invoice',
+    title: 'Selling something — Invoice Wizard',
+    steps: [
+      'Enter client details',
+      'Add line items',
+      'Check HST toggle',
+      'Download PDF & send',
+      'Copy row to Google Sheets',
+    ]
+  },
+  'sold-paid': {
+    tab: 'invoice',
+    title: 'Client already paid — Invoice Wizard',
+    steps: [
+      'Create the invoice',
+      'Note payment in Notes field',
+      'Paste into Sheet & mark Paid',
+    ]
+  },
+  'bought-csv': {
+    tab: 'importer',
+    title: 'Importing statement — Statement Importer',
+    steps: [
+      'Download CSV from AMEX / BMO',
+      'Select your bank & upload CSV',
+      'Click Analyze with AI',
+      'Review & fix categories',
+      'Export to Google Sheets',
+    ]
+  },
+  'bought-manual': {
+    tab: 'receipt',
+    title: 'Single receipt — Receipt Scanner',
+    steps: [
+      'Have receipt ready',
+      'Upload photo or PDF',
+      'Review extracted details',
+      'Copy row to Google Sheets',
+    ]
+  },
+  'receipt': {
+    tab: 'receipt',
+    title: 'Receipt / photo — Scanner',
+    steps: [
+      'Upload photo or PDF of receipt',
+      'Click Scan with AI',
+      'Confirm category & details',
+      'Copy row to Google Sheets',
+    ]
+  },
+  'payroll': {
+    tab: 'taxfiling',
+    title: 'Running payroll — CRA Payroll PD7A',
+    steps: [
+      'Update Employee Roster',
+      'Calculate CPP / EI / Tax',
+      'Pay employees',
+      'Remit to CRA by the 15th',
+      'Record in Google Sheet',
+    ]
+  },
+  'hst': {
+    tab: 'taxfiling',
+    title: 'Quarterly HST — CRA GST34',
+    steps: [
+      'Import all statements first',
+      'Select the quarter',
+      'Auto-fill from Importer',
+      'Review Lines 101–114',
+      'Pay via BMO to Receiver General',
+      'File on CRA My Business Account',
+    ]
+  },
+  'yearend': {
+    tab: 'taxfiling',
+    title: 'Year-End — T2 Corporate Tax',
+    steps: [
+      'Import all year statements',
+      'Fill T2 Schedule 1 revenue & expenses',
+      'Review CCA on tractor',
+      'Issue T4 slips by Feb 28',
+      'Pay tax balance by June 30',
+      'File T2 by Sept 30',
+    ]
+  },
+  'statement': {
+    tab: 'importer',
+    title: 'Monthly statement — Importer',
+    steps: [
+      'Download CSV from AMEX / BMO',
+      'Upload & select bank',
+      'Analyze with AI',
+      'Review categories',
+      'Export to Google Sheets',
+    ]
+  },
+};
+
+let activeTracker = null;
+let trackerDone = {};
+
+function showTrackerFor(key) {
+  const cfg = TRACKERS[key];
+  if (!cfg) return;
+  activeTracker = key;
+  trackerDone[key] = trackerDone[key] || {};
+  showTab(cfg.tab);
+  renderTracker(key);
+}
+
+function renderTracker(key) {
+  const cfg = TRACKERS[key];
+  if (!cfg) return;
+  const el = document.getElementById('tracker-' + cfg.tab);
+  if (!el) return;
+  const done = trackerDone[key] || {};
+  // Find first incomplete step to mark active
+  let firstIncomplete = cfg.steps.findIndex((_,i) => !done[i]);
+
+  el.innerHTML = `
+    <div class="tracker-header">
+      <span class="tracker-title">📋 ${cfg.title}</span>
+      <button class="tracker-close" onclick="closeTracker('${key}')" title="Dismiss">✕ dismiss</button>
+    </div>
+    <div class="tracker-steps">
+      ${cfg.steps.map((s,i) => `
+        <div class="tracker-step ${done[i]?'done':i===firstIncomplete?'active':''}"
+             onclick="trackerToggle('${key}',${i})">
+          <div class="tracker-num">${done[i]?'✓':i+1}</div>
+          <div class="tracker-label">${s}</div>
+        </div>`).join('')}
+    </div>`;
+  el.classList.add('visible');
+}
+
+function trackerToggle(key, i) {
+  if (!trackerDone[key]) trackerDone[key] = {};
+  trackerDone[key][i] = !trackerDone[key][i];
+  renderTracker(key);
+}
+
+function closeTracker(key) {
+  const cfg = TRACKERS[key];
+  if (!cfg) return;
+  const el = document.getElementById('tracker-' + cfg.tab);
+  if (el) { el.classList.remove('visible'); el.innerHTML = ''; }
+  activeTracker = null;
+}
+
+// ════════════════════════════════════════════════════════════
+// SHARED UTILITIES
+// ════════════════════════════════════════════════════════════
+function showTab(t){
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['home','importer','invoice','receipt','taxfiling'][i]===t));
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+}
+function toast(msg,ms=3500){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),ms);
+}
+function fmtMoney(n){return Number(n).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmtDate(s){
+  if(!s)return'—';
+  const d=new Date(s+'T12:00:00');
+  return d.toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'});
+}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+// All Claude API calls route through /claude-proxy (Cloudflare Pages Function)
+// This avoids CORS errors and keeps the API key server-side
+const CLAUDE_PROXY = '/claude-proxy';
+
+async function callClaude(prompt, maxTokens=1000){
+  const r = await fetch(CLAUDE_PROXY, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens,
+      messages: [{role:'user', content:prompt}]
+    })
+  });
+  const d = await r.json();
+  if(d.error) throw new Error(d.error);
+  return d.content?.[0]?.text || '';
+}
+
+async function callClaudeWithImage(prompt, b64, mediaType){
+  const r = await fetch(CLAUDE_PROXY, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{role:'user', content:[
+        {type:'image', source:{type:'base64', media_type:mediaType, data:b64}},
+        {type:'text', text:prompt}
+      ]}]
+    })
+  });
+  const d = await r.json();
+  if(d.error) throw new Error(d.error);
+  return d.content?.[0]?.text || '';
+}
+
+async function callClaudeWithPDF(prompt, b64, maxTokens=4096){
+  const r = await fetch(CLAUDE_PROXY, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens,
+      beta: 'pdfs-2024-09-25',
+      messages: [{role:'user', content:[
+        {type:'document', source:{type:'base64', media_type:'application/pdf', data:b64}},
+        {type:'text', text:prompt}
+      ]}]
+    })
+  });
+  const d = await r.json();
+  if(d.error) throw new Error(d.error);
+  return d.content?.[0]?.text || '';
+}
+
+// ════════════════════════════════════════════════════════════
+// TAB 1 — STATEMENT IMPORTER (PDF + CSV)
+// ════════════════════════════════════════════════════════════
+let impBank='AMEX', impRawRows=[], impTxns=[];
+let impPdfB64=null; // set when a PDF is loaded
+
+const EXP_CATS=['Meals & Entertainment','Professional Fees','Wages & Salaries','Small Tools','Supplies','Uniforms','Dues & Memberships','Vehicle Repairs','Fuel','Insurance','Interest & Bank Charges','Repairs & Maintenance','Property Tax','Telephone','Utilities','Conferences','Equipment Purchase','Other','SKIP — not a business expense'];
+const NO_HST=new Set(['Wages & Salaries','Insurance','Interest & Bank Charges','Property Tax','SKIP — not a business expense']);
+
+function setBank(b,el){
+  impBank=b;
+  document.querySelectorAll('.bank-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+function impDragOver(e){e.preventDefault();document.getElementById('impUploadZone').classList.add('drag-over')}
+function impDragLeave(){document.getElementById('impUploadZone').classList.remove('drag-over')}
+function impDrop(e){e.preventDefault();impDragLeave();const f=e.dataTransfer.files[0];if(f)impLoadFile(f)}
+function impFileChosen(e){const f=e.target.files[0];if(f)impLoadFile(f)}
+function togglePaste(){document.getElementById('pasteWrap').classList.toggle('hidden')}
+function loadPasted(){const t=document.getElementById('pasteBox').value.trim();if(t)impParseCSV(t,'pasted text');else toast('Paste some CSV text first')}
+
+function impLoadFile(f){
+  const isPDF = f.type==='application/pdf' || f.name.toLowerCase().endsWith('.pdf');
+  const zone = document.getElementById('impUploadZone');
+  const fname = document.getElementById('impFname');
+  const pdfNote = document.getElementById('impPdfNote');
+  const icon = document.getElementById('impUploadIcon');
+  const title = document.getElementById('impUploadTitle');
+
+  const reader = new FileReader();
+  if(isPDF){
+    reader.onload = e => {
+      impPdfB64 = e.target.result.split(',')[1];
+      impRawRows = []; // will be filled by AI
+      zone.classList.add('loaded');
+      if(icon) icon.textContent = '📋';
+      if(title) title.textContent = f.name;
+      fname.textContent = '✓ PDF ready — Claude will extract all transactions';
+      if(pdfNote) pdfNote.classList.remove('hidden');
+      document.getElementById('impAnalyzeBtn').disabled = false;
+      document.getElementById('impStatus').textContent = 'PDF loaded — click Analyze';
+      toast('PDF loaded — click Analyze with AI →');
+    };
+    reader.readAsDataURL(f);
+  } else {
+    impPdfB64 = null;
+    if(pdfNote) pdfNote.classList.add('hidden');
+    reader.onload = e => impParseCSV(e.target.result, f.name);
+    reader.readAsText(f);
+  }
+}
+
+function impParseCSV(text,src){
+  impPdfB64 = null;
+  const lines=text.trim().split('\n').filter(l=>l.trim());
+  const start=lines[0].toLowerCase().includes('date')?1:0;
+  impRawRows=[];
+  for(let i=start;i<lines.length;i++){
+    const row=parseCSVLine(lines[i]);
+    if(row.length<2)continue;
+    let date='',desc='',amount=0;
+    if(impBank==='AMEX'){
+      date=row[0]?.trim()||'';
+      if(row.length>=4){desc=row[2]?.trim()||'';amount=parseFloat(row[3]?.replace(/[^0-9.\-]/g,'')||'0')}
+      else{desc=row[1]?.trim()||'';amount=parseFloat(row[2]?.replace(/[^0-9.\-]/g,'')||'0')}
+    } else {
+      date=row[0]?.trim()||'';desc=row[2]?.trim()||row[1]?.trim()||'';
+      amount=parseFloat((row[4]||row[3]||'0').replace(/[^0-9.\-]/g,''))||0;
+    }
+    if(!date||!desc||isNaN(amount)||amount===0)continue;
+    impRawRows.push({date:normDate(date),description:desc,amount});
+  }
+  if(!impRawRows.length){toast('No transactions found — check format matches selected bank');return}
+  const z=document.getElementById('impUploadZone');z.classList.add('loaded');
+  document.getElementById('impFname').textContent=`✓ ${impRawRows.length} transactions from ${src}`;
+  document.getElementById('impAnalyzeBtn').disabled=false;
+  document.getElementById('impStatus').textContent=`${impRawRows.length} rows ready`;
+  toast(`Loaded ${impRawRows.length} transactions — click Analyze`);
+}
+
+function parseCSVLine(line){
+  const res=[];let cur='';let inQ=false;
+  for(const c of line){if(c==='"'){inQ=!inQ;continue}if(c===','&&!inQ){res.push(cur);cur='';continue}cur+=c}
+  res.push(cur);return res;
+}
+function normDate(d){
+  d=d.trim();
+  const m1=d.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m1)return`${m1[3]}-${m1[1].padStart(2,'0')}-${m1[2].padStart(2,'0')}`;
+  return d;
+}
+function loadSample(){
+  const s=impBank==='AMEX'
+    ?`Date,Description,Amount\n12/16/2025,"COSTCO WHOLESALE",-45.18\n12/18/2025,"A CUT ABOVE UNIFORMS",-29.51\n12/29/2025,"MIKES PLACE RESTAURANT",-106.62\n11/03/2025,"COSTCO ANNUAL MEMBERSHIP",-146.90\n11/19/2025,"MNP LLP ACCOUNTING",-6033.35\n01/15/2026,"SHELL FUEL",-87.40\n01/20/2026,"ROGERS WIRELESS",-95.00\n01/22/2026,"HOME DEPOT",-234.50\n02/05/2026,"CANADIAN TIRE TOOLS",-189.99\n02/14/2026,"STAPLES OFFICE",-67.45`
+    :`Date,Type,Description,Cheque No.,Amount\n12/22/2025,Debit,PAYROLL AKIYA POSTMA,,- 1000.00\n12/31/2025,Debit,BMO MONTHLY FEE,,- 10.50\n10/30/2025,Debit,CRA HST PAYMENT,,- 1623.47\n11/07/2025,Debit,TRACTOR PURCHASE,,- 33900.00\n12/30/2025,Debit,PAYROLL AVIENDA,,- 3000.00\n01/05/2026,Debit,INSURANCE PREMIUM,,- 1200.00\n01/15/2026,Debit,HYDRO ONE UTILITY,,- 345.00`;
+  impParseCSV(s,`${impBank} sample`);
+}
+
+async function impAnalyze(){
+  document.getElementById('imp-step1').classList.add('hidden');
+  document.getElementById('imp-step2').classList.remove('hidden');
+  document.getElementById('impProgWrap').classList.remove('hidden');
+
+  if(impPdfB64){
+    // PDF path: ask Claude to extract transactions directly from the PDF
+    await impAnalyzePDF();
+  } else {
+    // CSV path: transactions already parsed, just categorize
+    impTxns=impRawRows.map(r=>({...r,vendor:cleanVendor(r.description),category:'',confidence:'',hst:0,net:0,excluded:false}));
+    await runImpAI();
+  }
+}
+
+async function impAnalyzePDF(){
+  const fill=document.getElementById('impProgFill');
+  const txt=document.getElementById('impProgTxt');
+  const pct=document.getElementById('impProgPct');
+
+  function impPdfError(msg){
+    document.getElementById('impProgWrap').classList.add('hidden');
+    // Show error inline instead of toast so it doesn't disappear
+    const errDiv = document.getElementById('impPdfError') || (() => {
+      const d = document.createElement('div');
+      d.id = 'impPdfError';
+      d.style.cssText = 'background:#fff0f0;border:1px solid #e8b8b8;border-radius:5px;padding:.85rem 1rem;font-size:.83rem;color:#7f1d1d;margin-top:.75rem;line-height:1.5';
+      document.getElementById('imp-step2').appendChild(d);
+      return d;
+    })();
+    errDiv.innerHTML = '<strong>PDF read failed</strong><br>' + msg + '<br><br><button onclick="impReset()" style="background:var(--ink);color:white;border:none;border-radius:4px;padding:.4rem .85rem;cursor:pointer;font-size:.8rem">← Try again</button>';
+    errDiv.style.display = 'block';
+  }
+
+  txt.textContent='Reading PDF statement with AI…';
+  fill.style.width='15%'; pct.textContent='15%';
+
+  const bankName = impBank==='AMEX' ? 'American Express credit card' : 'BMO Bank';
+  const prompt = `You are reading a ${bankName} statement PDF for Postma Contracting Inc., a small Ontario corporation.
+
+Extract EVERY transaction from this statement. Include purchases, payments, fees, credits, and debits.
+
+RULES:
+- Negative amounts = charges/debits (money spent)
+- Positive amounts = credits/payments received
+- Dates in YYYY-MM-DD format
+- Include ALL rows — user will filter later
+
+Return ONLY a valid JSON array, no markdown, no explanation:
+[{"date":"2025-12-16","description":"COSTCO WHOLESALE","amount":-45.18},{"date":"2025-12-22","description":"PAYMENT RECEIVED","amount":794.91}]`;
+
+  try {
+    txt.textContent='Sending PDF to Claude…';
+    let raw;
+    try {
+      raw = await callClaudeWithPDF(prompt, impPdfB64, 4096);
+    } catch(fetchErr) {
+      impPdfError('Could not reach the proxy server. Make sure you are accessing this page from pctires.ca (not a local file). Error: ' + fetchErr.message);
+      return;
+    }
+    if(!raw){
+      impPdfError('Claude returned an empty response. The PDF may be a scanned image rather than a text-based statement. Try downloading a fresh PDF directly from BMO or AMEX online banking.');
+      return;
+    }
+
+    txt.textContent='Parsing transactions…';
+    fill.style.width='35%'; pct.textContent='35%';
+
+    // Strip any markdown fences and find the JSON array
+    let clean = raw.replace(/```json|```/g,'').trim();
+    // Find the JSON array even if there's surrounding text
+    const arrMatch = clean.match(/\[[\s\S]*\]/);
+    if(!arrMatch){
+      impPdfError('Could not find transaction data in the response. Raw response: ' + raw.slice(0,300));
+      return;
+    }
+    clean = arrMatch[0];
+
+    let extracted;
+    try {
+      extracted = JSON.parse(clean);
+    } catch(parseErr){
+      impPdfError('JSON parse error: ' + parseErr.message + '<br>Response was: ' + clean.slice(0,200));
+      return;
+    }
+
+    if(!Array.isArray(extracted) || extracted.length === 0){
+      impPdfError('No transactions found in this PDF. Make sure this is a bank or credit card statement with transaction rows visible.');
+      return;
+    }
+
+    // Normalize
+    impRawRows = extracted.map(tx => ({
+      date: (tx.date||'').trim(),
+      description: (tx.description||'').trim(),
+      amount: parseFloat(tx.amount) || 0
+    })).filter(tx => tx.date && tx.description && tx.amount !== 0);
+
+    if(impRawRows.length === 0){
+      impPdfError('Transactions were found but none had valid date, description, and amount. Check the PDF is a proper statement.');
+      return;
+    }
+
+    fill.style.width='40%'; pct.textContent='40%';
+    txt.textContent=`Extracted ${impRawRows.length} transactions — categorizing…`;
+
+    // Hide any previous error
+    const errDiv = document.getElementById('impPdfError');
+    if(errDiv) errDiv.style.display='none';
+
+    impTxns = impRawRows.map(r=>({...r, vendor:cleanVendor(r.description), category:'', confidence:'', hst:0, net:0, excluded:false}));
+    await runImpAI();
+
+  } catch(e) {
+    impPdfError('Unexpected error: ' + e.message + '. Check your internet connection and try again.');
+    console.error('impAnalyzePDF error:', e);
+  }
+}
+
+async function runImpAI(){
+  const fill=document.getElementById('impProgFill');
+  const txt=document.getElementById('impProgTxt');
+  const pct=document.getElementById('impProgPct');
+  const BATCH=15;const batches=[];
+  for(let i=0;i<impTxns.length;i+=BATCH)batches.push(impTxns.slice(i,i+BATCH));
+  let done=0;
+  for(let b=0;b<batches.length;b++){
+    txt.textContent=`Analyzing batch ${b+1} of ${batches.length}…`;
+    const batch=batches[b];
+    const prompt=`You are a Canadian corporate bookkeeper. Categorize each bank/credit card transaction for a small Ontario corp (consulting + lawn care).
+
+CATEGORIES (use exact names): ${EXP_CATS.join(', ')}
+
+RULES: HST/CRA payments→Interest & Bank Charges | Payroll→Wages & Salaries | Bank fees→Interest & Bank Charges | Gas stations→Fuel | Costco membership→Dues & Memberships | Costco purchases→Supplies | Restaurants/dining→Meals & Entertainment | Uniforms/workwear→Uniforms | Accounting/legal→Professional Fees | Tools under $500→Small Tools, over $500→Equipment Purchase | Rogers/Bell/Telus→Telephone | Hydro/utility→Utilities | Insurance→Insurance | Credit card payments/transfers→SKIP
+
+TRANSACTIONS:
+${batch.map((t,i)=>`${i+1}. ${t.date} | ${t.vendor} | $${Math.abs(t.amount).toFixed(2)} | ${t.amount>0?'CREDIT':'EXPENSE'}`).join('\n')}
+
+Respond ONLY with JSON array: [{"i":1,"category":"...","confidence":"High|Medium|Low","reason":"brief"}]`;
+    try{
+      const raw=await callClaude(prompt);
+      const clean=raw.replace(/\`\`\`json|\`\`\`/g,'').trim();
+      const res=JSON.parse(clean);
+      const offset=b*BATCH;
+      res.forEach(r=>{const idx=offset+r.i-1;if(idx>=0&&idx<impTxns.length){impTxns[idx].category=r.category||'Other';impTxns[idx].confidence=r.confidence||'Medium';impTxns[idx].reason=r.reason||''}});
+    } catch(e){
+      batch.forEach((t,i)=>{const idx=b*BATCH+i;impTxns[idx].category=ruleCategory(t.description,t.amount);impTxns[idx].confidence='Rule-based'});
+    }
+    done+=batch.length;
+    const p=Math.round(done/impTxns.length*100);
+    fill.style.width=p+'%';pct.textContent=p+'%';
+  }
+  document.getElementById('impProgWrap').classList.add('hidden');
+  calcHST();impRender();impRenderStats();
+}
+
+function calcHST(){
+  impTxns.forEach(tx=>{
+    if(NO_HST.has(tx.category)||tx.amount>0){tx.hst=0;tx.net=tx.amount}
+    else{tx.hst=Math.round(Math.abs(tx.amount)/1.13*0.13*100)/100;tx.net=-(Math.abs(tx.amount)-tx.hst)}
+  });
+}
+
+function ruleCategory(d,amt){
+  d=d.toUpperCase();
+  if(/PAYROLL|WAGES/.test(d))return'Wages & Salaries';
+  if(/CRA|HST|GST|BANK FEE|BMO FEE/.test(d))return'Interest & Bank Charges';
+  if(/SHELL|ESSO|PETRO|FUEL|GAS STATION/.test(d))return'Fuel';
+  if(/ROGERS|BELL|TELUS|WIRELESS/.test(d))return'Telephone';
+  if(/HYDRO|ENBRIDGE|UTILITY/.test(d))return'Utilities';
+  if(/INSURANCE|INTACT/.test(d))return'Insurance';
+  if(/RESTAURANT|DINING|CAFE|PIZZA|MIKES PLACE/.test(d))return'Meals & Entertainment';
+  if(/UNIFORM|CUT ABOVE|WORKWEAR/.test(d))return'Uniforms';
+  if(/COSTCO.*MEMBER|MEMBERSHIP/.test(d))return'Dues & Memberships';
+  if(/COSTCO|STAPLES/.test(d))return'Supplies';
+  if(/MNP|LLP|ACCOUNTING|LEGAL/.test(d))return'Professional Fees';
+  if(/TOOL|TRACTOR|EQUIPMENT/.test(d))return Math.abs(amt)>5000?'Equipment Purchase':'Small Tools';
+  if(/PAYMENT|TRANSFER/.test(d))return'SKIP — not a business expense';
+  return'Other';
+}
+
+function cleanVendor(d){return d.replace(/\s{2,}/g,' ').replace(/\*+/g,'').trim().split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()).join(' ')}
+
+function impRender(){
+  const hideSkip=document.getElementById('hideSkip').checked;
+  const CONF={High:'🟢',Medium:'🟡',Low:'🔴','Rule-based':'⚪'};
+  const rows=impTxns.filter(tx=>!(hideSkip&&tx.category==='SKIP — not a business expense'));
+  document.getElementById('impTbody').innerHTML=rows.map(tx=>{
+    const idx=impTxns.indexOf(tx);
+    const isPos=tx.amount>0;
+    return`<tr class="${tx.excluded?'excluded':''}">
+      <td><button class="excl-btn" onclick="impToggleExcl(${idx})" title="Toggle exclude">${tx.excluded?'✚':'✕'}</button></td>
+      <td class="mono">${tx.date}</td>
+      <td><div>${esc(tx.vendor)}</div>${tx.reason?`<div style="font-size:.7rem;color:var(--ink3)">${esc(tx.reason)}</div>`:''}</td>
+      <td class="${isPos?'pos':'neg'}">$${fmtMoney(Math.abs(tx.amount))}</td>
+      <td><select class="cat-sel" onchange="impChangeCat(${idx},this.value)">${EXP_CATS.map(c=>`<option value="${c}"${c===tx.category?' selected':''}>${c}</option>`).join('')}</select></td>
+      <td class="mono right">${tx.hst>0?'$'+fmtMoney(tx.hst):'—'}</td>
+      <td class="mono right">$${fmtMoney(Math.abs(tx.net))}</td>
+      <td><span style="font-family:var(--mono);font-size:.68rem">${CONF[tx.confidence]||'⚪'} ${tx.confidence||'—'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function impRenderStats(){
+  const active=impTxns.filter(tx=>!tx.excluded&&tx.category!=='SKIP — not a business expense');
+  const exp=active.filter(tx=>tx.amount<0);
+  const totExp=exp.reduce((s,tx)=>s+Math.abs(tx.amount),0);
+  const totHST=exp.reduce((s,tx)=>s+tx.hst,0);
+  const totNet=exp.reduce((s,tx)=>s+Math.abs(tx.net),0);
+  const totInc=active.filter(tx=>tx.amount>0).reduce((s,tx)=>s+tx.amount,0);
+  document.getElementById('impStats').innerHTML=`
+    <div class="stat-box"><div class="stat-lbl">TRANSACTIONS</div><div class="stat-val">${impTxns.length}</div></div>
+    <div class="stat-box"><div class="stat-lbl">EXPENSES</div><div class="stat-val r">$${fmtMoney(totExp)}</div></div>
+    <div class="stat-box"><div class="stat-lbl">HST PAID (ITC)</div><div class="stat-val a">$${fmtMoney(totHST)}</div></div>
+    <div class="stat-box"><div class="stat-lbl">NET (excl HST)</div><div class="stat-val">$${fmtMoney(totNet)}</div></div>
+    <div class="stat-box"><div class="stat-lbl">CREDITS</div><div class="stat-val g">$${fmtMoney(totInc)}</div></div>`;
+}
+
+function impChangeCat(idx,cat){impTxns[idx].category=cat;impTxns[idx].excluded=cat==='SKIP — not a business expense';calcHST();impRenderStats()}
+function impToggleExcl(idx){impTxns[idx].excluded=!impTxns[idx].excluded;impRender();impRenderStats()}
+function impReset(){
+  document.getElementById('imp-step2').classList.add('hidden');
+  document.getElementById('imp-step3').classList.add('hidden');
+  document.getElementById('imp-step1').classList.remove('hidden');
+  impRawRows=[];impTxns=[];impPdfB64=null;
+  document.getElementById('impAnalyzeBtn').disabled=true;
+  document.getElementById('impFname').textContent='';
+  document.getElementById('impStatus').textContent='';
+  document.getElementById('impUploadZone').classList.remove('loaded');
+  const pn=document.getElementById('impPdfNote');if(pn)pn.classList.add('hidden');
+  const icon=document.getElementById('impUploadIcon');if(icon)icon.textContent='📄';
+  const title=document.getElementById('impUploadTitle');if(title)title.textContent='Drop your statement here';
+}
+async function impRerun(){document.getElementById('impProgWrap').classList.remove('hidden');await runImpAI()}
+function showExport(){
+  document.getElementById('imp-step2').classList.add('hidden');
+  document.getElementById('imp-step3').classList.remove('hidden');
+  const pay=impBank==='AMEX'?'AMEX':'BMO Bank Transfer';
+  const rows=impTxns.filter(tx=>!tx.excluded&&tx.category!=='SKIP — not a business expense');
+  document.getElementById('expPreviewBody').innerHTML=rows.map(tx=>`<tr>
+    <td class="mono">${tx.date}</td><td>${esc(tx.vendor)}</td>
+    <td style="color:var(--ink3);font-size:.75rem">${esc(tx.description.slice(0,35))}</td>
+    <td class="mono right">$${fmtMoney(Math.abs(tx.amount))}</td>
+    <td><span class="badge badge-amber" style="font-size:.65rem">${tx.category}</span></td>
+    <td class="mono right">${tx.hst>0?'$'+fmtMoney(tx.hst):'—'}</td>
+    <td class="mono right">$${fmtMoney(Math.abs(tx.net))}</td>
+    <td style="font-size:.75rem;color:var(--ink3)">${pay}</td>
+  </tr>`).join('');
+}
+function showReview(){document.getElementById('imp-step3').classList.add('hidden');document.getElementById('imp-step2').classList.remove('hidden')}
+
+function getExpRows(){return impTxns.filter(tx=>!tx.excluded&&tx.category!=='SKIP — not a business expense'&&tx.category!=='')}
+function expCSV(){
+  const pay=impBank==='AMEX'?'AMEX':'BMO Bank Transfer';
+  const amex=impBank==='AMEX'?'Yes':'No';
+  const header='DATE,VENDOR / PAYEE,DESCRIPTION,TOTAL CHARGED (incl HST),CATEGORY,HST PAID (extracted),NET EXPENSE (excl HST),PAYMENT METHOD,AMEX?,NOTES\n';
+  const body=getExpRows().map(tx=>[tx.date,`"${tx.vendor}"`,`"${tx.description.replace(/"/g,'""')}"`,Math.abs(tx.amount).toFixed(2),`"${tx.category}"`,tx.hst.toFixed(2),Math.abs(tx.net).toFixed(2),pay,amex,''].join(',')).join('\n');
+  dlFile('statement-import.csv',header+body,'text/csv');
+  toast(`Downloaded ${getExpRows().length} rows — import into your Expenses tab`);
+}
+function expClipboard(){
+  const pay=impBank==='AMEX'?'AMEX':'BMO Bank Transfer';
+  const amex=impBank==='AMEX'?'Yes':'No';
+  const txt=getExpRows().map(tx=>[tx.date,tx.vendor,tx.description,Math.abs(tx.amount).toFixed(2),tx.category,tx.hst.toFixed(2),Math.abs(tx.net).toFixed(2),pay,amex,''].join('\t')).join('\n');
+  navigator.clipboard.writeText(txt).then(()=>toast(`${getExpRows().length} rows copied — click B12 in Expenses tab then Ctrl+V`));
+}
+function expHSTSummary(){
+  const rows=getExpRows().filter(tx=>tx.amount<0);
+  const bycat={};
+  rows.forEach(tx=>{if(!bycat[tx.category])bycat[tx.category]={total:0,hst:0,net:0,count:0};bycat[tx.category].total+=Math.abs(tx.amount);bycat[tx.category].hst+=tx.hst;bycat[tx.category].net+=Math.abs(tx.net);bycat[tx.category].count++});
+  const hdr='CATEGORY,TRANSACTIONS,TOTAL CHARGED,HST PAID (ITC),NET (excl HST)\n';
+  const body=Object.entries(bycat).sort((a,b)=>b[1].total-a[1].total).map(([cat,v])=>`"${cat}",${v.count},${v.total.toFixed(2)},${v.hst.toFixed(2)},${v.net.toFixed(2)}`).join('\n');
+  const tot=Object.values(bycat).reduce((s,v)=>({count:s.count+v.count,total:s.total+v.total,hst:s.hst+v.hst,net:s.net+v.net}),{count:0,total:0,hst:0,net:0});
+  dlFile('hst-summary.csv',hdr+body+`\n"TOTAL",${tot.count},${tot.total.toFixed(2)},${tot.hst.toFixed(2)},${tot.net.toFixed(2)}`,'text/csv');
+  toast('HST summary downloaded');
+}
+function dlFile(name,content,type){const b=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click()}
+
+// ════════════════════════════════════════════════════════════
+// TAB 2 — INVOICE WIZARD
+// ════════════════════════════════════════════════════════════
+let invLines=[{desc:'',qty:1,rate:''}];
+let invNum='342266';
+
+(function initInv(){
+  const today=new Date();
+  const fmt=d=>d.toISOString().split('T')[0];
+  document.getElementById('invDate').value=fmt(today);
+  const due=new Date(today);due.setDate(due.getDate()+30);
+  document.getElementById('invDue').value=fmt(due);
+  renderLines();invUpdate();
+})();
+
+function regenInv(){invNum=String(342266+Math.floor(Math.random()*200));document.getElementById('invNumDisp').textContent=invNum;invUpdate()}
+function customInv(v){if(v){invNum=v;document.getElementById('invNumDisp').textContent=v;invUpdate()}}
+
+function renderLines(){
+  document.getElementById('lineItemsWrap').innerHTML=invLines.map((l,i)=>`
+    <div class="line-item-row">
+      <input type="text" placeholder="Service description" value="${esc(l.desc)}" oninput="invLines[${i}].desc=this.value;invUpdate()">
+      <input type="number" placeholder="Qty" value="${l.qty||''}" min="0" step="any" oninput="invLines[${i}].qty=parseFloat(this.value)||0;invUpdate()">
+      <input type="number" placeholder="Rate $" value="${l.rate||''}" min="0" step="0.01" oninput="invLines[${i}].rate=parseFloat(this.value)||0;invUpdate()">
+      <div class="li-tot" id="lit${i}">$0.00</div>
+      ${invLines.length>1?`<button class="btn-rm" onclick="rmLine(${i})">×</button>`:'<div></div>'}
+    </div>`).join('');
+}
+function addLine(){invLines.push({desc:'',qty:1,rate:''});renderLines();invUpdate()}
+function rmLine(i){invLines.splice(i,1);renderLines();invUpdate()}
+
+function invUpdate(){
+  const hst=document.getElementById('invHST').checked;
+  const client=document.getElementById('invClient').value.trim();
+  const addr=document.getElementById('invAddr').value.trim();
+  const email=document.getElementById('invEmail').value.trim();
+  const dateVal=document.getElementById('invDate').value;
+  const dueVal=document.getElementById('invDue').value;
+  const notes=document.getElementById('invNotes').value.trim();
+
+  let sub=0;
+  invLines.forEach((l,i)=>{
+    const amt=(parseFloat(l.qty)||0)*(parseFloat(l.rate)||0);
+    sub+=amt;
+    const el=document.getElementById(`lit${i}`);
+    if(el)el.textContent='$'+fmtMoney(amt);
+  });
+  const hstAmt=hst?Math.round(sub*0.13*100)/100:0;
+  const total=sub+hstAmt;
+
+  document.getElementById('invTotalsBox').innerHTML=`
+    <div class="tot-row"><span class="tot-lbl">Subtotal</span><span class="tot-val">$${fmtMoney(sub)}</span></div>
+    ${hst?`<div class="tot-row"><span class="tot-lbl">HST 13%</span><span class="tot-val">$${fmtMoney(hstAmt)}</span></div>`:`<div class="tot-row"><span class="tot-lbl" style="color:var(--red)">No HST</span><span class="tot-val">—</span></div>`}
+    <div class="tot-row final"><span>Total</span><span class="tot-val big">$${fmtMoney(total)}</span></div>`;
+
+  document.getElementById('prevNum').textContent='#'+invNum;
+  let billTo=client||'<em style="color:var(--ink3)">Client name</em>';
+  if(addr)billTo+='<br><span style="color:var(--ink3);font-size:.78rem">'+addr.replace(/\n/g,'<br>')+'</span>';
+  if(email)billTo+='<br><span style="color:var(--ink3);font-size:.78rem">'+email+'</span>';
+  document.getElementById('prevBillTo').innerHTML=billTo;
+  document.getElementById('prevDate').textContent=dateVal?fmtDate(dateVal):'—';
+  document.getElementById('prevDueDate').textContent=dueVal?fmtDate(dueVal):'—';
+  const db=document.getElementById('prevDueBadge');
+  if(dueVal){db.style.display='inline-block';db.textContent='DUE '+fmtDate(dueVal)}else{db.style.display='none'}
+
+  document.getElementById('prevLines').innerHTML=invLines.map(l=>{
+    const amt=(parseFloat(l.qty)||0)*(parseFloat(l.rate)||0);
+    return`<tr><td>${esc(l.desc)||'<em style="color:var(--ink3)">Description</em>'}</td><td class="mono">${l.qty||1}</td><td class="mono">$${fmtMoney(parseFloat(l.rate)||0)}</td><td class="mono" style="text-align:right">$${fmtMoney(amt)}</td></tr>`;
+  }).join('');
+
+  document.getElementById('prevFoot').innerHTML=`
+    <tr><td colspan="3" class="flbl" style="text-align:right">Subtotal</td><td class="mono" style="text-align:right">$${fmtMoney(sub)}</td></tr>
+    ${hst?`<tr><td colspan="3" class="flbl" style="text-align:right">HST (13%)</td><td class="mono" style="text-align:right">$${fmtMoney(hstAmt)}</td></tr>`:''}
+    <tr class="gtotal"><td colspan="3" style="color:var(--ink3);font-size:.74rem;font-family:var(--mono)">TOTAL DUE</td><td style="text-align:right;color:var(--green)">$${fmtMoney(total)}</td></tr>`;
+
+  document.getElementById('prevNotes').innerHTML=notes
+    ?`<div style="font-size:.77rem;color:var(--ink3);border-top:1px solid var(--paper2);padding-top:.7rem;margin-bottom:.7rem;line-height:1.6">${notes.replace(/\n/g,'<br>')}</div>`:'';
+}
+
+function invPrint(){
+  const win=window.open('','_blank');
+  const doc=document.getElementById('invDoc').outerHTML;
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Invoice #${invNum}</title>
+    <style>*{box-sizing:border-box;margin:0;padding:0}:root{--ink:#151a18;--ink2:#3d4a44;--ink3:#7a8a82;--paper2:#ede9e0;--green:#1a5c38;--greenlt:#e8f5ee;--rule:#ccc8bc;--mono:'IBM Plex Mono',monospace;--serif:'Lora',serif;--sans:'DM Sans',sans-serif}body{font-family:var(--sans);font-weight:300;padding:40px;background:white;color:var(--ink)}.inv-doc{max-width:700px;margin:0 auto}.inv-doc-header{display:flex;justify-content:space-between;margin-bottom:1.75rem;padding-bottom:1.1rem;border-bottom:2px solid var(--ink)}.inv-co-name{font-family:var(--serif);font-size:1.2rem;font-weight:600}.inv-co-detail{font-size:.72rem;color:var(--ink3);line-height:1.7;margin-top:.15rem}.inv-doc-title{font-family:var(--serif);font-size:1.55rem;font-weight:400;text-align:right}.inv-doc-num{font-family:var(--mono);font-size:.72rem;color:var(--green);text-align:right;margin-top:.15rem}.inv-meta{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.4rem}.inv-meta-blk label{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.2rem}.inv-meta-blk p{font-size:.82rem;line-height:1.55}.inv-tbl{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:1.1rem}.inv-tbl thead tr{border-bottom:1px solid var(--ink)}.inv-tbl th{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:.4rem .35rem .4rem 0;text-align:left;font-weight:400}.inv-tbl th:last-child,.inv-tbl td:last-child{text-align:right;padding-right:0}.inv-tbl tbody tr{border-bottom:1px solid #f0ede6}.inv-tbl td{padding:.52rem .35rem .52rem 0}.inv-tbl tfoot td{padding:.3rem .35rem;font-size:.77rem}.inv-tbl tfoot tr.gtotal td{border-top:2px solid var(--ink);padding-top:.52rem;font-family:var(--serif);font-size:.9rem;font-weight:600}.mono{font-family:var(--mono);font-size:.77rem}.flbl{color:var(--ink3);font-family:var(--mono);font-size:.65rem;letter-spacing:.06em}.inv-doc-footer{border-top:1px solid var(--rule);padding-top:.9rem;display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink3)}.inv-thanks{font-family:var(--serif);font-style:italic;color:var(--ink2);font-size:.82rem}.due-badge{display:inline-block;padding:.12rem .45rem;border-radius:3px;font-family:var(--mono);font-size:.6rem;background:var(--greenlt);color:var(--green);margin-top:.2rem}</style>
+  </head><body>${doc}</body></html>`);
+  win.document.close();setTimeout(()=>win.print(),600);
+}
+
+function invCopySheets(){
+  const hst=document.getElementById('invHST').checked;
+  const client=document.getElementById('invClient').value.trim();
+  const dateVal=document.getElementById('invDate').value;
+  const dueVal=document.getElementById('invDue').value;
+  const sub=invLines.reduce((s,l)=>s+(parseFloat(l.qty)||0)*(parseFloat(l.rate)||0),0);
+  const hstAmt=hst?Math.round(sub*0.13*100)/100:0;
+  const total=sub+hstAmt;
+  const desc=invLines.map(l=>l.desc).filter(Boolean).join('; ')||'Services';
+  const invRow=[invNum,fmtDate(dateVal),client,desc,fmtMoney(sub),fmtMoney(hstAmt),fmtMoney(total),hst?'Yes':'No',fmtDate(dueVal),'Unpaid','',''].join('\t');
+  const incRow=[fmtDate(dateVal),client,desc,invNum,fmtMoney(sub),'Consulting Revenue',fmtMoney(hstAmt),fmtMoney(total),'BMO e-Transfer',''].join('\t');
+  navigator.clipboard.writeText(`--- INVOICES TAB (paste at row 12) ---\n${invRow}\n\n--- INCOME TAB (paste at row 12) ---\n${incRow}`)
+    .then(()=>toast('Copied! Paste into Invoices tab first, then Income tab'));
+}
+function invClear(){document.getElementById('invClient').value='';document.getElementById('invAddr').value='';document.getElementById('invEmail').value='';document.getElementById('invNotes').value='';invLines=[{desc:'',qty:1,rate:''}];renderLines();invUpdate()}
+
+// ════════════════════════════════════════════════════════════
+// TAB 3 — RECEIPT SCANNER
+// ════════════════════════════════════════════════════════════
+let rcptB64='';let rcptMediaType='';let rcptResult={};
+
+function rcptDragOver(e){e.preventDefault();document.getElementById('rcptZone').classList.add('drag-over')}
+function rcptDragLeave(){document.getElementById('rcptZone').classList.remove('drag-over')}
+function rcptDrop(e){e.preventDefault();rcptDragLeave();const f=e.dataTransfer.files[0];if(f)rcptLoad(f)}
+function rcptChosen(e){const f=e.target.files[0];if(f)rcptLoad(f)}
+
+function rcptLoad(file){
+  rcptMediaType=file.type||'image/jpeg';
+  const isPDF=file.type==='application/pdf'||file.name.toLowerCase().endsWith('.pdf');
+  const reader=new FileReader();
+  reader.onload=e=>{
+    rcptB64=e.target.result.split(',')[1];
+    const prev=document.getElementById('rcptPreview');
+    if(isPDF){
+      // Show a PDF icon placeholder instead of image preview
+      prev.src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="90" viewBox="0 0 120 90"><rect width="120" height="90" fill="%23f5f2ec" rx="8"/><text x="50%25" y="42%25" text-anchor="middle" font-size="28" font-family="sans-serif">📄</text><text x="50%25" y="68%25" text-anchor="middle" font-size="12" font-family="sans-serif" fill="%231a5c38">PDF loaded</text></svg>';
+      rcptMediaType='application/pdf';
+    } else {
+      prev.src=e.target.result;
+    }
+    prev.classList.remove('hidden');
+    document.getElementById('rcptAnalyzeWrap').classList.remove('hidden');
+    document.getElementById('rcptZone').classList.add('loaded');
+    // Show filename
+    const fname=document.getElementById('rcptFname');
+    if(fname)fname.textContent=file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function rcptAnalyze(){
+  const btn=document.getElementById('rcptBtnTxt');
+  btn.textContent='Scanning…';
+  document.getElementById('rcptAnalyzeBtn').disabled=true;
+
+  const prompt=`You are a Canadian corporate bookkeeper. Analyze this receipt or invoice document and extract key information.
+
+Return ONLY a JSON object with these exact fields:
+{
+  "date": "YYYY-MM-DD or empty string",
+  "vendor": "merchant/store name",
+  "total": "total amount as number string e.g. 45.18",
+  "hst": "HST/GST amount if visible, else calculate as total/1.13*0.13 rounded to 2 decimal places",
+  "net": "total minus hst, rounded to 2 decimal places",
+  "category": "one of: Meals & Entertainment, Professional Fees, Wages & Salaries, Small Tools, Supplies, Uniforms, Dues & Memberships, Vehicle Repairs, Fuel, Insurance, Interest & Bank Charges, Repairs & Maintenance, Property Tax, Telephone, Utilities, Conferences, Equipment Purchase, Other",
+  "confidence": "High, Medium, or Low",
+  "notes": "brief description of what was purchased"
+}
+
+No other text, just the JSON.`;
+
+  try{
+    let raw;
+    if(rcptMediaType==='application/pdf'){
+      raw = await callClaudeWithPDF(prompt, rcptB64, 1000);
+    } else {
+      raw = await callClaudeWithImage(prompt, rcptB64, rcptMediaType);
+    }
+    const clean=raw.replace(/```json|```/g,'').trim();
+    rcptResult=JSON.parse(clean);
+    rcptShowResult();
+  } catch(e){
+    document.getElementById('rcptResultContent').innerHTML=`<div style="color:var(--red);font-size:.85rem;padding:1rem">Could not read receipt — try a clearer photo, better lighting, or a text-based PDF.</div>`;
+  }
+  btn.textContent='Scan receipt with AI →';
+  document.getElementById('rcptAnalyzeBtn').disabled=false;
+}
+
+function rcptShowResult(){
+  document.getElementById('rcptBadge').style.display='inline-block';
+  const r=rcptResult;
+  document.getElementById('rcptResultContent').innerHTML=`
+    <div class="result-grid">
+      <div class="result-box"><div class="result-lbl">Vendor</div><div class="result-val">${esc(r.vendor||'Unknown')}</div></div>
+      <div class="result-box"><div class="result-lbl">Date</div><div class="result-val">${r.date?fmtDate(r.date):'Not found'}</div></div>
+      <div class="result-box"><div class="result-lbl">Total charged</div><div class="result-val" style="color:var(--red)">$${fmtMoney(r.total||0)}</div></div>
+      <div class="result-box"><div class="result-lbl">HST paid</div><div class="result-val" style="color:var(--amber)">$${fmtMoney(r.hst||0)}</div></div>
+      <div class="result-box"><div class="result-lbl">Net (excl HST)</div><div class="result-val">$${fmtMoney(r.net||0)}</div></div>
+      <div class="result-box"><div class="result-lbl">Confidence</div><div class="result-val">${r.confidence==='High'?'🟢':r.confidence==='Medium'?'🟡':'🔴'} ${r.confidence||'—'}</div></div>
+    </div>
+    <div style="margin-top:1rem">
+      <label style="font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.4rem">Category</label>
+      <select class="field" style="width:auto;padding:.5rem .75rem;border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:.88rem" id="rcptCatSel" onchange="rcptResult.category=this.value">
+        ${EXP_CATS.map(c=>`<option value="${c}"${c===r.category?' selected':''}>${c}</option>`).join('')}
+      </select>
+    </div>
+    ${r.notes?`<div style="margin-top:.75rem;font-size:.82rem;color:var(--ink3);line-height:1.5">${esc(r.notes)}</div>`:''}`;
+  document.getElementById('rcptExportWrap').classList.remove('hidden');
+}
+
+function rcptCopySheets(){
+  const r=rcptResult;
+  const pay='AMEX';
+  const row=[r.date||'',esc(r.vendor||''),esc(r.notes||''),fmtMoney(r.total||0),r.category||'Other',fmtMoney(r.hst||0),fmtMoney(r.net||0),pay,'Yes',''].join('\t');
+  navigator.clipboard.writeText(row).then(()=>toast('Row copied — click B12 in Expenses tab then Ctrl+V'));
+}
+function rcptClear(){
+  rcptB64='';rcptMediaType='';rcptResult={};
+  document.getElementById('rcptPreview').classList.add('hidden');
+  document.getElementById('rcptPreview').src='';
+  document.getElementById('rcptAnalyzeWrap').classList.add('hidden');
+  document.getElementById('rcptZone').classList.remove('loaded');
+  document.getElementById('rcptBadge').style.display='none';
+  document.getElementById('rcptExportWrap').classList.add('hidden');
+  document.getElementById('rcptResultContent').innerHTML=`<div style="text-align:center;padding:2rem;color:var(--ink3)"><div style="font-size:2rem;margin-bottom:.5rem">🧾</div><div style="font-size:.85rem">Upload a receipt to get started</div></div>`;
+  document.getElementById('rcptInput').value='';
+  const fn=document.getElementById('rcptFname');if(fn)fn.textContent='';
+}
+
+// ════════════════════════════════════════════════════════════
+// TAB 4 — CRA TAX FILING
+// ════════════════════════════════════════════════════════════
+function craShowPanel(p){
+  document.querySelectorAll('.cra-sub-tab').forEach((el,i)=>el.classList.toggle('active',['hst','t2','payroll','t4','tips'][i]===p));
+  document.querySelectorAll('.cra-panel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('cra-panel-'+p).classList.add('active');
+}
+
+function craSetPeriod(q,el){
+  document.querySelectorAll('.period-card').forEach(c=>{
+    c.style.border='1px solid var(--rule)';c.style.background='';
+  });
+  el.style.border='2px solid var(--green)';el.style.background='var(--greenlt)';
+  const labels={Q1:'Apr 1 – Jun 30, 2025',Q2:'Jul 1 – Sep 30, 2025',Q3:'Oct 1 – Dec 31, 2025',Q4:'Jan 1 – Mar 31, 2026'};
+  document.getElementById('hstPeriodLabel').textContent=labels[q]||'';
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('hst_filingdate').value=today;
+}
+
+// HST auto-fill from importer
+function craAutoFillHST(){
+  if(!impTxns||!impTxns.length){toast('Run the Statement Importer first, then come back here to auto-fill');return}
+  const active=impTxns.filter(tx=>!tx.excluded&&tx.category!=='SKIP — not a business expense');
+  const totalRevIncHST=active.filter(tx=>tx.amount>0).reduce((s,tx)=>s+tx.amount,0);
+  const totalHSTCollected=Math.round(totalRevIncHST/1.13*0.13*100)/100;
+  const totalITC=active.filter(tx=>tx.amount<0).reduce((s,tx)=>s+tx.hst,0);
+  setBoxVal('hst_101',totalRevIncHST.toFixed(2),true);
+  setBoxVal('hst_103',totalHSTCollected.toFixed(2),true);
+  setBoxVal('hst_106',totalITC.toFixed(2),true);
+  craCalcHST();
+  toast('HST form auto-filled from imported transactions!');
+}
+
+function setBoxVal(id,val,markAuto=false){
+  const el=document.getElementById(id);if(!el)return;
+  el.value=val;
+  if(markAuto)el.classList.add('auto');
+}
+
+function getBoxNum(id){return parseFloat(document.getElementById(id)?.value?.replace(/,/g,'')||'0')||0}
+
+function craCalcHST(){
+  const l101=getBoxNum('hst_101');
+  // Auto-calc 103 if not manually set
+  const l103El=document.getElementById('hst_103');
+  if(l103El&&!l103El.dataset.manual){
+    const calc=(Math.round(l101/1.13*0.13*100)/100);
+    l103El.value=calc.toFixed(2);
+  }
+  const l103=getBoxNum('hst_103');
+  const l104=getBoxNum('hst_104');
+  const l105=l103+l104;
+  setBoxVal('hst_105',l105.toFixed(2));
+
+  const l106=getBoxNum('hst_106');
+  const l107=getBoxNum('hst_107');
+  const l108=l106+l107;
+  setBoxVal('hst_108',l108.toFixed(2));
+
+  const l109=l105-l108;
+  setBoxVal('hst_109',l109.toFixed(2));
+
+  const l110=getBoxNum('hst_110');
+  const l111=getBoxNum('hst_111');
+  const net=l109-l110-l111;
+
+  if(net>0){
+    setBoxVal('hst_112',net.toFixed(2));
+    setBoxVal('hst_114','0.00');
+    document.getElementById('hstResultType').textContent='Amount Owing to CRA';
+    document.getElementById('hstResultAmt').textContent='$'+fmtMoney(net);
+    document.getElementById('hstResultAmt').style.color='#ff6b6b';
+  } else {
+    setBoxVal('hst_112','0.00');
+    setBoxVal('hst_114',Math.abs(net).toFixed(2));
+    document.getElementById('hstResultType').textContent='Refund from CRA';
+    document.getElementById('hstResultAmt').textContent='$'+fmtMoney(Math.abs(net));
+    document.getElementById('hstResultAmt').style.color='#4caf7d';
+  }
+}
+
+// Mark Line 103 as manually edited so auto-calc doesn't overwrite
+document.addEventListener('DOMContentLoaded',()=>{
+  const l103=document.getElementById('hst_103');
+  if(l103)l103.addEventListener('input',()=>{l103.dataset.manual='1'});
+  // Set default filing date
+  const fd=document.getElementById('hst_filingdate');
+  if(fd)fd.value=new Date().toISOString().split('T')[0];
+  // Init employee roster (drives payroll + T4)
+  renderEmpRoster();
+});
+
+function craResetHST(){
+  ['hst_101','hst_103','hst_104','hst_106','hst_107','hst_110','hst_111'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.value='';el.classList.remove('auto');delete el.dataset.manual}
+  });
+  ['hst_105','hst_108','hst_109','hst_112','hst_114'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  document.getElementById('hstResultAmt').textContent='$0.00';
+  toast('HST form cleared');
+}
+
+function craCopyHSTSummary(){
+  const lines=[
+    `CRA HST Return Summary — ${document.getElementById('hstPeriodLabel').textContent}`,
+    `Business: Postma Contracting Inc. | HST# RT 0001`,
+    ``,
+    `Line 101 — Total Sales:          $${document.getElementById('hst_101').value||'0.00'}`,
+    `Line 103 — HST Collected:        $${document.getElementById('hst_103').value||'0.00'}`,
+    `Line 105 — Total HST+Adj:        $${document.getElementById('hst_105').value||'0.00'}`,
+    `Line 106 — ITCs (HST on expenses): $${document.getElementById('hst_106').value||'0.00'}`,
+    `Line 108 — Total ITCs:           $${document.getElementById('hst_108').value||'0.00'}`,
+    `Line 109 — Net Tax:              $${document.getElementById('hst_109').value||'0.00'}`,
+    `Line 112 — Amount Owing:         $${document.getElementById('hst_112').value||'0.00'}`,
+    `Line 114 — Refund:               $${document.getElementById('hst_114').value||'0.00'}`,
+  ].join('\n');
+  navigator.clipboard.writeText(lines).then(()=>toast('HST summary copied — paste into CRA My Business Account notes or email'));
+}
+
+// T2 calculations
+function craAutoFillT2(){toast('Connect your Google Sheet to auto-fill — or enter year-end totals from the Sheet manually')}
+
+function craCalcT2(){
+  const rev=[t2_8000,t2_8090,t2_8230].map(id=>getBoxNum(id)).reduce((a,b)=>a+b,0);
+  setBoxVal('t2_totalrev',rev.toFixed(2));
+  document.getElementById('t2_totalrev').classList.add('calc');
+
+  const meals=getBoxNum('t2_8960');
+  const mealsDed=(meals*0.5);
+  const t2_8960_ded=document.getElementById('t2_8960_ded');
+  if(t2_8960_ded)t2_8960_ded.value=mealsDed.toFixed(2);
+
+  const expIds=['t2_9060','t2_8810','t2_9281','t2_8520','t2_9270','t2_8690','t2_9220','t2_9040','t2_8760','t2_9180','t2_8710','t2_9936','t2_8200','t2_other'];
+  let totalExp=expIds.map(id=>getBoxNum(id)).reduce((a,b)=>a+b,0);
+  // Replace meals full amount with 50% deductible
+  totalExp=totalExp-meals+mealsDed;
+  setBoxVal('t2_totalexp',totalExp.toFixed(2));
+  document.getElementById('t2_totalexp').classList.add('calc');
+
+  const netIncome=rev-totalExp;
+  setBoxVal('t2_netincome',netIncome.toFixed(2));
+  document.getElementById('t2_netincome').classList.add('calc');
+
+  // Tax calcs
+  const activeIncome=Math.max(0,netIncome);
+  const sbdLimit=Math.min(activeIncome,500000);
+  const fedTax=sbdLimit*0.09+(Math.max(0,activeIncome-500000)*0.15);
+  const onTax=sbdLimit*0.032+(Math.max(0,activeIncome-500000)*0.115);
+  const totalTax=fedTax+onTax;
+
+  setBoxVal('t2_fedtax',fedTax.toFixed(2));
+  setBoxVal('t2_ontax',onTax.toFixed(2));
+  setBoxVal('t2_totaltax',totalTax.toFixed(2));
+  document.getElementById('t2ResultAmt').textContent='$'+fmtMoney(totalTax);
+
+  ['t2_fedtax','t2_ontax','t2_totaltax','t2_netincome'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.add('calc');
+  });
+}
+
+function t2_8000(){return getBoxNum('t2_8000')}
+function t2_8090(){return getBoxNum('t2_8090')}
+function t2_8230(){return getBoxNum('t2_8230')}
+
+function craCalcCCA(){
+  const cl8=getBoxNum('cca_cl8');
+  const cl10=getBoxNum('cca_cl10');
+  const cl50=getBoxNum('cca_cl50');
+  const cl8cca=cl8*0.20*0.5; // half-year
+  const cl10cca=cl10*0.30*0.5;
+  const cl50cca=cl50*0.55*0.5;
+  const halfTotal=cl8cca+cl10cca+cl50cca;
+  const total=halfTotal;
+  setBoxVal('cca_halfyear',halfTotal.toFixed(2));
+  setBoxVal('cca_total',total.toFixed(2));
+  document.getElementById('cca_total').classList.add('calc');
+}
+
+function craCopyT2Summary(){
+  const net=document.getElementById('t2_netincome').value||'0.00';
+  const tax=document.getElementById('t2_totaltax').value||'0.00';
+  const txt=`Postma Contracting Inc. — T2 Corporate Tax Estimate\nFiscal Year: April 1, 2025 – March 31, 2026\nNet Income: $${net}\nEst. Corporate Tax: $${tax} (12.2% combined rate)\nBalance due: June 30, 2026 | T2 filing due: Sept 30, 2026`;
+  navigator.clipboard.writeText(txt).then(()=>toast('T2 summary copied'));
+}
+
+// ── EMPLOYEE ROSTER (single source of truth for Payroll + T4) ──
+let employees = [
+  {name:'Avienda Postma', role:'Operations', payType:'Salary', gross:''},
+  {name:'Akiya Postma',   role:'Assistant',  payType:'Salary', gross:''},
+  {name:'Ezra Postma',    role:'Labourer',   payType:'Hourly', gross:''},
+];
+
+const PAY_TYPES = ['Salary','Hourly','Contract'];
+
+function empAddRow(){
+  employees.push({name:'', role:'', payType:'Salary', gross:''});
+  renderEmpRoster();
+}
+
+function empRemoveRow(i){
+  if(employees.length<=1){toast('Keep at least one employee row');return;}
+  employees.splice(i,1);
+  renderEmpRoster();
+}
+
+function renderEmpRoster(){
+  const wrap = document.getElementById('empRosterRows');
+  if(!wrap) return;
+  wrap.innerHTML = employees.map((emp,i) => `
+    <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 80px;gap:.6rem;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--paper2)">
+      <input type="text" value="${esc(emp.name)}" placeholder="Full name"
+        style="padding:.38rem .65rem;border:1px solid var(--rule);border-radius:var(--radius);font-size:.84rem;margin:0;width:100%"
+        oninput="employees[${i}].name=this.value;syncPayrollAndT4()">
+      <input type="text" value="${esc(emp.role)}" placeholder="e.g. Labourer"
+        style="padding:.38rem .65rem;border:1px solid var(--rule);border-radius:var(--radius);font-size:.84rem;margin:0;width:100%"
+        oninput="employees[${i}].role=this.value">
+      <select style="padding:.38rem .55rem;border:1px solid var(--rule);border-radius:var(--radius);font-size:.82rem;margin:0;width:100%"
+        onchange="employees[${i}].payType=this.value">
+        ${PAY_TYPES.map(t=>`<option value="${t}"${t===emp.payType?' selected':''}>${t}</option>`).join('')}
+      </select>
+      <input type="text" value="${emp.gross}" placeholder="0.00"
+        style="padding:.38rem .65rem;border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--mono);font-size:.84rem;text-align:right;margin:0;width:100%"
+        oninput="employees[${i}].gross=this.value;syncPayrollAndT4()">
+      <div style="text-align:center">
+        <button onclick="empRemoveRow(${i})"
+          style="background:none;border:1px solid var(--rule);border-radius:var(--radius);padding:.3rem .55rem;cursor:pointer;font-size:.8rem;color:var(--ink3);transition:all .15s"
+          onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'"
+          onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--ink3)'">✕</button>
+      </div>
+    </div>`).join('');
+  syncPayrollAndT4();
+}
+
+function syncPayrollAndT4(){
+  renderPayrollRows();
+  renderT4Slips();
+}
+
+// Kept for backward compat
+function craInitPayroll(){ renderEmpRoster(); }
+function craAddPayrollRow(){ empAddRow(); }
+
+function renderPayrollRows(){
+  const wrap=document.getElementById('payrollRows');if(!wrap)return;
+  wrap.innerHTML=employees.map((emp,i)=>{
+    const g=parseFloat(emp.gross)||0;
+    const cpp=g>0?Math.max(0,g-3500/26)*0.0595:0;
+    const ei=g>0?g*0.0166:0;
+    const tax=g>0?g*0.20:0;
+    return `<div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:.5rem;align-items:center;padding:.28rem 0">
+      <span style="font-size:.83rem;font-weight:500">${esc(emp.name||'—')} <small style="color:var(--ink3);font-weight:300">${esc(emp.role)}</small></span>
+      <span style="font-family:var(--mono);font-size:.82rem;text-align:right">${g>0?'$'+fmtMoney(g):'—'}</span>
+      <span id="pr_cpp_${i}" style="font-family:var(--mono);font-size:.78rem;color:var(--ink2);text-align:right">${g>0?'$'+cpp.toFixed(2):'—'}</span>
+      <span id="pr_ei_${i}" style="font-family:var(--mono);font-size:.78rem;color:var(--ink2);text-align:right">${g>0?'$'+ei.toFixed(2):'—'}</span>
+      <span id="pr_tax_${i}" style="font-family:var(--mono);font-size:.78rem;color:var(--ink2);text-align:right">${g>0?'~$'+tax.toFixed(2):'—'}</span>
+    </div>`;
+  }).join('');
+  craCalcPayroll();
+}
+
+function craCalcPayroll(){
+  let totalGross=0,totalCPP=0,totalEI=0,totalTax=0;
+  employees.forEach(emp=>{
+    const g=parseFloat(emp.gross)||0;
+    totalGross+=g;
+    totalCPP+=Math.max(0,g-3500/26)*0.0595;
+    totalEI+=g*0.0166;
+    totalTax+=g*0.20;
+  });
+  setBoxVal('pd7a_14',totalGross.toFixed(2));
+  setBoxVal('pd7a_16',(totalCPP*2).toFixed(2));
+  setBoxVal('pd7a_18',(totalEI*2.4).toFixed(2));
+  setBoxVal('pd7a_22',totalTax.toFixed(2));
+  const total=(totalCPP*2)+(totalEI*2.4)+totalTax;
+  setBoxVal('pd7a_total',total.toFixed(2));
+  const el=document.getElementById('pd7aResultAmt');if(el)el.textContent='$'+fmtMoney(total);
+}
+// T4 slips — driven by shared employees array
+let t4Slips=[]; // legacy alias, unused
+
+function craInitT4(){
+  // T4 slips now sync from employees array — just render
+  renderT4Slips();
+}
+
+function craAddT4Slip(){
+  empAddRow(); // adding a T4 slip = adding an employee
+}
+
+function renderT4Slips(){
+  const cont=document.getElementById('t4SlipsContainer');if(!cont)return;
+  cont.innerHTML=employees.map((emp,i)=>{
+    const gross=parseFloat(emp.gross)||0;
+    const cpp=gross>0?Math.max(0,(gross-3500)*0.0595):0;
+    const ei=gross>0?gross*0.0166:0;
+    return `
+    <div class="cra-form" style="margin-bottom:1rem">
+      <div class="cra-form-header" style="padding:.75rem 1.25rem;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="cra-form-title" style="font-size:.88rem">T4 Slip — ${esc(emp.name||'Employee '+(i+1))} <span style="font-weight:300;font-size:.78rem;opacity:.7">${esc(emp.role)}</span></div>
+          <div class="cra-form-ref">Statement of Remuneration Paid · Calendar Year 2025</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <span class="cra-form-tag">T4</span>
+          <button onclick="empRemoveRow(${i})"
+            style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:var(--radius);padding:.28rem .55rem;cursor:pointer;font-size:.75rem;color:white"
+            title="Remove employee">✕</button>
+        </div>
+      </div>
+      <div class="box-grid">
+        <div class="cra-box">
+          <div class="box-code">BOX 12 — SIN</div>
+          <div class="box-name">Social Insurance Number</div>
+          <input class="box-input" id="t4_sin_${i}" placeholder="000-000-000">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 10 — PROVINCE</div>
+          <div class="box-name">Province of employment</div>
+          <input class="box-input" value="Ontario" readonly style="background:var(--paper2)">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 14 — EMPLOYMENT INCOME</div>
+          <div class="box-name">Total gross wages (annual)</div>
+          <input class="box-input auto" id="t4_14_${i}" value="${gross>0?gross.toFixed(2):''}" placeholder="0.00"
+            oninput="employees[${i}].gross=this.value;syncPayrollAndT4()">
+          <div class="box-note">Edit the Employee Roster to update this.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 16 — EMPLOYEE CPP</div>
+          <div class="box-name">Employee CPP contributions (5.95%)</div>
+          <input class="box-input auto" id="t4_cpp_${i}" value="${gross>0?cpp.toFixed(2):''}" placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 17 — EMPLOYER CPP</div>
+          <div class="box-name">Employer CPP match (equals Box 16)</div>
+          <input class="box-input calc" value="${gross>0?cpp.toFixed(2):''}" placeholder="0.00" readonly>
+          <div class="box-note">Employer matches employee CPP 1:1.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 18 — EMPLOYEE EI</div>
+          <div class="box-name">Employee EI premiums (1.66%)</div>
+          <input class="box-input auto" id="t4_ei_${i}" value="${gross>0?ei.toFixed(2):''}" placeholder="0.00">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 22 — INCOME TAX DEDUCTED</div>
+          <div class="box-name">Federal + provincial income tax withheld</div>
+          <input class="box-input auto" id="t4_tax_${i}" placeholder="Use CRA PDOC">
+          <div class="box-note">Use pdoc.cra-arc.gc.ca for exact amount.</div>
+        </div>
+        <div class="cra-box">
+          <div class="box-code">BOX 24 — EI INSURABLE EARNINGS</div>
+          <div class="box-name">Insurable earnings (usually = Box 14)</div>
+          <input class="box-input" value="${gross>0?gross.toFixed(2):''}" placeholder="Same as Box 14">
+        </div>
+        <div class="cra-box">
+          <div class="box-code">PAY TYPE</div>
+          <div class="box-name">Employment type</div>
+          <input class="box-input" value="${esc(emp.payType)}" readonly style="background:var(--paper2)">
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  t4SumTotal();
+}
+
+function t4CalcSlip(i){ renderT4Slips(); } // legacy shim
+
+function t4SumTotal(){
+  const totGross=employees.reduce((s,e)=>s+(parseFloat(e.gross)||0),0);
+  const totCPP=employees.reduce((s,e)=>{const g=parseFloat(e.gross)||0;return s+(g>0?Math.max(0,(g-3500)*0.0595):0);},0);
+  const totEI=employees.reduce((s,e)=>{const g=parseFloat(e.gross)||0;return s+(g>0?g*0.0166:0);},0);
+  // income tax from manual T4 inputs
+  let totTax=0;
+  employees.forEach((_,i)=>{const el=document.getElementById(`t4_tax_${i}`);if(el)totTax+=parseFloat(el.value)||0;});
+  setBoxVal('t4sum_76',totGross.toFixed(2));
+  setBoxVal('t4sum_78',totCPP.toFixed(2));
+  setBoxVal('t4sum_80',totEI.toFixed(2));
+  setBoxVal('t4sum_82',totTax.toFixed(2));
+}
+// Set today's date on HST filing date input once DOM is ready
+window.addEventListener('load',()=>{
+  const fd=document.getElementById('hst_filingdate');
+  if(fd&&!fd.value)fd.value=new Date().toISOString().split('T')[0];
+  renderEmpRoster();
+});
+
+// ════════════════════════════════════════════════════════════
+// HOME — WHAT HAPPENED TODAY
+// ════════════════════════════════════════════════════════════
+function homeShow(key){
+  document.getElementById('home-tiles').style.display='none';
+  document.querySelectorAll('.home-guide').forEach(el=>el.classList.add('hidden'));
+  const g=document.getElementById('guide-'+key);
+  if(g) g.classList.remove('hidden');
+}
+function homeClose(){
+  document.getElementById('home-tiles').style.display='grid';
+  document.querySelectorAll('.home-guide').forEach(el=>el.classList.add('hidden'));
+}
+function pathSwitch(guide, variant){
+  // update button styles
+  const btns=document.querySelectorAll('#guide-'+guide+' .path-btn');
+  btns.forEach(b=>b.classList.remove('path-active'));
+  event.target.classList.add('path-active');
+  // hide all step blocks for this guide, show the right one
+  const prefix='steps-'+guide+'-';
+  document.querySelectorAll('[id^="'+prefix+'"]').forEach(el=>el.classList.add('hidden'));
+  const target=document.getElementById('steps-'+guide+'-'+variant);
+  if(target) target.classList.remove('hidden');
+}
+
+</script>
+</body>
+</html>
