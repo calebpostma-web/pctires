@@ -815,9 +815,10 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
         <div class="field" style="margin-top:1.1rem"><label>Notes (optional)</label><textarea id="invNotes" placeholder="Payment due within 30 days. E-transfer to calebpostma [at] gmail.com" oninput="invUpdate()"></textarea></div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="invPrint()">⬇ Download PDF</button>
-          <button class="btn btn-green" onclick="invCopySheets()">→ Copy for Google Sheets</button>
+          <button class="btn btn-green" id="invSheetsBtn" onclick="invSendToSheets()">📊 Send to Google Sheets</button>
           <button class="btn btn-outline" onclick="invClear()">Clear</button>
         </div>
+        <div id="invSheetsStatus" style="font-size:.82rem;color:var(--ink3);margin-top:.5rem"></div>
       </div>
     </div>
 
@@ -843,7 +844,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       </div>
       <div class="btn-row" style="margin-top:.75rem">
         <button class="btn btn-primary btn-sm" onclick="invPrint()">⬇ Save as PDF</button>
-        <button class="btn btn-outline btn-sm" onclick="invCopySheets()">Copy rows for Sheets</button>
+        <button class="btn btn-green btn-sm" onclick="invSendToSheets()">📊 Send to Sheets</button>
       </div>
     </div>
   </div>
@@ -2220,20 +2221,32 @@ async function sendToSheets(){
     }))
   };
 
+  // Duplicate detection — warn if this exact set of transactions was already sent
+  const dupKey = rows.map(r=>r.date+'|'+Math.abs(r.amount).toFixed(2)).sort().join(',');
+  if(!window._sentKeys) window._sentKeys = new Set();
+  if(window._sentKeys.has(dupKey)){
+    if(!confirm('⚠️ These transactions look like they were already sent to Google Sheets this session. Send again anyway?\n\nClick Cancel to go back and check your sheet first.')){
+      btn.disabled = false;
+      btn.textContent = '📊 Send to Google Sheets';
+      status.textContent = '';
+      return;
+    }
+  }
+
   try {
     const r = await fetch(SHEETS_URL, {
       method: 'POST',
-      headers: {'Content-Type': 'text/plain'}, // Apps Script requires text/plain for CORS
+      headers: {'Content-Type': 'text/plain'},
       body: JSON.stringify(payload)
     });
     const d = await r.json();
 
     if(d.ok){
-      // Show success screen
-      document.getElementById('imp-step2').classList.add('hidden');
-      document.getElementById('imp-step3').classList.remove('hidden');
-      document.getElementById('successDetail').textContent =
-        `${d.expenses || 0} expenses and ${d.income || 0} income rows added. ${d.skipped || 0} transfers skipped.`;
+      window._sentKeys.add(dupKey);
+      btn.disabled = false;
+      btn.textContent = '✓ Sent to Sheets';
+      btn.style.background = 'var(--green)';
+      status.innerHTML = `✅ Done — <strong>${d.expenses||0} expenses</strong> and <strong>${d.income||0} income</strong> rows added to your Google Sheet. ${d.skipped||0} transfers skipped. <button onclick="impReset()" style="margin-left:.75rem;background:var(--ink);color:white;border:none;border-radius:4px;padding:.3rem .75rem;cursor:pointer;font-size:.78rem">Import another statement →</button>`;
     } else {
       status.textContent = '❌ Error: ' + (d.error || 'Unknown error');
       btn.disabled = false;
@@ -2365,19 +2378,61 @@ function invPrint(){
   win.document.close();setTimeout(()=>win.print(),600);
 }
 
-function invCopySheets(){
-  const hst=document.getElementById('invHST').checked;
-  const client=document.getElementById('invClient').value.trim();
-  const dateVal=document.getElementById('invDate').value;
-  const dueVal=document.getElementById('invDue').value;
-  const sub=invLines.reduce((s,l)=>s+(parseFloat(l.qty)||0)*(parseFloat(l.rate)||0),0);
-  const hstAmt=hst?Math.round(sub*0.13*100)/100:0;
-  const total=sub+hstAmt;
-  const desc=invLines.map(l=>l.desc).filter(Boolean).join('; ')||'Services';
-  const invRow=[invNum,fmtDate(dateVal),client,desc,fmtMoney(sub),fmtMoney(hstAmt),fmtMoney(total),hst?'Yes':'No',fmtDate(dueVal),'Unpaid','',''].join('\t');
-  const incRow=[fmtDate(dateVal),client,desc,invNum,fmtMoney(sub),'Consulting Revenue',fmtMoney(hstAmt),fmtMoney(total),'BMO e-Transfer',''].join('\t');
-  navigator.clipboard.writeText(`--- INVOICES TAB (paste at row 12) ---\n${invRow}\n\n--- INCOME TAB (paste at row 12) ---\n${incRow}`)
-    .then(()=>toast('Copied! Paste into Invoices tab first, then Income tab'));
+async function invSendToSheets(){
+  const btn = document.getElementById('invSheetsBtn');
+  const status = document.getElementById('invSheetsStatus');
+  const hst = document.getElementById('invHST').checked;
+  const client = document.getElementById('invClient').value.trim();
+  const dateVal = document.getElementById('invDate').value;
+  const dueVal = document.getElementById('invDue').value;
+
+  if(!client){ toast('Please enter a client name first'); return; }
+
+  const sub = invLines.reduce((s,l)=>s+(parseFloat(l.qty)||0)*(parseFloat(l.rate)||0),0);
+  const hstAmt = hst ? Math.round(sub*0.13*100)/100 : 0;
+  const total = sub + hstAmt;
+  const desc = invLines.map(l=>l.desc).filter(Boolean).join('; ') || 'Services';
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Sending…';
+  status.textContent = 'Sending to Google Sheets…';
+
+  const payload = {
+    type: 'invoice',
+    invoice: {
+      invNum, dateVal, dueVal, client,
+      desc, sub, hstAmt, total,
+      hst: hst ? 'Yes' : 'No',
+      lines: invLines.map(l=>({
+        desc: l.desc,
+        qty: parseFloat(l.qty)||0,
+        rate: parseFloat(l.rate)||0,
+        amt: (parseFloat(l.qty)||0)*(parseFloat(l.rate)||0)
+      }))
+    }
+  };
+
+  try {
+    const r = await fetch(SHEETS_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify(payload)
+    });
+    const d = await r.json();
+    if(d.ok){
+      btn.textContent = '✓ Sent!';
+      btn.style.background = 'var(--green)';
+      status.innerHTML = `✅ Invoice #${invNum} added to <strong>Invoices</strong> and <strong>Income</strong> tabs. <a href="https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw" target="_blank" style="color:var(--green)">Open Sheet ↗</a>`;
+    } else {
+      status.textContent = '❌ ' + (d.error || 'Unknown error');
+      btn.disabled = false;
+      btn.textContent = '📊 Send to Google Sheets';
+    }
+  } catch(err){
+    status.textContent = '❌ Connection error: ' + err.message;
+    btn.disabled = false;
+    btn.textContent = '📊 Send to Google Sheets';
+  }
 }
 function invClear(){document.getElementById('invClient').value='';document.getElementById('invAddr').value='';document.getElementById('invEmail').value='';document.getElementById('invNotes').value='';invLines=[{desc:'',qty:1,rate:''}];renderLines();invUpdate()}
 
