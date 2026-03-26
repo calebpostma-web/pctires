@@ -497,6 +497,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
   <button class="tab" onclick="showTab('invoice')"><span class="tab-icon">🧾</span>Invoice Wizard</button>
   <button class="tab" onclick="showTab('receipt')"><span class="tab-icon">📷</span>Receipt Scanner</button>
   <button class="tab" onclick="showTab('taxfiling')"><span class="tab-icon">🗂</span>CRA Tax Filing</button>
+  <button class="tab" onclick="showTab('taxai')"><span class="tab-icon">🧠</span>Tax Intelligence</button>
 </div>
 
 <!-- ════════════════════════════════════════════════════════════
@@ -786,7 +787,18 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
     <!-- Left: Form -->
     <div>
       <div class="card">
-        <div class="card-title">Invoice details</div>
+        <div class="card-title">Billing from</div>
+        <div style="display:flex;gap:.5rem;margin-bottom:1.25rem">
+          <button class="co-btn bank-tab active" data-co="postma" onclick="setInvCompany('postma')" style="display:flex;align-items:center;gap:.4rem">
+            <span style="width:10px;height:10px;border-radius:50%;background:#1a5c38;display:inline-block"></span>
+            Postma Contracting Inc.
+          </button>
+          <button class="co-btn bank-tab" data-co="pctires" onclick="setInvCompany('pctires')" style="display:flex;align-items:center;gap:.4rem">
+            <span style="width:10px;height:10px;border-radius:50%;background:#0d3b66;display:inline-block"></span>
+            PC Tires
+          </button>
+        </div>
+        <div class="card-title" style="margin-top:0">Invoice details</div>
         <div style="margin-bottom:1.1rem">
           <label style="font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.4rem">Invoice number</label>
           <div class="inv-num-row">
@@ -827,7 +839,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       <div style="font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;margin-bottom:.75rem">Live preview</div>
       <div class="inv-doc" id="invDoc">
         <div class="inv-doc-header">
-          <div><div class="inv-co-name">Postma Contracting Inc.</div><div class="inv-co-detail">Chatham, Ontario<br>caleb&#112;ostma&#64;gmail&#46;com<br>HST# RT 0001</div></div>
+          <div><div class="inv-co-name" id="prevCoName">Postma Contracting Inc.</div><div class="inv-co-detail" id="prevCoDetail">Chatham, Ontario<br>caleb&#112;ostma&#64;gmail&#46;com<br>HST# RT 0001</div></div>
           <div><div class="inv-doc-title">Invoice</div><div class="inv-doc-num" id="prevNum">#342266</div></div>
         </div>
         <div class="inv-meta">
@@ -840,7 +852,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
           <tfoot id="prevFoot"></tfoot>
         </table>
         <div id="prevNotes"></div>
-        <div class="inv-doc-footer"><div><div style="font-family:var(--mono);font-size:.68rem">HST Registration: RT 0001</div><div style="font-size:.7rem;margin-top:.15rem">Postma Contracting Inc. · Chatham, ON</div></div><div class="inv-thanks">Thank you for your business.</div></div>
+        <div class="inv-doc-footer"><div><div style="font-family:var(--mono);font-size:.68rem" id="prevFooterHST">HST Registration: RT 0001</div><div style="font-size:.7rem;margin-top:.15rem" id="prevFooterName">Postma Contracting Inc. · Chatham, ON</div></div><div class="inv-thanks">Thank you for your business.</div></div>
       </div>
       <div class="btn-row" style="margin-top:.75rem">
         <button class="btn btn-primary btn-sm" onclick="invPrint()">⬇ Save as PDF</button>
@@ -1585,6 +1597,115 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 </div><!-- /page taxfiling -->
 </div><!-- /panel-taxfiling -->
 
+
+<!-- ════════════════════════════════════════════════════════════
+     TAX INTELLIGENCE PANEL
+═════════════════════════════════════════════════════════════ -->
+<div class="panel" id="panel-taxai">
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Tax Intelligence</h1>
+    <p class="page-sub">Real-time tax position, year-end strategy, and AI advisor — specific to Postma Contracting Inc.</p>
+  </div>
+
+  <!-- LIVE TAX POSITION -->
+  <div class="card" id="taxPosCard">
+    <div class="card-title">📊 Live Tax Position
+      <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="taxRefresh()">↻ Refresh from Sheet</button>
+    </div>
+    <div id="taxPosContent">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.25rem" id="taxKpiGrid">
+        <div class="stat-box"><div class="stat-lbl">GROSS REVENUE</div><div class="stat-val" id="kpi-rev">—</div></div>
+        <div class="stat-box"><div class="stat-lbl">TOTAL EXPENSES</div><div class="stat-val r" id="kpi-exp">—</div></div>
+        <div class="stat-box"><div class="stat-lbl">NET INCOME</div><div class="stat-val" id="kpi-net">—</div></div>
+        <div class="stat-box" style="background:var(--amberlt)"><div class="stat-lbl">EST. CORP TAX</div><div class="stat-val a" id="kpi-tax">—</div></div>
+      </div>
+      <div style="background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);padding:1rem;margin-bottom:1rem">
+        <div style="font-family:var(--mono);font-size:.65rem;color:var(--ink3);letter-spacing:.08em;margin-bottom:.5rem">ENTER YOUR YEAR-TO-DATE TOTALS FROM GOOGLE SHEET</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem">
+          <div class="field" style="margin:0">
+            <label>Total Revenue (excl HST)</label>
+            <input type="text" id="ti-revenue" placeholder="e.g. 85000" oninput="taxCalc()" style="margin:0">
+          </div>
+          <div class="field" style="margin:0">
+            <label>Total Expenses (excl HST)</label>
+            <input type="text" id="ti-expenses" placeholder="e.g. 45000" oninput="taxCalc()" style="margin:0">
+          </div>
+          <div class="field" style="margin:0">
+            <label>Total Wages Paid (all employees)</label>
+            <input type="text" id="ti-wages" placeholder="e.g. 20000" oninput="taxCalc()" style="margin:0">
+          </div>
+        </div>
+      </div>
+      <div id="taxBreakdown"></div>
+    </div>
+  </div>
+
+  <!-- YEAR-END COUNTDOWN -->
+  <div class="card">
+    <div class="card-title">📅 Year-End Countdown</div>
+    <div id="yearEndCountdown" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem"></div>
+  </div>
+
+  <!-- TAX SAVING ACTIONS -->
+  <div class="card">
+    <div class="card-title">💡 Smart Tax Actions <span class="badge badge-amber">Personalized</span></div>
+    <div id="taxActions"></div>
+  </div>
+
+  <!-- SALARY vs DIVIDEND OPTIMIZER -->
+  <div class="card">
+    <div class="card-title">⚖️ Salary vs Dividend Optimizer</div>
+    <p style="font-size:.83rem;color:var(--ink2);margin-bottom:1rem;line-height:1.6">
+      Based on your structure: <strong>Postma Contracting Inc.</strong> → <strong>Family Trust</strong> → beneficiaries (you, Andrea, kids).
+      The optimal mix depends on each person's income. Adjust below to model different scenarios.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div>
+        <div style="font-family:var(--mono);font-size:.65rem;color:var(--ink3);letter-spacing:.08em;margin-bottom:.75rem">CURRENT YEAR WAGES PAID</div>
+        <div id="wageRows" style="font-size:.85rem"></div>
+        <button class="btn btn-outline btn-sm" style="margin-top:.5rem" onclick="taxAddWageRow()">+ Add person</button>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:.65rem;color:var(--ink3);letter-spacing:.08em;margin-bottom:.75rem">TAX COMPARISON</div>
+        <div id="taxComparison" style="font-size:.83rem"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI TAX ADVISOR -->
+  <div class="card">
+    <div class="card-title">🤖 AI Tax Advisor <span class="badge badge-green">AI</span></div>
+    <p style="font-size:.83rem;color:var(--ink3);margin-bottom:1rem">Ask anything about your tax situation. The AI knows your structure: Ontario corp, family trust, income sprinkling, fiscal year April–March.</p>
+
+    <!-- Quick question chips -->
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
+      <button class="bank-tab" onclick="taxAskQuick(this)">Should I buy the truck through the corp?</button>
+      <button class="bank-tab" onclick="taxAskQuick(this)">How much should I pay each kid?</button>
+      <button class="bank-tab" onclick="taxAskQuick(this)">Should Andrea be on payroll?</button>
+      <button class="bank-tab" onclick="taxAskQuick(this)">What should I buy before March 31?</button>
+      <button class="bank-tab" onclick="taxAskQuick(this)">Salary vs dividends — what's better?</button>
+      <button class="bank-tab" onclick="taxAskQuick(this)">How does my trust save taxes?</button>
+      <button class="bank-tab" onclick="taxAskQuick(this)">Can I write off my home office?</button>
+      <button class="bank-tab" onclick="taxAskQuick(this)">What are my TOSI risks?</button>
+    </div>
+
+    <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
+      <input type="text" id="taxQuestion" placeholder="Ask a tax question specific to your situation..."
+        style="flex:1;padding:.65rem .85rem;border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:.88rem"
+        onkeydown="if(event.key==='Enter')taxAsk()">
+      <button class="btn btn-primary" onclick="taxAsk()">Ask →</button>
+    </div>
+
+    <div id="taxAnswerWrap" class="hidden">
+      <div id="taxAnswer" style="background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);padding:1.1rem;font-size:.85rem;line-height:1.8;color:var(--ink2)"></div>
+      <div style="font-size:.72rem;color:var(--ink3);margin-top:.5rem">⚠️ AI-generated guidance based on current Canadian tax law. Verify significant decisions with a CPA before acting.</div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /panel-taxai -->
+
 <div class="toast" id="toast"></div>
 </div><!-- /appContent -->
 
@@ -1748,7 +1869,7 @@ function closeTracker(key) {
 // SHARED UTILITIES
 // ════════════════════════════════════════════════════════════
 function showTab(t){
-  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['home','importer','invoice','receipt','taxfiling'][i]===t));
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['home','importer','invoice','receipt','taxfiling','taxai'][i]===t));
   document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
   document.getElementById('panel-'+t).classList.add('active');
 }
@@ -2291,6 +2412,38 @@ function dlFile(name,content,type){const b=new Blob([content],{type});const a=do
 // ════════════════════════════════════════════════════════════
 // TAB 2 — INVOICE WIZARD
 // ════════════════════════════════════════════════════════════
+// ── COMPANY PROFILES ──
+const INV_COMPANIES = {
+  postma: {
+    name: 'Postma Contracting Inc.',
+    address: 'Chatham, Ontario',
+    email: 'calebpostma@gmail.com',
+    hst: 'RT 0001',
+    clients: ['Postma Heating Ltd.','42 Braemer'],
+  },
+  pctires: {
+    name: 'PC Tires',
+    subline: 'o/a Postma Contracting Inc.',
+    address: 'Chatham, Ontario',
+    email: 'calebpostma@gmail.com',
+    hst: 'RT 0001',
+    clients: [],
+  }
+};
+let activeCompany = 'postma';
+
+function setInvCompany(key){
+  activeCompany = key;
+  // Update toggle buttons
+  document.querySelectorAll('.co-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.co-btn[data-co="'+key+'"]').classList.add('active');
+  // Update client autocomplete
+  const co = INV_COMPANIES[key];
+  const dl = document.getElementById('clientSugg');
+  if(dl) dl.innerHTML = co.clients.map(c=>`<option value="${c}">`).join('');
+  invUpdate();
+}
+
 let invLines=[{desc:'',qty:1,rate:''}];
 let invNum='342266';
 
@@ -2343,6 +2496,16 @@ function invUpdate(){
     ${hst?`<div class="tot-row"><span class="tot-lbl">HST 13%</span><span class="tot-val">$${fmtMoney(hstAmt)}</span></div>`:`<div class="tot-row"><span class="tot-lbl" style="color:var(--red)">No HST</span><span class="tot-val">—</span></div>`}
     <div class="tot-row final"><span>Total</span><span class="tot-val big">$${fmtMoney(total)}</span></div>`;
 
+  // Update company header in preview
+  const co = INV_COMPANIES[activeCompany];
+  const nameEl = document.getElementById('prevCoName');
+  const detailEl = document.getElementById('prevCoDetail');
+  const footerHST = document.getElementById('prevFooterHST');
+  const footerName = document.getElementById('prevFooterName');
+  if(nameEl) nameEl.textContent = co.name;
+  if(detailEl) detailEl.innerHTML = (co.subline?'<span style="font-size:.7rem;color:var(--ink3)">'+co.subline+'</span><br>':'') + co.address + '<br>' + co.email + '<br>HST# ' + co.hst;
+  if(footerHST) footerHST.textContent = 'HST Registration: ' + co.hst;
+  if(footerName) footerName.textContent = co.name + ' · Chatham, ON';
   document.getElementById('prevNum').textContent='#'+invNum;
   let billTo=client||'<em style="color:var(--ink3)">Client name</em>';
   if(addr)billTo+='<br><span style="color:var(--ink3);font-size:.78rem">'+addr.replace(/\n/g,'<br>')+'</span>';
@@ -2372,7 +2535,7 @@ function invPrint(){
   const doc=document.getElementById('invDoc').outerHTML;
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <title>Invoice #${invNum}</title>
+    <title>Invoice #${invNum} — ${INV_COMPANIES[activeCompany].name}</title>
     <style>*{box-sizing:border-box;margin:0;padding:0}:root{--ink:#151a18;--ink2:#3d4a44;--ink3:#7a8a82;--paper2:#ede9e0;--green:#1a5c38;--greenlt:#e8f5ee;--rule:#ccc8bc;--mono:'IBM Plex Mono',monospace;--serif:'Lora',serif;--sans:'DM Sans',sans-serif}body{font-family:var(--sans);font-weight:300;padding:40px;background:white;color:var(--ink)}.inv-doc{max-width:700px;margin:0 auto}.inv-doc-header{display:flex;justify-content:space-between;margin-bottom:1.75rem;padding-bottom:1.1rem;border-bottom:2px solid var(--ink)}.inv-co-name{font-family:var(--serif);font-size:1.2rem;font-weight:600}.inv-co-detail{font-size:.72rem;color:var(--ink3);line-height:1.7;margin-top:.15rem}.inv-doc-title{font-family:var(--serif);font-size:1.55rem;font-weight:400;text-align:right}.inv-doc-num{font-family:var(--mono);font-size:.72rem;color:var(--green);text-align:right;margin-top:.15rem}.inv-meta{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.4rem}.inv-meta-blk label{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.2rem}.inv-meta-blk p{font-size:.82rem;line-height:1.55}.inv-tbl{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:1.1rem}.inv-tbl thead tr{border-bottom:1px solid var(--ink)}.inv-tbl th{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:.4rem .35rem .4rem 0;text-align:left;font-weight:400}.inv-tbl th:last-child,.inv-tbl td:last-child{text-align:right;padding-right:0}.inv-tbl tbody tr{border-bottom:1px solid #f0ede6}.inv-tbl td{padding:.52rem .35rem .52rem 0}.inv-tbl tfoot td{padding:.3rem .35rem;font-size:.77rem}.inv-tbl tfoot tr.gtotal td{border-top:2px solid var(--ink);padding-top:.52rem;font-family:var(--serif);font-size:.9rem;font-weight:600}.mono{font-family:var(--mono);font-size:.77rem}.flbl{color:var(--ink3);font-family:var(--mono);font-size:.65rem;letter-spacing:.06em}.inv-doc-footer{border-top:1px solid var(--rule);padding-top:.9rem;display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink3)}.inv-thanks{font-family:var(--serif);font-style:italic;color:var(--ink2);font-size:.82rem}.due-badge{display:inline-block;padding:.12rem .45rem;border-radius:3px;font-family:var(--mono);font-size:.6rem;background:var(--greenlt);color:var(--green);margin-top:.2rem}</style>
   </head><body>${doc}</body></html>`);
   win.document.close();setTimeout(()=>win.print(),600);
@@ -2397,9 +2560,11 @@ async function invSendToSheets(){
   btn.textContent = '⏳ Sending…';
   status.textContent = 'Sending to Google Sheets…';
 
+  const co = INV_COMPANIES[activeCompany];
   const payload = {
     type: 'invoice',
     invoice: {
+      company: co.name,
       invNum, dateVal, dueVal, client,
       desc, sub, hstAmt, total,
       hst: hst ? 'Yes' : 'No',
@@ -3060,6 +3225,294 @@ async function lockSubmit(){
   btn.disabled = false;
   btn.textContent = 'Unlock →';
 }
+
+
+// ════════════════════════════════════════════════════════════
+// TAX INTELLIGENCE
+// ════════════════════════════════════════════════════════════
+
+// Business profile — specific to Postma Contracting Inc.
+const TAX_PROFILE = {
+  name: 'Postma Contracting Inc.',
+  province: 'Ontario',
+  fiscalYearEnd: 'March 31',
+  hstNumber: 'RT 0001',
+  structure: 'Operating corp → Family Trust → Caleb, Andrea, Avienda, Akiya, Ezra',
+  activities: 'Management consulting, lawn care, tire/wheel sales',
+  fedSBDRate: 0.09,
+  onSBDRate: 0.032,
+  combinedRate: 0.122,
+  sbdLimit: 500000,
+};
+
+// Wage modelling rows
+let taxWageRows = [
+  {name:'Avienda Postma', annual:'', role:'Operations'},
+  {name:'Akiya Postma',   annual:'', role:'Assistant'},
+  {name:'Ezra Postma',    annual:'', role:'Labourer'},
+  {name:'Andrea Postma',  annual:'', role:'Bookkeeping/Admin'},
+];
+
+function taxCalc(){
+  const rev   = parseFloat(document.getElementById('ti-revenue')?.value?.replace(/,/g,''))||0;
+  const exp   = parseFloat(document.getElementById('ti-expenses')?.value?.replace(/,/g,''))||0;
+  const wages = parseFloat(document.getElementById('ti-wages')?.value?.replace(/,/g,''))||0;
+
+  const netIncome = Math.max(0, rev - exp);
+  const fedTax    = netIncome * TAX_PROFILE.fedSBDRate;
+  const onTax     = netIncome * TAX_PROFILE.onSBDRate;
+  const totalTax  = fedTax + onTax;
+
+  // Update KPIs
+  const fmt = n => '$' + n.toLocaleString('en-CA', {minimumFractionDigits:0, maximumFractionDigits:0});
+  document.getElementById('kpi-rev').textContent  = rev   ? fmt(rev)   : '—';
+  document.getElementById('kpi-exp').textContent  = exp   ? fmt(exp)   : '—';
+  document.getElementById('kpi-net').textContent  = netIncome ? fmt(netIncome) : '—';
+  document.getElementById('kpi-tax').textContent  = totalTax ? fmt(totalTax)   : '—';
+
+  if(!rev && !exp){ document.getElementById('taxBreakdown').innerHTML=''; return; }
+
+  // Tax breakdown
+  document.getElementById('taxBreakdown').innerHTML = `
+    <div style="background:var(--white);border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden">
+      <div style="background:var(--ink);color:white;padding:.6rem 1rem;font-family:var(--mono);font-size:.65rem;letter-spacing:.08em">CORPORATE TAX BREAKDOWN</div>
+      <div style="padding:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.83rem">
+        <div>
+          <div style="color:var(--ink3);margin-bottom:.2rem">Net Income (before tax)</div>
+          <div style="font-family:var(--mono);font-size:1rem;font-weight:500">${fmt(netIncome)}</div>
+        </div>
+        <div>
+          <div style="color:var(--ink3);margin-bottom:.2rem">Federal tax @ 9% (SBD)</div>
+          <div style="font-family:var(--mono);font-size:1rem;color:var(--amber)">${fmt(fedTax)}</div>
+        </div>
+        <div>
+          <div style="color:var(--ink3);margin-bottom:.2rem">Ontario tax @ 3.2% (SBD)</div>
+          <div style="font-family:var(--mono);font-size:1rem;color:var(--amber)">${fmt(onTax)}</div>
+        </div>
+        <div style="background:var(--amberlt);border-radius:var(--radius);padding:.75rem">
+          <div style="color:var(--amber);font-size:.75rem;margin-bottom:.2rem">TOTAL CORPORATE TAX</div>
+          <div style="font-family:var(--mono);font-size:1.2rem;font-weight:600;color:var(--amber)">${fmt(totalTax)}</div>
+        </div>
+      </div>
+      ${netIncome > 0 ? `
+      <div style="padding:.75rem 1rem;background:var(--greenlt);border-top:1px solid var(--rule);font-size:.8rem;color:var(--green)">
+        💡 Every $1,000 of additional deductible expenses saves <strong>$122 in corporate tax</strong>.
+        ${netIncome > 50000 ? ` At your current income level, paying $${fmt(Math.min(netIncome*0.3, 30000))} more in family wages would save <strong>$${fmt(Math.min(netIncome*0.3,30000)*0.122)} in corp tax</strong>.` : ''}
+      </div>` : ''}
+    </div>`;
+
+  // Generate smart actions
+  taxGenerateActions(rev, exp, netIncome, totalTax, wages);
+}
+
+function taxGenerateActions(rev, exp, netIncome, totalTax, wages){
+  const today = new Date();
+  const yearEnd = new Date(today.getFullYear(), 2, 31); // March 31
+  if(yearEnd < today) yearEnd.setFullYear(yearEnd.getFullYear()+1);
+  const daysLeft = Math.ceil((yearEnd - today)/(1000*60*60*24));
+  const fmt = n => '$' + n.toLocaleString('en-CA', {minimumFractionDigits:0, maximumFractionDigits:0});
+
+  const actions = [];
+
+  // Always-on actions
+  actions.push({
+    icon:'👨‍👩‍👧‍👦', priority:'high',
+    title:'Keep family wages reasonable and documented',
+    detail:`You're paying wages to your kids — excellent strategy. CRA requires wages to be reasonable for actual work performed. Keep simple records: what each person does, hours worked, rate paid. Avienda, Akiya, and Ezra should each be earning no more than what you'd pay a non-family member for the same work. At your income level, maximizing their wages (up to ~$50K each) before paying corp tax saves 12.2% on every dollar.`
+  });
+
+  if(!wages || wages < 40000){
+    actions.push({
+      icon:'💼', priority:'high',
+      title:'Add Andrea to payroll — she\'s doing real work',
+      detail:`Andrea manages your bookkeeping and admin. A salary of $40,000-60,000 is reasonable and fully deductible for the corp. At 12.2% corp rate that saves $4,880-7,320 in corporate tax. Andrea pays personal tax at roughly 20-29% on that income — still a net family win versus leaving money in the corp. She also builds RRSP room.`
+    });
+  }
+
+  if(daysLeft < 90 && netIncome > 30000){
+    const potentialSaving = Math.round(Math.min(netIncome * 0.4, 50000) * 0.122);
+    actions.push({
+      icon:'⏰', priority:'high',
+      title:`${daysLeft} days to year-end — accelerate expenses NOW`,
+      detail:`With ${fmt(netIncome)} net income and ${daysLeft} days left, consider: prepaying insurance premiums, buying supplies and equipment you need anyway, paying year-end bonuses to family members before March 31. Every $10,000 in legitimate expenses saves $1,220 in corporate tax. Equipment purchases go on Schedule 8 CCA — the tractor purchase was smart for this reason.`
+    });
+  }
+
+  if(netIncome > 80000){
+    actions.push({
+      icon:'🏦', priority:'medium',
+      title:'Consider a corporate RRSP contribution or IPP',
+      detail:`At ${fmt(netIncome)} net income, you're paying ${fmt(netIncome*0.122)} in corp tax. An Individual Pension Plan (IPP) lets you make larger deductible contributions than a personal RRSP. Worth exploring once corp income is consistently above $80K.`
+    });
+  }
+
+  actions.push({
+    icon:'🚗', priority:'medium',
+    title:'Vehicle expenses — log your business km',
+    detail:`If you use a personal vehicle for business (site visits, supply runs, client meetings), keep a mileage log. CRA's 2025 rate is $0.70/km for first 5,000km, $0.64/km after. Or claim actual costs at the business-use percentage. A vehicle used 70% for business = deduct 70% of gas, insurance, repairs, CCA. This could be $3,000-8,000 in additional deductions.`
+  });
+
+  actions.push({
+    icon:'🏠', priority:'medium',
+    title:'Home office deduction',
+    detail:`If you run Postma Contracting from a home office, claim a portion of home expenses. Calculate: (office sq ft ÷ total home sq ft) × eligible costs. Eligible: mortgage interest or rent, utilities, internet, property tax, insurance. At $300K house value with 10% office use, this could be $2,000-4,000 additional deduction.`
+  });
+
+  actions.push({
+    icon:'🔧', priority:'low',
+    title:'Equipment timing — buy before March 31',
+    detail:`Any equipment purchase before March 31 gets CCA in the current year (with half-year rule + Accelerated Investment Incentive). A $20,000 equipment purchase before year-end = ~$4,200 first-year CCA deduction = $512 in tax savings. After March 31, you wait another full year for the deduction.`
+  });
+
+  actions.push({
+    icon:'🏛', priority:'low',
+    title:'Trust distributions — plan before year-end',
+    detail:`Your family trust should allocate its income before December 31 each calendar year (trust tax year is calendar year, not fiscal year). Work with your trust deed to ensure distributions to Avienda, Akiya, and Ezra are documented before December 31. Undistributed trust income is taxed at the top marginal rate (53.5% in Ontario).`
+  });
+
+  document.getElementById('taxActions').innerHTML = actions.map(a=>`
+    <div style="display:flex;gap:1rem;padding:.85rem;border-bottom:1px solid var(--rule);align-items:flex-start">
+      <div style="font-size:1.5rem;flex-shrink:0">${a.icon}</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">
+          <strong style="font-size:.88rem">${a.title}</strong>
+          <span class="badge ${a.priority==='high'?'badge-red':a.priority==='medium'?'badge-amber':'badge-blue'}">${a.priority}</span>
+        </div>
+        <div style="font-size:.8rem;color:var(--ink2);line-height:1.6">${a.detail}</div>
+      </div>
+    </div>`).join('');
+}
+
+function taxRefresh(){
+  toast('Connect to Google Sheet — enter your YTD totals from the sheet summary above');
+  document.getElementById('ti-revenue').focus();
+}
+
+// Year-end countdown
+function taxRenderCountdown(){
+  const today = new Date();
+  const thisYearEnd = new Date(2026, 2, 31);
+  const t2Due = new Date(2026, 8, 30);
+  const taxBalDue = new Date(2026, 5, 30);
+  const hstDue = new Date(2026, 3, 30);
+
+  function daysBetween(a,b){ return Math.ceil((b-a)/(1000*60*60*24)); }
+  function daysColor(d){ return d<14?'var(--red)':d<60?'var(--amber)':'var(--green)'; }
+
+  const items = [
+    {label:'Fiscal Year-End', date:'March 31, 2026', days:daysBetween(today,thisYearEnd), note:'Last day to incur deductible expenses'},
+    {label:'Tax Balance Due', date:'June 30, 2026', days:daysBetween(today,taxBalDue), note:'Pay corporate tax or interest starts'},
+    {label:'T2 Filing Due', date:'Sept 30, 2026', days:daysBetween(today,t2Due), note:'File the T2 return (6 months after year-end)'},
+    {label:'Q4 HST Due', date:'April 30, 2026', days:daysBetween(today,hstDue), note:'Jan–Mar 2026 HST return and payment'},
+  ];
+
+  document.getElementById('yearEndCountdown').innerHTML = items.map(item=>`
+    <div style="background:var(--white);border:1px solid var(--rule);border-radius:var(--radius);padding:1rem;text-align:center">
+      <div style="font-family:var(--mono);font-size:.62rem;color:var(--ink3);letter-spacing:.06em;margin-bottom:.25rem">${item.label}</div>
+      <div style="font-size:2rem;font-weight:700;color:${daysColor(item.days)};font-family:var(--serif)">${Math.max(0,item.days)}</div>
+      <div style="font-size:.75rem;color:var(--ink3);margin:.15rem 0">days · ${item.date}</div>
+      <div style="font-size:.72rem;color:var(--ink2);margin-top:.35rem">${item.note}</div>
+    </div>`).join('');
+}
+
+// Salary optimizer wage rows
+function taxRenderWageRows(){
+  document.getElementById('wageRows').innerHTML = taxWageRows.map((w,i)=>`
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:.4rem;margin-bottom:.4rem;align-items:center">
+      <span style="font-size:.83rem">${w.name} <small style="color:var(--ink3)">${w.role}</small></span>
+      <input type="text" value="${w.annual}" placeholder="Annual wages"
+        style="padding:.35rem .55rem;border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--mono);font-size:.82rem;margin:0"
+        oninput="taxWageRows[${i}].annual=this.value;taxCalcComparison()">
+    </div>`).join('');
+  taxCalcComparison();
+}
+
+function taxAddWageRow(){
+  taxWageRows.push({name:'New person', annual:'', role:'Employee'});
+  taxRenderWageRows();
+}
+
+function taxCalcComparison(){
+  const fmt = n => '$'+Math.round(n).toLocaleString('en-CA');
+  const totalWages = taxWageRows.reduce((s,w)=>s+(parseFloat(w.annual)||0),0);
+  const rev = parseFloat(document.getElementById('ti-revenue')?.value?.replace(/,/g,''))||0;
+  const exp = parseFloat(document.getElementById('ti-expenses')?.value?.replace(/,/g,''))||0;
+  const netBeforeWages = Math.max(0, rev - exp);
+  const netAfterWages = Math.max(0, netBeforeWages - totalWages);
+  const corpTaxSaved = totalWages * TAX_PROFILE.combinedRate;
+  const personalTaxEst = totalWages * 0.22; // rough avg family rate
+  const netFamilySaving = corpTaxSaved - personalTaxEst;
+
+  document.getElementById('taxComparison').innerHTML = `
+    <div style="font-size:.82rem;line-height:2;color:var(--ink2)">
+      <div style="display:flex;justify-content:space-between"><span>Total wages paid:</span><strong style="font-family:var(--mono)">${fmt(totalWages)}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span>Corp tax saved:</span><strong style="font-family:var(--mono);color:var(--green)">${fmt(corpTaxSaved)}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span>Est. personal tax (family avg 22%):</span><strong style="font-family:var(--mono);color:var(--red)">${fmt(personalTaxEst)}</strong></div>
+      <div style="border-top:1px solid var(--rule);margin-top:.35rem;padding-top:.35rem;display:flex;justify-content:space-between">
+        <span>Net family tax saving:</span>
+        <strong style="font-family:var(--mono);font-size:1rem;color:${netFamilySaving>0?'var(--green)':'var(--red)'}">${fmt(netFamilySaving)}</strong>
+      </div>
+      ${netAfterWages>0?`<div style="margin-top:.5rem;padding:.5rem;background:var(--amberlt);border-radius:var(--radius);font-size:.75rem;color:var(--amber)">Corp still has ${fmt(netAfterWages)} net income → ${fmt(netAfterWages*0.122)} tax owing. Consider increasing wages or equipment purchases.</div>`:'<div style="margin-top:.5rem;padding:.5rem;background:var(--greenlt);border-radius:var(--radius);font-size:.75rem;color:var(--green)">✓ Corp income fully offset by wages — minimal corporate tax!</div>'}
+    </div>`;
+}
+
+// AI Tax Advisor
+function taxAskQuick(btn){
+  document.getElementById('taxQuestion').value = btn.textContent;
+  taxAsk();
+}
+
+async function taxAsk(){
+  const q = document.getElementById('taxQuestion').value.trim();
+  if(!q){ toast('Enter a tax question first'); return; }
+
+  const rev   = document.getElementById('ti-revenue')?.value || 'unknown';
+  const exp   = document.getElementById('ti-expenses')?.value || 'unknown';
+  const wages = document.getElementById('ti-wages')?.value || 'unknown';
+
+  const wrap = document.getElementById('taxAnswerWrap');
+  const ans  = document.getElementById('taxAnswer');
+  wrap.classList.remove('hidden');
+  ans.innerHTML = '<span style="color:var(--ink3)">Thinking…</span>';
+
+  const context = `You are a Canadian corporate tax advisor specializing in Ontario small business tax planning.
+
+CLIENT PROFILE:
+- Entity: Postma Contracting Inc. (Ontario corporation)
+- Structure: Operating corp → Family Trust → beneficiaries (Caleb, Andrea, Avienda, Akiya, Ezra Postma)
+- Also owns shares in Postma Heating Ltd.
+- Activities: Management consulting, lawn care, tire/wheel sales (PC Tires)
+- Fiscal year: April 1 – March 31
+- HST registrant: RT 0001, Ontario 13%
+- Current year revenue: $${rev} (excl HST)
+- Current year expenses: $${exp} (excl HST)
+- Current year wages paid: $${wages}
+- Corporate tax rate: 12.2% combined (9% federal SBD + 3.2% Ontario SBD)
+- Goal: Minimize all taxes legally, comfortable with corp being in negative income position
+
+QUESTION: ${q}
+
+Provide specific, actionable advice with dollar amounts where possible. Reference current 2025 Canadian tax law. Be direct and practical — no generic disclaimers, just real advice. If there are risks (like TOSI, reasonableness of wages), mention them briefly. Keep response under 300 words.`;
+
+  try {
+    const raw = await callClaude(context, 800);
+    // Convert markdown to basic HTML
+    ans.innerHTML = raw
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/^#{1,3}\s(.+)$/gm, '<strong style="color:var(--ink)">$1</strong>')
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, '<br>');
+  } catch(err){
+    ans.innerHTML = '<span style="color:var(--red)">Could not reach AI — check your connection.</span>';
+  }
+}
+
+// Init on tab open
+document.addEventListener('DOMContentLoaded', ()=>{
+  taxRenderCountdown();
+  taxRenderWageRows();
+});
 
 // Set today's date on HST filing date input once DOM is ready
 window.addEventListener('load',()=>{
