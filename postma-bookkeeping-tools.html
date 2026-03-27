@@ -957,17 +957,45 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
   <div class="step-tracker" id="tracker-receipt"></div>
   <div class="page-header">
     <h1 class="page-title">Receipt Scanner <button class="help-btn" onclick="showHelp('receipt_upload')" title="How to scan receipts">?</button></h1>
-    <p class="page-sub">Upload a photo of a receipt — AI reads the merchant, amount, date and suggests a category.</p>
+    <p class="page-sub">Upload a photo or PDF of a receipt or bill — AI reads the details and logs it to your Expenses tab.</p>
   </div>
+
+  <!-- Mode switcher -->
+  <div style="display:flex;gap:.5rem;margin-bottom:1.25rem;flex-wrap:wrap">
+    <button class="bank-tab active" id="rcptModeRegular" onclick="rcptSetMode('regular')">🧾 Business Receipt</button>
+    <button class="bank-tab" id="rcptModeHome" onclick="rcptSetMode('home')">🏠 Home Office Bill</button>
+  </div>
+
+  <!-- Home Office info bar (hidden by default) -->
+  <div id="homeOfficeBar" class="hidden" style="background:var(--bluelt);border:1px solid #b8cfe8;border-radius:var(--radius);padding:.85rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap">
+    <div style="flex:1;min-width:220px">
+      <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--blue);text-transform:uppercase;margin-bottom:.3rem">Home Office Mode <button class="help-btn" onclick="showHelp('home_office')" title="How home office allocation works" style="background:rgba(13,59,102,.1);border-color:#b8cfe8;color:var(--blue)">?</button></div>
+      <div style="font-size:.82rem;color:var(--ink2);line-height:1.6">
+        Upload any home bill (Enbridge, Hydro One, Mortgage, Insurance, etc.). The AI reads the total and HST, then applies your <strong>11% business-use allocation</strong> automatically. Only the business portion is sent to your Expenses tab.
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+      <div>
+        <label style="font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.3rem">Allocation %</label>
+        <div style="display:flex;align-items:center;gap:.35rem">
+          <input type="number" id="hoAllocRate" value="11" min="1" max="100" step="1"
+            style="width:70px;padding:.42rem .6rem;border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--mono);font-size:.9rem;text-align:center"
+            oninput="rcptRefreshHomeCalc()">
+          <span style="font-size:.9rem;color:var(--ink2)">%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
     <div>
       <div class="card">
         <div class="card-title">Upload receipt photo <button class="help-btn" onclick="showHelp('receipt_upload')" title="Tips for a good receipt photo">?</button></div>
         <div class="receipt-upload" id="rcptZone" ondragover="rcptDragOver(event)" ondragleave="rcptDragLeave()" ondrop="rcptDrop(event)">
           <input type="file" accept="image/*,application/pdf,.pdf" id="rcptInput" onchange="rcptChosen(event)">
-          <span class="receipt-icon">📷</span>
-          <span class="upload-title" style="font-size:.95rem">Drop receipt photo here</span>
-          <span class="upload-hint">JPG, PNG, HEIC, PDF · Takes a photo on mobile</span>
+          <span class="receipt-icon" id="rcptZoneIcon">📷</span>
+          <span class="upload-title" style="font-size:.95rem" id="rcptZoneTitle">Drop receipt photo here</span>
+          <span class="upload-hint" id="rcptZoneHint">JPG, PNG, HEIC, PDF · Takes a photo on mobile</span>
           <span id="rcptFname" style="font-family:var(--mono);font-size:.7rem;color:var(--green);margin-top:.3rem;display:block"></span>
           <img id="rcptPreview" class="receipt-preview hidden" alt="Receipt preview">
         </div>
@@ -2696,6 +2724,28 @@ function invClear(){document.getElementById('invClient').value='';document.getEl
 // TAB 3 — RECEIPT SCANNER
 // ════════════════════════════════════════════════════════════
 let rcptB64='';let rcptMediaType='';let rcptResult={};
+let rcptMode = 'regular'; // 'regular' or 'home'
+
+// ── Mode switcher ──────────────────────────────────────────
+function rcptSetMode(mode) {
+  rcptMode = mode;
+  document.getElementById('rcptModeRegular').classList.toggle('active', mode === 'regular');
+  document.getElementById('rcptModeHome').classList.toggle('active', mode === 'home');
+  const bar = document.getElementById('homeOfficeBar');
+  if (mode === 'home') {
+    bar.classList.remove('hidden');
+    bar.style.display = 'flex';
+    document.getElementById('rcptZoneIcon').textContent = '🏠';
+    document.getElementById('rcptZoneTitle').textContent = 'Drop home bill or invoice here';
+    document.getElementById('rcptZoneHint').textContent = 'Enbridge, Hydro One, Mortgage, Insurance, Internet — PDF or photo';
+  } else {
+    bar.classList.add('hidden');
+    document.getElementById('rcptZoneIcon').textContent = '📷';
+    document.getElementById('rcptZoneTitle').textContent = 'Drop receipt photo here';
+    document.getElementById('rcptZoneHint').textContent = 'JPG, PNG, HEIC, PDF · Takes a photo on mobile';
+  }
+  rcptClear();
+}
 
 function rcptDragOver(e){e.preventDefault();document.getElementById('rcptZone').classList.add('drag-over')}
 function rcptDragLeave(){document.getElementById('rcptZone').classList.remove('drag-over')}
@@ -2731,7 +2781,27 @@ async function rcptAnalyze(){
   btn.textContent='Scanning…';
   document.getElementById('rcptAnalyzeBtn').disabled=true;
 
-  const prompt=`You are a Canadian corporate bookkeeper. Analyze this receipt or invoice document and extract key information.
+  const isHome = rcptMode === 'home';
+  const allocRate = isHome ? (parseFloat(document.getElementById('hoAllocRate').value) || 11) / 100 : 1;
+
+  const prompt = isHome
+    ? `You are a Canadian corporate bookkeeper analyzing a home utility or household bill for home office expense purposes.
+
+Extract the billing information and return ONLY a JSON object with these exact fields:
+{
+  "date": "YYYY-MM-DD (billing date or statement date)",
+  "vendor": "utility or service provider name (e.g. Enbridge Gas, Hydro One, Rogers, etc.)",
+  "total": "total amount billed as a number string e.g. 281.39",
+  "hst": "HST/GST amount if shown on the bill. If not shown, use 0 for insurance, mortgage interest, property tax, car insurance. For utilities and internet, calculate as total/1.13*0.13 rounded to 2 decimal places",
+  "net": "total minus hst rounded to 2 decimal places",
+  "hst_applies": true or false (false for: insurance, mortgage interest, property tax, car insurance; true for: gas, hydro, internet, water),
+  "category": "one of: Utilities, Insurance, Interest & Bank Charges, Property Tax, Telephone",
+  "confidence": "High, Medium, or Low",
+  "notes": "brief description e.g. Enbridge Gas — November 2025 billing period"
+}
+
+No other text, just the JSON.`
+    : `You are a Canadian corporate bookkeeper. Analyze this receipt or invoice document and extract key information.
 
 Return ONLY a JSON object with these exact fields:
 {
@@ -2756,26 +2826,82 @@ No other text, just the JSON.`;
     }
     const clean=raw.replace(/```json|```/g,'').trim();
     rcptResult=JSON.parse(clean);
+    // Attach allocation info to result for home office mode
+    if (isHome) {
+      rcptResult._isHome = true;
+      rcptResult._allocRate = allocRate;
+    }
     rcptShowResult();
   } catch(e){
-    document.getElementById('rcptResultContent').innerHTML=`<div style="color:var(--red);font-size:.85rem;padding:1rem">Could not read receipt — try a clearer photo, better lighting, or a text-based PDF.</div>`;
+    document.getElementById('rcptResultContent').innerHTML=`<div style="color:var(--red);font-size:.85rem;padding:1rem">Could not read the document — try a clearer photo, better lighting, or a text-based PDF.</div>`;
   }
-  btn.textContent='Scan receipt with AI →';
+  btn.textContent = isHome ? 'Scan bill with AI →' : 'Scan receipt with AI →';
   document.getElementById('rcptAnalyzeBtn').disabled=false;
 }
 
 function rcptShowResult(){
   document.getElementById('rcptBadge').style.display='inline-block';
   const r=rcptResult;
+  const isHome = r._isHome;
+  const allocRate = r._allocRate || 0.11;
+  const allocPct = Math.round(allocRate * 100);
+
+  const totalAmt   = parseFloat(r.total) || 0;
+  const hstAmt     = parseFloat(r.hst) || 0;
+  const netAmt     = parseFloat(r.net) || 0;
+
+  // For home office: allocated amounts
+  const allocTotal = +(totalAmt * allocRate).toFixed(2);
+  const hstApplies = r.hst_applies !== false; // default true unless AI said false
+  const allocHST   = hstApplies ? +(hstAmt * allocRate).toFixed(2) : 0;
+  const allocNet   = +(allocTotal - allocHST).toFixed(2);
+
+  let homePanel = '';
+  if (isHome) {
+    homePanel = `
+    <div style="margin-top:1rem;background:var(--bluelt);border:1px solid #b8cfe8;border-radius:var(--radius);padding:1rem">
+      <div style="font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--blue);text-transform:uppercase;margin-bottom:.6rem">🏠 Home Office Allocation — ${allocPct}% Business Use</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.6rem">
+        <div style="background:white;border-radius:var(--radius);padding:.65rem .75rem">
+          <div style="font-size:.65rem;color:var(--ink3);font-family:var(--mono);margin-bottom:.2rem">FULL BILL</div>
+          <div style="font-size:1rem;font-weight:500">$${fmtMoney(totalAmt)}</div>
+        </div>
+        <div style="background:white;border-radius:var(--radius);padding:.65rem .75rem">
+          <div style="font-size:.65rem;color:var(--ink3);font-family:var(--mono);margin-bottom:.2rem">BUSINESS PORTION (${allocPct}%)</div>
+          <div style="font-size:1rem;font-weight:600;color:var(--green)">$${fmtMoney(allocTotal)}</div>
+        </div>
+        <div style="background:white;border-radius:var(--radius);padding:.65rem .75rem">
+          <div style="font-size:.65rem;color:var(--ink3);font-family:var(--mono);margin-bottom:.2rem">CLAIMABLE HST ITC</div>
+          <div style="font-size:1rem;font-weight:500;color:${hstApplies ? 'var(--amber)' : 'var(--ink3)'}">
+            ${hstApplies ? '$'+fmtMoney(allocHST) : 'N/A — no HST'}
+          </div>
+        </div>
+      </div>
+      <div style="font-size:.76rem;color:var(--blue);line-height:1.5">
+        ${hstApplies
+          ? `✅ HST applies — $${fmtMoney(allocHST)} ITC claimable on your HST return.`
+          : `ℹ️ No HST on this expense type — no ITC to claim, but the $${fmtMoney(allocNet)} is still a deductible business expense.`}
+        <strong>Only the ${allocPct}% business portion ($${fmtMoney(allocTotal)}) will be sent to your Expenses tab.</strong>
+      </div>
+      <div style="margin-top:.6rem;display:flex;align-items:center;gap:.5rem">
+        <label style="font-size:.75rem;color:var(--ink2)">Adjust allocation %:</label>
+        <input type="number" value="${allocPct}" min="1" max="100"
+          style="width:60px;padding:.3rem .5rem;border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--mono);font-size:.82rem;text-align:center"
+          oninput="rcptResult._allocRate=this.value/100;rcptShowResult()">
+      </div>
+    </div>`;
+  }
+
   document.getElementById('rcptResultContent').innerHTML=`
     <div class="result-grid">
-      <div class="result-box"><div class="result-lbl">Vendor</div><div class="result-val">${esc(r.vendor||'Unknown')}</div></div>
+      <div class="result-box"><div class="result-lbl">Vendor / Provider</div><div class="result-val">${esc(r.vendor||'Unknown')}</div></div>
       <div class="result-box"><div class="result-lbl">Date</div><div class="result-val">${r.date?fmtDate(r.date):'Not found'}</div></div>
-      <div class="result-box"><div class="result-lbl">Total charged</div><div class="result-val" style="color:var(--red)">$${fmtMoney(r.total||0)}</div></div>
-      <div class="result-box"><div class="result-lbl">HST paid</div><div class="result-val" style="color:var(--amber)">$${fmtMoney(r.hst||0)}</div></div>
-      <div class="result-box"><div class="result-lbl">Net (excl HST)</div><div class="result-val">$${fmtMoney(r.net||0)}</div></div>
+      <div class="result-box"><div class="result-lbl">${isHome ? 'Total Bill' : 'Total charged'}</div><div class="result-val" style="color:var(--red)">$${fmtMoney(totalAmt)}</div></div>
+      <div class="result-box"><div class="result-lbl">HST on bill</div><div class="result-val" style="color:var(--amber)">${hstApplies ? '$'+fmtMoney(hstAmt) : 'N/A'}</div></div>
+      <div class="result-box"><div class="result-lbl">Net (excl HST)</div><div class="result-val">$${fmtMoney(netAmt)}</div></div>
       <div class="result-box"><div class="result-lbl">Confidence</div><div class="result-val">${r.confidence==='High'?'🟢':r.confidence==='Medium'?'🟡':'🔴'} ${r.confidence||'—'}</div></div>
     </div>
+    ${homePanel}
     <div style="margin-top:1rem">
       <label style="font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.4rem">Category</label>
       <select class="field" style="width:auto;padding:.5rem .75rem;border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:.88rem" id="rcptCatSel" onchange="rcptResult.category=this.value">
@@ -2786,14 +2912,38 @@ function rcptShowResult(){
   document.getElementById('rcptExportWrap').classList.remove('hidden');
 }
 
+function rcptRefreshHomeCalc(){
+  if(rcptResult && rcptResult._isHome){
+    const rate = parseFloat(document.getElementById('hoAllocRate').value)||11;
+    rcptResult._allocRate = rate/100;
+    rcptShowResult();
+  }
+}
+
 async function rcptSendToSheets(){
   const r = rcptResult;
   const btn = document.getElementById('rcptSheetsBtn');
   const status = document.getElementById('rcptSheetsStatus');
   const cat = document.getElementById('rcptCatSel')?.value || r.category || 'Other';
 
-  // Try to match against any already-imported statement transactions
-  const matchedTxn = findMatchingTransaction(r);
+  const isHome = r._isHome;
+  const allocRate = r._allocRate || 0.11;
+  const hstApplies = r.hst_applies !== false;
+
+  const fullTotal = parseFloat(r.total) || 0;
+  const fullHST   = parseFloat(r.hst) || 0;
+  const fullNet   = parseFloat(r.net) || 0;
+
+  // Use allocated amounts for home office, full amounts for regular
+  const sendTotal = isHome ? +(fullTotal * allocRate).toFixed(2) : fullTotal;
+  const sendHST   = isHome ? (hstApplies ? +(fullHST * allocRate).toFixed(2) : 0) : fullHST;
+  const sendNet   = isHome ? +(sendTotal - sendHST).toFixed(2) : fullNet;
+  const sendDesc  = isHome
+    ? `${r.notes || r.vendor} — ${Math.round(allocRate*100)}% home office allocation`
+    : (r.notes || r.vendor || '');
+
+  // Try to match against any already-imported statement transactions (regular mode only)
+  const matchedTxn = isHome ? null : findMatchingTransaction(r);
 
   btn.disabled = true;
   btn.textContent = '⏳ Sending…';
@@ -2804,11 +2954,11 @@ async function rcptSendToSheets(){
     rows: [{
       date: r.date || '',
       vendor: r.vendor || '',
-      description: r.notes || r.vendor || '',
-      amount: -(parseFloat(r.total) || 0), // negative = expense
+      description: sendDesc,
+      amount: -sendTotal,
       category: cat,
-      hst: parseFloat(r.hst) || 0,
-      net: -(parseFloat(r.net) || 0),
+      hst: sendHST,
+      net: -sendNet,
       receiptVerified: true,
       matchedStatement: matchedTxn ? matchedTxn.vendor : null
     }]
@@ -2824,10 +2974,15 @@ async function rcptSendToSheets(){
 
     if(d.ok) {
       btn.textContent = '✓ Sent!';
-      status.innerHTML = matchedTxn
-        ? `✓ Added to Expenses tab. <strong>Matches statement entry: ${esc(matchedTxn.vendor)} on ${matchedTxn.date}</strong> — that transaction is now receipt-verified.`
-        : '✓ Added to Expenses tab in your Google Sheet.';
-      if(matchedTxn) matchedTxn.receiptVerified = true; // mark in memory
+      if (isHome) {
+        const pct = Math.round(allocRate*100);
+        status.innerHTML = `✅ Home office entry added — <strong>$${fmtMoney(sendTotal)}</strong> (${pct}% of $${fmtMoney(fullTotal)})${sendHST > 0 ? `, ITC: $${fmtMoney(sendHST)}` : ', no ITC'} → Expenses tab.`;
+      } else {
+        status.innerHTML = matchedTxn
+          ? `✅ Added to Expenses tab. <strong>Matched: ${esc(matchedTxn.vendor)} on ${matchedTxn.date}</strong> — receipt verified.`
+          : '✅ Added to Expenses tab in your Google Sheet.';
+        if(matchedTxn) matchedTxn.receiptVerified = true;
+      }
     } else {
       status.textContent = '❌ Error: ' + (d.error || 'Unknown');
       btn.disabled = false;
@@ -4050,6 +4205,30 @@ const HELP = {
 <h3>Quick-question chips:</h3>
 <p>The buttons above the text box are pre-loaded common questions for your situation. Click any one to instantly get an answer.</p>
 <div class="help-tip">The AI gives planning guidance based on current Canadian tax law. For final decisions on large amounts, confirm with a CPA — but this tool will make those conversations much faster and cheaper.</div>`
+  },
+
+  // ── HOME OFFICE ─────────────────────────────────────────
+  home_office: {
+    icon: '🏠',
+    title: 'Home Office Bills — How It Works',
+    body: `<p>Switch to <strong>🏠 Home Office Bill</strong> mode to upload any personal household bill and have the business portion automatically calculated.</p>
+<h3>Your allocation rate: 11%</h3>
+<p>This means 11% of your home expenses are deductible as a business expense — based on the square footage of your home office divided by total home square footage. CRA accepts this method.</p>
+<h3>Which bills to upload:</h3>
+<ul>
+  <li><strong>Enbridge Gas</strong> — HST applies ✅ ITC claimable</li>
+  <li><strong>Hydro One</strong> — HST applies ✅ ITC claimable</li>
+  <li><strong>Internet (Tek Savy/Rogers)</strong> — HST applies ✅ ITC claimable</li>
+  <li><strong>Water / Entegrus</strong> — HST applies ✅ ITC claimable</li>
+  <li><strong>Home Insurance</strong> — no HST, no ITC (still deductible)</li>
+  <li><strong>Property Tax</strong> — no HST, no ITC (still deductible)</li>
+  <li><strong>Mortgage Interest</strong> — no HST, no ITC (still deductible)</li>
+  <li><strong>Car Insurance</strong> — no HST, no ITC (still deductible)</li>
+</ul>
+<h3>What gets sent to your sheet:</h3>
+<p>Only the <strong>11% business portion</strong> is recorded — not the full bill. The description is automatically tagged "home office allocation" so it's clear in your records.</p>
+<div class="help-tip">CRA requires you to be able to prove the square footage calculation if audited. Keep a note of: home office sq ft ÷ total home sq ft = your % rate.</div>
+<div class="help-cra">You can adjust the allocation % on the fly if some bills have a different rate (e.g. if your internet is 100% business use).</div>`
   },
 
   // ── GOOGLE SHEETS ───────────────────────────────────────
