@@ -410,6 +410,87 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 }
 @media(max-width:480px){#home-tiles{grid-template-columns:1fr!important}}
 
+/* ── HELP SYSTEM ── */
+.help-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--paper3);border:1px solid var(--rule);
+  color:var(--ink3);font-size:.68rem;font-weight:600;
+  cursor:pointer;transition:all .15s;flex-shrink:0;
+  font-family:var(--mono);line-height:1;
+  vertical-align:middle;margin-left:.4rem;
+}
+.help-btn:hover{background:var(--green);border-color:var(--green);color:white}
+
+#helpOverlay{
+  position:fixed;inset:0;z-index:10000;
+  background:rgba(21,26,24,.55);
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+#helpOverlay.open{opacity:1;pointer-events:all}
+#helpModal{
+  background:var(--white);border-radius:10px;
+  max-width:520px;width:100%;
+  box-shadow:0 24px 80px rgba(0,0,0,.28);
+  transform:translateY(8px) scale(.98);
+  transition:transform .2s;
+  max-height:88vh;display:flex;flex-direction:column;
+  overflow:hidden;
+}
+#helpOverlay.open #helpModal{transform:translateY(0) scale(1)}
+.help-modal-head{
+  background:var(--ink);color:#f5f2ec;
+  padding:1.1rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-shrink:0;
+}
+.help-modal-icon{font-size:1.5rem;line-height:1}
+.help-modal-title{font-family:var(--serif);font-size:1rem;font-weight:600;flex:1}
+.help-modal-close{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  border-radius:var(--radius);padding:.3rem .7rem;color:#f5f2ec;
+  cursor:pointer;font-size:.82rem;transition:all .15s;white-space:nowrap;
+}
+.help-modal-close:hover{background:rgba(255,255,255,.25)}
+.help-modal-body{
+  padding:1.4rem 1.5rem;overflow-y:auto;font-size:.875rem;
+  color:var(--ink2);line-height:1.7;flex:1;
+}
+.help-modal-body h3{
+  font-family:var(--serif);font-size:.95rem;font-weight:600;
+  color:var(--ink);margin:1.1rem 0 .4rem;
+}
+.help-modal-body h3:first-child{margin-top:0}
+.help-modal-body p{margin-bottom:.75rem}
+.help-modal-body ul{padding-left:1.2rem;margin-bottom:.75rem}
+.help-modal-body li{margin-bottom:.35rem}
+.help-modal-body strong{font-weight:600;color:var(--ink)}
+.help-modal-body .help-tip{
+  background:var(--amberlt);border:1px solid #e6c97a;
+  border-radius:var(--radius);padding:.7rem 1rem;
+  font-size:.8rem;color:var(--amber);line-height:1.6;
+  margin:.75rem 0;
+}
+.help-modal-body .help-tip::before{content:"💡 ";font-style:normal}
+.help-modal-body .help-example{
+  background:var(--paper2);border:1px solid var(--rule);
+  border-radius:var(--radius);padding:.65rem 1rem;
+  font-family:var(--mono);font-size:.76rem;color:var(--ink2);
+  margin:.5rem 0;line-height:1.6;
+}
+.help-modal-body .help-cra{
+  background:var(--bluelt);border:1px solid #b8cfe8;
+  border-radius:var(--radius);padding:.7rem 1rem;
+  font-size:.8rem;color:var(--blue);line-height:1.6;
+  margin:.75rem 0;
+}
+.help-modal-footer{
+  padding:.85rem 1.5rem;border-top:1px solid var(--rule);
+  display:flex;justify-content:flex-end;flex-shrink:0;
+}
+
 /* ── LOCK SCREEN ── */
 #lockScreen{
   position:fixed;inset:0;z-index:9999;
@@ -488,7 +569,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 <div id="appContent" style="display:none">
 <header>
   <div class="brand"><div class="brand-dot"></div>Postma Contracting Inc. — Bookkeeping Tools</div>
-  <div class="header-sub">ONTARIO HST 13% · FISCAL APR–MAR · <span id="sheetLink" style="cursor:pointer;text-decoration:underline" onclick="window.open('https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw','_blank')">OPEN SHEET ↗</span></div>
+  <div class="header-sub">ONTARIO HST 13% · FISCAL APR–MAR · <span id="sheetLink" style="cursor:pointer;text-decoration:underline" onclick="window.open('https://docs.google.com/spreadsheets/d/1ZYGnskYB2duwGMvYDfR0xoBzZDJ44aBQbSp0h_hNWSw','_blank')">OPEN SHEET ↗</span> · <span style="cursor:pointer;text-decoration:underline;color:#4caf7d" onclick="showHelp('sheets_link')">WHAT'S IN THE SHEET?</span></div>
 </header>
 
 <div class="tabs">
@@ -507,7 +588,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 <div class="page">
 
   <div class="page-header">
-    <h1 class="page-title">What happened today?</h1>
+    <h1 class="page-title">What happened today? <button class="help-btn" onclick="showHelp('home_overview')" title="How this works">?</button></h1>
     <p class="page-sub">Pick what you did — we'll walk you through exactly what to record, step by step.</p>
   </div>
 
@@ -682,14 +763,14 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 <div class="page">
   <div class="step-tracker" id="tracker-importer"></div>
   <div class="page-header">
-    <h1 class="page-title">Statement Importer</h1>
+    <h1 class="page-title">Statement Importer <button class="help-btn" onclick="showHelp('importer_upload')" title="How to import statements">?</button></h1>
     <p class="page-sub">Upload your AMEX or BMO statement — PDF or CSV both work. AI reads every transaction, categorizes it, and extracts HST automatically.</p>
   </div>
 
   <!-- Step 1: Upload -->
   <div id="imp-step1">
     <div class="card">
-      <div class="card-title">Select bank & upload statement</div>
+      <div class="card-title">Select bank & upload statement <button class="help-btn" onclick="showHelp('importer_bank_select')" title="Which bank to choose">?</button></div>
       <div class="bank-tabs">
         <button class="bank-tab active" onclick="setBank('AMEX',this)">AMEX Credit Card</button>
         <button class="bank-tab" onclick="setBank('BMO',this)">BMO Bank Account</button>
@@ -715,6 +796,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
     </div>
     <div class="btn-row">
       <button class="btn btn-primary" id="impAnalyzeBtn" onclick="impAnalyze()" disabled>Analyze with AI →</button>
+      <button class="help-btn" onclick="showHelp('importer_analyze')" title="What AI analysis does" style="align-self:center">?</button>
       <span id="impStatus" style="font-size:.82rem;color:var(--ink3);align-self:center"></span>
     </div>
   </div>
@@ -725,6 +807,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
     <div class="card">
       <div class="card-title">
         Categorized transactions <span class="badge badge-green">AI</span>
+        <button class="help-btn" onclick="showHelp('importer_categories')" title="How to review and fix categories" style="margin-left:.25rem">?</button>
         <span style="margin-left:auto;display:flex;gap:.75rem;align-items:center">
           <label style="font-size:.78rem;color:var(--ink3);display:flex;align-items:center;gap:.35rem">
             <input type="checkbox" id="hideSkip" onchange="impRender()" style="accent-color:var(--green)"> Hide skipped
@@ -752,6 +835,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       <button class="btn btn-green" id="sendSheetsBtn" onclick="sendToSheets()">
         📊 Send to Google Sheets
       </button>
+      <button class="help-btn" onclick="showHelp('importer_send_sheets')" title="What happens when you send to Sheets" style="align-self:center">?</button>
       <span id="sendSheetsStatus" style="font-size:.82rem;color:var(--ink3);align-self:center"></span>
     </div>
   </div>
@@ -779,7 +863,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 <div class="page">
   <div class="step-tracker" id="tracker-invoice"></div>
   <div class="page-header">
-    <h1 class="page-title">Invoice Wizard</h1>
+    <h1 class="page-title">Invoice Wizard <button class="help-btn" onclick="showHelp('invoice_number')" title="How invoicing works">?</button></h1>
     <p class="page-sub">Fill in the fields — the invoice builds live on the right.</p>
   </div>
   <div class="inv-layout">
@@ -787,7 +871,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
     <!-- Left: Form -->
     <div>
       <div class="card">
-        <div class="card-title">Billing from</div>
+        <div class="card-title">Billing from <button class="help-btn" onclick="showHelp('invoice_company')" title="Which company name to use">?</button></div>
         <div style="display:flex;gap:.5rem;margin-bottom:1.25rem">
           <button class="co-btn bank-tab active" data-co="postma" onclick="setInvCompany('postma')" style="display:flex;align-items:center;gap:.4rem">
             <span style="width:10px;height:10px;border-radius:50%;background:#1a5c38;display:inline-block"></span>
@@ -798,9 +882,9 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
             PC Tires
           </button>
         </div>
-        <div class="card-title" style="margin-top:0">Invoice details</div>
+        <div class="card-title" style="margin-top:0">Invoice details <button class="help-btn" onclick="showHelp('invoice_dates')" title="Invoice date and due date explained">?</button></div>
         <div style="margin-bottom:1.1rem">
-          <label style="font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.4rem">Invoice number</label>
+          <label style="font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:.4rem">Invoice number <button class="help-btn" onclick="showHelp('invoice_number')" title="How invoice numbers work">?</button></label>
           <div class="inv-num-row">
             <div class="inv-num-disp" id="invNumDisp">342266</div>
             <button class="btn-regen" onclick="regenInv()">↺ New #</button>
@@ -812,22 +896,24 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
           <div class="field"><label>Due date</label><input type="date" id="invDue" oninput="invUpdate()"></div>
         </div>
         <hr class="divider">
-        <div class="field"><label>Client name</label><input type="text" id="invClient" placeholder="Postma Heating Ltd." oninput="invUpdate()" list="clientSugg"><datalist id="clientSugg"><option value="Postma Heating Ltd."><option value="42 Braemer"></datalist></div>
+        <div class="field"><label>Client name <button class="help-btn" onclick="showHelp('invoice_client')" title="Client info and saved clients">?</button></label><input type="text" id="invClient" placeholder="Postma Heating Ltd." oninput="invUpdate()" list="clientSugg"><datalist id="clientSugg"><option value="Postma Heating Ltd."><option value="42 Braemer"></datalist></div>
         <div class="field"><label>Client address (optional)</label><textarea id="invAddr" placeholder="123 Main St&#10;Chatham, ON" oninput="invUpdate()"></textarea></div>
         <div class="field"><label>Client email (optional)</label><input type="email" id="invEmail" placeholder="billing@client.com" oninput="invUpdate()"></div>
         <hr class="divider">
-        <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;margin-bottom:.6rem">Line items</div>
+        <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;margin-bottom:.6rem">Line items <button class="help-btn" onclick="showHelp('invoice_lineitems')" title="How to fill in line items">?</button></div>
         <div id="lineItemsWrap"></div>
         <button class="btn-add-li" onclick="addLine()">+ Add line item</button>
         <div class="toggle-row">
-          <div class="toggle-lbl">Charge HST (13%)<small>Ontario — RT 0001</small></div>
+          <div class="toggle-lbl">Charge HST (13%) <button class="help-btn" onclick="showHelp('invoice_hst')" title="When to charge HST">?</button><small>Ontario — RT 0001</small></div>
           <label class="toggle-sw"><input type="checkbox" id="invHST" checked onchange="invUpdate()"><div class="t-track"></div><div class="t-knob"></div></label>
         </div>
         <div class="totals-box" id="invTotalsBox"></div>
         <div class="field" style="margin-top:1.1rem"><label>Notes (optional)</label><textarea id="invNotes" placeholder="Payment due within 30 days. E-transfer to calebpostma [at] gmail.com" oninput="invUpdate()"></textarea></div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="invPrint()">⬇ Download PDF</button>
+          <button class="help-btn" onclick="showHelp('invoice_pdf')" title="What the PDF includes">?</button>
           <button class="btn btn-green" id="invSheetsBtn" onclick="invSendToSheets()">📊 Send to Google Sheets</button>
+          <button class="help-btn" onclick="showHelp('invoice_sheets')" title="Where this goes in your Sheet">?</button>
           <button class="btn btn-outline" onclick="invClear()">Clear</button>
         </div>
         <div id="invSheetsStatus" style="font-size:.82rem;color:var(--ink3);margin-top:.5rem"></div>
@@ -870,13 +956,13 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 <div class="page">
   <div class="step-tracker" id="tracker-receipt"></div>
   <div class="page-header">
-    <h1 class="page-title">Receipt Scanner</h1>
+    <h1 class="page-title">Receipt Scanner <button class="help-btn" onclick="showHelp('receipt_upload')" title="How to scan receipts">?</button></h1>
     <p class="page-sub">Upload a photo of a receipt — AI reads the merchant, amount, date and suggests a category.</p>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
     <div>
       <div class="card">
-        <div class="card-title">Upload receipt photo</div>
+        <div class="card-title">Upload receipt photo <button class="help-btn" onclick="showHelp('receipt_upload')" title="Tips for a good receipt photo">?</button></div>
         <div class="receipt-upload" id="rcptZone" ondragover="rcptDragOver(event)" ondragleave="rcptDragLeave()" ondrop="rcptDrop(event)">
           <input type="file" accept="image/*,application/pdf,.pdf" id="rcptInput" onchange="rcptChosen(event)">
           <span class="receipt-icon">📷</span>
@@ -886,15 +972,18 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
           <img id="rcptPreview" class="receipt-preview hidden" alt="Receipt preview">
         </div>
         <div id="rcptAnalyzeWrap" class="hidden" style="margin-top:1rem">
-          <button class="btn btn-primary" id="rcptAnalyzeBtn" onclick="rcptAnalyze()" style="width:100%">
+          <div style="display:flex;align-items:center;gap:.5rem">
+          <button class="btn btn-primary" id="rcptAnalyzeBtn" onclick="rcptAnalyze()" style="flex:1">
             <span id="rcptBtnTxt">Scan receipt with AI →</span>
           </button>
+          <button class="help-btn" onclick="showHelp('receipt_scan')" title="What the AI extracts">?</button>
+          </div>
         </div>
       </div>
     </div>
     <div>
       <div class="card" id="rcptResultCard">
-        <div class="card-title">Extracted details <span class="badge badge-green" id="rcptBadge" style="display:none">AI read</span></div>
+        <div class="card-title">Extracted details <span class="badge badge-green" id="rcptBadge" style="display:none">AI read</span> <button class="help-btn" onclick="showHelp('receipt_match')" title="Receipt matching explained">?</button></div>
         <div id="rcptResultContent">
           <div style="text-align:center;padding:2rem;color:var(--ink3)">
             <div style="font-size:2rem;margin-bottom:.5rem">🧾</div>
@@ -905,6 +994,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       <div id="rcptExportWrap" class="hidden">
         <div class="btn-row">
           <button class="btn btn-green" id="rcptSheetsBtn" onclick="rcptSendToSheets()">📊 Send to Google Sheets</button>
+          <button class="help-btn" onclick="showHelp('importer_send_sheets')" title="Where this goes in your Sheet">?</button>
           <button class="btn btn-outline" onclick="rcptClear()">Clear / Scan another</button>
         </div>
         <div id="rcptSheetsStatus" style="font-size:.82rem;color:var(--ink3);margin-top:.5rem"></div>
@@ -922,7 +1012,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 <div class="page">
   <div class="step-tracker" id="tracker-taxfiling"></div>
   <div class="page-header">
-    <h1 class="page-title">CRA Tax Filing</h1>
+    <h1 class="page-title">CRA Tax Filing <button class="help-btn" onclick="showHelp('hst_overview')" title="Overview of HST and tax filing">?</button></h1>
     <p class="page-sub">Pre-filled CRA form boxes for Postma Contracting Inc. · HST returns, corporate T2, and payroll remittances. Enter amounts and download/print your completed forms.</p>
   </div>
 
@@ -945,7 +1035,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 
     <!-- Period selector -->
     <div class="card">
-      <div class="card-title">Select Filing Period</div>
+      <div class="card-title">Select Filing Period <button class="help-btn" onclick="showHelp('hst_overview')" title="HST periods and deadlines">?</button></div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem">
         <div onclick="craSetPeriod('Q1',this)" style="border:1px solid var(--rule);border-radius:var(--radius);padding:.85rem;cursor:pointer;text-align:center;transition:all .15s" class="period-card">
           <div style="font-family:var(--mono);font-size:.65rem;color:var(--ink3)">Q1</div>
@@ -981,7 +1071,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       </div>
 
       <!-- PART A: SALES & OTHER REVENUE -->
-      <div class="cra-section-label">Part A — Sales &amp; Revenue (what you charged HST on)</div>
+      <div class="cra-section-label">Part A — Sales &amp; Revenue (what you charged HST on) <button class="help-btn" onclick="showHelp('hst_line101')" title="What to enter for total sales">?</button></div>
       <div class="box-grid">
         <div class="cra-box">
           <div class="box-code">LINE 101</div>
@@ -1016,7 +1106,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       </div>
 
       <!-- PART B: INPUT TAX CREDITS -->
-      <div class="cra-section-label">Part B — Input Tax Credits (HST you paid on business expenses)</div>
+      <div class="cra-section-label">Part B — Input Tax Credits (HST you paid on business expenses) <button class="help-btn" onclick="showHelp('hst_itc')" title="What qualifies as an ITC">?</button></div>
       <div class="box-grid">
         <div class="cra-box">
           <div class="box-code">LINE 106</div>
@@ -1127,7 +1217,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
       </div>
 
       <!-- Schedule 1 — Income from operations -->
-      <div class="cra-section-label">Schedule 1 — Net Income for Tax Purposes (mapped to your expense categories)</div>
+      <div class="cra-section-label">Schedule 1 — Net Income for Tax Purposes (mapped to your expense categories) <button class="help-btn" onclick="showHelp('t2_overview')" title="Corporate tax overview and rates">?</button></div>
 
       <div style="background:var(--white)">
         <!-- Revenue lines -->
@@ -1342,7 +1432,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
     </div>
 
     <div class="card" style="margin-top:1.25rem">
-      <div class="card-title">T2 Important Notes</div>
+      <div class="card-title">T2 Important Notes <button class="help-btn" onclick="showHelp('t2_overview')" title="T2 filing dates and what to know">?</button></div>
       <div style="font-size:.83rem;color:var(--ink2);line-height:1.8">
         <strong>Balance due date:</strong> June 30 (3 months after year-end March 31) — pay any tax owing to avoid arrears interest.<br>
         <strong>T2 filing date:</strong> September 30 (6 months after year-end) — late filing penalty is 5% + 1%/month up to 12 months.<br>
@@ -1373,7 +1463,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
     </div>
 
     <div class="card">
-      <div class="card-title">Payroll Remittance — Form PD7A</div>
+      <div class="card-title">Payroll Remittance — Form PD7A <button class="help-btn" onclick="showHelp('payroll_overview')" title="Payroll deductions explained">?</button></div>
       <p class="page-sub" style="margin-bottom:1rem">CRA payroll deductions must be remitted by the 15th of the month following payroll. Postma Contracting Inc. is a regular remitter.</p>
       <div class="autofill-bar" style="background:var(--greenlt);border-color:#b8ddc8">
         <span style="font-size:.8rem;color:var(--green)">Amounts below are pulled from your Employee Roster above. Edit the roster to update.</span>
@@ -1448,7 +1538,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
     </div>
 
     <div class="card" style="margin-top:1.25rem">
-      <div class="card-title">Payroll Remittance Quick Reference</div>
+      <div class="card-title">Payroll Remittance Quick Reference <button class="help-btn" onclick="showHelp('payroll_overview')" title="CPP, EI, and remittance rules">?</button></div>
       <div style="font-size:.83rem;color:var(--ink2);line-height:1.9">
         <strong>CPP 2025:</strong> Employee rate 5.95% · Max annual contribution $3,867.50 · Exemption $3,500<br>
         <strong>EI 2025:</strong> Employee rate 1.66% · Max annual premium $1,049.12 · Employer pays 1.4× employee<br>
@@ -1463,7 +1553,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
   <!-- ── T4 SLIPS ── -->
   <div class="cra-panel" id="cra-panel-t4">
     <div class="card">
-      <div class="card-title">T4 Slip — Statement of Remuneration Paid</div>
+      <div class="card-title">T4 Slip — Statement of Remuneration Paid <button class="help-btn" onclick="showHelp('t4_overview')" title="T4 slips and key deadlines">?</button></div>
       <p class="page-sub" style="margin-bottom:1rem">Issue a T4 for each employee paid in the calendar year. T4 Summary and slips due to CRA by last day of February.</p>
     </div>
 
@@ -1521,7 +1611,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
   <!-- ── TAX SAVING TIPS ── -->
   <div class="cra-panel" id="cra-panel-tips">
     <div class="card">
-      <div class="card-title">Tax-Saving Ideas for Postma Contracting Inc.</div>
+      <div class="card-title">Tax-Saving Ideas for Postma Contracting Inc. <button class="help-btn" onclick="showHelp('taxai_advisor')" title="How to use the AI Tax Advisor for more ideas">?</button></div>
       <p class="page-sub" style="margin-bottom:1rem">Legitimate tax strategies for an Ontario corporation in consulting + lawn care. These are ideas to explore — always confirm with CRA or a tax professional.</p>
     </div>
 
@@ -1604,13 +1694,14 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 <div class="panel" id="panel-taxai">
 <div class="page">
   <div class="page-header">
-    <h1 class="page-title">Tax Intelligence</h1>
+    <h1 class="page-title">Tax Intelligence <button class="help-btn" onclick="showHelp('taxai_overview')" title="What's in this tab">?</button></h1>
     <p class="page-sub">Real-time tax position, year-end strategy, and AI advisor — specific to Postma Contracting Inc.</p>
   </div>
 
   <!-- LIVE TAX POSITION -->
   <div class="card" id="taxPosCard">
     <div class="card-title">📊 Live Tax Position
+      <button class="help-btn" onclick="showHelp('taxai_liveposition')" title="What to enter and how it calculates" style="margin-left:.3rem">?</button>
       <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="taxRefresh()">↻ Refresh from Sheet</button>
     </div>
     <div id="taxPosContent">
@@ -1643,19 +1734,19 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 
   <!-- YEAR-END COUNTDOWN -->
   <div class="card">
-    <div class="card-title">📅 Year-End Countdown</div>
+    <div class="card-title">📅 Year-End Countdown <button class="help-btn" onclick="showHelp('t2_overview')" title="Key filing deadlines for your fiscal year">?</button></div>
     <div id="yearEndCountdown" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem"></div>
   </div>
 
   <!-- TAX SAVING ACTIONS -->
   <div class="card">
-    <div class="card-title">💡 Smart Tax Actions <span class="badge badge-amber">Personalized</span></div>
+    <div class="card-title">💡 Smart Tax Actions <span class="badge badge-amber">Personalized</span> <button class="help-btn" onclick="showHelp('taxai_overview')" title="How to use Tax Intelligence">?</button></div>
     <div id="taxActions"></div>
   </div>
 
   <!-- SALARY vs DIVIDEND OPTIMIZER -->
   <div class="card">
-    <div class="card-title">⚖️ Salary vs Dividend Optimizer</div>
+    <div class="card-title">⚖️ Salary vs Dividend Optimizer <button class="help-btn" onclick="showHelp('taxai_salary')" title="How to use the salary optimizer">?</button></div>
     <p style="font-size:.83rem;color:var(--ink2);margin-bottom:1rem;line-height:1.6">
       Based on your structure: <strong>Postma Contracting Inc.</strong> → <strong>Family Trust</strong> → beneficiaries (you, Andrea, kids).
       The optimal mix depends on each person's income. Adjust below to model different scenarios.
@@ -1675,7 +1766,7 @@ kbd{background:var(--paper2);border:1px solid var(--rule);border-radius:3px;padd
 
   <!-- AI TAX ADVISOR -->
   <div class="card">
-    <div class="card-title">🤖 AI Tax Advisor <span class="badge badge-green">AI</span></div>
+    <div class="card-title">🤖 AI Tax Advisor <span class="badge badge-green">AI</span> <button class="help-btn" onclick="showHelp('taxai_advisor')" title="How to use the AI advisor">?</button></div>
     <p style="font-size:.83rem;color:var(--ink3);margin-bottom:1rem">Ask anything about your tax situation. The AI knows your structure: Ontario corp, family trust, income sprinkling, fiscal year April–March.</p>
 
     <!-- Quick question chips -->
@@ -3522,6 +3613,494 @@ window.addEventListener('load',()=>{
 });
 
 // ════════════════════════════════════════════════════════════
+// HELP SYSTEM — showHelp(id)
+// ════════════════════════════════════════════════════════════
+const HELP = {
+
+  // ── HOME TAB ────────────────────────────────────────────
+  home_overview: {
+    icon: '🏠',
+    title: 'What Happened Today? — Overview',
+    body: `<p>This is your <strong>starting point</strong> every time you use the tool. Instead of trying to figure out which tab to go to, just pick what happened:</p>
+<ul>
+  <li>💰 <strong>Sold something / made income</strong> → creates an invoice and logs your income</li>
+  <li>🛒 <strong>Bought something / had an expense</strong> → imports your statement or adds a single expense</li>
+  <li>🧾 <strong>Have a receipt</strong> → scans it with AI and logs it automatically</li>
+  <li>📄 <strong>Have a bank or credit card statement</strong> → bulk-imports all transactions at once</li>
+  <li>👤 <strong>Paid an employee</strong> → records payroll in the CRA tab</li>
+  <li>📋 <strong>Need to file taxes</strong> → opens the CRA filing forms</li>
+</ul>
+<p>Each option gives you exact step-by-step instructions. You won't need to guess.</p>`
+  },
+
+  // ── STATEMENT IMPORTER ──────────────────────────────────
+  importer_bank_select: {
+    icon: '🏦',
+    title: 'Choosing Your Bank',
+    body: `<p>Pick which account the statement is from <strong>before</strong> you upload — this tells the AI how to read the file.</p>
+<h3>AMEX Credit Card</h3>
+<p>Your American Express business card. Used for most day-to-day purchases. AMEX statements list each purchase with the merchant name, date, and amount. The AI knows AMEX's format and will automatically flag credit card payments showing up on your BMO account as "Bill Payment / Transfer" so they don't get double-counted as expenses.</p>
+<h3>BMO Bank Account</h3>
+<p>Your BMO business chequing account. Used for payroll, supplier payments, and transfers. BMO statements include deposits and withdrawals.</p>
+<div class="help-tip">Import AMEX and BMO statements separately each month. Do AMEX first, then BMO. The tool remembers which you did so it can match receipts and flag duplicates.</div>`
+  },
+
+  importer_upload: {
+    icon: '📂',
+    title: 'Uploading Your Statement',
+    body: `<p>You can upload your statement in two ways:</p>
+<h3>Option 1 — PDF (easiest)</h3>
+<p>Download your statement as a PDF directly from your bank's website. Just drag it in — the AI reads it directly. No conversion needed.</p>
+<h3>Option 2 — CSV</h3>
+<p>Download as a CSV (spreadsheet) file. More accurate for large statements with many transactions.</p>
+<h3>How to download from AMEX</h3>
+<div class="help-example">americanexpress.com → Log in → Statements & Activity → Select statement → Download → PDF or CSV</div>
+<h3>How to download from BMO</h3>
+<div class="help-example">bmo.com → Log in → My Accounts → Click account → Download Transactions → Set date range → CSV</div>
+<div class="help-tip">If the file won't upload, make sure you're using the correct file type (PDF or CSV). Screenshots or photos of your statement won't work — you need the actual downloaded file.</div>`
+  },
+
+  importer_analyze: {
+    icon: '🤖',
+    title: 'Analyze with AI',
+    body: `<p>This sends your statement to the AI, which reads every transaction and:</p>
+<ul>
+  <li>Identifies the <strong>merchant name</strong> and cleans it up (e.g., "SQ *RONA CHATHAM" becomes "Rona")</li>
+  <li>Assigns an <strong>expense category</strong> (Fuel, Supplies, Meals & Entertainment, etc.)</li>
+  <li>Extracts the <strong>HST</strong> automatically (most business purchases include 13% HST)</li>
+  <li>Calculates the <strong>net amount</strong> before HST</li>
+  <li>Gives a <strong>confidence score</strong> so you know which ones to double-check</li>
+</ul>
+<p>This takes about 10–30 seconds depending on how many transactions there are.</p>
+<div class="help-tip">The AI is right about 90% of the time. Always scan the results — anything with a lower confidence score (shown in amber or red) should be reviewed first.</div>`
+  },
+
+  importer_categories: {
+    icon: '🏷️',
+    title: 'Reviewing & Fixing Categories',
+    body: `<p>After the AI runs, you'll see a table of all your transactions. Here's what to check:</p>
+<h3>Change a category</h3>
+<p>Click the dropdown in the <strong>Category</strong> column for any row and pick the right one. Common fixes:</p>
+<ul>
+  <li><strong>Costco</strong> might show as Supplies — check if it was actually a Membership renewal</li>
+  <li><strong>Amazon</strong> could be anything — Tools, Supplies, or even personal (exclude it)</li>
+  <li><strong>Tim Hortons / coffee shops</strong> are Meals & Entertainment (50% deductible only)</li>
+</ul>
+<h3>Exclude a transaction</h3>
+<p>Click the <strong>✕</strong> button on any row to mark it as "not a business expense." The row turns grey and won't be sent to your Google Sheet. Use this for:</p>
+<ul>
+  <li>Personal purchases on the business card</li>
+  <li>Credit card payments (already captured as AMEX expenses)</li>
+  <li>Transfers between your own accounts</li>
+</ul>
+<div class="help-tip">HST is only extracted for categories where HST applies. Wages, insurance, bank charges, and property tax are flagged as non-HST automatically.</div>`
+  },
+
+  importer_send_sheets: {
+    icon: '📊',
+    title: 'Send to Google Sheets',
+    body: `<p>Once you're happy with the categories, this button sends all your reviewed transactions directly to your Google Sheet — no copy-paste needed.</p>
+<h3>Where do the rows go?</h3>
+<ul>
+  <li><strong>Expenses</strong> (most transactions) → go to the 💸 Expenses tab</li>
+  <li><strong>Income Received</strong> category → goes to the 💰 Income tab</li>
+</ul>
+<h3>Duplicate detection</h3>
+<p>If you try to import the same statement twice, the tool will warn you. It checks dates and amounts to catch duplicates before they get into your sheet.</p>
+<h3>After sending</h3>
+<p>Open your Google Sheet to verify the rows landed correctly. The Expenses tab should show the new transactions at the bottom. The HST columns (G and H) fill in automatically via formula — don't type in those columns.</p>
+<div class="help-cra">The HST you paid on expenses is called an <strong>Input Tax Credit (ITC)</strong>. It reduces the HST you owe CRA. Keeping accurate expense records is how you get that money back.</div>`
+  },
+
+  // ── INVOICE WIZARD ──────────────────────────────────────
+  invoice_company: {
+    icon: '🏢',
+    title: 'Choosing the Company Name',
+    body: `<p>You have two company names that both operate under the same legal entity and HST number:</p>
+<h3>Postma Contracting Inc.</h3>
+<p>Use this for: lawn care, snow removal, general contracting, management consulting, and any work that isn't tire/wheel related.</p>
+<h3>PC Tires</h3>
+<p>The full legal name is "PC Tires o/a Postma Contracting Inc." — use this for all tire and wheel sales. "o/a" means "operating as."</p>
+<div class="help-tip">Both companies share the same HST number (RT 0001) and bank account. The only thing that changes on the invoice is the company name shown at the top.</div>`
+  },
+
+  invoice_number: {
+    icon: '#',
+    title: 'Invoice Numbers',
+    body: `<p>Your invoice numbers start at <strong>342266</strong> and increment automatically each time you create a new invoice.</p>
+<h3>Why do invoice numbers matter?</h3>
+<ul>
+  <li>CRA requires sequential invoice numbering — it proves your income records are complete</li>
+  <li>Clients use invoice numbers when they pay by e-transfer so you can match the payment</li>
+  <li>Auditors look for gaps in invoice numbers — a missing number raises questions</li>
+</ul>
+<h3>Can I use a custom number?</h3>
+<p>Yes — type directly in the "Custom" field. Use this only if you're catching up on a missed invoice and need to backfill a specific number.</p>
+<h3>↺ New # button</h3>
+<p>If you accidentally generated a number but didn't send the invoice, click this to regenerate. Don't leave gaps in your numbering.</p>`
+  },
+
+  invoice_dates: {
+    icon: '📅',
+    title: 'Invoice Date & Due Date',
+    body: `<p><strong>Invoice Date:</strong> The date you're issuing the invoice — usually today. This is the date CRA considers the income "earned," which determines which quarter the HST belongs to.</p>
+<p><strong>Due Date:</strong> When you expect payment. Standard for small business is <strong>Net 30</strong> (30 days from invoice date). You can also use Net 15 for faster payment, or "Due on Receipt" for immediate payment.</p>
+<div class="help-tip">For HST purposes, what matters is the invoice date, not the payment date. If you invoice in March but get paid in April, the HST belongs to your Q4 (Jan–Mar) return — due April 30.</div>`
+  },
+
+  invoice_client: {
+    icon: '👤',
+    title: 'Client Information',
+    body: `<p>Start typing a client name and your saved clients will appear as suggestions:</p>
+<ul>
+  <li><strong>Postma Heating Ltd.</strong> — your affiliated company</li>
+  <li><strong>42 Braemer</strong> — your property management client</li>
+</ul>
+<p>For new clients, just type their name. You don't need to add them in advance.</p>
+<h3>Address and email</h3>
+<p>Both are optional but helpful. The address appears on the invoice as the "Bill To" section. The email is for your own reference — the tool doesn't send emails automatically.</p>
+<div class="help-tip">Even if you're billing a related company (like Postma Heating), you still need a proper invoice with an address and clear description. CRA scrutinizes transactions between related parties — proper documentation protects you.</div>`
+  },
+
+  invoice_lineitems: {
+    icon: '📋',
+    title: 'Line Items',
+    body: `<p>Each line item is one thing you're billing for. Most invoices have 1–3 line items.</p>
+<h3>Fields for each line item:</h3>
+<ul>
+  <li><strong>Description:</strong> What you did or sold. Be specific — "Property management services – March 2026" is better than "Services."</li>
+  <li><strong>Qty:</strong> Number of units, hours, or items. Can be a decimal (e.g., 2.5 for 2.5 hours).</li>
+  <li><strong>Rate:</strong> Price per unit/hour. The total calculates automatically.</li>
+</ul>
+<h3>+ Add line item</h3>
+<p>Click this to add another line. Useful when billing for multiple services on one invoice (e.g., labour + materials).</p>
+<div class="help-example">Description: "Lawn maintenance – April 2026"  ·  Qty: 4  ·  Rate: $250  =  $1,000</div>`
+  },
+
+  invoice_hst: {
+    icon: '🍁',
+    title: 'HST Toggle (Charge HST?)',
+    body: `<p>Ontario HST is <strong>13%</strong> and your registration number is <strong>RT 0001</strong>.</p>
+<h3>When to turn HST ON (most of the time):</h3>
+<ul>
+  <li>Billing any business for services or products</li>
+  <li>Billing Postma Heating Ltd. (even though it's related)</li>
+  <li>Tire and wheel sales</li>
+  <li>Lawn care, snow removal, consulting</li>
+</ul>
+<h3>When to turn HST OFF (rare):</h3>
+<ul>
+  <li>The client is an individual consumer on a zero-rated or exempt service</li>
+  <li>You're billing for a non-taxable item (e.g., certain financial services)</li>
+  <li>The client is outside Canada</li>
+</ul>
+<div class="help-cra">The HST you charge is <strong>not your money</strong> — you're collecting it on behalf of CRA and remitting it quarterly. If you charge $1,000 + $130 HST, you keep $1,000 and send CRA $130 (minus any HST you paid on expenses).</div>`
+  },
+
+  invoice_pdf: {
+    icon: '⬇️',
+    title: 'Download Invoice as PDF',
+    body: `<p>This saves a professionally formatted PDF of the invoice to your Downloads folder. Send this file to your client — by email, text, or however you normally communicate.</p>
+<h3>What the invoice includes:</h3>
+<ul>
+  <li>Your company name, address, and HST number</li>
+  <li>Invoice number, date, and due date</li>
+  <li>Client name and address</li>
+  <li>Line items with quantities and rates</li>
+  <li>Subtotal, HST amount, and grand total</li>
+  <li>Payment instructions (e-transfer to calebpostma@gmail.com)</li>
+</ul>
+<div class="help-tip">Keep a copy of every invoice you send — even if the client pays quickly. CRA can audit any year within 6 years. Your invoice is proof the income was legitimate.</div>`
+  },
+
+  invoice_sheets: {
+    icon: '📊',
+    title: 'Send Invoice to Google Sheets',
+    body: `<p>This button adds the invoice to two places in your Google Sheet at once:</p>
+<ul>
+  <li><strong>🧾 Invoices tab</strong> — records the invoice number, client, amount, and status (starts as "Unpaid")</li>
+  <li><strong>💰 Income tab</strong> — records the revenue for your income tracking and HST calculations</li>
+</ul>
+<h3>When the client pays:</h3>
+<p>Go to your Google Sheet → Invoices tab → find the invoice → change the Status column from <em>Unpaid</em> to <em>Paid</em> and enter the payment date.</p>
+<div class="help-tip">Send to Sheets every time you create an invoice — even if the client hasn't paid yet. Your income is considered "earned" on the invoice date, not the payment date. This is important for HST filing.</div>`
+  },
+
+  // ── RECEIPT SCANNER ─────────────────────────────────────
+  receipt_upload: {
+    icon: '📷',
+    title: 'Taking a Photo of Your Receipt',
+    body: `<p>The AI reads the merchant name, date, total amount, and HST directly from a photo of your receipt.</p>
+<h3>Tips for a good photo:</h3>
+<ul>
+  <li>Lay the receipt flat on a table</li>
+  <li>Make sure the <strong>total, merchant name, and date</strong> are all visible</li>
+  <li>Good lighting — near a window works well</li>
+  <li>Keep the phone steady — blurry photos won't read correctly</li>
+  <li>If the receipt is long, make sure the whole thing fits in frame</li>
+</ul>
+<h3>On a phone:</h3>
+<p>Tap the upload area and your camera will open. Take the photo directly, or choose an existing photo from your camera roll.</p>
+<h3>On a computer:</h3>
+<p>Click the upload area and select a photo file from your computer. JPG, PNG, and PDF formats all work.</p>`
+  },
+
+  receipt_scan: {
+    icon: '🤖',
+    title: 'Scan Receipt with AI',
+    body: `<p>After uploading your photo, click this button to let the AI read it. The AI extracts:</p>
+<ul>
+  <li><strong>Vendor/Merchant name</strong> — cleaned up and standardized</li>
+  <li><strong>Date</strong> — from the receipt (or today if it can't be read)</li>
+  <li><strong>Total amount</strong> — the full amount you paid</li>
+  <li><strong>HST paid</strong> — extracted from the receipt, or calculated at 13% if not shown separately</li>
+  <li><strong>Net amount</strong> — total minus HST</li>
+  <li><strong>Suggested category</strong> — based on the merchant type</li>
+</ul>
+<h3>What if the AI gets something wrong?</h3>
+<p>You can edit any field directly before sending to your sheet. The Category dropdown lets you override the AI's suggestion.</p>
+<div class="help-tip">Do this the same day you get the receipt. Takes 30 seconds. Letting receipts pile up makes tax time a nightmare — and CRA requires receipts for expenses over $30.</div>`
+  },
+
+  receipt_match: {
+    icon: '🔗',
+    title: 'Receipt Matching',
+    body: `<p>If you imported your AMEX statement earlier in the same session, the Receipt Scanner will automatically try to match this receipt to a transaction in that statement.</p>
+<h3>Why this matters:</h3>
+<p>Matching a receipt to a statement transaction creates a <strong>paper trail</strong> — the receipt proves what the card charge was for. CRA loves this.</p>
+<h3>How it works:</h3>
+<ul>
+  <li>The AI compares the vendor name, date, and amount to your imported AMEX transactions</li>
+  <li>If it finds a match, it shows you which transaction it matched</li>
+  <li>The receipt is flagged as "verified" in your expense records</li>
+</ul>
+<p>If no match is found, the receipt is still saved — it just won't be linked to a statement transaction.</p>`
+  },
+
+  // ── CRA TAX FILING ──────────────────────────────────────
+  hst_overview: {
+    icon: '🍁',
+    title: 'HST Return — Overview',
+    body: `<p>As a registered HST business, you collect 13% HST on sales and pay 13% HST on most expenses. The difference is what you remit (or claim back) from CRA each quarter.</p>
+<h3>Your HST periods (fiscal year April 1 – March 31):</h3>
+<ul>
+  <li><strong>Q1:</strong> Apr 1 – Jun 30 → due July 31</li>
+  <li><strong>Q2:</strong> Jul 1 – Sep 30 → due October 31</li>
+  <li><strong>Q3:</strong> Oct 1 – Dec 31 → due January 31</li>
+  <li><strong>Q4:</strong> Jan 1 – Mar 31 → due April 30</li>
+</ul>
+<h3>The formula:</h3>
+<div class="help-example">HST Collected (on sales) − HST Paid (on expenses) = Amount to Remit (or Refund)</div>
+<div class="help-cra">File on time — even if you can't pay. Late filing penalties are 1% of the balance owing plus 25% of that for each late month. Late payment is just interest (currently ~9% annually). Filing late without paying is always worse than paying late after filing on time.</div>`
+  },
+
+  hst_line101: {
+    icon: '📊',
+    title: 'Line 101 — Total Sales & Revenue',
+    body: `<p>Enter your <strong>total invoiced revenue for the quarter, including HST</strong>.</p>
+<h3>Where to find this number:</h3>
+<p>Go to your Google Sheet → Income tab → add up all the "Amount with HST" entries for the quarter dates.</p>
+<div class="help-example">Example: You invoiced $5,000 + $650 HST = $5,650 total. Enter $5,650 in Line 101.</div>
+<h3>What to include:</h3>
+<ul>
+  <li>All invoices issued during the quarter (even if not yet paid)</li>
+  <li>Any cash or e-transfer income received</li>
+</ul>
+<h3>What to exclude:</h3>
+<ul>
+  <li>HST-exempt or zero-rated sales (rare for contracting/lawn care)</li>
+  <li>Owner draws or transfers from your own accounts</li>
+</ul>`
+  },
+
+  hst_itc: {
+    icon: '↩️',
+    title: 'Input Tax Credits (ITCs) — Line 106',
+    body: `<p><strong>ITCs</strong> are the HST you paid on your business expenses. You get this money back by claiming it on your HST return — it reduces what you owe CRA.</p>
+<h3>Where to find this number:</h3>
+<p>If you imported your statements using the Statement Importer, this number auto-fills from your Expenses tab — it's the sum of the "HST Extracted" column for the quarter.</p>
+<h3>What qualifies as an ITC:</h3>
+<ul>
+  <li>Fuel, supplies, tools, repairs, telephone</li>
+  <li>Professional fees (accountant, lawyer — if they charged you HST)</li>
+  <li>Equipment purchases</li>
+  <li>Meals & Entertainment (50% of the HST only)</li>
+</ul>
+<h3>What does NOT qualify:</h3>
+<ul>
+  <li>Wages (no HST on wages)</li>
+  <li>Insurance (HST-exempt)</li>
+  <li>Bank charges and interest (HST-exempt)</li>
+  <li>Property tax (no HST)</li>
+</ul>
+<div class="help-cra">The Statement Importer already flags non-HST categories and excludes them from your ITC total automatically. This is one of the biggest benefits of keeping your books current.</div>`
+  },
+
+  t2_overview: {
+    icon: '🏢',
+    title: 'Corporate Tax Return (T2) — Overview',
+    body: `<p>Your company pays corporate income tax on its net income each year. The T2 is the annual return filed with CRA.</p>
+<h3>Postma Contracting Inc. tax rates:</h3>
+<ul>
+  <li>Federal Small Business Deduction: <strong>9%</strong></li>
+  <li>Ontario Small Business Rate: <strong>3.2%</strong></li>
+  <li>Combined: <strong>12.2%</strong> on the first $500,000 of active business income</li>
+</ul>
+<h3>Your fiscal year:</h3>
+<p>April 1 – March 31. Your T2 is due <strong>September 30</strong> (6 months after fiscal year-end). Any tax owing is due <strong>June 30</strong> (3 months after year-end).</p>
+<h3>The goal:</h3>
+<p>Legally reduce net corporate income as close to zero as possible through wages, expenses, and equipment purchases. Every $10,000 in deductions saves $1,220 in tax.</p>
+<div class="help-tip">The T2 estimate here is a planning tool — your actual T2 should be reviewed by an accountant or filed through CRA My Business Account. But this gives you a very accurate picture of where you stand.</div>`
+  },
+
+  payroll_overview: {
+    icon: '👥',
+    title: 'Payroll — Overview',
+    body: `<p>If you pay employees (including family members), you must withhold and remit CPP, EI, and income tax to CRA each payroll period.</p>
+<h3>Your employees:</h3>
+<ul>
+  <li><strong>Avienda, Akiya, Ezra</strong> — children</li>
+  <li><strong>Andrea</strong> — spouse/bookkeeper</li>
+</ul>
+<h3>Rates (2025):</h3>
+<ul>
+  <li><strong>CPP (employee):</strong> 5.95% on pensionable earnings</li>
+  <li><strong>EI (employee):</strong> 1.66% on insurable earnings</li>
+  <li><strong>CPP (employer match):</strong> same as employee</li>
+  <li><strong>EI (employer match):</strong> 1.4× employee amount</li>
+</ul>
+<div class="help-cra">Wages paid to family members must be "reasonable" — meaning you'd pay the same to a non-family employee for the same work. Keep records of what tasks each person does. CRA watches family wages closely for income sprinkling.</div>`
+  },
+
+  t4_overview: {
+    icon: '📄',
+    title: 'T4 Slips — Overview',
+    body: `<p>A T4 is the tax slip you issue to each employee at the end of the calendar year. It shows their total wages and the deductions withheld.</p>
+<h3>Important dates:</h3>
+<ul>
+  <li>T4 slips must be issued to employees by <strong>February 28</strong></li>
+  <li>T4 Summary must be filed with CRA by <strong>February 28</strong></li>
+  <li>Note: this is the <em>calendar</em> year end (Dec 31), not your fiscal year end (Mar 31)</li>
+</ul>
+<h3>Key T4 boxes:</h3>
+<ul>
+  <li><strong>Box 14:</strong> Employment income (total wages)</li>
+  <li><strong>Box 16:</strong> Employee CPP contributions</li>
+  <li><strong>Box 18:</strong> Employee EI premiums</li>
+  <li><strong>Box 22:</strong> Income tax deducted</li>
+</ul>
+<div class="help-tip">The T4 slips here auto-fill from your Employee Roster. Review them in January to make sure the full-year wages match your payroll records before filing with CRA.</div>`
+  },
+
+  taxai_overview: {
+    icon: '🧠',
+    title: 'Tax Intelligence — Overview',
+    body: `<p>This tab gives you a live picture of your tax position and helps you make smarter decisions throughout the year.</p>
+<h3>What's inside:</h3>
+<ul>
+  <li><strong>Live Tax Position</strong> — enter your YTD numbers to see estimated corporate tax instantly</li>
+  <li><strong>Year-End Countdown</strong> — four timers for your most important deadlines</li>
+  <li><strong>Smart Tax Actions</strong> — personalized recommendations based on your structure</li>
+  <li><strong>Salary vs Dividend Optimizer</strong> — shows whether paying wages saves more than keeping income in the corp</li>
+  <li><strong>AI Tax Advisor</strong> — ask free-form questions about your specific situation</li>
+</ul>
+<div class="help-tip">Check this tab once a month. The best tax planning happens during the year — not in a rush before your March 31 year-end.</div>`
+  },
+
+  taxai_liveposition: {
+    icon: '📈',
+    title: 'Live Tax Position',
+    body: `<p>Enter your year-to-date revenue, expenses, and wages to see an estimate of your current corporate tax owing.</p>
+<h3>Where to find these numbers:</h3>
+<ul>
+  <li><strong>Revenue:</strong> Google Sheet → Income tab → sum of Amount column (excluding HST)</li>
+  <li><strong>Expenses:</strong> Google Sheet → Expenses tab → sum of Net Amount column</li>
+  <li><strong>Wages:</strong> total wages paid to all employees so far this year</li>
+</ul>
+<h3>The calculation:</h3>
+<div class="help-example">Net Income = Revenue − Expenses − Wages<br>Corporate Tax = Net Income × 12.2%</div>
+<p>The display also shows you exactly how much you save in tax for every $10,000 of additional deductible expenses — a powerful planning number.</p>`
+  },
+
+  taxai_salary: {
+    icon: '⚖️',
+    title: 'Salary vs Dividend Optimizer',
+    body: `<p>This tool compares two strategies for getting money out of the corporation:</p>
+<h3>Strategy 1 — Pay wages</h3>
+<p>The corp deducts wages as a business expense (saving 12.2% corp tax), but the recipient pays personal income tax at their marginal rate.</p>
+<h3>Strategy 2 — Leave in corp, pay dividends later</h3>
+<p>The corp pays 12.2% tax now on the net income, then pays a dividend (taxed more favourably personally).</p>
+<h3>For your family structure:</h3>
+<p>Paying reasonable wages to family members (Andrea, Avienda, Akiya, Ezra) through the Family Trust is often the most tax-efficient strategy — it spreads income across multiple people at lower personal tax brackets.</p>
+<div class="help-cra">TOSI (Tax on Split Income) rules apply to income paid to family members who don't work in the business. Children under 18 are subject to TOSI on dividends. Wages are generally TOSI-safe if the work is real and the amount is reasonable.</div>`
+  },
+
+  taxai_advisor: {
+    icon: '💬',
+    title: 'AI Tax Advisor',
+    body: `<p>Ask any tax planning question in plain language. The AI knows your full business structure and gives specific, dollar-based answers for your situation.</p>
+<h3>Good questions to ask:</h3>
+<ul>
+  <li>"Should I buy the truck before or after March 31?"</li>
+  <li>"How much can I pay Avienda this year without TOSI?"</li>
+  <li>"What's the best way to pay Andrea for bookkeeping?"</li>
+  <li>"We have $40,000 profit this year — what should we do before year-end?"</li>
+  <li>"Can I deduct my home office?"</li>
+</ul>
+<h3>Quick-question chips:</h3>
+<p>The buttons above the text box are pre-loaded common questions for your situation. Click any one to instantly get an answer.</p>
+<div class="help-tip">The AI gives planning guidance based on current Canadian tax law. For final decisions on large amounts, confirm with a CPA — but this tool will make those conversations much faster and cheaper.</div>`
+  },
+
+  // ── GOOGLE SHEETS ───────────────────────────────────────
+  sheets_link: {
+    icon: '📗',
+    title: 'Your Google Sheet',
+    body: `<p>Your bookkeeping lives in a Google Sheet with six tabs:</p>
+<ul>
+  <li><strong>🏠 Dashboard</strong> — profit & loss summary by quarter, income vs expenses at a glance</li>
+  <li><strong>💰 Income</strong> — all revenue: invoices, payments received, income sources</li>
+  <li><strong>💸 Expenses</strong> — all business expenses with HST automatically extracted</li>
+  <li><strong>🧾 Invoices</strong> — every invoice you've issued with payment status</li>
+  <li><strong>📋 HST Returns</strong> — quarterly HST calculations</li>
+  <li><strong>📊 Year-End</strong> — annual summary for tax preparation</li>
+</ul>
+<h3>What you should never do in the sheet:</h3>
+<ul>
+  <li>Don't type in columns that have formulas (they're highlighted in green/blue)</li>
+  <li>Don't delete rows — mark them as excluded or cancelled instead</li>
+  <li>Don't change column headers</li>
+</ul>
+<div class="help-tip">The "Send to Google Sheets" buttons in this tool write directly to your sheet. You only need to open the sheet manually to verify results, update invoice status, or review the Dashboard.</div>`
+  }
+};
+
+function showHelp(id) {
+  const item = HELP[id];
+  if (!item) return;
+  document.getElementById('helpModalIcon').textContent = item.icon;
+  document.getElementById('helpModalTitle').textContent = item.title;
+  document.getElementById('helpModalBody').innerHTML = item.body;
+  document.getElementById('helpOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHelp() {
+  document.getElementById('helpOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on overlay click
+document.getElementById('helpOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeHelp();
+});
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeHelp();
+});
+
+// ════════════════════════════════════════════════════════════
 // HOME — WHAT HAPPENED TODAY
 // ════════════════════════════════════════════════════════════
 function homeShow(key){
@@ -3547,5 +4126,23 @@ function pathSwitch(guide, variant){
 }
 
 </script>
+
+<!-- ════════════════════════════════════════════════════════════
+     HELP MODAL OVERLAY
+════════════════════════════════════════════════════════════ -->
+<div id="helpOverlay">
+  <div id="helpModal">
+    <div class="help-modal-head">
+      <span class="help-modal-icon" id="helpModalIcon">❓</span>
+      <span class="help-modal-title" id="helpModalTitle">Help</span>
+      <button class="help-modal-close" onclick="closeHelp()">✕ Close</button>
+    </div>
+    <div class="help-modal-body" id="helpModalBody"></div>
+    <div class="help-modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeHelp()">Got it</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
