@@ -658,6 +658,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .mm-note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5}
 .mm-note a{color:var(--yellow);cursor:pointer}
 .member-price-badge{display:inline-flex;align-items:center;gap:5px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.3);border-radius:2px;padding:2px 7px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:4px}
+.owner-price-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,200,120,.1);border:1px solid rgba(0,200,120,.3);border-radius:2px;padding:2px 7px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:4px}
 
 /* LOOKUP TABS */
 .lookup-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border)}
@@ -2164,13 +2165,16 @@ function retailPrice(item) {
   if (item.map && item.map > price) price = item.map;
   return Math.round(price * 100) / 100;
 }
+function ownerPrice(item) { return Math.round((item.price || 0) * 100) / 100; }
 function memberPrice(item) { return Math.round(retailPrice(item) * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100; }
-function displayedPrice(item) { return currentMember ? memberPrice(item) : retailPrice(item); }
+function displayedPrice(item) { return currentMember?.tier === 'owner' ? ownerPrice(item) : currentMember ? memberPrice(item) : retailPrice(item); }
+function priceBadgeHtml() { if (!currentMember) return ''; return currentMember.tier === 'owner' ? '<div class="owner-price-badge">⚡ TDG Cost</div>' : '<div class="member-price-badge">★ Member Price</div>'; }
 
 // ─────────────────────────────────────────────────
 //  MEMBER SYSTEM
 // ─────────────────────────────────────────────────
 const MEMBER_CODE = 'postmah&c';
+const OWNER_CODE = 'pctowner2026';
 const APPROVED_MEMBERS = {};
 let currentMember = null;
 
@@ -2180,11 +2184,13 @@ function initMemberState() {
     if (saved) {
       const m = JSON.parse(saved);
       const approved = APPROVED_MEMBERS[m.email];
+      const isOwner = m.code.toLowerCase() === OWNER_CODE.toLowerCase();
       const universalOk = m.code.toLowerCase() === MEMBER_CODE.toLowerCase();
       const namedOk = approved && approved.code === m.code;
-      if (universalOk || namedOk) {
+      if (isOwner || universalOk || namedOk) {
         const name = approved?.name || m.email.split('@')[0];
-        currentMember = { email: m.email, name, code: m.code };
+        const tier = isOwner ? 'owner' : 'member';
+        currentMember = { email: m.email, name, code: m.code, tier };
         updateMemberNav();
       }
     }
@@ -2194,7 +2200,8 @@ function initMemberState() {
 function updateMemberNav() {
   const btn = document.getElementById('memberNavBtn');
   if (!btn) return;
-  if (currentMember) { btn.textContent = '★ ' + currentMember.name.split(' ')[0]; btn.classList.add('logged-in'); }
+  if (currentMember && currentMember.tier === 'owner') { btn.textContent = '⚡ Owner'; btn.classList.add('logged-in'); }
+  else if (currentMember) { btn.textContent = '★ ' + currentMember.name.split(' ')[0]; btn.classList.add('logged-in'); }
   else { btn.textContent = 'Member Login'; btn.classList.remove('logged-in'); }
 }
 
@@ -2222,14 +2229,17 @@ function memberLogin() {
   const code  = document.getElementById('mmCode').value.trim();
   const errEl = document.getElementById('mmError');
   if (!email || !code) { errEl.textContent = 'Please enter your email and invite code.'; errEl.classList.add('show'); return; }
+  const isOwner = code.toLowerCase() === OWNER_CODE.toLowerCase();
   const universalMatch = code.toLowerCase() === MEMBER_CODE.toLowerCase();
   const namedMatch = APPROVED_MEMBERS[email] && APPROVED_MEMBERS[email].code === code;
-  if (!universalMatch && !namedMatch) { errEl.textContent = 'Invite code not recognized. Contact PC Tires to request access.'; errEl.classList.add('show'); return; }
+  if (!isOwner && !universalMatch && !namedMatch) { errEl.textContent = 'Invite code not recognized. Contact PC Tires to request access.'; errEl.classList.add('show'); return; }
   const name = APPROVED_MEMBERS[email]?.name || email.split('@')[0];
-  currentMember = { email, name, code };
+  const tier = isOwner ? 'owner' : 'member';
+  currentMember = { email, name, code, tier };
   try { localStorage.setItem('pc_member', JSON.stringify(currentMember)); } catch(e) {}
   closeMemberModal(); updateMemberNav(); renderCatalog();
-  showToast('Welcome! Member pricing is active', '10% off all products unlocked');
+  if (isOwner) showToast('Owner access active', 'All prices shown at TDG cost — no markup');
+  else showToast('Welcome! Member pricing is active', '10% off all products unlocked');
 }
 function memberRequest() {
   const name  = document.getElementById('mmReqName').value.trim();
@@ -2742,7 +2752,7 @@ function buildRecCard(t, tier) {
   const stockClass = t.stock === 'in' ? 'in-stock' : 'low-stock';
   const stockLabel = t.stock === 'in' ? 'In Stock' : 'Low Stock';
   const retail = retailPrice(t), shown = displayedPrice(t);
-  const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
+  const memberBadge = priceBadgeHtml();
   const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
   const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
   const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
@@ -2811,7 +2821,7 @@ function renderTires() {
     const stockClass = t.stock === 'in' ? 'in-stock' : 'low-stock';
     const stockLabel = t.stock === 'in' ? 'In Stock' : t.stock === 'low' ? 'Low Stock' : 'Call Us';
     const retail = retailPrice(t), shown = displayedPrice(t);
-    const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
+    const memberBadge = priceBadgeHtml();
     const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
     const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
     const dimStyle = recIds.has(t.itemNumber) ? 'opacity:.55' : '';
@@ -2879,7 +2889,7 @@ function renderWheels() {
     const stockClass = w.stock === 'in' ? 'in-stock' : 'low-stock';
     const stockLabel = w.stock === 'in' ? 'In Stock' : w.stock === 'low' ? 'Low Stock' : 'Call Us';
     const retail = retailPrice(w), shown = displayedPrice(w);
-    const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
+    const memberBadge = priceBadgeHtml();
     const msrpNote = w.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${w.msrp.toFixed(2)}</div>` : '';
     const noImgSVG = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px">
       <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" opacity="0.35">
