@@ -211,11 +211,6 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .wheel-img{width:100%;height:160px;display:flex;align-items:center;justify-content:center;background:var(--raised);border-radius:2px;margin-bottom:14px;overflow:hidden;color:var(--mid)}
 .wheel-img img{width:100%;height:100%;object-fit:contain}
 
-.offset-info{position:relative;display:inline-flex;align-items:center;cursor:help}
-.offset-info .offset-tip{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:220px;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:2px;font-size:11px;line-height:1.5;color:var(--light);z-index:20;pointer-events:none;transition:opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,.4)}
-.offset-info .offset-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--border)}
-.offset-info:hover .offset-tip{visibility:visible;opacity:1}
-
 /* ── WHEEL SEARCH PANEL ── */
 .wheel-category-row{display:flex;gap:10px;margin-bottom:20px;align-items:flex-end}
 .wheel-or-divider{display:flex;align-items:center;gap:14px;margin:20px 0;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
@@ -1092,6 +1087,7 @@ function getRebateForBrand(brand) {
       </div>
       <div class="cat-meta">Showing <span id="tireCount">—</span> tires</div>
     </div>
+  </div>
     <!-- Refine bar -->
     <div class="refine-bar" id="refineBar">
       <!-- TIRE filters -->
@@ -1144,11 +1140,6 @@ function getRebateForBrand(brand) {
           <option value="">Any Size</option>
         </select>
         <div class="refine-divider"></div>
-        <label class="refine-label">Finish</label>
-        <select id="wFinishFilter" onchange="applyWheelRefinements()">
-          <option value="">Any Finish</option>
-        </select>
-        <div class="refine-divider"></div>
         <label class="refine-label">Price</label>
         <select id="wPriceFilter" onchange="applyWheelRefinements()">
           <option value="">Any Price</option>
@@ -1162,15 +1153,14 @@ function getRebateForBrand(brand) {
         <label class="refine-label">Sort</label>
         <select id="wSortOrder" onchange="applyWheelRefinements()">
           <option value="default">Default</option>
-          <option value="price-asc">Price: Low &#8594; High</option>
-          <option value="price-desc">Price: High &#8594; Low</option>
-          <option value="brand">Brand A &#8594; Z</option>
-          <option value="diameter-asc">Diameter: Small &#8594; Large</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="brand">Brand A → Z</option>
+          <option value="diameter-asc">Diameter: Small → Large</option>
         </select>
-        <button class="refine-clear" onclick="clearWheelRefinements()">&#10005; Clear</button>
+        <button class="refine-clear" onclick="clearWheelRefinements()">✕ Clear</button>
       </div>
     </div>
-  </div>
 
   <!-- Wheel chips -->
   <div id="wheel-chips-row" style="display:none">
@@ -2649,17 +2639,13 @@ function applyWheelRefinements() {
   const inStockOnly = document.getElementById('wInStockOnly')?.checked;
   const brand       = document.getElementById('wBrandFilter')?.value  || '';
   const dia         = document.getElementById('wDiaFilter')?.value    || '';
-  const finish      = document.getElementById('wFinishFilter')?.value || '';
   const price       = document.getElementById('wPriceFilter')?.value  || '';
   const sort        = document.getElementById('wSortOrder')?.value    || 'default';
 
-  // Always start from allWheels, then apply chip filter first
-  let wheels = activeWheelFilter === 'all' ? [...allWheels] : allWheels.filter(w => w.category === activeWheelFilter);
-
+  let wheels = [...allWheels];
   if (inStockOnly) wheels = wheels.filter(w => w.stock !== 'out');
   if (brand)       wheels = wheels.filter(w => w.brand === brand);
   if (dia)         wheels = wheels.filter(w => String(w.diameter) === dia);
-  if (finish)      wheels = wheels.filter(w => (w.finish || '').toLowerCase() === finish.toLowerCase());
   if (price) {
     const [lo, hi] = price.split('-').map(Number);
     wheels = wheels.filter(w => { const p = wheelRetailPrice(w); return p >= lo && p <= hi; });
@@ -2675,7 +2661,7 @@ function applyWheelRefinements() {
 }
 
 function clearWheelRefinements() {
-  ['wInStockOnly','wBrandFilter','wDiaFilter','wFinishFilter','wPriceFilter','wSortOrder'].forEach(id => {
+  ['wInStockOnly','wBrandFilter','wDiaFilter','wPriceFilter','wSortOrder'].forEach(id => {
     const el = document.getElementById(id); if (!el) return;
     if (el.type === 'checkbox') el.checked = false; else el.value = '';
   });
@@ -2703,13 +2689,6 @@ function populateWheelRefineDropdowns() {
   if (dSel) {
     dSel.innerHTML = '<option value="">Any Size</option>';
     dias.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d + '"'; dSel.appendChild(o); });
-  }
-  // Finish
-  const finishes = [...new Set(allWheels.map(w => w.finish).filter(Boolean))].sort();
-  const fSel = document.getElementById('wFinishFilter');
-  if (fSel) {
-    fSel.innerHTML = '<option value="">Any Finish</option>';
-    finishes.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = f; fSel.appendChild(o); });
   }
 }
 
@@ -2870,7 +2849,13 @@ function renderTires() {
 // ─────────────────────────────────────────────────
 function applyWheelFilter(type) {
   activeWheelFilter = type;
+  // Pre-filter by category chip, then let refine bar further narrow
+  const base = type === 'all' ? allWheels : allWheels.filter(w => w.category === type);
+  // Temporarily swap allWheels so applyWheelRefinements sees only this category
+  const saved = allWheels;
+  allWheels = base;
   applyWheelRefinements();
+  allWheels = saved;
 }
 
 function filterWheels(type, btn) {
@@ -2922,7 +2907,7 @@ function renderWheels() {
         <div><div class="spec-label">Bolt Pattern</div><div class="spec-value">${w.boltPattern||'—'}</div></div>
         <div><div class="spec-label">Diameter</div><div class="spec-value">${w.diameter ? w.diameter+'"' : '—'}</div></div>
         <div><div class="spec-label">Width</div><div class="spec-value">${w.width ? w.width+'"' : '—'}</div></div>
-        <div><div class="spec-label">Offset <span class="offset-info">&#9432;<span class="offset-tip"><strong>What is offset?</strong><br>Offset (ET) measures how far the wheel's mounting surface sits from its centreline, in mm. <strong>Positive</strong> = wheel sits further in (most cars). <strong>Negative</strong> = wheel pokes out (some trucks). Your vehicle's OEM offset is the safest starting point.</span></span></div><div class="spec-value">${w.offset ? 'ET'+w.offset : '&#8212;'}</div></div>
+        <div><div class="spec-label">Offset</div><div class="spec-value">${w.offset ? 'ET'+w.offset : '—'}</div></div>
       </div>
       <div class="tc-foot">
         <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
