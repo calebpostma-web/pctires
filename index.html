@@ -979,6 +979,7 @@ function getRebateForBrand(brand) {
           <button class="lookup-btn" id="vinSearchBtn" onclick="doVinLookup()" disabled style="opacity:.5;cursor:not-allowed">Decode VIN &#8594;</button>
         </div>
         <input type="file" id="vinImageInput" accept="image/*" capture="environment" style="display:none" onchange="handleVinImage(this)">
+        <input type="file" id="vinTireImageInput" accept="image/*" capture="environment" style="display:none" onchange="handleTireImage(this)">
         <div class="vin-scan-overlay" id="vinScanOverlay" style="display:none">
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--white)">Scan Your VIN</div>
           <div class="vin-scan-preview" id="vinScanPreview">
@@ -987,8 +988,10 @@ function getRebateForBrand(brand) {
           <div class="vin-scan-status" id="vinScanStatus">Point camera at your VIN sticker</div>
           <div class="vin-scan-actions">
             <button class="vin-scan-btn primary" id="vinScanConfirmBtn" onclick="confirmVinScan()" style="display:none">Use This VIN &#8594;</button>
+            <button class="vin-scan-btn secondary" id="vinAddTireBtn" onclick="openTirePhotoInput()" style="display:none">&#128247; Add Tire Photo</button>
             <button class="vin-scan-btn secondary" onclick="closeVinScanner()">Cancel</button>
           </div>
+          <div style="font-size:11px;color:var(--muted);text-align:center;max-width:380px">Optionally add a photo of your tire sidewall to cross-reference the size</div>
         </div>
         <div class="vin-result" id="vinResult"></div>
       </div>
@@ -3611,51 +3614,120 @@ const OEM_ALT_SIZES = {
 let vinDecoded = null;
 let vinScanImageData = null;
 
-// ── VIN Camera / Photo Scanner ──
+// ── VIN Camera / Photo Scanner (multi-photo) ──
+let vinTireImageData = null;  // optional second photo (tire sidewall)
+let vinTireMediaType = null;
+
 function openVinScanner() {
   document.getElementById('vinImageInput').click();
+}
+
+function openTirePhotoInput() {
+  document.getElementById('vinTireImageInput').click();
 }
 
 function handleVinImage(input) {
   const file = input.files?.[0];
   if (!file) return;
-
   const reader = new FileReader();
   reader.onload = async (e) => {
     const dataUrl = e.target.result;
     vinScanImageData = dataUrl.split(',')[1];
+    const mediaType = file.type || 'image/jpeg';
 
-    const overlay = document.getElementById('vinScanOverlay');
-    const preview = document.getElementById('vinScanPreview');
-    const status  = document.getElementById('vinScanStatus');
+    const overlay    = document.getElementById('vinScanOverlay');
+    const preview    = document.getElementById('vinScanPreview');
+    const status     = document.getElementById('vinScanStatus');
     const confirmBtn = document.getElementById('vinScanConfirmBtn');
+    const addTireBtn = document.getElementById('vinAddTireBtn');
 
-    preview.innerHTML = `<img src="${dataUrl}" alt="VIN photo"><div class="vin-scan-frame"></div>`;
-    status.textContent = 'Analysing image…';
+    preview.innerHTML = `<img src="${dataUrl}" alt="VIN photo" style="width:100%;height:100%;object-fit:contain"><div class="vin-scan-frame"></div>`;
+    status.innerHTML = '<span style="color:var(--yellow)">Analysing VIN sticker…</span>';
     confirmBtn.style.display = 'none';
+    if (addTireBtn) addTireBtn.style.display = 'none';
     overlay.style.display = 'flex';
 
     try {
+      const images = [{ imageData: vinScanImageData, mediaType }];
+      if (vinTireImageData) images.push({ imageData: vinTireImageData, mediaType: vinTireMediaType });
+
       const response = await fetch('/functions/vin-scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageData: vinScanImageData, mediaType: file.type || 'image/jpeg' })
+        body: JSON.stringify({ images })
       });
       const data = await response.json();
 
       if (data.vin) {
-        status.innerHTML = `<span style="color:var(--green)">✓ VIN found: <span style="letter-spacing:2px">${data.vin}</span></span>`;
+        let statusHtml = `<span style="color:var(--green)">✓ VIN: <span style="letter-spacing:2px;font-weight:700">${data.vin}</span></span>`;
+        if (data.tireSize) statusHtml += `<span style="color:var(--green);margin-left:12px">✓ Tire: <strong>${data.tireSize}</strong></span>`;
+        if (data.mismatch) statusHtml += `<span style="color:var(--red);display:block;margin-top:6px">⚠ Tire size doesn’t match OEM spec — confirm before ordering</span>`;
+        status.innerHTML = statusHtml;
         confirmBtn.dataset.vin = data.vin;
         confirmBtn.style.display = 'inline-flex';
+        if (addTireBtn) addTireBtn.style.display = 'none'; // already have result
       } else {
         status.innerHTML = `<span style="color:var(--red)">Could not read a VIN — try a clearer photo</span>`;
         confirmBtn.style.display = 'none';
+        if (addTireBtn) addTireBtn.style.display = 'inline-flex';
       }
     } catch (err) {
       status.innerHTML = `<span style="color:var(--red)">Scan failed — enter VIN manually</span>`;
       console.error('VIN scan error:', err);
     }
+    input.value = '';
+  };
+  reader.readAsDataURL(file);
+}
 
+function handleTireImage(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+    vinTireImageData = dataUrl.split(',')[1];
+    vinTireMediaType = file.type || 'image/jpeg';
+
+    const preview    = document.getElementById('vinScanPreview');
+    const status     = document.getElementById('vinScanStatus');
+    const confirmBtn = document.getElementById('vinScanConfirmBtn');
+    const addTireBtn = document.getElementById('vinAddTireBtn');
+
+    // Show both images side by side
+    preview.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;width:100%;height:100%">
+        <div style="position:relative;overflow:hidden"><img src="${vinScanImageData ? 'data:image/jpeg;base64,'+vinScanImageData : ''}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:4px;left:4px;font-size:10px;background:rgba(0,0,0,.7);padding:2px 6px;border-radius:2px">VIN</div></div>
+        <div style="position:relative;overflow:hidden"><img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:4px;left:4px;font-size:10px;background:rgba(0,0,0,.7);padding:2px 6px;border-radius:2px">TIRE</div></div>
+      </div>`;
+    status.innerHTML = '<span style="color:var(--yellow)">Cross-referencing VIN and tire…</span>';
+    confirmBtn.style.display = 'none';
+    if (addTireBtn) addTireBtn.style.display = 'none';
+
+    try {
+      const response = await fetch('/functions/vin-scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images: [
+          { imageData: vinScanImageData, mediaType: 'image/jpeg' },
+          { imageData: vinTireImageData, mediaType: vinTireMediaType }
+        ]})
+      });
+      const data = await response.json();
+
+      if (data.vin) {
+        let statusHtml = `<span style="color:var(--green)">✓ VIN: <span style="letter-spacing:2px;font-weight:700">${data.vin}</span></span>`;
+        if (data.tireSize) statusHtml += `<span style="color:var(--green);margin-left:12px">✓ Tire: <strong>${data.tireSize}</strong></span>`;
+        if (data.mismatch) statusHtml += `<span style="color:var(--red);display:block;margin-top:6px">⚠ Tire on vehicle doesn’t match OEM spec — confirm size before ordering</span>`;
+        status.innerHTML = statusHtml;
+        confirmBtn.dataset.vin = data.vin;
+        confirmBtn.style.display = 'inline-flex';
+      } else {
+        status.innerHTML = `<span style="color:var(--red)">Could not read VIN — try clearer photos or enter manually</span>`;
+      }
+    } catch (err) {
+      status.innerHTML = `<span style="color:var(--red)">Scan failed — enter VIN manually</span>`;
+    }
     input.value = '';
   };
   reader.readAsDataURL(file);
@@ -3675,6 +3747,8 @@ function confirmVinScan() {
 function closeVinScanner() {
   document.getElementById('vinScanOverlay').style.display = 'none';
   vinScanImageData = null;
+  vinTireImageData = null;
+  vinTireMediaType = null;
 }
 
 function onVinInput(el) {
@@ -3738,7 +3812,7 @@ async function doVinLookup() {
       <div style="display:flex;gap:8px;flex-wrap:wrap;width:100%">
         ${oemSize
           ? `<button class="vin-search-btn" onclick="vinSearchTires()">🔵 Shop Tires for ${oemSize} →</button>
-             ${altSizes.length ? `<button class="vin-alt-btn" onclick="vinSearchAllSizes()">All Compatible Sizes</button>` : ''}`
+             ${altSizes.length ? altSizes.map(s => `<button class="vin-alt-btn" onclick="vinSearchTireSize('${s}')">${s}</button>`).join('') : ''}`
           : `<button class="vin-search-btn" onclick="smoothScroll('#catalog')">Browse Tire Inventory →</button>`}
         ${oemWheel
           ? `<button class="vin-alt-btn" onclick="vinSearchWheels()">🔩 Shop Wheels (${oemWheel.bolt})</button>`
@@ -3783,6 +3857,20 @@ function vinSearchTires() {
   resultEl.classList.add('show');
   loadTires({ tireSizes: [vinDecoded.oemSize] }).then(() => {
     textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> tires for size <strong>${vinDecoded.oemSize}</strong>.`;
+  });
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
+function vinSearchTireSize(size) {
+  if (!vinDecoded) return;
+  lastSearchMethod = 'vin';
+  lastSearchVehicle = { year: vinDecoded.year, make: vinDecoded.make, model: vinDecoded.model, trim: vinDecoded.trim, vin: vinDecoded.vin };
+  switchCatalogType('tires');
+  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
+  textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — searching tires for <strong>${size}</strong>…`;
+  resultEl.classList.add('show');
+  loadTires({ tireSizes: [size] }).then(() => {
+    textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> tires for size <strong>${size}</strong>.`;
   });
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
