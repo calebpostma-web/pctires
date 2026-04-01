@@ -211,6 +211,11 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .wheel-img{width:100%;height:160px;display:flex;align-items:center;justify-content:center;background:var(--raised);border-radius:2px;margin-bottom:14px;overflow:hidden;color:var(--mid)}
 .wheel-img img{width:100%;height:100%;object-fit:contain}
 
+.offset-info{position:relative;display:inline-flex;align-items:center;cursor:help}
+.offset-info .offset-tip{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:220px;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:2px;font-size:11px;line-height:1.5;color:var(--light);z-index:20;pointer-events:none;transition:opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.offset-info .offset-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--border)}
+.offset-info:hover .offset-tip{visibility:visible;opacity:1}
+
 /* ── WHEEL SEARCH PANEL ── */
 .wheel-category-row{display:flex;gap:10px;margin-bottom:20px;align-items:flex-end}
 .wheel-or-divider{display:flex;align-items:center;gap:14px;margin:20px 0;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
@@ -520,23 +525,6 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .vin-input.valid{border-color:var(--green)}
 .vin-input.invalid{border-color:var(--red)}
 .vin-chars{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);pointer-events:none}
-.vin-cam-btn{display:flex;align-items:center;gap:7px;background:var(--raised);color:var(--light);border:1px solid var(--border);padding:11px 16px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
-.vin-cam-btn:hover{border-color:var(--yellow);color:var(--yellow)}
-.vin-cam-btn svg{width:16px;height:16px;flex-shrink:0}
-.vin-cam-btn.scanning{border-color:var(--yellow);color:var(--yellow);animation:pulse-border .8s ease-in-out infinite}
-@keyframes pulse-border{0%,100%{border-color:rgba(245,197,24,.4)}50%{border-color:rgba(245,197,24,1)}}
-.vin-scan-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px}
-.vin-scan-preview{width:100%;max-width:480px;border-radius:4px;overflow:hidden;position:relative;background:#000;aspect-ratio:16/9}
-.vin-scan-preview img{width:100%;height:100%;object-fit:contain}
-.vin-scan-frame{position:absolute;inset:10%;border:2px solid var(--yellow);border-radius:2px;pointer-events:none}
-.vin-scan-frame::before,.vin-scan-frame::after{content:'';position:absolute;width:20px;height:20px;border-color:var(--yellow);border-style:solid}
-.vin-scan-frame::before{top:-2px;left:-2px;border-width:3px 0 0 3px}
-.vin-scan-frame::after{bottom:-2px;right:-2px;border-width:0 3px 3px 0}
-.vin-scan-status{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);text-align:center}
-.vin-scan-actions{display:flex;gap:10px}
-.vin-scan-btn{padding:11px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none}
-.vin-scan-btn.primary{background:var(--yellow);color:var(--black)}
-.vin-scan-btn.secondary{background:transparent;color:var(--light);border:1px solid var(--border)}
 .vin-result{margin-top:16px}
 .vin-card{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:18px 20px}
 .vin-card.success{border-color:rgba(34,197,94,.3);background:var(--green-dim)}
@@ -916,7 +904,7 @@ function getRebateForBrand(brand) {
     <button class="nav-link" onclick="smoothScroll('#decision-guide')">Tire Finder</button>
     <button class="nav-link" onclick="smoothScroll('#guide')">Tire Guide</button>
     <button class="nav-link" onclick="smoothScroll('#install')">Installation</button>
-    <button class="nav-link" onclick="smoothScroll('#services')">Book a Service</button>
+    <button class="nav-link" onclick="smoothScroll('#services')" style="color:var(--yellow)">Book a Service</button>
     <button class="nav-link" onclick="smoothScroll('#location')">Location</button>
   </div>
   <div class="nav-right">
@@ -934,7 +922,7 @@ function getRebateForBrand(brand) {
   <button class="mobile-menu-link" onclick="smoothScroll('#catalog');closeMenu()">Shop All</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#guide');closeMenu()">Tire Buying Guide</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#install');closeMenu()">Installation</button>
-  <button class="mobile-menu-link" onclick="smoothScroll('#services');closeMenu()">🔧 Book a Service</button>
+  <button class="mobile-menu-link" onclick="smoothScroll('#services');closeMenu()" style="color:var(--yellow)">🔧 Book a Service</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#location');closeMenu()">Location & Hours</button>
   <a class="mobile-menu-link" href="tel:5193805104" style="text-decoration:none">📞 519-380-5104</a>
 </div>
@@ -969,29 +957,7 @@ function getRebateForBrand(brand) {
             <input type="text" id="vinInput" class="vin-input" placeholder="e.g. 2GCUKREC4P1234567" maxlength="17" oninput="onVinInput(this)" autocomplete="off" spellcheck="false">
             <div class="vin-chars" id="vinChars">0 / 17</div>
           </div>
-          <button class="vin-cam-btn" id="vinCamBtn" onclick="openVinScanner()" title="Scan VIN with camera">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-              <circle cx="12" cy="13" r="4"/>
-            </svg>
-            Scan
-          </button>
-          <button class="lookup-btn" id="vinSearchBtn" onclick="doVinLookup()" disabled style="opacity:.5;cursor:not-allowed">Decode VIN &#8594;</button>
-        </div>
-        <input type="file" id="vinImageInput" accept="image/*" capture="environment" style="display:none" onchange="handleVinImage(this)">
-        <input type="file" id="vinTireImageInput" accept="image/*" capture="environment" style="display:none" onchange="handleTireImage(this)">
-        <div class="vin-scan-overlay" id="vinScanOverlay" style="display:none">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--white)">Scan Your VIN</div>
-          <div class="vin-scan-preview" id="vinScanPreview">
-            <div class="vin-scan-frame"></div>
-          </div>
-          <div class="vin-scan-status" id="vinScanStatus">Point camera at your VIN sticker</div>
-          <div class="vin-scan-actions">
-            <button class="vin-scan-btn primary" id="vinScanConfirmBtn" onclick="confirmVinScan()" style="display:none">Use This VIN &#8594;</button>
-            <button class="vin-scan-btn secondary" id="vinAddTireBtn" onclick="openTirePhotoInput()" style="display:none">&#128247; Add Tire Photo</button>
-            <button class="vin-scan-btn secondary" onclick="closeVinScanner()">Cancel</button>
-          </div>
-          <div style="font-size:11px;color:var(--muted);text-align:center;max-width:380px">Optionally add a photo of your tire sidewall to cross-reference the size</div>
+          <button class="lookup-btn" id="vinSearchBtn" onclick="doVinLookup()" disabled style="opacity:.5;cursor:not-allowed">Decode VIN →</button>
         </div>
         <div class="vin-result" id="vinResult"></div>
       </div>
@@ -1178,6 +1144,11 @@ function getRebateForBrand(brand) {
           <option value="">Any Size</option>
         </select>
         <div class="refine-divider"></div>
+        <label class="refine-label">Finish</label>
+        <select id="wFinishFilter" onchange="applyWheelRefinements()">
+          <option value="">Any Finish</option>
+        </select>
+        <div class="refine-divider"></div>
         <label class="refine-label">Price</label>
         <select id="wPriceFilter" onchange="applyWheelRefinements()">
           <option value="">Any Price</option>
@@ -1191,12 +1162,12 @@ function getRebateForBrand(brand) {
         <label class="refine-label">Sort</label>
         <select id="wSortOrder" onchange="applyWheelRefinements()">
           <option value="default">Default</option>
-          <option value="price-asc">Price: Low → High</option>
-          <option value="price-desc">Price: High → Low</option>
-          <option value="brand">Brand A → Z</option>
-          <option value="diameter-asc">Diameter: Small → Large</option>
+          <option value="price-asc">Price: Low &#8594; High</option>
+          <option value="price-desc">Price: High &#8594; Low</option>
+          <option value="brand">Brand A &#8594; Z</option>
+          <option value="diameter-asc">Diameter: Small &#8594; Large</option>
         </select>
-        <button class="refine-clear" onclick="clearWheelRefinements()">✕ Clear</button>
+        <button class="refine-clear" onclick="clearWheelRefinements()">&#10005; Clear</button>
       </div>
     </div>
   </div>
@@ -2678,13 +2649,17 @@ function applyWheelRefinements() {
   const inStockOnly = document.getElementById('wInStockOnly')?.checked;
   const brand       = document.getElementById('wBrandFilter')?.value  || '';
   const dia         = document.getElementById('wDiaFilter')?.value    || '';
+  const finish      = document.getElementById('wFinishFilter')?.value || '';
   const price       = document.getElementById('wPriceFilter')?.value  || '';
   const sort        = document.getElementById('wSortOrder')?.value    || 'default';
 
-  let wheels = [...allWheels];
+  // Always start from allWheels, then apply chip filter first
+  let wheels = activeWheelFilter === 'all' ? [...allWheels] : allWheels.filter(w => w.category === activeWheelFilter);
+
   if (inStockOnly) wheels = wheels.filter(w => w.stock !== 'out');
   if (brand)       wheels = wheels.filter(w => w.brand === brand);
   if (dia)         wheels = wheels.filter(w => String(w.diameter) === dia);
+  if (finish)      wheels = wheels.filter(w => (w.finish || '').toLowerCase() === finish.toLowerCase());
   if (price) {
     const [lo, hi] = price.split('-').map(Number);
     wheels = wheels.filter(w => { const p = wheelRetailPrice(w); return p >= lo && p <= hi; });
@@ -2700,7 +2675,7 @@ function applyWheelRefinements() {
 }
 
 function clearWheelRefinements() {
-  ['wInStockOnly','wBrandFilter','wDiaFilter','wPriceFilter','wSortOrder'].forEach(id => {
+  ['wInStockOnly','wBrandFilter','wDiaFilter','wFinishFilter','wPriceFilter','wSortOrder'].forEach(id => {
     const el = document.getElementById(id); if (!el) return;
     if (el.type === 'checkbox') el.checked = false; else el.value = '';
   });
@@ -2728,6 +2703,13 @@ function populateWheelRefineDropdowns() {
   if (dSel) {
     dSel.innerHTML = '<option value="">Any Size</option>';
     dias.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d + '"'; dSel.appendChild(o); });
+  }
+  // Finish
+  const finishes = [...new Set(allWheels.map(w => w.finish).filter(Boolean))].sort();
+  const fSel = document.getElementById('wFinishFilter');
+  if (fSel) {
+    fSel.innerHTML = '<option value="">Any Finish</option>';
+    finishes.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = f; fSel.appendChild(o); });
   }
 }
 
@@ -2888,13 +2870,7 @@ function renderTires() {
 // ─────────────────────────────────────────────────
 function applyWheelFilter(type) {
   activeWheelFilter = type;
-  // Pre-filter by category chip, then let refine bar further narrow
-  const base = type === 'all' ? allWheels : allWheels.filter(w => w.category === type);
-  // Temporarily swap allWheels so applyWheelRefinements sees only this category
-  const saved = allWheels;
-  allWheels = base;
   applyWheelRefinements();
-  allWheels = saved;
 }
 
 function filterWheels(type, btn) {
@@ -2946,7 +2922,7 @@ function renderWheels() {
         <div><div class="spec-label">Bolt Pattern</div><div class="spec-value">${w.boltPattern||'—'}</div></div>
         <div><div class="spec-label">Diameter</div><div class="spec-value">${w.diameter ? w.diameter+'"' : '—'}</div></div>
         <div><div class="spec-label">Width</div><div class="spec-value">${w.width ? w.width+'"' : '—'}</div></div>
-        <div><div class="spec-label">Offset</div><div class="spec-value">${w.offset ? 'ET'+w.offset : '—'}</div></div>
+        <div><div class="spec-label">Offset <span class="offset-info">&#9432;<span class="offset-tip"><strong>What is offset?</strong><br>Offset (ET) measures how far the wheel's mounting surface sits from its centreline, in mm. <strong>Positive</strong> = wheel sits further in (most cars). <strong>Negative</strong> = wheel pokes out (some trucks). Your vehicle's OEM offset is the safest starting point.</span></span></div><div class="spec-value">${w.offset ? 'ET'+w.offset : '&#8212;'}</div></div>
       </div>
       <div class="tc-foot">
         <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
@@ -3612,144 +3588,6 @@ const OEM_ALT_SIZES = {
 //  VIN DECODER (NHTSA free API)
 // ─────────────────────────────────────────────────
 let vinDecoded = null;
-let vinScanImageData = null;
-
-// ── VIN Camera / Photo Scanner (multi-photo) ──
-let vinTireImageData = null;  // optional second photo (tire sidewall)
-let vinTireMediaType = null;
-
-function openVinScanner() {
-  document.getElementById('vinImageInput').click();
-}
-
-function openTirePhotoInput() {
-  document.getElementById('vinTireImageInput').click();
-}
-
-function handleVinImage(input) {
-  const file = input.files?.[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    const dataUrl = e.target.result;
-    vinScanImageData = dataUrl.split(',')[1];
-    const mediaType = file.type || 'image/jpeg';
-
-    const overlay    = document.getElementById('vinScanOverlay');
-    const preview    = document.getElementById('vinScanPreview');
-    const status     = document.getElementById('vinScanStatus');
-    const confirmBtn = document.getElementById('vinScanConfirmBtn');
-    const addTireBtn = document.getElementById('vinAddTireBtn');
-
-    preview.innerHTML = `<img src="${dataUrl}" alt="VIN photo" style="width:100%;height:100%;object-fit:contain"><div class="vin-scan-frame"></div>`;
-    status.innerHTML = '<span style="color:var(--yellow)">Analysing VIN sticker…</span>';
-    confirmBtn.style.display = 'none';
-    if (addTireBtn) addTireBtn.style.display = 'none';
-    overlay.style.display = 'flex';
-
-    try {
-      const images = [{ imageData: vinScanImageData, mediaType }];
-      if (vinTireImageData) images.push({ imageData: vinTireImageData, mediaType: vinTireMediaType });
-
-      const response = await fetch('/functions/vin-scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ images })
-      });
-      const data = await response.json();
-
-      if (data.vin) {
-        let statusHtml = `<span style="color:var(--green)">✓ VIN: <span style="letter-spacing:2px;font-weight:700">${data.vin}</span></span>`;
-        if (data.tireSize) statusHtml += `<span style="color:var(--green);margin-left:12px">✓ Tire: <strong>${data.tireSize}</strong></span>`;
-        if (data.mismatch) statusHtml += `<span style="color:var(--red);display:block;margin-top:6px">⚠ Tire size doesn’t match OEM spec — confirm before ordering</span>`;
-        status.innerHTML = statusHtml;
-        confirmBtn.dataset.vin = data.vin;
-        confirmBtn.style.display = 'inline-flex';
-        if (addTireBtn) addTireBtn.style.display = 'none'; // already have result
-      } else {
-        status.innerHTML = `<span style="color:var(--red)">Could not read a VIN — try a clearer photo</span>`;
-        confirmBtn.style.display = 'none';
-        if (addTireBtn) addTireBtn.style.display = 'inline-flex';
-      }
-    } catch (err) {
-      status.innerHTML = `<span style="color:var(--red)">Scan failed — enter VIN manually</span>`;
-      console.error('VIN scan error:', err);
-    }
-    input.value = '';
-  };
-  reader.readAsDataURL(file);
-}
-
-function handleTireImage(input) {
-  const file = input.files?.[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    const dataUrl = e.target.result;
-    vinTireImageData = dataUrl.split(',')[1];
-    vinTireMediaType = file.type || 'image/jpeg';
-
-    const preview    = document.getElementById('vinScanPreview');
-    const status     = document.getElementById('vinScanStatus');
-    const confirmBtn = document.getElementById('vinScanConfirmBtn');
-    const addTireBtn = document.getElementById('vinAddTireBtn');
-
-    // Show both images side by side
-    preview.innerHTML = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;width:100%;height:100%">
-        <div style="position:relative;overflow:hidden"><img src="${vinScanImageData ? 'data:image/jpeg;base64,'+vinScanImageData : ''}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:4px;left:4px;font-size:10px;background:rgba(0,0,0,.7);padding:2px 6px;border-radius:2px">VIN</div></div>
-        <div style="position:relative;overflow:hidden"><img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:4px;left:4px;font-size:10px;background:rgba(0,0,0,.7);padding:2px 6px;border-radius:2px">TIRE</div></div>
-      </div>`;
-    status.innerHTML = '<span style="color:var(--yellow)">Cross-referencing VIN and tire…</span>';
-    confirmBtn.style.display = 'none';
-    if (addTireBtn) addTireBtn.style.display = 'none';
-
-    try {
-      const response = await fetch('/functions/vin-scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ images: [
-          { imageData: vinScanImageData, mediaType: 'image/jpeg' },
-          { imageData: vinTireImageData, mediaType: vinTireMediaType }
-        ]})
-      });
-      const data = await response.json();
-
-      if (data.vin) {
-        let statusHtml = `<span style="color:var(--green)">✓ VIN: <span style="letter-spacing:2px;font-weight:700">${data.vin}</span></span>`;
-        if (data.tireSize) statusHtml += `<span style="color:var(--green);margin-left:12px">✓ Tire: <strong>${data.tireSize}</strong></span>`;
-        if (data.mismatch) statusHtml += `<span style="color:var(--red);display:block;margin-top:6px">⚠ Tire on vehicle doesn’t match OEM spec — confirm size before ordering</span>`;
-        status.innerHTML = statusHtml;
-        confirmBtn.dataset.vin = data.vin;
-        confirmBtn.style.display = 'inline-flex';
-      } else {
-        status.innerHTML = `<span style="color:var(--red)">Could not read VIN — try clearer photos or enter manually</span>`;
-      }
-    } catch (err) {
-      status.innerHTML = `<span style="color:var(--red)">Scan failed — enter VIN manually</span>`;
-    }
-    input.value = '';
-  };
-  reader.readAsDataURL(file);
-}
-
-function confirmVinScan() {
-  const btn = document.getElementById('vinScanConfirmBtn');
-  const vin = btn.dataset.vin;
-  if (!vin) return;
-  closeVinScanner();
-  const input = document.getElementById('vinInput');
-  input.value = vin;
-  onVinInput(input);
-  setTimeout(() => doVinLookup(), 150);
-}
-
-function closeVinScanner() {
-  document.getElementById('vinScanOverlay').style.display = 'none';
-  vinScanImageData = null;
-  vinTireImageData = null;
-  vinTireMediaType = null;
-}
 
 function onVinInput(el) {
   const v = el.value.replace(/[^A-HJ-NPR-Z0-9]/gi, '').toUpperCase().substr(0, 17);
@@ -3812,7 +3650,7 @@ async function doVinLookup() {
       <div style="display:flex;gap:8px;flex-wrap:wrap;width:100%">
         ${oemSize
           ? `<button class="vin-search-btn" onclick="vinSearchTires()">🔵 Shop Tires for ${oemSize} →</button>
-             ${altSizes.length ? altSizes.map(s => `<button class="vin-alt-btn" onclick="vinSearchTireSize('${s}')">${s}</button>`).join('') : ''}`
+             ${altSizes.length ? `<button class="vin-alt-btn" onclick="vinSearchAllSizes()">All Compatible Sizes</button>` : ''}`
           : `<button class="vin-search-btn" onclick="smoothScroll('#catalog')">Browse Tire Inventory →</button>`}
         ${oemWheel
           ? `<button class="vin-alt-btn" onclick="vinSearchWheels()">🔩 Shop Wheels (${oemWheel.bolt})</button>`
@@ -3857,20 +3695,6 @@ function vinSearchTires() {
   resultEl.classList.add('show');
   loadTires({ tireSizes: [vinDecoded.oemSize] }).then(() => {
     textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> tires for size <strong>${vinDecoded.oemSize}</strong>.`;
-  });
-  setTimeout(() => smoothScroll('#catalog'), 300);
-}
-
-function vinSearchTireSize(size) {
-  if (!vinDecoded) return;
-  lastSearchMethod = 'vin';
-  lastSearchVehicle = { year: vinDecoded.year, make: vinDecoded.make, model: vinDecoded.model, trim: vinDecoded.trim, vin: vinDecoded.vin };
-  switchCatalogType('tires');
-  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
-  textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — searching tires for <strong>${size}</strong>…`;
-  resultEl.classList.add('show');
-  loadTires({ tireSizes: [size] }).then(() => {
-    textEl.innerHTML = `VIN decoded: <strong>${vinDecoded.year} ${vinDecoded.make.charAt(0).toUpperCase()+vinDecoded.make.slice(1)} ${vinDecoded.model}</strong> — showing <strong>${filteredTires.length}</strong> tires for size <strong>${size}</strong>.`;
   });
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
