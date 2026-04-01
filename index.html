@@ -520,6 +520,23 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .vin-input.valid{border-color:var(--green)}
 .vin-input.invalid{border-color:var(--red)}
 .vin-chars{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);pointer-events:none}
+.vin-cam-btn{display:flex;align-items:center;gap:7px;background:var(--raised);color:var(--light);border:1px solid var(--border);padding:11px 16px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.vin-cam-btn:hover{border-color:var(--yellow);color:var(--yellow)}
+.vin-cam-btn svg{width:16px;height:16px;flex-shrink:0}
+.vin-cam-btn.scanning{border-color:var(--yellow);color:var(--yellow);animation:pulse-border .8s ease-in-out infinite}
+@keyframes pulse-border{0%,100%{border-color:rgba(245,197,24,.4)}50%{border-color:rgba(245,197,24,1)}}
+.vin-scan-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px}
+.vin-scan-preview{width:100%;max-width:480px;border-radius:4px;overflow:hidden;position:relative;background:#000;aspect-ratio:16/9}
+.vin-scan-preview img{width:100%;height:100%;object-fit:contain}
+.vin-scan-frame{position:absolute;inset:10%;border:2px solid var(--yellow);border-radius:2px;pointer-events:none}
+.vin-scan-frame::before,.vin-scan-frame::after{content:'';position:absolute;width:20px;height:20px;border-color:var(--yellow);border-style:solid}
+.vin-scan-frame::before{top:-2px;left:-2px;border-width:3px 0 0 3px}
+.vin-scan-frame::after{bottom:-2px;right:-2px;border-width:0 3px 3px 0}
+.vin-scan-status{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);text-align:center}
+.vin-scan-actions{display:flex;gap:10px}
+.vin-scan-btn{padding:11px 24px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none}
+.vin-scan-btn.primary{background:var(--yellow);color:var(--black)}
+.vin-scan-btn.secondary{background:transparent;color:var(--light);border:1px solid var(--border)}
 .vin-result{margin-top:16px}
 .vin-card{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:18px 20px}
 .vin-card.success{border-color:rgba(34,197,94,.3);background:var(--green-dim)}
@@ -658,7 +675,6 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .mm-note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5}
 .mm-note a{color:var(--yellow);cursor:pointer}
 .member-price-badge{display:inline-flex;align-items:center;gap:5px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.3);border-radius:2px;padding:2px 7px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:4px}
-.owner-price-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,200,120,.1);border:1px solid rgba(0,200,120,.3);border-radius:2px;padding:2px 7px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:4px}
 
 /* LOOKUP TABS */
 .lookup-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border)}
@@ -900,7 +916,7 @@ function getRebateForBrand(brand) {
     <button class="nav-link" onclick="smoothScroll('#decision-guide')">Tire Finder</button>
     <button class="nav-link" onclick="smoothScroll('#guide')">Tire Guide</button>
     <button class="nav-link" onclick="smoothScroll('#install')">Installation</button>
-    <button class="nav-link" onclick="smoothScroll('#services')" style="color:var(--yellow)">Book a Service</button>
+    <button class="nav-link" onclick="smoothScroll('#services')">Book a Service</button>
     <button class="nav-link" onclick="smoothScroll('#location')">Location</button>
   </div>
   <div class="nav-right">
@@ -918,7 +934,7 @@ function getRebateForBrand(brand) {
   <button class="mobile-menu-link" onclick="smoothScroll('#catalog');closeMenu()">Shop All</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#guide');closeMenu()">Tire Buying Guide</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#install');closeMenu()">Installation</button>
-  <button class="mobile-menu-link" onclick="smoothScroll('#services');closeMenu()" style="color:var(--yellow)">🔧 Book a Service</button>
+  <button class="mobile-menu-link" onclick="smoothScroll('#services');closeMenu()">🔧 Book a Service</button>
   <button class="mobile-menu-link" onclick="smoothScroll('#location');closeMenu()">Location & Hours</button>
   <a class="mobile-menu-link" href="tel:5193805104" style="text-decoration:none">📞 519-380-5104</a>
 </div>
@@ -953,7 +969,26 @@ function getRebateForBrand(brand) {
             <input type="text" id="vinInput" class="vin-input" placeholder="e.g. 2GCUKREC4P1234567" maxlength="17" oninput="onVinInput(this)" autocomplete="off" spellcheck="false">
             <div class="vin-chars" id="vinChars">0 / 17</div>
           </div>
-          <button class="lookup-btn" id="vinSearchBtn" onclick="doVinLookup()" disabled style="opacity:.5;cursor:not-allowed">Decode VIN →</button>
+          <button class="vin-cam-btn" id="vinCamBtn" onclick="openVinScanner()" title="Scan VIN with camera">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            Scan
+          </button>
+          <button class="lookup-btn" id="vinSearchBtn" onclick="doVinLookup()" disabled style="opacity:.5;cursor:not-allowed">Decode VIN &#8594;</button>
+        </div>
+        <input type="file" id="vinImageInput" accept="image/*" capture="environment" style="display:none" onchange="handleVinImage(this)">
+        <div class="vin-scan-overlay" id="vinScanOverlay" style="display:none">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--white)">Scan Your VIN</div>
+          <div class="vin-scan-preview" id="vinScanPreview">
+            <div class="vin-scan-frame"></div>
+          </div>
+          <div class="vin-scan-status" id="vinScanStatus">Point camera at your VIN sticker</div>
+          <div class="vin-scan-actions">
+            <button class="vin-scan-btn primary" id="vinScanConfirmBtn" onclick="confirmVinScan()" style="display:none">Use This VIN &#8594;</button>
+            <button class="vin-scan-btn secondary" onclick="closeVinScanner()">Cancel</button>
+          </div>
         </div>
         <div class="vin-result" id="vinResult"></div>
       </div>
@@ -2165,16 +2200,13 @@ function retailPrice(item) {
   if (item.map && item.map > price) price = item.map;
   return Math.round(price * 100) / 100;
 }
-function ownerPrice(item) { return Math.round((item.price || 0) * 100) / 100; }
 function memberPrice(item) { return Math.round(retailPrice(item) * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100; }
-function displayedPrice(item) { return currentMember?.tier === 'owner' ? ownerPrice(item) : currentMember ? memberPrice(item) : retailPrice(item); }
-function priceBadgeHtml() { if (!currentMember) return ''; return currentMember.tier === 'owner' ? '<div class="owner-price-badge">⚡ TDG Cost</div>' : '<div class="member-price-badge">★ Member Price</div>'; }
+function displayedPrice(item) { return currentMember ? memberPrice(item) : retailPrice(item); }
 
 // ─────────────────────────────────────────────────
 //  MEMBER SYSTEM
 // ─────────────────────────────────────────────────
 const MEMBER_CODE = 'postmah&c';
-const OWNER_CODE = 'pctowner2026';
 const APPROVED_MEMBERS = {};
 let currentMember = null;
 
@@ -2184,13 +2216,11 @@ function initMemberState() {
     if (saved) {
       const m = JSON.parse(saved);
       const approved = APPROVED_MEMBERS[m.email];
-      const isOwner = m.code.toLowerCase() === OWNER_CODE.toLowerCase();
       const universalOk = m.code.toLowerCase() === MEMBER_CODE.toLowerCase();
       const namedOk = approved && approved.code === m.code;
-      if (isOwner || universalOk || namedOk) {
+      if (universalOk || namedOk) {
         const name = approved?.name || m.email.split('@')[0];
-        const tier = isOwner ? 'owner' : 'member';
-        currentMember = { email: m.email, name, code: m.code, tier };
+        currentMember = { email: m.email, name, code: m.code };
         updateMemberNav();
       }
     }
@@ -2200,8 +2230,7 @@ function initMemberState() {
 function updateMemberNav() {
   const btn = document.getElementById('memberNavBtn');
   if (!btn) return;
-  if (currentMember && currentMember.tier === 'owner') { btn.textContent = '⚡ Owner'; btn.classList.add('logged-in'); }
-  else if (currentMember) { btn.textContent = '★ ' + currentMember.name.split(' ')[0]; btn.classList.add('logged-in'); }
+  if (currentMember) { btn.textContent = '★ ' + currentMember.name.split(' ')[0]; btn.classList.add('logged-in'); }
   else { btn.textContent = 'Member Login'; btn.classList.remove('logged-in'); }
 }
 
@@ -2229,17 +2258,14 @@ function memberLogin() {
   const code  = document.getElementById('mmCode').value.trim();
   const errEl = document.getElementById('mmError');
   if (!email || !code) { errEl.textContent = 'Please enter your email and invite code.'; errEl.classList.add('show'); return; }
-  const isOwner = code.toLowerCase() === OWNER_CODE.toLowerCase();
   const universalMatch = code.toLowerCase() === MEMBER_CODE.toLowerCase();
   const namedMatch = APPROVED_MEMBERS[email] && APPROVED_MEMBERS[email].code === code;
-  if (!isOwner && !universalMatch && !namedMatch) { errEl.textContent = 'Invite code not recognized. Contact PC Tires to request access.'; errEl.classList.add('show'); return; }
+  if (!universalMatch && !namedMatch) { errEl.textContent = 'Invite code not recognized. Contact PC Tires to request access.'; errEl.classList.add('show'); return; }
   const name = APPROVED_MEMBERS[email]?.name || email.split('@')[0];
-  const tier = isOwner ? 'owner' : 'member';
-  currentMember = { email, name, code, tier };
+  currentMember = { email, name, code };
   try { localStorage.setItem('pc_member', JSON.stringify(currentMember)); } catch(e) {}
   closeMemberModal(); updateMemberNav(); renderCatalog();
-  if (isOwner) showToast('Owner access active', 'All prices shown at TDG cost — no markup');
-  else showToast('Welcome! Member pricing is active', '10% off all products unlocked');
+  showToast('Welcome! Member pricing is active', '10% off all products unlocked');
 }
 function memberRequest() {
   const name  = document.getElementById('mmReqName').value.trim();
@@ -2752,7 +2778,7 @@ function buildRecCard(t, tier) {
   const stockClass = t.stock === 'in' ? 'in-stock' : 'low-stock';
   const stockLabel = t.stock === 'in' ? 'In Stock' : 'Low Stock';
   const retail = retailPrice(t), shown = displayedPrice(t);
-  const memberBadge = priceBadgeHtml();
+  const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
   const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
   const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
   const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
@@ -2821,7 +2847,7 @@ function renderTires() {
     const stockClass = t.stock === 'in' ? 'in-stock' : 'low-stock';
     const stockLabel = t.stock === 'in' ? 'In Stock' : t.stock === 'low' ? 'Low Stock' : 'Call Us';
     const retail = retailPrice(t), shown = displayedPrice(t);
-    const memberBadge = priceBadgeHtml();
+    const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
     const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
     const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
     const dimStyle = recIds.has(t.itemNumber) ? 'opacity:.55' : '';
@@ -2889,7 +2915,7 @@ function renderWheels() {
     const stockClass = w.stock === 'in' ? 'in-stock' : 'low-stock';
     const stockLabel = w.stock === 'in' ? 'In Stock' : w.stock === 'low' ? 'Low Stock' : 'Call Us';
     const retail = retailPrice(w), shown = displayedPrice(w);
-    const memberBadge = priceBadgeHtml();
+    const memberBadge = currentMember ? `<div class="member-price-badge">★ Member Price</div>` : '';
     const msrpNote = w.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${w.msrp.toFixed(2)}</div>` : '';
     const noImgSVG = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px">
       <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" opacity="0.35">
@@ -3583,6 +3609,73 @@ const OEM_ALT_SIZES = {
 //  VIN DECODER (NHTSA free API)
 // ─────────────────────────────────────────────────
 let vinDecoded = null;
+let vinScanImageData = null;
+
+// ── VIN Camera / Photo Scanner ──
+function openVinScanner() {
+  document.getElementById('vinImageInput').click();
+}
+
+function handleVinImage(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+    vinScanImageData = dataUrl.split(',')[1];
+
+    const overlay = document.getElementById('vinScanOverlay');
+    const preview = document.getElementById('vinScanPreview');
+    const status  = document.getElementById('vinScanStatus');
+    const confirmBtn = document.getElementById('vinScanConfirmBtn');
+
+    preview.innerHTML = `<img src="${dataUrl}" alt="VIN photo"><div class="vin-scan-frame"></div>`;
+    status.textContent = 'Analysing image…';
+    confirmBtn.style.display = 'none';
+    overlay.style.display = 'flex';
+
+    try {
+      const response = await fetch('/functions/vin-scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageData: vinScanImageData, mediaType: file.type || 'image/jpeg' })
+      });
+      const data = await response.json();
+
+      if (data.vin) {
+        status.innerHTML = `<span style="color:var(--green)">✓ VIN found: <span style="letter-spacing:2px">${data.vin}</span></span>`;
+        confirmBtn.dataset.vin = data.vin;
+        confirmBtn.style.display = 'inline-flex';
+      } else {
+        status.innerHTML = `<span style="color:var(--red)">Could not read a VIN — try a clearer photo</span>`;
+        confirmBtn.style.display = 'none';
+      }
+    } catch (err) {
+      status.innerHTML = `<span style="color:var(--red)">Scan failed — enter VIN manually</span>`;
+      console.error('VIN scan error:', err);
+    }
+
+    input.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function confirmVinScan() {
+  const btn = document.getElementById('vinScanConfirmBtn');
+  const vin = btn.dataset.vin;
+  if (!vin) return;
+  closeVinScanner();
+  const input = document.getElementById('vinInput');
+  input.value = vin;
+  onVinInput(input);
+  setTimeout(() => doVinLookup(), 150);
+}
+
+function closeVinScanner() {
+  document.getElementById('vinScanOverlay').style.display = 'none';
+  vinScanImageData = null;
+}
 
 function onVinInput(el) {
   const v = el.value.replace(/[^A-HJ-NPR-Z0-9]/gi, '').toUpperCase().substr(0, 17);
