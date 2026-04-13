@@ -31,7 +31,7 @@ const CORS = {
   'Content-Type': 'application/json',
 };
 
-// ─── TDG order placement ──────────────────────────────────────────────────────
+// ─── TDG order placement (two-step: quote → create) ──────────────────────────
 async function placeTDGOrder(order) {
   // Build products array from cart items that have a real TDG id (integer)
   const products = (order.tires || [])
@@ -42,24 +42,52 @@ async function placeTDGOrder(order) {
     return { skipped: true, reason: 'No TDG product IDs in order — mock/fallback items only' };
   }
 
-  const payload = {
+  const basePayload = {
     shippingMethod: TDG_SHIPPING_METHOD,
     paymentMethod:  TDG_PAYMENT_METHOD,
     shipComplete:   false,
-    poNumber:       order.orderNumber, // use our internal order number as PO ref
+    poNumber:       order.orderNumber,
     deliveryInstructions: order.appointmentDate
       ? `Customer install booked: ${order.appointmentDate} at ${order.appointmentTime}`
       : 'PC Tires online order — contact shop for install details',
     products,
   };
 
+  const tdgHeaders = {
+    'Content-Type': 'application/json',
+    'Authorization': `ApiKey ${TDG_API_KEY}`,
+  };
+
+  // Step 1: Get quote to obtain orderHash
+  const quoteRes = await fetch(`${TDG_API_BASE}/order/quote`, {
+    method: 'POST',
+    headers: tdgHeaders,
+    body: JSON.stringify(basePayload),
+  });
+
+  const quoteText = await quoteRes.text();
+  let quoteData;
+  try { quoteData = JSON.parse(quoteText); } catch { quoteData = { raw: quoteText }; }
+
+  if (!quoteRes.ok) {
+    console.error('TDG quote failed:', quoteRes.status, quoteText);
+    return { error: true, status: quoteRes.status, body: quoteData, step: 'quote' };
+  }
+
+  // Extract orderHash from quote response
+  const orderHash = quoteData.orderHash || quoteData.quote?.orderHash;
+  if (!orderHash) {
+    console.error('TDG quote missing orderHash:', quoteText);
+    return { error: true, status: 200, body: quoteData, step: 'quote-no-hash' };
+  }
+
+  // Step 2: Create order with orderHash
+  const createPayload = { ...basePayload, orderHash };
+
   const res = await fetch(`${TDG_API_BASE}/order/create`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `ApiKey ${TDG_API_KEY}`,
-    },
-    body: JSON.stringify(payload),
+    headers: tdgHeaders,
+    body: JSON.stringify(createPayload),
   });
 
   const text = await res.text();
@@ -68,7 +96,7 @@ async function placeTDGOrder(order) {
 
   if (!res.ok) {
     console.error('TDG order failed:', res.status, text);
-    return { error: true, status: res.status, body: data };
+    return { error: true, status: res.status, body: data, step: 'create' };
   }
 
   return data; // { order: { orderNumber, reference, currency, subtotal, shipping, tax, total } }
