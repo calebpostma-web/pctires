@@ -46,8 +46,7 @@ export async function onRequest(context) {
       'automatic_payment_methods[enabled]': 'true',
       description: description || `PC Tires order ${orderNumber}`,
       receipt_email: customerEmail || '',
-      'metadata[orderNumber]': orderNumber || '',
-    });
+        });
 
     const res = await fetch('https://api.stripe.com/v1/payment_intents', {
       method: 'POST',
