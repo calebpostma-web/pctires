@@ -627,16 +627,52 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .cookie-decline:hover{border-color:var(--muted);color:var(--light)}
 
 /* CHAT */
-.chat-fab{position:fixed;bottom:24px;left:24px;z-index:600;background:var(--yellow);color:var(--black);border:none;width:52px;height:52px;border-radius:50%;font-size:22px;cursor:pointer;box-shadow:0 4px 20px rgba(245,197,24,.3);transition:all .2s;display:flex;align-items:center;justify-content:center}
+.chat-fab{position:fixed;bottom:24px;left:24px;z-index:600;background:var(--yellow);color:var(--black);border:none;width:56px;height:56px;border-radius:50%;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(245,197,24,.3);transition:all .2s;display:flex;align-items:center;justify-content:center}
 .chat-fab:hover{transform:scale(1.08);background:var(--yellow-dark)}
-.chat-popup{position:fixed;bottom:86px;left:24px;z-index:600;background:var(--dark);border:1px solid var(--border);border-radius:4px;padding:18px 20px;width:280px;display:none;box-shadow:0 8px 32px rgba(0,0,0,.5)}
-.chat-popup.show{display:block}
-.chat-popup-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;margin-bottom:4px}
-.chat-popup-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
-.chat-options{display:flex;flex-direction:column;gap:7px}
-.chat-option{display:flex;align-items:center;gap:10px;background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:10px 12px;font-size:13px;color:var(--light);text-decoration:none;cursor:pointer;transition:all .2s}
-.chat-option:hover{border-color:var(--yellow);color:var(--yellow)}
-.chat-option-icon{font-size:16px}
+.chat-fab.has-window{background:var(--red);color:var(--white)}
+.chat-fab.has-window:hover{background:#c0392b}
+.chat-window{position:fixed;bottom:90px;left:24px;z-index:601;width:360px;max-height:520px;background:var(--dark);border:1px solid var(--border);border-radius:4px;display:none;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,.6)}
+.chat-window.show{display:flex}
+.chat-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--card)}
+.chat-header-left{display:flex;align-items:center;gap:10px}
+.chat-header-avatar{width:32px;height:32px;background:var(--yellow);color:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;font-family:'Barlow Condensed',sans-serif}
+.chat-header-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.chat-header-status{font-size:10px;color:var(--green);font-family:'IBM Plex Mono',monospace}
+.chat-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px}
+.chat-close:hover{color:var(--white)}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:200px;max-height:340px}
+.chat-msg{display:flex;flex-direction:column;max-width:85%}
+.chat-msg.user{align-self:flex-end}
+.chat-msg.ai{align-self:flex-start}
+.chat-msg-bubble{padding:10px 14px;border-radius:2px;font-size:13px;line-height:1.6}
+.chat-msg.user .chat-msg-bubble{background:var(--yellow);color:var(--black);font-weight:500}
+.chat-msg.ai .chat-msg-bubble{background:var(--raised);color:var(--light);border:1px solid var(--border)}
+.chat-typing{display:flex;gap:4px;padding:10px 14px;background:var(--raised);border:1px solid var(--border);border-radius:2px;width:fit-content}
+.chat-typing span{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:chatBounce .6s infinite alternate}
+.chat-typing span:nth-child(2){animation-delay:.2s}
+.chat-typing span:nth-child(3){animation-delay:.4s}
+@keyframes chatBounce{0%{opacity:.3;transform:translateY(0)}100%{opacity:1;transform:translateY(-4px)}}
+.chat-quick-btns{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 12px}
+.chat-quick-btn{background:var(--raised);border:1px solid var(--border);color:var(--light);padding:7px 12px;border-radius:2px;font-size:12px;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s}
+.chat-quick-btn:hover{border-color:var(--yellow);color:var(--yellow)}
+.chat-input-row{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);background:var(--card)}
+.chat-input-row input{flex:1;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:10px 12px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;outline:none}
+.chat-input-row input:focus{border-color:var(--yellow)}
+.chat-input-row input::placeholder{color:var(--muted)}
+.chat-send-btn{background:var(--yellow);color:var(--black);border:none;padding:10px 16px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.chat-send-btn:hover{background:var(--yellow-dark)}
+.chat-send-btn:disabled{opacity:.4;cursor:not-allowed}
+.chat-tire-card{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:2px;padding:10px;margin-top:8px;cursor:pointer;transition:all .2s}
+.chat-tire-card:hover{border-color:var(--yellow)}
+.chat-tire-card-info{flex:1;min-width:0}
+.chat-tire-card-brand{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.chat-tire-card-name{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-tire-card-meta{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.chat-tire-card-right{text-align:right;flex-shrink:0}
+.chat-tire-card-price{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;color:var(--yellow)}
+.chat-tire-card-add{background:var(--yellow);color:var(--black);border:none;padding:5px 10px;border-radius:2px;font-size:10px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;margin-top:3px}
+.chat-tire-card-add:hover{background:var(--yellow-dark)}
+@media(max-width:600px){.chat-window{left:8px;right:8px;bottom:80px;width:auto}}
 
 /* HAMBURGER */
 .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
@@ -1502,16 +1538,29 @@ function getRebateForBrand(brand) {
 </div>
 
 <!-- FLOATING CHAT -->
-<button class="chat-fab" onclick="toggleChat()" id="chatFab" title="Need help?">💬</button>
-<div class="chat-popup" id="chatPopup">
-  <div class="chat-popup-title">Need Help?</div>
-  <div class="chat-popup-sub">We usually respond instantly during business hours.</div>
-  <div class="chat-options">
-    <a href="tel:5193805104" class="chat-option"><span class="chat-option-icon">📞</span> Call us: 519-380-5104</a>
-    <a href="sms:5193805104" class="chat-option"><span class="chat-option-icon">💬</span> Text us a question</a>
-    <a href="/cdn-cgi/l/email-protection#5d0d322e29303c3e3233292f3c3e2934333a1d3a303c3431733e3230" class="chat-option"><span class="chat-option-icon">✉️</span> Email us</a>
-    <button class="chat-option" onclick="smoothScroll('#guide');toggleChat()" style="border:none;cursor:pointer;text-align:left"><span class="chat-option-icon">📖</span> Browse tire guide</button>
-    <button class="chat-option" onclick="openSelectionGuide();toggleChat()" style="border:none;cursor:pointer;text-align:left"><span class="chat-option-icon">🛞</span> Tire Selection Guide</button>
+<button class="chat-fab" onclick="toggleChat()" id="chatFab" title="Chat with us">🛞</button>
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="chat-header-avatar">PC</div>
+      <div>
+        <div class="chat-header-name">PC Tires</div>
+        <div class="chat-header-status">● Online</div>
+      </div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg ai"><div class="chat-msg-bubble">Hey! I'm the PC Tires assistant. I can help you find the right tires for your vehicle, check what's in stock, or answer any questions. What can I help with?</div></div>
+  </div>
+  <div class="chat-quick-btns" id="chatQuickBtns">
+    <button class="chat-quick-btn" onclick="chatQuickSend('What tires fit my 2023 Honda Civic?')">🚗 My vehicle</button>
+    <button class="chat-quick-btn" onclick="chatQuickSend('What season of tire should I get for Ontario?')">❄️ Season help</button>
+    <button class="chat-quick-btn" onclick="chatQuickSend('How do I read a tire size?')">📏 Tire sizes</button>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Ask about tires, sizes, seasons..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send-btn" id="chatSendBtn" onclick="sendChat()">Send</button>
   </div>
 </div>
 
@@ -4108,7 +4157,7 @@ const TIRE_SIZES = [
   '205/45R15','205/45R16','205/45R17','205/45R18','205/50R13','205/50R14','205/50R15','205/50R16','205/50R17','205/50R18','205/55R13','205/55R14','205/55R15','205/55R16','205/55R17','205/55R18','205/60R13','205/60R14','205/60R15','205/60R16','205/60R17','205/60R18','205/65R13','205/65R14','205/65R15','205/65R16','205/65R17','205/65R18','205/70R13','205/70R14','205/70R15','205/70R16','205/70R17','205/70R18','205/75R13','205/75R14','205/75R15','205/75R16','205/75R17','205/75R18',
   '215/40R15','215/40R16','215/40R17','215/40R18','215/45R15','215/45R16','215/45R17','215/45R18','215/50R13','215/50R14','215/50R15','215/50R16','215/50R17','215/50R18','215/55R13','215/55R14','215/55R15','215/55R16','215/55R17','215/55R18','215/60R13','215/60R14','215/60R15','215/60R16','215/60R17','215/60R18','215/65R13','215/65R14','215/65R15','215/65R16','215/65R17','215/65R18','215/70R13','215/70R14','215/70R15','215/70R16','215/70R17','215/70R18','215/75R13','215/75R14','215/75R15','215/75R16','215/75R17','215/75R18',
   '225/35R16','225/35R17','225/35R18','225/35R19','225/35R20','225/40R15','225/40R16','225/40R17','225/40R18','225/40R19','225/45R15','225/45R16','225/45R17','225/45R18','225/45R19','225/50R13','225/50R14','225/50R15','225/50R16','225/50R17','225/50R18','225/50R19','225/55R13','225/55R14','225/55R15','225/55R16','225/55R17','225/55R18','225/55R19','225/60R13','225/60R14','225/60R15','225/60R16','225/60R17','225/60R18','225/60R19','225/65R13','225/65R14','225/65R15','225/65R16','225/65R17','225/65R18','225/65R19','225/70R13','225/70R14','225/70R15','225/70R16','225/70R17','225/70R18','225/70R19','225/75R13','225/75R14','225/75R15','225/75R16','225/75R17','225/75R18','225/75R19',
-  '235/30R17','235/30R18','235/30R19','235/30R20','235/35R16','235/35R17','235/35R18','235/35R19','235/35R20','235/40R15','235/40R16','235/40R17','235/40R18','235/40R19','235/40R20','235/45R15','235/45R16','235/45R17','235/45R18','235/45R19','235/45R20','235/50R13','235/50R14','235/50R15','235/50R16','235/50R17','235/50R18','235/50R19','235/50R20','235/55R13','235/55R14','235/55R15','235/55R16','235/55R17','235/55R18','235/55R19','235/55R20','235/55R21','235/60R13','235/60R14','235/60R15','235/60R16','235/60R17','235/60R18','235/60R19','235/60R20','235/65R13','235/65R14','235/65R15','235/65R16','235/65R17','235/65R18','235/65R19','235/65R20','235/70R13','235/70R14','235/70R15','235/70R16','235/70R17','235/70R18','235/70R19','235/70R20','235/75R13','235/75R14','235/75R15','235/75R16','235/75R17','235/75R18','235/75R19','235/75R20','235/80R13','235/80R14','235/80R15','235/80R16','235/80R17','235/80R18','235/80R19','235/80R20','235/85R13','235/85R14','235/85R15','235/85R16','235/85R17','235/85R18','235/85R19','235/85R20',
+  '235/30R17','235/30R18','235/30R19','235/35R16','235/35R17','235/35R18','235/35R19','235/35R20','235/40R15','235/40R16','235/40R17','235/40R18','235/40R19','235/45R15','235/45R16','235/45R17','235/45R18','235/45R19','235/50R13','235/50R14','235/50R15','235/50R16','235/50R17','235/50R18','235/50R19','235/55R13','235/55R14','235/55R15','235/55R16','235/55R17','235/55R18','235/55R19','235/60R13','235/60R14','235/60R15','235/60R16','235/60R17','235/60R18','235/60R19','235/65R13','235/65R14','235/65R15','235/65R16','235/65R17','235/65R18','235/65R19','235/70R13','235/70R14','235/70R15','235/70R16','235/70R17','235/70R18','235/70R19','235/75R13','235/75R14','235/75R15','235/75R16','235/75R17','235/75R18','235/75R19','235/80R13','235/80R14','235/80R15','235/80R16','235/80R17','235/80R18','235/80R19','235/85R13','235/85R14','235/85R15','235/85R16','235/85R17','235/85R18','235/85R19',
   '245/30R17','245/30R18','245/30R19','245/30R20','245/35R16','245/35R17','245/35R18','245/35R19','245/35R20','245/35R21','245/40R15','245/40R16','245/40R17','245/40R18','245/40R19','245/40R20','245/40R21','245/45R15','245/45R16','245/45R17','245/45R18','245/45R19','245/45R20','245/45R21','245/50R13','245/50R14','245/50R15','245/50R16','245/50R17','245/50R18','245/50R19','245/50R20','245/55R13','245/55R14','245/55R15','245/55R16','245/55R17','245/55R18','245/55R19','245/55R20','245/60R13','245/60R14','245/60R15','245/60R16','245/60R17','245/60R18','245/60R19','245/60R20','245/65R13','245/65R14','245/65R15','245/65R16','245/65R17','245/65R18','245/65R19','245/65R20','245/70R13','245/70R14','245/70R15','245/70R16','245/70R17','245/70R18','245/70R19','245/70R20','245/75R13','245/75R14','245/75R15','245/75R16','245/75R17','245/75R18','245/75R19','245/75R20',
   '255/25R19','255/25R20','255/30R17','255/30R18','255/30R19','255/30R20','255/30R22','255/35R16','255/35R17','255/35R18','255/35R19','255/35R20','255/35R21','255/40R15','255/40R16','255/40R17','255/40R18','255/40R19','255/40R20','255/40R21','255/45R15','255/45R16','255/45R17','255/45R18','255/45R19','255/45R20','255/50R13','255/50R14','255/50R15','255/50R16','255/50R17','255/50R18','255/50R19','255/50R20','255/55R13','255/55R14','255/55R15','255/55R16','255/55R17','255/55R18','255/55R19','255/55R20','255/60R13','255/60R14','255/60R15','255/60R16','255/60R17','255/60R18','255/60R19','255/60R20','255/65R13','255/65R14','255/65R15','255/65R16','255/65R17','255/65R18','255/65R19','255/65R20','255/70R13','255/70R14','255/70R15','255/70R16','255/70R17','255/70R18','255/70R19','255/70R20','255/75R13','255/75R14','255/75R15','255/75R16','255/75R17','255/75R18','255/75R19','255/75R20',
   '265/30R17','265/30R18','265/30R19','265/30R20','265/30R21','265/30R22','265/35R16','265/35R17','265/35R18','265/35R19','265/35R20','265/35R21','265/35R22','265/40R15','265/40R16','265/40R17','265/40R18','265/40R19','265/40R20','265/40R21','265/40R22','265/45R15','265/45R16','265/45R17','265/45R18','265/45R19','265/45R20','265/45R21','265/45R22','265/50R13','265/50R14','265/50R15','265/50R16','265/50R17','265/50R18','265/50R19','265/50R20','265/50R21','265/50R22','265/55R13','265/55R14','265/55R15','265/55R16','265/55R17','265/55R18','265/55R19','265/55R20','265/55R21','265/55R22','265/60R13','265/60R14','265/60R15','265/60R16','265/60R17','265/60R18','265/60R19','265/60R20','265/60R21','265/60R22','265/65R13','265/65R14','265/65R15','265/65R16','265/65R17','265/65R18','265/65R19','265/65R20','265/65R21','265/65R22','265/70R13','265/70R14','265/70R15','265/70R16','265/70R17','265/70R18','265/70R19','265/70R20','265/70R21','265/70R22','265/75R13','265/75R14','265/75R15','265/75R16','265/75R17','265/75R18','265/75R19','265/75R20','265/75R21','265/75R22',
@@ -4510,7 +4559,7 @@ async function processPayment() {
     window._pendingOrderId = orderId;
 
     // Create PaymentIntent server-side
- const piRes = await fetch('/create-pi', {
+    const piRes = await fetch('/create-pi', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amountCents, orderNumber: orderId, customerEmail: email }),
@@ -4795,11 +4844,123 @@ function dismissCookie(accepted) {
   try { localStorage.setItem('pc_cookie_consent', accepted ? 'all' : 'essential'); } catch(e) {}
   document.getElementById('cookieBanner').classList.remove('show');
 }
-function toggleChat() { document.getElementById('chatPopup').classList.toggle('show'); }
+// ─── AI CHAT ───
+const chatHistory = [];
+function toggleChat() {
+  const win = document.getElementById('chatWindow');
+  const fab = document.getElementById('chatFab');
+  win.classList.toggle('show');
+  fab.classList.toggle('has-window');
+  if (win.classList.contains('show')) {
+    fab.textContent = '✕';
+    document.getElementById('chatInput').focus();
+  } else {
+    fab.textContent = '🛞';
+  }
+}
 document.addEventListener('click', e => {
-  const fab = document.getElementById('chatFab'), popup = document.getElementById('chatPopup');
-  if (fab && popup && !fab.contains(e.target) && !popup.contains(e.target)) popup.classList.remove('show');
+  const fab = document.getElementById('chatFab'), win = document.getElementById('chatWindow');
+  if (fab && win && win.classList.contains('show') && !fab.contains(e.target) && !win.contains(e.target)) toggleChat();
 });
+
+function chatAddMessage(role, text, recItems) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  // Convert newlines and basic markdown bold
+  let html = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  div.innerHTML = '<div class="chat-msg-bubble">' + html + '</div>';
+  // Add tire recommendation cards
+  if (recItems && recItems.length > 0) {
+    recItems.forEach(function(itemNum) {
+      const tire = allTires.find(function(t) { return t.itemNumber === itemNum; });
+      if (tire) {
+        const card = buildChatTireCard(tire);
+        div.innerHTML += card;
+      }
+    });
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function buildChatTireCard(tire) {
+  var price = displayedPrice(tire);
+  var itemNumber = tire.itemNumber;
+  var card = '<div class="chat-tire-card" onclick="addToCartFromChat(\'' + itemNumber + '\')">' +
+    '<div class="chat-tire-card-info">' +
+      '<div class="chat-tire-card-brand">' + (tire.brand || '') + '</div>' +
+      '<div class="chat-tire-card-name">' + (tire.name || '') + '</div>' +
+      '<div class="chat-tire-card-meta">' + (tire.size || '') + (tire.season ? ' · ' + tire.season : '') + '</div>' +
+    '</div>' +
+    '<div class="chat-tire-card-right">' +
+      '<div class="chat-tire-card-price">$' + price.toFixed(2) + '</div>' +
+      '<button class="chat-tire-card-add" onclick="event.stopPropagation();addToCartFromChat(\'' + itemNumber + '\')">Add to Cart</button>' +
+    '</div>' +
+  '</div>';
+  return card;
+}
+
+function addToCartFromChat(itemNumber) {
+  addToCart(itemNumber, 'tire');
+}
+
+function chatShowTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ai'; div.id = 'chatTyping';
+  div.innerHTML = '<div class="chat-typing"><span></span><span></span><span></span></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function chatHideTyping() { const el = document.getElementById('chatTyping'); if (el) el.remove(); }
+
+function chatQuickSend(text) {
+  document.getElementById('chatInput').value = text;
+  document.getElementById('chatQuickBtns').style.display = 'none';
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const btn = document.getElementById('chatSendBtn');
+  const text = input.value.trim();
+  if (!text || btn.disabled) return;
+  input.value = ''; btn.disabled = true;
+  document.getElementById('chatQuickBtns').style.display = 'none';
+  chatHistory.push({ role: 'user', content: text });
+  chatAddMessage('user', text);
+  chatShowTyping();
+  // Send up to 40 tires as inventory context
+  const inventory = allTires.slice(0, 40).map(function(t) {
+    return {
+      itemNumber: t.itemNumber, brand: t.brand, name: t.name,
+      size: t.size, season: t.season || t.type, price: displayedPrice(t).toFixed(2)
+    };
+  });
+  try {
+    const res = await fetch('/chat-agent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory.slice(-10), inventory: inventory })
+    });
+    const data = await res.json();
+    const rawText = (data.content && data.content[0] && data.content[0].text) ||
+      'Sorry, I had trouble connecting. Please try again or call us at 519-380-5104.';
+    const recMatch = rawText.match(/\[RECOMMEND:(\{[^\]]+\})\]/);
+    const cleanText = rawText.replace(/\[RECOMMEND:[^\]]+\]/g, '').trim();
+    let recItems = [];
+    if (recMatch) { try { recItems = JSON.parse(recMatch[1]).items || []; } catch(e){} }
+    chatHideTyping();
+    chatHistory.push({ role: 'assistant', content: rawText });
+    chatAddMessage('ai', cleanText, recItems);
+  } catch(e) {
+    chatHideTyping();
+    chatAddMessage('ai', 'Having trouble connecting right now. Please call us at 519-380-5104 or try again in a moment.');
+  }
+  btn.disabled = false; input.focus();
+}
 function toggleMenu() { document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobileMenu').classList.toggle('open'); }
 function closeMenu() { document.getElementById('hamburger').classList.remove('open'); document.getElementById('mobileMenu').classList.remove('open'); }
 document.addEventListener('click', e => { const h = document.getElementById('hamburger'), m = document.getElementById('mobileMenu'); if (h && m && !h.contains(e.target) && !m.contains(e.target)) closeMenu(); });
