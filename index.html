@@ -4510,7 +4510,7 @@ async function processPayment() {
     window._pendingOrderId = orderId;
 
     // Create PaymentIntent server-side
-    const piRes = await fetch('/create-payment-intent', {
+ const piRes = await fetch('/create-pi', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amountCents, orderNumber: orderId, customerEmail: email }),
