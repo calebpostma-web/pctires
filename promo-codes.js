@@ -23,11 +23,11 @@
 const PROMO_CODES = {
 
   // ── Partner codes (25% markup from cost instead of 35%) ──
-  'MULTI2026':    { type: 'markup', value: 1.25, label: 'Multi Construction — Partner Pricing' },
-  'WINDMILL2026': { type: 'markup', value: 1.25, label: 'Windmill Cabinets — Partner Pricing' },
+  'MULTI2026':    { type: 'markup', value: 1.15, label: 'Multi Construction — Partner Pricing' },
+  'WINDMILL2026': { type: 'markup', value: 1.15, label: 'Windmill Cabinets — Partner Pricing' },
 
   // ── Member / friends & family ──
-  'POSTMAH&C':   { type: 'percent', value: 10, label: '10% Off — Postma H&C' },
+  'POSTMAH&C':   { type: 'markup', value: 1.1, label: 'Postma H&C' },
 
   // ── Promo / marketing codes ──
   'WELCOME10':    { type: 'percent', value: 10, label: '10% Off — Welcome Offer', expires: '2026-12-31' },
