@@ -4372,9 +4372,16 @@ function applyPromo() {
   errEl.style.display = 'none';
   if (!code) return;
 
-  // Check member/owner codes — those use the member system, not promo codes
-  if (code.toLowerCase() === MEMBER_CODE.toLowerCase() || code.toLowerCase() === OWNER_CODE.toLowerCase()) {
-    errEl.textContent = 'That\'s a member code — use Member Login in the top menu.';
+  // Block promo codes when member/owner pricing is already active
+  if (currentMember) {
+    const who = isOwner() ? 'Owner' : 'Member';
+    errEl.textContent = who + ' pricing is already active. Sign out first to use a discount code.';
+    errEl.style.display = 'block'; return;
+  }
+
+  // Owner code uses the member login system, not promo codes
+  if (code.toLowerCase() === OWNER_CODE.toLowerCase()) {
+    errEl.textContent = 'That\'s an admin code — use Member Login in the top menu.';
     errEl.style.display = 'block'; return;
   }
 
