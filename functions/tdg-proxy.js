@@ -20,6 +20,7 @@ const HEADERS = {
 
 const ACTION_MAP = {
   search:           `${TDG_API_BASE}/product/search`,
+  hardware:         `${TDG_API_BASE}/hardware/search`,
   inventory:        `${TDG_API_BASE}/inventory/search`,
   all:              `${TDG_API_BASE}/product/all`,
   shippingAddresses:`${TDG_API_BASE}/account/shippingAddresses`,
