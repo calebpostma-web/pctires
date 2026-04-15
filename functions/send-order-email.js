@@ -106,7 +106,7 @@ async function placeTDGOrder(order) {
     orderHash,
     shippingMethod: TDG_SHIPPING_METHOD,
     paymentMethod:  TDG_PAYMENT_METHOD,
-    shipComplete:   false,
+    shipComplete:   true,
     poNumber:       order.orderNumber,
     deliveryInstructions: order.appointmentDate
       ? `Customer install booked: ${order.appointmentDate} at ${order.appointmentTime}`
