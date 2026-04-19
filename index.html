@@ -273,18 +273,6 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .inst-toggle span{font-size:11px;color:var(--muted)}
 .inst-toggle b{color:var(--green);font-weight:600}
 .cart-foot{padding:20px 26px;border-top:1px solid var(--border)}
-.promo-row{margin-bottom:14px}
-.promo-input-wrap{display:flex;gap:6px}
-.promo-input-wrap input{flex:1;background:var(--raised);border:1px solid var(--border);color:var(--light);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:8px 12px;border-radius:2px;text-transform:uppercase;letter-spacing:.5px}
-.promo-input-wrap input::placeholder{color:var(--muted);text-transform:none;letter-spacing:0;font-family:'Barlow',sans-serif}
-.promo-input-wrap input:focus{border-color:var(--yellow);outline:none}
-.promo-input-wrap button{background:var(--raised);color:var(--yellow);border:1px solid var(--border);padding:8px 16px;font-family:'Barlow',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border-radius:2px;white-space:nowrap;transition:background .15s}
-.promo-input-wrap button:hover{background:var(--card)}
-.promo-active{display:flex;align-items:center;justify-content:space-between;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);padding:8px 12px;border-radius:2px}
-.promo-active span:first-child{font-size:12px;color:var(--green);font-weight:600}
-.promo-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0 4px;transition:color .15s}
-.promo-remove:hover{color:var(--red)}
-.promo-error{font-size:11px;color:var(--red);margin-top:5px}
 .sum-row{display:flex;justify-content:space-between;font-size:13px;color:var(--light);margin-bottom:7px}
 .sum-row.total{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--white);padding-top:11px;margin-top:3px;border-top:1px solid var(--border);margin-bottom:0}
 .checkout-btn{width:100%;background:var(--yellow);color:var(--black);border:none;padding:14px;border-radius:2px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:14px}
@@ -1601,20 +1589,8 @@ function getRebateForBrand(brand) {
     <div class="dhead"><div class="dtitle">Your Cart</div><button class="close-x" onclick="closeCart()">✕</button></div>
     <div class="cart-body" id="cartBody"></div>
     <div class="cart-foot" id="cartFoot" style="display:none">
-      <div id="promoRow" class="promo-row">
-        <div id="promoInput" class="promo-input-wrap">
-          <input type="text" id="promoField" placeholder="Discount code" spellcheck="false" autocomplete="off" onkeydown="if(event.key==='Enter')applyPromo()">
-          <button onclick="applyPromo()">Apply</button>
-        </div>
-        <div id="promoActive" class="promo-active" style="display:none">
-          <span id="promoLabel"></span>
-          <button onclick="removePromo()" class="promo-remove">✕</button>
-        </div>
-        <div id="promoError" class="promo-error" style="display:none"></div>
-      </div>
       <div class="sum-row"><span>Subtotal</span><span id="sumSub">$0.00</span></div>
       <div class="sum-row"><span>Installation</span><span id="sumInst">—</span></div>
-      <div class="sum-row" id="sumDiscRow" style="display:none"><span id="sumDiscLabel">Discount</span><span id="sumDisc" style="color:var(--green)">−$0.00</span></div>
       <div class="sum-row"><span>Tax (13% HST)</span><span id="sumTax">$0.00</span></div>
       <div class="sum-row total"><span>Total</span><span id="sumTotal">$0.00</span></div>
       <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout →</button>
@@ -1817,6 +1793,7 @@ function getRebateForBrand(brand) {
         <div id="serviceMenu" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px"></div>
         <div id="calSection" style="display:none">
           <div class="appt-note" id="durationNote" style="background:var(--yellow-dim);border-color:rgba(245,197,24,.25)"></div>
+          <div class="appt-note" id="leadTimeNote" style="background:rgba(245,197,24,.08);border-color:rgba(245,197,24,.25);font-size:13px;line-height:1.5"></div>
           <div class="cal-hdr"><button class="cal-nav" onclick="prevMo()">‹</button><div class="cal-month" id="calMo"></div><button class="cal-nav" onclick="nextMo()">›</button></div>
           <div class="cal-grid" id="calGrid"></div>
           <div id="timeSec" style="display:none"><div class="time-lbl">Available Times</div><div class="time-grid" id="timeGrid"></div></div>
@@ -1883,9 +1860,7 @@ function getRebateForBrand(brand) {
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-<script src="/promo-codes.js"></script>
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ─────────────────────────────────────────────────
 //  CONFIG
 // ─────────────────────────────────────────────────
@@ -1899,8 +1874,6 @@ const TDG = {
   SEASON_MAP:   { 1:'summer', 2:'allseason', 3:'allweather', 4:'winter' },
   SEASON_LABEL: { 1:'Summer', 2:'All-Season', 3:'All-Weather', 4:'Winter' },
 };
-
-// PROMO_CODES loaded from /promo-codes.js (edit that file, not this one)
 
 // ─────────────────────────────────────────────────
 //  MOCK TIRE INVENTORY (TDG fallback)
@@ -2397,7 +2370,6 @@ let activeFilter  = 'all';
 let activeWheelFilter = 'all';
 let catalogMode   = 'tires'; // 'tires' or 'wheels'
 let cart          = [];
-let activePromo   = null;  // { code, ...PROMO_CODES entry, discount (computed) }
 let step          = 1;
 let selDate = null, selTime = null, tdgQuote = null;
 let lastTireSearchSize  = null; // tracks most recent tire size searched (single)
@@ -4347,7 +4319,7 @@ function addToCart(itemNumber, itemType) {
   const ex = cart.find(c => c.itemNumber === itemNumber);
   const priceToCharge = displayedPrice(item);
   if (ex) ex.qty++;
-  else cart.push({ ...item, tdgCost: item.price, price: priceToCharge, qty: itemType === 'wheel' ? 4 : 4, install: true, itemType: itemType || 'tire' });
+  else cart.push({ ...item, price: priceToCharge, qty: itemType === 'wheel' ? 4 : 4, install: true, itemType: itemType || 'tire' });
   updBadge();
   const qty = ex ? ex.qty : 4;
   const label = itemType === 'wheel' ? 'wheels' : 'tires';
@@ -4361,102 +4333,6 @@ function chgQty(itemNumber, d) {
 }
 function togInst(itemNumber) { const item = cart.find(c => c.itemNumber === itemNumber); if (item) item.install = !item.install; renderCart(); }
 function updBadge() { document.getElementById('cartCount').textContent = cart.reduce((s, c) => s + c.qty, 0); }
-
-// ─────────────────────────────────────────────────
-//  PROMO CODE LOGIC
-// ─────────────────────────────────────────────────
-function applyPromo() {
-  const field = document.getElementById('promoField');
-  const errEl = document.getElementById('promoError');
-  const code = (field.value || '').trim().toUpperCase();
-  errEl.style.display = 'none';
-  if (!code) return;
-
-  // Block promo codes when member/owner pricing is already active
-  if (currentMember) {
-    const who = isOwner() ? 'Owner' : 'Member';
-    errEl.textContent = who + ' pricing is already active. Sign out first to use a discount code.';
-    errEl.style.display = 'block'; return;
-  }
-
-  // Owner code uses the member login system, not promo codes
-  if (code.toLowerCase() === OWNER_CODE.toLowerCase()) {
-    errEl.textContent = 'That\'s an admin code — use Member Login in the top menu.';
-    errEl.style.display = 'block'; return;
-  }
-
-  const entry = PROMO_CODES[code];
-  if (!entry) { errEl.textContent = 'Code not recognized.'; errEl.style.display = 'block'; return; }
-
-  // Check expiry
-  if (entry.expires && new Date(entry.expires + 'T23:59:59') < new Date()) {
-    errEl.textContent = 'This code has expired.'; errEl.style.display = 'block'; return;
-  }
-
-  // Check minimum cart
-  const sub = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  if (entry.minCart && sub < entry.minCart) {
-    errEl.textContent = 'Minimum order of $' + entry.minCart.toFixed(0) + ' required for this code.';
-    errEl.style.display = 'block'; return;
-  }
-
-  activePromo = { code, ...entry };
-  field.value = '';
-  showPromoState();
-  renderCart();
-  showToast('Code applied!', entry.label || code);
-}
-
-function removePromo() {
-  activePromo = null;
-  showPromoState();
-  renderCart();
-}
-
-function showPromoState() {
-  const inputWrap = document.getElementById('promoInput');
-  const activeWrap = document.getElementById('promoActive');
-  const label = document.getElementById('promoLabel');
-  const errEl = document.getElementById('promoError');
-  if (!inputWrap || !activeWrap) return;
-  errEl.style.display = 'none';
-  if (activePromo) {
-    inputWrap.style.display = 'none';
-    activeWrap.style.display = 'flex';
-    label.textContent = '✓ ' + (activePromo.label || activePromo.code);
-  } else {
-    inputWrap.style.display = 'flex';
-    activeWrap.style.display = 'none';
-  }
-}
-
-function getPromoDiscount(sub, inst) {
-  if (!activePromo) return 0;
-  const p = activePromo;
-  switch (p.type) {
-    case 'percent':     return Math.round(sub * (p.value / 100) * 100) / 100;
-    case 'flat':        return Math.min(p.value, sub);
-    case 'per_tire': {
-      const tireQty = cart.filter(c => c.itemType === 'tire').reduce((s, c) => s + c.qty, 0);
-      return Math.min(p.value * tireQty, sub);
-    }
-    case 'free_install': return inst;
-    case 'markup': {
-      // Partner markup: value is the multiplier (e.g. 1.25 for 25%)
-      // Discount = difference between what they'd pay at retail vs partner markup
-      let saving = 0;
-      cart.forEach(c => {
-        const cost = c.tdgCost || 0;
-        if (!cost) return;
-        const partnerPrice = Math.max(cost * p.value, c.map || 0);  // respect MAP
-        const retailAtFull = Math.max(cost * TDG.MARKUP, c.map || 0);
-        saving += Math.max(0, retailAtFull - partnerPrice) * c.qty;
-      });
-      return Math.round(saving * 100) / 100;
-    }
-    default: return 0;
-  }
-}
 
 function renderCart() {
   const body = document.getElementById('cartBody'), foot = document.getElementById('cartFoot');
@@ -4493,26 +4369,16 @@ function renderCart() {
 }
 
 function getTotals() {
+  if (tdgQuote) { return { sub: tdgQuote.subtotal, inst: cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0), ship: tdgQuote.shipping, tax: tdgQuote.tax, total: tdgQuote.total }; }
   const sub  = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const inst = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
-  const disc = getPromoDiscount(sub, inst);
-  if (tdgQuote) {
-    return { sub: tdgQuote.subtotal, inst, disc, ship: tdgQuote.shipping, tax: tdgQuote.tax, total: Math.max(0, tdgQuote.total - disc) };
-  }
-  const taxable = Math.max(0, sub + inst - disc);
-  const tax  = taxable * 0.13;
-  return { sub, inst, disc, ship: 0, tax, total: taxable + tax };
+  const tax  = (sub + inst) * 0.13;
+  return { sub, inst, ship: 0, tax, total: sub + inst + tax };
 }
 function updTotals() {
   const t = getTotals();
   document.getElementById('sumSub').textContent   = `$${t.sub.toFixed(2)}`;
   document.getElementById('sumInst').textContent  = t.inst > 0 ? `$${t.inst.toFixed(2)}` : '—';
-  const discRow = document.getElementById('sumDiscRow');
-  if (t.disc > 0) {
-    discRow.style.display = 'flex';
-    document.getElementById('sumDiscLabel').textContent = activePromo ? (activePromo.label || 'Discount') : 'Discount';
-    document.getElementById('sumDisc').textContent = `−$${t.disc.toFixed(2)}`;
-  } else { discRow.style.display = 'none'; }
   document.getElementById('sumTax').textContent   = `$${t.tax.toFixed(2)}`;
   document.getElementById('sumTotal').textContent = `$${t.total.toFixed(2)}`;
 }
@@ -4640,11 +4506,9 @@ async function buildPaymentSummary() {
   const addonLines = ADDONS.filter(a => selectedAddons.has(a.id))
     .map(a => `<div class="ptrow"><span>${a.name}</span><span>${a.price === 0 ? '<span style="color:var(--green)">FREE</span>' : '$' + a.price.toFixed(2)}</span></div>`)
     .join('');
-  const discLine = t.disc > 0 ? `<div class="ptrow" style="color:var(--green)"><span>${activePromo ? (activePromo.label || 'Discount') : 'Discount'}</span><span>−$${t.disc.toFixed(2)}</span></div>` : '';
   box.innerHTML = `
     <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
     ${instTotal > 0 ? `<div class="ptrow"><span>Installation</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
-    ${discLine}
     ${addonLines}
     <div class="ptrow"><span>Tax (HST 13%)</span><span>$${(grandTotal * 0.13 / 1.13).toFixed(2)}</span></div>
     <div class="ptrow bold"><span>Total Due Today</span><span>$${grandTotal.toFixed(2)}</span></div>
@@ -4680,8 +4544,23 @@ function initStripeElements() {
   } catch(err) { console.warn('Stripe init failed:', err.message); }
 }
 
+// Stable order ID for this checkout session.
+// Generated ONCE on first use, reused on every retry within this session.
+// Prevents duplicate orders if the customer double-taps Pay or retries after an error.
+function getOrCreateOrderId() {
+  if (!window._pendingOrderId) {
+    window._pendingOrderId = 'PCT-' + Math.random().toString(36).substr(2,6).toUpperCase();
+  }
+  return window._pendingOrderId;
+}
+
 async function processPayment() {
+  // ── HARD GUARD: prevent concurrent/duplicate submissions ──
+  if (window._paymentInFlight) return;
+  window._paymentInFlight = true;
+
   const btn = document.getElementById('nextBtn');
+  btn.disabled = true;
   btn.textContent = 'Processing...'; btn.classList.add('ld');
   const errEl = document.getElementById('stripeError');
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
@@ -4692,10 +4571,11 @@ async function processPayment() {
     const grandTotal = t.total + addonAmt;
     const amountCents = Math.round(grandTotal * 100);
     const email = document.getElementById('email').value || '';
-    const orderId = 'PCT-' + Math.random().toString(36).substr(2,6).toUpperCase();
-    window._pendingOrderId = orderId;
+    // Stable order ID — same value on first click, retry, or any re-entry within this session.
+    const orderId = getOrCreateOrderId();
 
-    // Create PaymentIntent server-side
+    // Create PaymentIntent server-side. Server uses orderId as Stripe Idempotency-Key
+    // so repeat calls with the same orderId return the SAME PaymentIntent — no double charge.
     const piRes = await fetch('/create-pi', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -4717,13 +4597,19 @@ async function processPayment() {
 
     window._stripePaymentIntentId = result.paymentIntent.id;
     await finishOrder();
+    // Order succeeded — clear the stable ID so the NEXT checkout starts clean.
+    window._pendingOrderId = null;
 
   } catch(e) {
     if (errEl) { errEl.textContent = e.message; errEl.style.display = 'block'; }
     else alert('Payment failed: ' + e.message);
     btn.textContent = 'Pay Securely';
+    btn.disabled = false;
   } finally {
     btn.classList.remove('ld');
+    // Always release the in-flight lock — success advances to step 5,
+    // failure needs to allow retry with the SAME orderId.
+    window._paymentInFlight = false;
   }
 }
 
@@ -4738,7 +4624,8 @@ async function finishOrder() {
   const email = document.getElementById('email').value || '';
   const phone = document.getElementById('phone')?.value || '';
   const caslOptIn = document.getElementById('caslOptIn')?.checked || false;
-  const orderId = 'PCT-' + Math.random().toString(36).substr(2,6).toUpperCase();
+  // Use the STABLE order ID from processPayment — never regenerate here.
+  const orderId = window._pendingOrderId || ('PCT-' + Math.random().toString(36).substr(2,6).toUpperCase());
   const svcLabel = selectedService ? selectedService.label : 'Not booked';
   const instLine = selectedService ? `${svcLabel} · ${selDate} at ${selTime}` : 'Not booked — arrange separately';
   const addonNames = ADDONS.filter(a => selectedAddons.has(a.id)).map(a => a.name).join(', ') || 'None';
@@ -4758,7 +4645,6 @@ async function finishOrder() {
     ${vehicleStr ? `<div class="cd-row"><span class="cd-label">Vehicle</span><span class="cd-val">${vehicleStr}</span></div>` : ''}
     <div class="cd-row"><span class="cd-label">Items</span><span class="cd-val">${cart.map(c=>`${c.qty}× ${c.brand} ${c.name}`).join(', ')}</span></div>
     ${addonAmt > 0 ? `<div class="cd-row"><span class="cd-label">Add-ons</span><span class="cd-val">${addonNames}</span></div>` : ''}
-    ${activePromo ? `<div class="cd-row"><span class="cd-label">Discount</span><span class="cd-val" style="color:var(--green)">−$${(t.disc||0).toFixed(2)} (${activePromo.label || activePromo.code})</span></div>` : ''}
     <div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div>
     <div class="cd-row"><span class="cd-label">Installation</span><span class="cd-val">${instLine}</span></div>
     <div class="cd-row"><span class="cd-label">Confirmation</span><span class="cd-val">Sent to ${email}</span></div>
@@ -4774,9 +4660,6 @@ async function finishOrder() {
     vin,
     vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
     searchMethod: lastSearchMethod || 'unknown',
-    promoCode: activePromo ? activePromo.code : '',
-    promoLabel: activePromo ? (activePromo.label || activePromo.code) : '',
-    promoDiscount: t.disc || 0,
     tires: cart.map(c => ({ tdgId: c.tdgId, qty: c.qty, brand: c.brand, name: c.name, size: c.size || c.diameter + '"', price: c.price })),
     addons: addonNames,
     installation: !!selectedService,
@@ -4811,8 +4694,6 @@ async function finishOrder() {
         vehicle: vehicleStr,
         vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
         searchMethod: lastSearchMethod || 'unknown',
-        promoCode: activePromo ? activePromo.code : '',
-        promoDiscount: (t.disc || 0).toFixed(2),
         items: cart.map(c => `${c.qty}× ${c.brand} ${c.name} (${c.size || c.diameter + '"'})`).join(' | '),
         addons: addonNames,
         subtotal: t.sub.toFixed(2),
@@ -4826,7 +4707,7 @@ async function finishOrder() {
     });
   } catch(e) { console.warn('Sheets write failed:', e.message); }
 
-  cart = []; tdgQuote = null; selectedAddons = new Set(); activePromo = null; updBadge();
+  cart = []; tdgQuote = null; selectedAddons = new Set(); updBadge();
   if (btn) btn.classList.remove('ld');
 
   // Show rebate reminders on confirm screen
@@ -4880,6 +4761,36 @@ function selectService(id) {
 }
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const BOOKED_SLOTS = {};
+
+// ── Tire arrival lead time ───────────────────────────────────────────
+// TDG delivers fast — in-stock tires ordered by 9 AM often arrive same-day by noon.
+// We assume a 1 business-day lead as the default safety buffer, plus a morning cutoff
+// on the first bookable day to account for late-morning delivery.
+const INSTALL_LEAD_BUSINESS_DAYS = 1;   // earliest install = today + 1 business day
+const FIRST_DAY_EARLIEST_HOUR    = 10;  // on the first eligible day, no slots before 10 AM
+
+// Add N business days (Mon–Fri only) to a date.
+function addBusinessDays(date, n) {
+  const d = new Date(date);
+  let added = 0;
+  while (added < n) {
+    d.setDate(d.getDate() + 1);
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) added++; // skip Sun(0) and Sat(6)
+  }
+  return d;
+}
+
+function getEarliestInstallDate() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  // If it's already past 2 PM, a same-day TDG order likely won't ship until tomorrow
+  // — push the lead-time clock forward by one day.
+  const startFrom = (new Date().getHours() >= 14)
+    ? (() => { const d = new Date(today); d.setDate(d.getDate()+1); return d; })()
+    : today;
+  return addBusinessDays(startFrom, INSTALL_LEAD_BUSINESS_DAYS);
+}
+
 function getSlotsForDuration(duration) {
   const slots = [];
   for (let m = 8*60; m + duration <= 18*60; m += 30) {
@@ -4888,10 +4799,21 @@ function getSlotsForDuration(duration) {
   }
   return slots;
 }
+
+// Given a "3:00 PM" style label, return 24-hour number (e.g., 15).
+function slotLabelToHour24(label) {
+  const m = label.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!m) return 0;
+  let h = parseInt(m[1], 10);
+  const ampm = m[3].toUpperCase();
+  if (ampm === 'PM' && h !== 12) h += 12;
+  if (ampm === 'AM' && h === 12) h = 0;
+  return h;
+}
+
 function buildCal() {
   document.getElementById('calMo').textContent = `${MONTHS[calMo]} ${calY}`;
-  const minDate = new Date(); minDate.setHours(minDate.getHours() + 24); minDate.setHours(0,0,0,0);
-  if (new Date().getHours() >= 12) minDate.setDate(minDate.getDate() + 1);
+  const minDate = getEarliestInstallDate();
   const firstDay = new Date(calY, calMo, 1).getDay(), days = new Date(calY, calMo+1, 0).getDate();
   let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
@@ -4901,15 +4823,37 @@ function buildCal() {
     html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="pickDate('${dateStr}')"`:''}>${d}</div>`;
   }
   document.getElementById('calGrid').innerHTML = html;
+
+  // Lead-time note — shown once the calendar is visible.
+  const leadNote = document.getElementById('leadTimeNote');
+  if (leadNote) {
+    const earliest = minDate.toLocaleDateString('en-CA', { weekday:'long', month:'long', day:'numeric' });
+    const h12 = FIRST_DAY_EARLIEST_HOUR > 12 ? FIRST_DAY_EARLIEST_HOUR - 12 : FIRST_DAY_EARLIEST_HOUR;
+    const ampm = FIRST_DAY_EARLIEST_HOUR >= 12 ? 'PM' : 'AM';
+    leadNote.innerHTML = `<b>📦 Earliest install: ${earliest}</b> — tires typically arrive by late morning. First-day slots start at ${h12}:00 ${ampm}.`;
+  }
+
   if (selDate) { document.getElementById('timeSec').style.display = 'block'; buildTimes(); }
   else document.getElementById('timeSec').style.display = 'none';
 }
 function pickDate(d) { selDate = d; selTime = null; buildCal(); }
 function buildTimes() {
   const slots = getSlotsForDuration(selectedService?.duration || 60), booked = BOOKED_SLOTS[selDate] || [];
+  // If the selected date is the FIRST eligible install day, block slots before the cutoff hour.
+  const earliestDate = getEarliestInstallDate();
+  const selDateObj   = selDate ? new Date(selDate) : null;
+  const isFirstDay   = selDateObj &&
+    selDateObj.getFullYear() === earliestDate.getFullYear() &&
+    selDateObj.getMonth()    === earliestDate.getMonth() &&
+    selDateObj.getDate()     === earliestDate.getDate();
+
   document.getElementById('timeGrid').innerHTML = slots.map(t => {
     const isBooked = booked.includes(t);
-    return `<div class="time-slot${isBooked?' bkd':''}${selTime===t?' sel':''}" ${!isBooked?`onclick="pickTime('${t}')"`:''}>${t}${isBooked?'<br><small>Booked</small>':''}</div>`;
+    const tooEarly = isFirstDay && slotLabelToHour24(t) < FIRST_DAY_EARLIEST_HOUR;
+    const disabled = isBooked || tooEarly;
+    const note     = isBooked ? '<br><small>Booked</small>'
+                              : (tooEarly ? '<br><small>Tires arriving</small>' : '');
+    return `<div class="time-slot${disabled?' bkd':''}${selTime===t?' sel':''}" ${!disabled?`onclick="pickTime('${t}')"`:''}>${t}${note}</div>`;
   }).join('');
 }
 function pickTime(t) { selTime = t; buildTimes(); }
