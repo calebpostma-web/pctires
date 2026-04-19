@@ -31,6 +31,41 @@ const CORS = {
   'Content-Type': 'application/json',
 };
 
+// ─── Dedup cache ───────────────────────────────────────────────────────────────
+// Keyed by paymentIntentId (or orderNumber as fallback). Entries expire after 10
+// minutes. Prevents a duplicate TDG order if the frontend posts the same order
+// twice — e.g. customer hits "Place order" twice, or a network retry happens
+// after the server-side call already succeeded.
+//
+// Note: this runs per isolate, so a cold-started second invocation on a
+// different isolate would still miss. Main guarantees come from:
+//   1. Frontend in-flight lock (index.html)
+//   2. Stripe Idempotency-Key on PaymentIntent creation (create-pi.js)
+//   3. This cache catches the middle case where the browser retries a POST
+const RECENT_ORDERS = new Map(); // key -> { at: timestamp, result: response }
+const DEDUP_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+
+function checkDedup(key) {
+  if (!key) return null;
+  const entry = RECENT_ORDERS.get(key);
+  if (!entry) return null;
+  if (Date.now() - entry.at > DEDUP_WINDOW_MS) {
+    RECENT_ORDERS.delete(key);
+    return null;
+  }
+  return entry.result;
+}
+
+function recordDedup(key, result) {
+  if (!key) return;
+  RECENT_ORDERS.set(key, { at: Date.now(), result });
+  // Lazy cleanup: if cache grows past 100 entries, drop the oldest.
+  if (RECENT_ORDERS.size > 100) {
+    const oldest = [...RECENT_ORDERS.entries()].sort((a,b) => a[1].at - b[1].at)[0];
+    if (oldest) RECENT_ORDERS.delete(oldest[0]);
+  }
+}
+
 // ─── MD5 hash (pure JS, needed for orderHash — Web Crypto doesn't support MD5) ─
 function md5(string) {
   function cmn(q,a,b,x,s,t){a=(((a+q)>>>0)+((x+t)>>>0))>>>0;return((((a<<s)|(a>>>(32-s)))>>>0)+b)>>>0;}
@@ -321,6 +356,18 @@ export async function onRequest(context) {
 
   const RESEND_API_KEY = env.RESEND_API_KEY || 're_LwrkevNg_H9uD76w3LhTQa2sJwxNXFE6n';
 
+  // ── Dedup check: if we've already processed this paymentIntentId (or orderNumber
+  // as fallback) within the last 10 minutes, return the previous result instead of
+  // placing another TDG order or sending another set of emails.
+  const dedupKey = order.paymentIntentId || order.orderNumber || null;
+  const existing = checkDedup(dedupKey);
+  if (existing) {
+    console.log('Duplicate order suppressed for key:', dedupKey);
+    return new Response(JSON.stringify({ ...existing, duplicate: true }), {
+      status: 200, headers: CORS,
+    });
+  }
+
   // Build vehicle string
   order.vehicle = [order.vehicleYear, order.vehicleMake, order.vehicleModel, order.vehicleTrim]
     .filter(Boolean).join(' ') || order.vehicle || '';
@@ -362,11 +409,15 @@ export async function onRequest(context) {
   }
 
   // Return result
-  return new Response(JSON.stringify({
+  const result = {
     success: true,
     orderNumber: order.orderNumber,
     tdg: tdgOrder?.order || null,
     tdgError: tdgError || null,
     tdgSkipped: tdgOrder?.skipped || false,
-  }), { status: 200, headers: CORS });
+  };
+  // Cache the result so a repeat POST with the same paymentIntentId returns
+  // the same response instead of re-placing the TDG order.
+  recordDedup(dedupKey, result);
+  return new Response(JSON.stringify(result), { status: 200, headers: CORS });
 }
