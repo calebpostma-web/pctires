@@ -170,9 +170,36 @@ async function placeTDGOrder(order) {
   return data;
 }
 
+// ─── Extract TDG order reference from response (handles multiple shapes) ──
+// TDG's /order/create response shape isn't fully documented. Empirically we've
+// seen the order go through successfully but the reference nested under
+// different keys. This tries common paths in order of likelihood.
+function extractTDGRef(tdgOrder) {
+  if (!tdgOrder || tdgOrder.skipped || tdgOrder.error) return null;
+  const candidates = [
+    tdgOrder?.order?.orderNumber,      // original expected shape
+    tdgOrder?.order?.reference,
+    tdgOrder?.orderNumber,              // flat
+    tdgOrder?.reference,
+    tdgOrder?.orderId,
+    tdgOrder?.salesOrder,
+    tdgOrder?.salesOrderNumber,
+    tdgOrder?.data?.orderNumber,        // wrapped in data
+    tdgOrder?.data?.reference,
+    tdgOrder?.result?.orderNumber,      // wrapped in result
+    tdgOrder?.result?.reference,
+    tdgOrder?.order?.id,
+    tdgOrder?.id,
+  ];
+  for (const c of candidates) {
+    if (c && typeof c !== 'object') return String(c);
+  }
+  return null;
+}
+
 // ─── Customer confirmation email ───────────────────────────────────────────────
 function buildCustomerEmail(order, tdgOrder) {
-  const tdgRef = tdgOrder?.order?.orderNumber || tdgOrder?.order?.reference || null;
+  const tdgRef = extractTDGRef(tdgOrder);
   const itemsHtml = (order.tires || [])
     .map(t => `<tr>
       <td style="padding:8px 12px;border-bottom:1px solid #2a2a2a">${t.qty}× ${t.brand} ${t.name}</td>
@@ -289,7 +316,7 @@ function buildCustomerEmail(order, tdgOrder) {
 
 // ─── Internal notification email ───────────────────────────────────────────────
 function buildInternalEmail(order, tdgOrder, tdgError) {
-  const tdgRef = tdgOrder?.order?.orderNumber || tdgOrder?.order?.reference || 'NOT PLACED';
+  const tdgRef = extractTDGRef(tdgOrder) || 'NOT FOUND';
   const tdgStatus = tdgError
     ? `❌ TDG ORDER FAILED: ${JSON.stringify(tdgError)}`
     : tdgOrder?.skipped
@@ -314,8 +341,8 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
     <tr><td style="padding:4px 12px 4px 0;color:#888">Search Method</td><td>${order.searchMethod || '—'}</td></tr>
     <tr><td style="padding:4px 12px 4px 0;color:#888">CASL Opt-in</td><td>${order.caslOptIn ? 'Yes' : 'No'}</td></tr>
   </table>
-  ${tdgOrder?.order ? `<hr style="border-color:#2a2a2a"><h3 style="color:#4ade80">TDG Order Details</h3>
-  <pre style="color:#e0e0e0">${JSON.stringify(tdgOrder.order, null, 2)}</pre>` : ''}
+  ${tdgOrder && !tdgOrder.skipped && !tdgError ? `<hr style="border-color:#2a2a2a"><h3 style="color:#4ade80">Raw TDG Response</h3>
+  <pre style="color:#e0e0e0;background:#1a1a1a;padding:12px;border-radius:4px;overflow:auto">${JSON.stringify(tdgOrder, null, 2)}</pre>` : ''}
 </body>
 </html>`;
 }
