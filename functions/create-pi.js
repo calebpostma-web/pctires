@@ -1,5 +1,5 @@
 /**
- * Cloudflare Pages Function: /functions/create-payment-intent.js
+ * Cloudflare Pages Function: /functions/create-pi.js
  *
  * Creates a Stripe PaymentIntent server-side so the secret key never
  * touches the browser. Called by the frontend just before the payment
@@ -46,14 +46,21 @@ export async function onRequest(context) {
       'automatic_payment_methods[enabled]': 'true',
       description: description || `PC Tires order ${orderNumber}`,
       receipt_email: customerEmail || '',
-        });
+    });
+
+    // Stripe idempotency: if the same orderNumber hits this endpoint again within 24h,
+    // Stripe returns the EXISTING PaymentIntent instead of creating a new one. This is
+    // the backstop against double-charging even if the frontend retries or double-posts.
+    // Requires the frontend to send a stable orderNumber across retries.
+    const stripeHeaders = {
+      'Authorization': `Bearer ${stripeSecret}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    if (orderNumber) stripeHeaders['Idempotency-Key'] = `pi-${orderNumber}`;
 
     const res = await fetch('https://api.stripe.com/v1/payment_intents', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${stripeSecret}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+      headers: stripeHeaders,
       body: body.toString(),
     });
 
