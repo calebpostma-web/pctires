@@ -8,6 +8,7 @@
 import { findTorque as halderman } from './tech-torque-db.js';
 import { findOverlay } from './tech-torque-overlay-2022-2026.js';
 import { findCorrection } from './tech-torque-corrections.js';
+import { classifyVehicle } from './tech-vehicle-type.js';
 
 
 //
@@ -120,7 +121,8 @@ export async function onRequestPost(context) {
         //   1. KV verified override (shop-confirmed, highest trust)
         //   2. 2022-2026 Overlay (current-year manufacturer data)
         //   3. Corrections (fixes known Halderman platform-swap errors, 1995-2021)
-        //   4. Halderman 1995-2021 published DB
+        //   4. Halderman 1995-2021 published DB (with vehicleType hint to fix
+        //      catchall tier ordering for truck-platform SUVs)
         //   5. Null (client falls back to AI via /tech-specs)
 
         const key = normTorqueKey(body);
@@ -129,6 +131,10 @@ export async function onRequestPost(context) {
           const entry = JSON.parse(raw);
           return json({ ok: true, torque: { ...entry, source: 'verified' } });
         }
+
+        // Classify once up front. Used by Halderman to reorder catchall tiers.
+        // Overlay and Corrections are exact-match, so they don't need the hint.
+        const vehicleType = classifyVehicle({ make: body.make, model: body.model });
 
         // Try 2022-2026 overlay first (authoritative manufacturer data)
         const o = findOverlay({ year: body.year, make: body.make, model: body.model });
@@ -141,6 +147,7 @@ export async function onRequestPost(context) {
               note: o.note,
               matchTier: o.matchTier,
               reference: `${o.sourceTag} · ${o.entry.make} ${o.entry.model} ${o.entry.yearFrom}-${o.entry.yearTo}`,
+              vehicleType,
             },
           });
         }
@@ -156,12 +163,15 @@ export async function onRequestPost(context) {
               note: c.note,
               matchTier: c.matchTier,
               reference: `${c.sourceTag} · ${c.entry.make} ${c.entry.model} ${c.entry.yearFrom}-${c.entry.yearTo}`,
+              vehicleType,
             },
           });
         }
 
-        // Fall back to Halderman for 1995-2021
-        const h = halderman({ year: body.year, make: body.make, model: body.model });
+        // Fall back to Halderman for 1995-2021 — pass vehicleType hint so
+        // truck-platform SUVs (Escalade, Yukon, etc.) hit the truck catchall
+        // at 140 ft-lb instead of the car catchall at 100 ft-lb.
+        const h = halderman({ year: body.year, make: body.make, model: body.model, vehicleType });
         if (h) {
           return json({
             ok: true,
@@ -172,6 +182,7 @@ export async function onRequestPost(context) {
               flags: h.flags,
               matchTier: h.matchTier,
               reference: `Halderman ${h.entry.yearFrom}-${h.entry.yearTo} · ${h.entry.make} ${h.entry.model}`,
+              vehicleType,
             },
           });
         }
