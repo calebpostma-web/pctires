@@ -7,6 +7,7 @@
 
 import { findTorque as halderman } from './tech-torque-db.js';
 import { findOverlay } from './tech-torque-overlay-2022-2026.js';
+import { findCorrection } from './tech-torque-corrections.js';
 
 
 //
@@ -118,8 +119,9 @@ export async function onRequestPost(context) {
         // Lookup order:
         //   1. KV verified override (shop-confirmed, highest trust)
         //   2. 2022-2026 Overlay (current-year manufacturer data)
-        //   3. Halderman 1995-2021 published DB
-        //   4. Null (client falls back to AI via /tech-specs)
+        //   3. Corrections (fixes known Halderman platform-swap errors, 1995-2021)
+        //   4. Halderman 1995-2021 published DB
+        //   5. Null (client falls back to AI via /tech-specs)
 
         const key = normTorqueKey(body);
         const raw = await env.TECH_KV.get(key);
@@ -139,6 +141,21 @@ export async function onRequestPost(context) {
               note: o.note,
               matchTier: o.matchTier,
               reference: `${o.sourceTag} · ${o.entry.make} ${o.entry.model} ${o.entry.yearFrom}-${o.entry.yearTo}`,
+            },
+          });
+        }
+
+        // Try corrections overlay (fixes to Halderman 1995-2021 data)
+        const c = findCorrection({ year: body.year, make: body.make, model: body.model });
+        if (c) {
+          return json({
+            ok: true,
+            torque: {
+              ftlb: c.ftlb,
+              source: 'published',
+              note: c.note,
+              matchTier: c.matchTier,
+              reference: `${c.sourceTag} · ${c.entry.make} ${c.entry.model} ${c.entry.yearFrom}-${c.entry.yearTo}`,
             },
           });
         }
