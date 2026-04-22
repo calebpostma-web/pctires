@@ -821,8 +821,20 @@ function expandAlternatives(model) {
  * Find a torque entry for {year, make, model}.
  * Returns null if no match, otherwise { ftlb, raw, flags, matchTier, entry }.
  * matchTier: 'exact' | 'partial' | 'base' | 'catchall'
+ *
+ * @param {Object} args
+ * @param {number|string} args.year
+ * @param {string} args.make
+ * @param {string} args.model
+ * @param {'car'|'truck_suv'|'van'|'unknown'} [args.vehicleType]
+ *   Optional classification hint from tech-vehicle-type.js. When set to
+ *   'truck_suv' or 'van', the truck/SUV/van catchall is tried BEFORE the car
+ *   catchall. This fixes the platform-swap bug where e.g. a Cadillac Escalade
+ *   hit the "All Other Car Models" catchall (100 ft-lb) instead of the
+ *   truck/SUV catchall (140 ft-lb). 'car' and 'unknown' use the default order
+ *   (car catchall first, then truck).
  */
-export function findTorque({ year, make, model }) {
+export function findTorque({ year, make, model, vehicleType } = {}) {
   if (!year || !make || !model) return null;
   const y = Number(year);
   const normMake = normalize(make);
@@ -864,19 +876,36 @@ export function findTorque({ year, make, model }) {
     if (alts.some(em => em && q.startsWith(em + ' '))) return toResult(row, 'base');
   }
 
-  // Tier 4: catchall — "All Other Car Models" / "All Models"
-  for (const row of candidates) {
-    if (/all (other )?car models|^all models$/i.test(row[1])) return toResult(row, 'catchall');
-  }
+  // ─── Catchall tiers — order depends on vehicleType hint ──────────────────
+  const carCatchall = () => {
+    for (const row of candidates) {
+      if (/all (other )?car models|^all models$/i.test(row[1])) return toResult(row, 'catchall');
+    }
+    return null;
+  };
+  const truckCatchall = () => {
+    for (const row of candidates) {
+      if (/all.*(truck|suv|van)/i.test(row[1])) return toResult(row, 'catchall');
+    }
+    return null;
+  };
+  const anyAllCatchall = () => {
+    for (const row of candidates) {
+      if (/\ball\b/i.test(row[1])) return toResult(row, 'catchall');
+    }
+    return null;
+  };
 
-  // Tier 5: catchall — trucks/SUVs/vans
-  for (const row of candidates) {
-    if (/all.*(truck|suv|van)/i.test(row[1])) return toResult(row, 'catchall');
-  }
+  // When classified as truck/SUV/van, prefer truck catchall first.
+  // Otherwise use default order (car catchall first — matches original Halderman intent).
+  const preferTruck = vehicleType === 'truck_suv' || vehicleType === 'van';
+  const order = preferTruck
+    ? [truckCatchall, carCatchall, anyAllCatchall]
+    : [carCatchall, truckCatchall, anyAllCatchall];
 
-  // Tier 6: any remaining "All" entry
-  for (const row of candidates) {
-    if (/\ball\b/i.test(row[1])) return toResult(row, 'catchall');
+  for (const fn of order) {
+    const r = fn();
+    if (r) return r;
   }
 
   return null;
