@@ -2951,8 +2951,8 @@ function renderTires() {
         <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
           <div class="price-each">per tire · HST extra${rebate ? ` · <span style="color:var(--yellow)">+$${rebate.amount} rebate</span>` : ''}</div>
         </div>
-        <button class="add-btn" onclick="event.stopPropagation();addToCart('${t.itemNumber}','tire')" ${t.stock==='out'?'disabled style="opacity:.4;cursor:not-allowed"':''}>
-          ${t.stock==='out'?'Out of Stock':'Add to Cart +'}
+        <button class="add-btn" onclick="event.stopPropagation();addToCart('${t.itemNumber}','tire')" ${t.stock==='out' && !isOwner()?'disabled style="opacity:.4;cursor:not-allowed"':''}>
+          ${t.stock==='out'?(isOwner()?'Order In +':'Out of Stock'):'Add to Cart +'}
         </button>
       </div>
     </div>`;
@@ -3024,8 +3024,8 @@ function renderWheels() {
         <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
           <div class="price-each">per wheel · HST extra</div>
         </div>
-        <button class="add-btn" onclick="addToCart('${w.itemNumber}','wheel')" ${w.stock==='out'?'disabled style="opacity:.4;cursor:not-allowed"':''}>
-          ${w.stock==='out'?'Out of Stock':'Add to Cart +'}
+        <button class="add-btn" onclick="addToCart('${w.itemNumber}','wheel')" ${w.stock==='out' && !isOwner()?'disabled style="opacity:.4;cursor:not-allowed"':''}>
+          ${w.stock==='out'?(isOwner()?'Order In +':'Out of Stock'):'Add to Cart +'}
         </button>
       </div>
     </div>`;
@@ -5447,9 +5447,13 @@ function openTireDetail(itemNumber) {
   const addBtn = document.getElementById('tdAddBtn');
   const stockEl = document.getElementById('tdStock');
   const qtyEl = document.getElementById('tdQty');
-  if (t.stock === 'out') {
+    if (t.stock === 'out' && !isOwner()) {
     addBtn.disabled = true; addBtn.style.opacity = '.4'; addBtn.textContent = 'Out of Stock';
     stockEl.textContent = '';
+  } else if (t.stock === 'out' && isOwner()) {
+    addBtn.disabled = false; addBtn.style.opacity = '1'; addBtn.textContent = 'Order In +';
+    stockEl.textContent = '⚡ Will Order from TDG';
+    stockEl.style.color = 'var(--green)';
   } else {
     addBtn.disabled = false; addBtn.style.opacity = '1'; addBtn.textContent = 'Add to Cart +';
     stockEl.textContent = t.stock === 'low' ? '⚠️ Low Stock' : '✅ In Stock';
@@ -5776,7 +5780,7 @@ async function wizardShowResults() {
   var tires = products.map(function(p) { return normaliseTire(p, inventoryMap[p.itemNumber]); });
 
   tires = tires.filter(function(t) {
-    if (t.stock === 'out') return false;
+    if (t.stock === 'out' && !isOwner()) return false;
     var p = retailPrice(t);
     if (p < bMin || p > bMax) return false;
     if (validTypes.indexOf(t.type) === -1) return false;
@@ -5854,7 +5858,7 @@ async function wizardShowResults() {
       + '<div class="tdg-pick-right">'
       + '<div class="tdg-pick-price">$' + Math.floor(p) + '<span style="font-size:14px;font-weight:400;color:var(--muted)">.' + cents + '</span></div>'
       + '<div class="tdg-pick-each">per tire &middot; HST extra</div>'
-      + '<button class="tdg-pick-add" onclick="addToCart(\'' + t.itemNumber + '\',\'tire\')" ' + (t.stock==='out'?'disabled':'') + '>Add to Cart +</button>'
+      + '<button class="tdg-pick-add" onclick="addToCart(\'' + t.itemNumber + '\',\'tire\')" ' + (t.stock==='out' && !isOwner()?'disabled':'') + '>' + (t.stock==='out'?(isOwner()?'Order In +':'Out of Stock'):'Add to Cart +') + '</button>'
       + '</div></div>';
   }).join('');
 
