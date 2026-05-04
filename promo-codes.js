@@ -28,6 +28,7 @@ const PROMO_CODES = {
 
   // ── Member / friends & family ──
   'POSTMAH&C':   { type: 'markup', value: 1.1, label: 'Postma H&C' },
+  'EZRA2026':    { type: 'percent', value: 10, label: '10% Off — Ezra' },
 
   // ── Promo / marketing codes ──
   'WELCOME10':    { type: 'percent', value: 10, label: '10% Off — Welcome Offer', expires: '2026-12-31' },
