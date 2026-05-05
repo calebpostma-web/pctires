@@ -86,7 +86,7 @@ export async function onRequest(context) {
       <tr><td>Notes</td><td>${notes || '—'}</td></tr>
     </table>
   </div>
-  <div class="footer">PC Tires · 7144 Grande River Line, Pain Court, ON · 519-380-5104</div>
+  <div class="footer">PC Tires · 7144 Grande River Line, Pain Court, ON · 519-397-4686</div>
 </div>
 </body>
 </html>`;
