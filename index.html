@@ -1590,7 +1590,20 @@ function getRebateForBrand(brand) {
     <div class="dhead"><div class="dtitle">Your Cart</div><button class="close-x" onclick="closeCart()">✕</button></div>
     <div class="cart-body" id="cartBody"></div>
     <div class="cart-foot" id="cartFoot" style="display:none">
+      <!-- Promo code input -->
+      <div id="promoBlock" style="margin-bottom:14px;padding:10px;background:rgba(0,0,0,.2);border-radius:2px">
+        <div style="display:flex;gap:6px">
+          <input type="text" id="promoInput" placeholder="Promo code" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();applyPromoCode(this.value);}">
+          <button onclick="applyPromoCode(document.getElementById('promoInput').value)" style="background:var(--yellow);color:var(--black);border:none;padding:8px 14px;font-weight:700;cursor:pointer;font-size:12px">APPLY</button>
+        </div>
+        <div id="promoError" style="display:none;color:#ef4444;font-size:11px;margin-top:6px"></div>
+      </div>
+      <div id="promoApplied" style="display:none;margin-bottom:14px;padding:10px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:2px;align-items:center;justify-content:space-between">
+        <div style="font-size:12px;color:var(--green);font-weight:600"><span style="margin-right:6px">★</span><span class="promo-applied-label"></span></div>
+        <button onclick="removePromoCode()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px">✕</button>
+      </div>
       <div class="sum-row"><span>Subtotal</span><span id="sumSub">$0.00</span></div>
+      <div class="sum-row" id="sumDiscRow" style="display:none;color:var(--green)"><span id="sumDiscLabel">Discount</span><span id="sumDisc">$0.00</span></div>
       <div class="sum-row"><span>Installation</span><span id="sumInst">—</span></div>
       <div class="sum-row"><span>Tax (13% HST)</span><span id="sumTax">$0.00</span></div>
       <div class="sum-row total"><span>Total</span><span id="sumTotal">$0.00</span></div>
@@ -4370,11 +4383,16 @@ function renderCart() {
 }
 
 function getTotals() {
-  if (tdgQuote) { return { sub: tdgQuote.subtotal, inst: cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0), ship: tdgQuote.shipping, tax: tdgQuote.tax, total: tdgQuote.total }; }
-  const sub  = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const inst = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
-  const tax  = (sub + inst) * 0.13;
-  return { sub, inst, ship: 0, tax, total: sub + inst + tax };
+  const baseInst = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
+  let sub;
+  if (tdgQuote) { sub = tdgQuote.subtotal; }
+  else { sub = cart.reduce((s, c) => s + c.price * c.qty, 0); }
+  const disc    = calculatePromoDiscount(appliedPromo, sub, baseInst, cart);
+  const adjSub  = Math.max(0, sub - disc.sub);
+  const adjInst = Math.max(0, baseInst - disc.inst);
+  const tax     = (adjSub + adjInst) * 0.13;
+  const ship    = tdgQuote ? (tdgQuote.shipping || 0) : 0;
+  return { sub, inst: baseInst, ship, tax, total: adjSub + adjInst + tax + ship, discount: disc.sub + disc.inst };
 }
 function updTotals() {
   const t = getTotals();
@@ -4382,6 +4400,113 @@ function updTotals() {
   document.getElementById('sumInst').textContent  = t.inst > 0 ? `$${t.inst.toFixed(2)}` : '—';
   document.getElementById('sumTax').textContent   = `$${t.tax.toFixed(2)}`;
   document.getElementById('sumTotal').textContent = `$${t.total.toFixed(2)}`;
+  const discRow = document.getElementById('sumDiscRow');
+  const discEl  = document.getElementById('sumDisc');
+  const discLbl = document.getElementById('sumDiscLabel');
+  if (discRow && discEl) {
+    if (t.discount && t.discount > 0) {
+      discRow.style.display = 'flex';
+      discEl.textContent = `-$${t.discount.toFixed(2)}`;
+      if (discLbl) discLbl.textContent = appliedPromo ? `Discount (${appliedPromo.code})` : 'Discount';
+    } else {
+      discRow.style.display = 'none';
+    }
+  }
+  renderPromoApplied();
+}
+
+// ─────────────────────────────────────────────────
+//  PROMO CODE SYSTEM (reads PROMO_CODES from promo-codes.js)
+// ─────────────────────────────────────────────────
+let appliedPromo = null;
+
+function validatePromoCode(input) {
+  if (typeof PROMO_CODES === 'undefined') return { ok: false, error: 'Promo system not loaded.' };
+  if (!input) return { ok: false, error: 'Enter a code.' };
+  const upper = input.toString().toUpperCase().trim();
+  if (!upper) return { ok: false, error: 'Enter a code.' };
+  let def = null, actualKey = null;
+  for (const k in PROMO_CODES) {
+    if (k.toUpperCase() === upper) { def = PROMO_CODES[k]; actualKey = k; break; }
+  }
+  if (!def) return { ok: false, error: 'Code not recognized.' };
+  if (currentMember && !isOwner() && def.type !== 'markup') {
+    return { ok: false, error: 'Promo codes can\'t be combined with member pricing. Sign out to apply this code.' };
+  }
+  if (def.expires) {
+    const exp = new Date(def.expires + 'T23:59:59');
+    if (Date.now() > exp.getTime()) return { ok: false, error: 'This code has expired.' };
+  }
+  if (def.minCart) {
+    const sub = cart.reduce((s, c) => s + c.price * c.qty, 0);
+    if (sub < def.minCart) return { ok: false, error: `Minimum order $${def.minCart} required.` };
+  }
+  return { ok: true, code: actualKey, def };
+}
+
+function calculatePromoDiscount(promo, sub, inst, cartItems) {
+  if (!promo || !promo.def) return { sub: 0, inst: 0 };
+  const def = promo.def;
+  switch (def.type) {
+    case 'percent':      return { sub: sub * (def.value / 100), inst: 0 };
+    case 'flat':         return { sub: Math.min(def.value, sub), inst: 0 };
+    case 'per_tire': {
+      const tireQty = cartItems.filter(c => c.itemType !== 'wheel').reduce((s, c) => s + c.qty, 0);
+      return { sub: Math.min(def.value * tireQty, sub), inst: 0 };
+    }
+    case 'free_install': return { sub: 0, inst: inst };
+    case 'markup': {
+      let savings = 0;
+      for (const c of cartItems) {
+        const pool = c.itemType === 'wheel' ? allWheels : allTires;
+        const orig = pool.find(t => t.itemNumber === c.itemNumber);
+        if (!orig) continue;
+        const newPrice = Math.round(orig.price * def.value * 100) / 100;
+        if (c.price > newPrice) savings += (c.price - newPrice) * c.qty;
+      }
+      return { sub: Math.min(savings, sub), inst: 0 };
+    }
+  }
+  return { sub: 0, inst: 0 };
+}
+
+function applyPromoCode(input) {
+  const result = validatePromoCode(input);
+  const errEl = document.getElementById('promoError');
+  if (!result.ok) {
+    appliedPromo = null;
+    if (errEl) { errEl.textContent = result.error; errEl.style.display = 'block'; }
+    updTotals();
+    return;
+  }
+  appliedPromo = { code: result.code, def: result.def };
+  if (errEl) errEl.style.display = 'none';
+  updTotals();
+  if (typeof showToast === 'function') showToast('Promo applied', result.def.label || result.code);
+}
+
+function removePromoCode() {
+  appliedPromo = null;
+  const errEl = document.getElementById('promoError');
+  if (errEl) errEl.style.display = 'none';
+  const inputEl = document.getElementById('promoInput');
+  if (inputEl) inputEl.value = '';
+  updTotals();
+}
+
+function renderPromoApplied() {
+  const promoBlock   = document.getElementById('promoBlock');
+  const promoApplied = document.getElementById('promoApplied');
+  if (!promoBlock || !promoApplied) return;
+  if (appliedPromo) {
+    promoBlock.style.display = 'none';
+    promoApplied.style.display = 'flex';
+    const labelEl = promoApplied.querySelector('.promo-applied-label');
+    if (labelEl) labelEl.textContent = appliedPromo.def.label || appliedPromo.code;
+  } else {
+    promoBlock.style.display = 'block';
+    promoApplied.style.display = 'none';
+  }
 }
 function openCart()  { document.getElementById('cartOverlay').classList.add('show'); renderCart(); }
 function closeCart() { document.getElementById('cartOverlay').classList.remove('show'); }
