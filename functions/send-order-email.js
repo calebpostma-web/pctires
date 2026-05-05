@@ -220,7 +220,7 @@ function buildCustomerEmail(order, tdgOrder) {
     <!-- Header -->
     <div style="background:#161616;border:1px solid #2a2a2a;border-radius:4px;padding:28px 32px;margin-bottom:16px;text-align:center">
       <div style="font-size:28px;font-weight:900;letter-spacing:2px;color:#f5c518">PC TIRES</div>
-      <div style="font-size:12px;color:#888;letter-spacing:1px;margin-top:4px">CHATHAM-KENT · 519-380-5104</div>
+      <div style="font-size:12px;color:#888;letter-spacing:1px;margin-top:4px">CHATHAM-KENT · 519-397-4686</div>
     </div>
 
     <!-- Confirmation banner -->
@@ -293,7 +293,7 @@ function buildCustomerEmail(order, tdgOrder) {
     <div style="background:#1a1a2a;border:1px solid #2a2a4a;border-radius:4px;padding:20px 32px;margin-bottom:16px">
       <div style="font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:10px">📅 Installation</div>
       <div style="font-size:15px;color:#e0e0e0">${installLine}</div>
-      <div style="font-size:12px;color:#888;margin-top:8px">PC Tires · Chatham-Kent, ON · 519-380-5104</div>
+      <div style="font-size:12px;color:#888;margin-top:8px">PC Tires · Chatham-Kent, ON · 519-397-4686</div>
     </div>
 
     <!-- What's next -->
@@ -309,7 +309,7 @@ function buildCustomerEmail(order, tdgOrder) {
     <!-- Footer -->
     <div style="text-align:center;font-size:12px;color:#555;line-height:1.8">
       <div>PC Tires · Chatham-Kent, Ontario</div>
-      <div>📞 519-380-5104 · orders@pctires.ca · pctires.ca</div>
+      <div>📞 519-397-4686 · orders@pctires.ca · pctires.ca</div>
       <div style="margin-top:8px">Questions? Just reply to this email or give us a call.</div>
     </div>
 
