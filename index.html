@@ -4343,10 +4343,10 @@ function addToCart(itemNumber, itemType) {
 function removeFromCart(itemNumber) { cart = cart.filter(c => c.itemNumber !== itemNumber); updBadge(); renderCart(); }
 function chgQty(itemNumber, d) {
   const item = cart.find(c => c.itemNumber === itemNumber); if (!item) return;
-  item.qty += d; if (item.qty <= 0) { removeFromCart(itemNumber); return; } renderCart();
+  item.qty += d; if (item.qty <= 0) { removeFromCart(itemNumber); return; } saveCartToStorage(); renderCart();
 }
-function togInst(itemNumber) { const item = cart.find(c => c.itemNumber === itemNumber); if (item) item.install = !item.install; renderCart(); }
-function updBadge() { document.getElementById('cartCount').textContent = cart.reduce((s, c) => s + c.qty, 0); }
+function togInst(itemNumber) { const item = cart.find(c => c.itemNumber === itemNumber); if (item) item.install = !item.install; saveCartToStorage(); renderCart(); }
+function updBadge() { document.getElementById('cartCount').textContent = cart.reduce((s, c) => s + c.qty, 0); saveCartToStorage(); }
 
 function renderCart() {
   const body = document.getElementById('cartBody'), foot = document.getElementById('cartFoot');
@@ -4481,6 +4481,7 @@ function applyPromoCode(input) {
   }
   appliedPromo = { code: result.code, def: result.def };
   if (errEl) errEl.style.display = 'none';
+  saveCartToStorage();
   updTotals();
   if (typeof showToast === 'function') showToast('Promo applied', result.def.label || result.code);
 }
@@ -4491,6 +4492,7 @@ function removePromoCode() {
   if (errEl) errEl.style.display = 'none';
   const inputEl = document.getElementById('promoInput');
   if (inputEl) inputEl.value = '';
+  saveCartToStorage();
   updTotals();
 }
 
@@ -4506,6 +4508,39 @@ function renderPromoApplied() {
   } else {
     promoBlock.style.display = 'block';
     promoApplied.style.display = 'none';
+  }
+}
+// ─────────────────────────────────────────────────
+//  CART PERSISTENCE — saves cart + promo to localStorage
+//  Auto-expires after 30 days so abandoned carts don't haunt forever
+// ─────────────────────────────────────────────────
+const CART_STORAGE_KEY = 'pc_cart';
+const CART_EXPIRY_DAYS = 30;
+
+function saveCartToStorage() {
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({
+      cart, appliedPromo, savedAt: Date.now()
+    }));
+  } catch(e) {}
+}
+
+function loadCartFromStorage() {
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (!data.savedAt) return;
+    const ageMs = Date.now() - data.savedAt;
+    if (ageMs > CART_EXPIRY_DAYS * 24 * 60 * 60 * 1000) {
+      localStorage.removeItem(CART_STORAGE_KEY);
+      return;
+    }
+    if (Array.isArray(data.cart)) cart = data.cart;
+    if (data.appliedPromo) appliedPromo = data.appliedPromo;
+    updBadge();
+  } catch(e) {
+    try { localStorage.removeItem(CART_STORAGE_KEY); } catch(e2) {}
   }
 }
 function openCart()  { document.getElementById('cartOverlay').classList.add('show'); renderCart(); }
@@ -4837,7 +4872,7 @@ async function finishOrder() {
     });
   } catch(e) { console.warn('Sheets write failed:', e.message); }
 
-  cart = []; tdgQuote = null; selectedAddons = new Set(); updBadge();
+  cart = []; tdgQuote = null; selectedAddons = new Set(); appliedPromo = null; updBadge();
   if (btn) btn.classList.remove('ld');
 
   // Show rebate reminders on confirm screen
@@ -6009,6 +6044,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSizeDropdowns();
   initWheelDropdowns();
   initMemberState();
+  loadCartFromStorage();
   initCookie();
   buildSvcGrid();
   initDecisionGuide();
