@@ -270,6 +270,10 @@ function buildCustomerEmail(order, tdgOrder) {
           <td style="padding:4px 0;color:#888;font-size:13px">Subtotal</td>
           <td style="padding:4px 0;text-align:right;color:#e0e0e0">$${order.subtotal?.toFixed(2)}</td>
         </tr>
+        ${order.discount && Number(order.discount) > 0 ? `<tr>
+          <td style="padding:4px 0;color:#22c55e;font-size:13px">Discount${order.discountCode ? ` (${order.discountCode})` : ''}</td>
+          <td style="padding:4px 0;text-align:right;color:#22c55e">-$${Number(order.discount).toFixed(2)}</td>
+        </tr>` : ''}
         ${order.addonTotal > 0 ? `<tr>
           <td style="padding:4px 0;color:#888;font-size:13px">Add-ons</td>
           <td style="padding:4px 0;text-align:right;color:#e0e0e0">$${order.addonTotal?.toFixed(2)}</td>
@@ -336,6 +340,7 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
     <tr><td style="padding:4px 12px 4px 0;color:#888">Vehicle</td><td>${order.vehicle || '—'}</td></tr>
     <tr><td style="padding:4px 12px 4px 0;color:#888">Items</td><td>${(order.tires||[]).map(t=>`${t.qty}× ${t.brand} ${t.name} (${t.size||t.diameter+'"'})`).join('<br>')}</td></tr>
     <tr><td style="padding:4px 12px 4px 0;color:#888">Add-ons</td><td>${order.addons || 'None'}</td></tr>
+    ${order.discount && Number(order.discount) > 0 ? `<tr><td style="padding:4px 12px 4px 0;color:#888">Discount</td><td style="color:#22c55e">-$${Number(order.discount).toFixed(2)}${order.discountCode ? ` (${order.discountCode})` : ''}</td></tr>` : ''}
     <tr><td style="padding:4px 12px 4px 0;color:#888">Total</td><td style="color:#f5c518;font-weight:bold">$${order.total?.toFixed(2)} CAD</td></tr>
     <tr><td style="padding:4px 12px 4px 0;color:#888">Install</td><td>${order.appointmentDate ? `${order.appointmentDate} at ${order.appointmentTime} — ${order.serviceName}` : 'Not booked'}</td></tr>
     <tr><td style="padding:4px 12px 4px 0;color:#888">Search Method</td><td>${order.searchMethod || '—'}</td></tr>
