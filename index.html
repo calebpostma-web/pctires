@@ -25,6 +25,24 @@ html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;scroll-padding-top:129px}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--mid);border-radius:3px}
 
+/* PROMO BAR — first-order discount */
+.promo-bar{background:linear-gradient(90deg,#000 0%,#1a1a1a 50%,#000 100%);color:var(--yellow);font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;letter-spacing:.4px;padding:9px 44px 9px 16px;display:flex;align-items:center;justify-content:center;gap:10px;position:fixed;top:0;left:0;right:0;z-index:510;border-bottom:1px solid var(--yellow);height:36px;box-sizing:border-box}
+.promo-bar-inner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+.promo-bar-msg{color:var(--white)}
+.promo-bar-msg strong{color:var(--yellow);font-weight:800;letter-spacing:.8px;text-transform:uppercase;font-size:12px}
+.promo-bar-sep{color:var(--mid);font-weight:300}
+.promo-bar-code{background:var(--yellow);color:var(--black);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:800;padding:3px 9px;border:0;cursor:pointer;letter-spacing:1.5px;border-radius:2px;transition:background .15s}
+.promo-bar-code:hover{background:#fff}
+.promo-bar-code.copied{background:var(--green);color:#fff}
+.promo-bar-close{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:4px 8px;opacity:.7;transition:opacity .2s}
+.promo-bar-close:hover{opacity:1;color:var(--white)}
+body.with-promo-bar .rebate-ticker{top:36px}
+body.with-promo-bar .trust-bar{top:69px}
+body.with-promo-bar nav{top:107px}
+body.with-promo-bar{scroll-padding-top:165px}
+@media(max-width:960px){body.with-promo-bar nav{top:69px}}
+@media(max-width:600px){.promo-bar{font-size:11px;padding:8px 36px 8px 10px;gap:7px}.promo-bar-msg strong{font-size:11px}.promo-bar-code{font-size:10px;padding:3px 7px;letter-spacing:1px}}
+
 .rebate-ticker{background:var(--yellow);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:7px 0;overflow:hidden;position:fixed;top:0;left:0;right:0;z-index:502}
 .rebate-ticker-inner{display:flex;animation:ticker 120s linear infinite;white-space:nowrap;width:max-content}
 .rebate-ticker-inner:hover{animation-play-state:paused}
@@ -631,6 +649,15 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .chat-fab:hover{transform:scale(1.08);background:var(--yellow-dark)}
 .chat-fab.has-window{background:var(--red);color:var(--white)}
 .chat-fab.has-window:hover{background:#c0392b}
+@keyframes chatFabPulse{0%,100%{box-shadow:0 4px 20px rgba(245,197,24,.3)}50%{box-shadow:0 4px 28px rgba(245,197,24,.7),0 0 0 8px rgba(245,197,24,.15)}}
+.chat-fab.pulse{animation:chatFabPulse 1.4s ease-in-out 3}
+.chat-tooltip{position:fixed;bottom:34px;left:90px;z-index:599;background:var(--dark);border:1px solid var(--yellow);border-radius:3px;padding:10px 32px 10px 14px;font-size:13px;line-height:1.4;color:var(--white);font-family:'Barlow',sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.5);opacity:0;transform:translateX(-10px);transition:opacity .3s,transform .3s;pointer-events:none;max-width:240px;cursor:pointer}
+.chat-tooltip.show{opacity:1;transform:translateX(0);pointer-events:auto}
+.chat-tooltip::before{content:'';position:absolute;left:-7px;top:50%;transform:translateY(-50%) rotate(45deg);width:12px;height:12px;background:var(--dark);border-left:1px solid var(--yellow);border-bottom:1px solid var(--yellow)}
+.chat-tooltip strong{color:var(--yellow);font-weight:700;display:block;margin-bottom:2px}
+.chat-tooltip-close{position:absolute;right:6px;top:4px;background:transparent;border:0;color:var(--muted);font-size:15px;line-height:1;cursor:pointer;padding:3px 6px;opacity:.6;transition:opacity .15s}
+.chat-tooltip-close:hover{opacity:1;color:var(--white)}
+@media(max-width:600px){.chat-tooltip{max-width:200px;font-size:12px}}
 .chat-window{position:fixed;bottom:90px;left:24px;z-index:601;width:360px;max-height:520px;background:var(--dark);border:1px solid var(--border);border-radius:4px;display:none;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,.6)}
 .chat-window.show{display:flex}
 .chat-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--card)}
@@ -893,6 +920,52 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 <script src="/promo-codes.js"></script>
 </head>
 <body>
+
+<!-- PROMO BAR — first-order discount (dismiss = sessionStorage) -->
+<div class="promo-bar" id="promoBar">
+  <div class="promo-bar-inner">
+    <span class="promo-bar-msg"><strong>NEW CUSTOMER:</strong> Save 10% on your first order</span>
+    <span class="promo-bar-sep">·</span>
+    <span>Use code: <button class="promo-bar-code" onclick="copyPromoCode(this)" data-code="WELCOME10">WELCOME10</button></span>
+  </div>
+  <button class="promo-bar-close" onclick="dismissPromoBar()" aria-label="Dismiss">×</button>
+</div>
+<script>
+(function(){
+  try{
+    if(sessionStorage.getItem('pcPromoBarDismissed')!=='1'){
+      document.body.classList.add('with-promo-bar');
+    } else {
+      var b=document.getElementById('promoBar'); if(b) b.style.display='none';
+    }
+  }catch(e){ document.body.classList.add('with-promo-bar'); }
+})();
+function copyPromoCode(btn){
+  var code=btn.getAttribute('data-code');
+  var done=function(){
+    var orig=btn.textContent;
+    btn.textContent='COPIED!'; btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent=orig; btn.classList.remove('copied'); },1800);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(done).catch(function(){
+      var t=document.createElement('textarea'); t.value=code; document.body.appendChild(t); t.select();
+      try{document.execCommand('copy');}catch(e){}
+      document.body.removeChild(t); done();
+    });
+  } else {
+    var t=document.createElement('textarea'); t.value=code; document.body.appendChild(t); t.select();
+    try{document.execCommand('copy');}catch(e){}
+    document.body.removeChild(t); done();
+  }
+}
+function dismissPromoBar(){
+  var b=document.getElementById('promoBar');
+  if(b) b.style.display='none';
+  document.body.classList.remove('with-promo-bar');
+  try{sessionStorage.setItem('pcPromoBarDismissed','1');}catch(e){}
+}
+</script>
 
 <!-- REBATE TICKER -->
 <!-- ↓↓↓ UPDATE REBATES HERE — change dates, amounts, brands as needed ↓↓↓ -->
@@ -1558,6 +1631,10 @@ function getRebateForBrand(brand) {
 
 <!-- FLOATING CHAT -->
 <button class="chat-fab" onclick="toggleChat()" id="chatFab" title="Chat with us">🛞</button>
+<div class="chat-tooltip" id="chatTooltip" onclick="openChatFromTooltip(event)">
+  <strong>Got tire questions?</strong>Ask our AI assistant — find the right size, brand, or fit in seconds.
+  <button class="chat-tooltip-close" onclick="dismissChatTooltip(event)" aria-label="Dismiss">×</button>
+</div>
 <div class="chat-window" id="chatWindow">
   <div class="chat-header">
     <div class="chat-header-left">
@@ -5134,6 +5211,13 @@ const chatHistory = [];
 function toggleChat() {
   const win = document.getElementById('chatWindow');
   const fab = document.getElementById('chatFab');
+  // dismiss tooltip + pulse on first interaction
+  const tip = document.getElementById('chatTooltip');
+  if (tip && tip.classList.contains('show')) {
+    tip.classList.remove('show');
+    try { sessionStorage.setItem('pcChatTooltipDismissed', '1'); } catch(e){}
+  }
+  if (fab) fab.classList.remove('pulse');
   win.classList.toggle('show');
   fab.classList.toggle('has-window');
   if (win.classList.contains('show')) {
@@ -5143,6 +5227,38 @@ function toggleChat() {
     fab.textContent = '🛞';
   }
 }
+function dismissChatTooltip(ev){
+  if (ev) ev.stopPropagation();
+  const tip = document.getElementById('chatTooltip');
+  const fab = document.getElementById('chatFab');
+  if (tip) tip.classList.remove('show');
+  if (fab) fab.classList.remove('pulse');
+  try { sessionStorage.setItem('pcChatTooltipDismissed', '1'); } catch(e){}
+}
+function openChatFromTooltip(ev){
+  // clicks on the close button bubble up here; ignore
+  if (ev && ev.target && ev.target.closest('.chat-tooltip-close')) return;
+  dismissChatTooltip();
+  if (typeof toggleChat === 'function') toggleChat();
+}
+// auto-show tooltip after 8s on first visit of the session
+(function(){
+  try { if (sessionStorage.getItem('pcChatTooltipDismissed') === '1') return; } catch(e){}
+  setTimeout(function(){
+    const tip = document.getElementById('chatTooltip');
+    const fab = document.getElementById('chatFab');
+    const win = document.getElementById('chatWindow');
+    if (!tip || !fab) return;
+    if (win && win.classList.contains('show')) return;  // user already opened chat
+    tip.classList.add('show');
+    fab.classList.add('pulse');
+    // auto-hide tooltip after 12s of silence (still dismissable manually before that)
+    setTimeout(function(){
+      if (tip.classList.contains('show')) tip.classList.remove('show');
+      fab.classList.remove('pulse');
+    }, 12000);
+  }, 8000);
+})();
 document.addEventListener('click', e => {
   const fab = document.getElementById('chatFab'), win = document.getElementById('chatWindow');
   if (fab && win && win.classList.contains('show') && !fab.contains(e.target) && !win.contains(e.target)) toggleChat();
