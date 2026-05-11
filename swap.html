@@ -1,1036 +1,566 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-CA">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Tire Swap — PC Tires | Chatham-Kent</title>
-<meta name="description" content="Book your spring tire swap at PC Tires in Pain Court. $20/tire or $80/set. Certified techs, same-day slots. Limited appointments — book online now.">
+<title id="pageTitle">Book Your Appointment — PC Tires | Chatham-Kent</title>
+<meta name="description" id="pageDesc" content="Book your tire service at PC Tires in Pain Court. Certified techs, same-day slots, full service shop in Chatham-Kent.">
+<meta name="robots" content="noindex, follow"><!-- internal booking, don't fight homepage in search -->
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&family=Barlow+Condensed:wght@700;800;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --black:   #070707;
-    --dark:    #0f0f0f;
-    --card:    #161616;
-    --border:  #242424;
-    --yellow:  #f5c518;
-    --yellow2: #e8b800;
-    --orange:  #f07318;
-    --white:   #f4f4f4;
-    --muted:   #888;
-    --light:   #bbb;
-    --green:   #22c55e;
-    --red:     #ef4444;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Barlow', sans-serif;
-    overflow-x: hidden;
-  }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    padding: 60px 24px 80px;
-  }
-
-  /* Animated tire track background */
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 60px,
-        rgba(245,197,24,.03) 60px,
-        rgba(245,197,24,.03) 62px
-      ),
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 60px,
-        rgba(245,197,24,.03) 60px,
-        rgba(245,197,24,.03) 62px
-      );
-    animation: gridDrift 20s linear infinite;
-  }
-
-  @keyframes gridDrift {
-    from { transform: translate(0,0); }
-    to   { transform: translate(62px,62px); }
-  }
-
-  /* Big yellow glow */
-  .hero::after {
-    content: '';
-    position: absolute;
-    top: -200px;
-    right: -200px;
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(circle, rgba(245,197,24,.12) 0%, transparent 65%);
-    pointer-events: none;
-  }
-
-  .hero-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-  }
-
-  .season-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(245,197,24,.12);
-    border: 1px solid rgba(245,197,24,.3);
-    border-radius: 2px;
-    padding: 6px 14px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--yellow);
-    margin-bottom: 28px;
-  }
-
-  .season-badge .dot {
-    width: 7px; height: 7px;
-    background: var(--yellow);
-    border-radius: 50%;
-    animation: pulse 1.8s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%,100% { opacity: 1; transform: scale(1); }
-    50%      { opacity: .4; transform: scale(.7); }
-  }
-
-  .hero-headline {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(72px, 14vw, 160px);
-    line-height: .9;
-    letter-spacing: -1px;
-    margin-bottom: 8px;
-  }
-
-  .hero-headline .line1 { color: var(--white); display: block; }
-  .hero-headline .line2 {
-    color: var(--yellow);
-    display: block;
-    -webkit-text-stroke: 2px var(--yellow);
-    text-shadow: 0 0 60px rgba(245,197,24,.4);
-  }
-  .hero-headline .line3 { color: var(--white); display: block; }
-
-  .hero-sub {
-    font-size: 18px;
-    color: var(--light);
-    max-width: 520px;
-    line-height: 1.6;
-    margin: 24px 0 40px;
-  }
-
-  .hero-sub strong { color: var(--white); }
-
-  .hero-ctas {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .btn-primary {
-    background: var(--yellow);
-    color: var(--black);
-    border: none;
-    padding: 16px 36px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 18px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: all .2s;
-    text-decoration: none;
-    display: inline-block;
-  }
-
-  .btn-primary:hover {
-    background: var(--yellow2);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(245,197,24,.35);
-  }
-
-  .btn-ghost {
-    color: var(--white);
-    border: 2px solid var(--border);
-    background: none;
-    padding: 14px 28px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: all .2s;
-    text-decoration: none;
-    display: inline-block;
-  }
-
-  .btn-ghost:hover { border-color: var(--yellow); color: var(--yellow); }
-
-  /* ── URGENCY BAR ── */
-  .urgency-bar {
-    background: linear-gradient(135deg, #1a1500, #0f0f0f);
-    border-top: 3px solid var(--yellow);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 24px;
-  }
-
-  .urgency-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-
-  .urgency-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .urgency-icon {
-    font-size: 28px;
-    animation: wobble 2s ease-in-out infinite;
-  }
-
-  @keyframes wobble {
-    0%,100% { transform: rotate(-5deg); }
-    50%      { transform: rotate(5deg); }
-  }
-
-  .urgency-text strong {
-    display: block;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--yellow);
-    letter-spacing: .5px;
-  }
-
-  .urgency-text span {
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  .slots-remaining {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
-
-  .slot-pip {
-    width: 14px; height: 14px;
-    border-radius: 3px;
-    background: var(--green);
-    transition: background .3s;
-  }
-
-  .slot-pip.taken { background: var(--border); }
-  .slot-pip.last  { background: var(--orange); animation: pipPulse 1s ease-in-out infinite; }
-
-  @keyframes pipPulse {
-    0%,100% { opacity: 1; } 50% { opacity: .4; }
-  }
-
-  .slots-label {
-    font-size: 13px;
-    color: var(--light);
-    margin-left: 4px;
-  }
-
-  /* ── PRICING ── */
-  .pricing-section {
-    padding: 80px 24px;
-    background: var(--dark);
-  }
-
-  .section-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--yellow);
-    margin-bottom: 12px;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(42px, 8vw, 72px);
-    line-height: 1;
-    margin-bottom: 48px;
-  }
-
-  .pricing-grid {
-    max-width: 960px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-  .price-card {
-    background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    padding: 36px;
-    position: relative;
-    overflow: hidden;
-    transition: transform .2s, border-color .2s;
-  }
-
-  .price-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(245,197,24,.4);
-  }
-
-  .price-card.featured {
-    border-color: var(--yellow);
-    background: linear-gradient(135deg, #1a1500 0%, var(--card) 60%);
-  }
-
-  .price-card.featured::before {
-    content: 'BEST VALUE';
-    position: absolute;
-    top: 16px; right: -22px;
-    background: var(--yellow);
-    color: var(--black);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    padding: 4px 28px;
-    transform: rotate(35deg);
-  }
-
-  .price-tag {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 72px;
-    line-height: 1;
-    color: var(--yellow);
-    margin-bottom: 4px;
-  }
-
-  .price-tag sup {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    vertical-align: super;
-  }
-
-  .price-unit {
-    font-size: 14px;
-    color: var(--muted);
-    margin-bottom: 20px;
-  }
-
-  .price-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 24px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 16px;
-  }
-
-  .price-includes {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .price-includes li {
-    font-size: 14px;
-    color: var(--light);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .price-includes li::before {
-    content: '✓';
-    color: var(--green);
-    font-weight: 700;
-    font-size: 13px;
-    flex-shrink: 0;
-  }
-
-  .price-cta {
-    margin-top: 28px;
-    width: 100%;
-    text-align: center;
-  }
-
-  /* ── HOW IT WORKS ── */
-  .how-section {
-    padding: 80px 24px;
-    background: var(--black);
-    max-width: 960px;
-    margin: 0 auto;
-  }
-
-  .steps-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    position: relative;
-    margin-top: 48px;
-  }
-
-  .steps-grid::before {
-    content: '';
-    position: absolute;
-    top: 28px;
-    left: 10%;
-    right: 10%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow));
-    opacity: .3;
-  }
-
-  .step-item {
-    text-align: center;
-    padding: 0 16px;
-  }
-
-  .step-num {
-    width: 56px; height: 56px;
-    background: var(--card);
-    border: 2px solid var(--yellow);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    color: var(--yellow);
-    margin: 0 auto 16px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .step-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    margin-bottom: 8px;
-  }
-
-  .step-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-
-  /* ── TRUST BAR ── */
-  .trust-section {
-    background: var(--card);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 40px 24px;
-  }
-
-  .trust-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    text-align: center;
-  }
-
-  .trust-item strong {
-    display: block;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    color: var(--yellow);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .trust-item span {
-    font-size: 12px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  /* ── BOOKING FORM ── */
-  .booking-section {
-    padding: 80px 24px;
-    background: var(--dark);
-  }
-
-  .booking-inner {
-    max-width: 640px;
-    margin: 0 auto;
-  }
-
-  .booking-card {
-    background: var(--card);
-    border: 2px solid var(--yellow);
-    border-radius: 4px;
-    padding: 48px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .booking-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow));
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
-
-  .form-row.one { grid-template-columns: 1fr; }
-
-  .fg label {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 7px;
-  }
-
-  .fg input, .fg select {
-    width: 100%;
-    background: var(--black);
-    border: 1px solid var(--border);
-    color: var(--white);
-    padding: 12px 14px;
-    border-radius: 3px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 15px;
-    outline: none;
-    transition: border-color .2s;
-    appearance: none;
-  }
-
-  .fg input:focus, .fg select:focus { border-color: var(--yellow); }
-  .fg select option { background: var(--card); }
-
-  .pkg-select {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .pkg-opt {
-    border: 2px solid var(--border);
-    border-radius: 3px;
-    padding: 14px;
-    cursor: pointer;
-    transition: all .2s;
-    text-align: center;
-  }
-
-  .pkg-opt:hover { border-color: rgba(245,197,24,.4); }
-  .pkg-opt.active { border-color: var(--yellow); background: rgba(245,197,24,.06); }
-
-  .pkg-opt .pkg-price {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--yellow);
-    line-height: 1;
-  }
-
-  .pkg-opt .pkg-name {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 3px;
-  }
-
-  .submit-btn {
-    width: 100%;
-    background: var(--yellow);
-    color: var(--black);
-    border: none;
-    padding: 18px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 20px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 3px;
-    margin-top: 20px;
-    transition: all .2s;
-  }
-
-  .submit-btn:hover {
-    background: var(--yellow2);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(245,197,24,.3);
-  }
-
-  .form-note {
-    font-size: 12px;
-    color: var(--muted);
-    text-align: center;
-    margin-top: 12px;
-    line-height: 1.5;
-  }
-
-  /* ── SUCCESS STATE ── */
-  .success-state {
-    display: none;
-    text-align: center;
-    padding: 20px 0;
-  }
-
-  .success-circle {
-    width: 80px; height: 80px;
-    background: rgba(34,197,94,.15);
-    border: 3px solid var(--green);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    margin: 0 auto 20px;
-  }
-
-  .success-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px;
-    color: var(--green);
-    margin-bottom: 8px;
-  }
-
-  .success-sub {
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
-  /* ── FOOTER ── */
-  .footer {
-    background: var(--black);
-    border-top: 1px solid var(--border);
-    padding: 32px 24px;
-    text-align: center;
-  }
-
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-  }
-
-  .footer-logo span { color: var(--yellow); }
-
-  .footer-info {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.8;
-  }
-
-  .footer-info a { color: var(--yellow); text-decoration: none; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 700px) {
-    .pricing-grid { grid-template-columns: 1fr; }
-    .steps-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-    .steps-grid::before { display: none; }
-    .trust-inner { grid-template-columns: 1fr 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-    .booking-card { padding: 28px 20px; }
-    .urgency-inner { flex-direction: column; align-items: flex-start; }
-  }
-
-  @media (max-width: 480px) {
-    .steps-grid { grid-template-columns: 1fr; }
-    .trust-inner { grid-template-columns: 1fr 1fr; }
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:#070707; --dark:#0f0f0f; --card:#161616; --raised:#1d1d1d;
+  --border:#242424; --mid:#2d2d2d; --muted:#888; --light:#bbb;
+  --white:#f4f4f4; --yellow:#f5c518; --yellow2:#e8b800; --orange:#f07318;
+  --green:#22c55e; --red:#ef4444;
+}
+
+html { scroll-behavior: smooth; }
+body { background:var(--black); color:var(--white); font-family:'Barlow',sans-serif; line-height:1.6; overflow-x:hidden; }
+
+/* ── NAV ── */
+.site-nav { padding:14px 24px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background:rgba(7,7,7,.85); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+.logo { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:900; letter-spacing:3px; text-transform:uppercase; color:var(--white); text-decoration:none; }
+.logo .pc { color:var(--yellow); }
+.nav-phone { font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--white); text-decoration:none; background:var(--yellow); color:var(--black); padding:9px 16px; border-radius:2px; font-weight:700; }
+
+/* ── HERO ── */
+.hero { min-height:78vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden; padding:60px 24px 70px; }
+.hero::before {
+  content:''; position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(245,197,24,.03) 60px, rgba(245,197,24,.03) 62px),
+    repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(245,197,24,.03) 60px, rgba(245,197,24,.03) 62px);
+  animation:gridDrift 20s linear infinite;
+}
+@keyframes gridDrift { from{transform:translate(0,0)} to{transform:translate(62px,62px)} }
+.hero::after { content:''; position:absolute; top:-200px; right:-200px; width:700px; height:700px; background:radial-gradient(circle, rgba(245,197,24,.12) 0%, transparent 65%); pointer-events:none; }
+.hero-inner { max-width:960px; margin:0 auto; width:100%; position:relative; z-index:1; }
+
+.season-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(245,197,24,.12); border:1px solid rgba(245,197,24,.3); border-radius:30px; padding:6px 14px; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--yellow); margin-bottom:24px; }
+.season-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--yellow); box-shadow:0 0 0 4px rgba(245,197,24,.2); animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 4px rgba(245,197,24,.2)} 50%{box-shadow:0 0 0 8px rgba(245,197,24,0)} }
+
+.hero-headline { font-family:'Barlow Condensed',sans-serif; font-weight:900; line-height:.92; letter-spacing:-1px; margin-bottom:22px; }
+.hero-headline .line1 { display:block; font-size:clamp(36px,7vw,72px); color:var(--white); }
+.hero-headline .line2 { display:block; font-size:clamp(64px,14vw,150px); color:var(--yellow); margin:-4px 0; text-shadow:0 0 60px rgba(245,197,24,.3); }
+.hero-headline .line3 { display:block; font-size:clamp(36px,7vw,72px); color:var(--white); }
+
+.hero-sub { font-size:clamp(16px,2vw,20px); color:var(--light); margin-bottom:30px; max-width:600px; }
+.hero-sub strong { color:var(--white); }
+
+.hero-meta { display:flex; gap:24px; flex-wrap:wrap; align-items:center; margin-bottom:30px; }
+.meta-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); }
+.meta-item strong { color:var(--white); font-size:15px; }
+.meta-item .meta-sep { color:var(--mid); }
+
+.hero-ctas { display:flex; gap:14px; flex-wrap:wrap; }
+.btn-primary { background:var(--yellow); color:var(--black); padding:16px 32px; border-radius:2px; font-weight:800; font-size:15px; letter-spacing:1.5px; text-transform:uppercase; text-decoration:none; border:none; cursor:pointer; transition:transform .15s, background .15s; }
+.btn-primary:hover { background:var(--yellow2); transform:translateY(-1px); }
+.btn-ghost { background:transparent; color:var(--white); padding:16px 32px; border-radius:2px; font-weight:700; font-size:15px; letter-spacing:1.5px; text-transform:uppercase; text-decoration:none; border:1px solid var(--mid); transition:border-color .15s, color .15s; }
+.btn-ghost:hover { border-color:var(--yellow); color:var(--yellow); }
+
+/* ── SERVICE INFO CARD ── */
+.svc-info-section { padding:30px 24px; background:var(--dark); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.svc-info-inner { max-width:760px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+.svc-info-card { background:var(--card); border:1px solid var(--border); padding:18px 20px; border-radius:2px; text-align:center; }
+.svc-info-label { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); font-weight:700; margin-bottom:6px; }
+.svc-info-value { font-family:'Barlow Condensed',sans-serif; font-size:24px; font-weight:800; color:var(--yellow); line-height:1; }
+.svc-info-value .small { font-size:14px; color:var(--light); font-weight:500; }
+@media(max-width:600px) { .svc-info-inner { grid-template-columns:1fr; } }
+
+/* ── BOOKING SECTION ── */
+.booking-section { padding:70px 24px; background:var(--black); }
+.booking-inner { max-width:680px; margin:0 auto; }
+.section-label { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--yellow); margin-bottom:12px; text-align:center; }
+.section-title { font-family:'Barlow Condensed',sans-serif; font-size:clamp(32px,6vw,52px); font-weight:900; line-height:1.05; margin-bottom:14px; color:var(--white); text-align:center; letter-spacing:-.5px; }
+.section-sub { color:var(--muted); font-size:15px; text-align:center; margin-bottom:36px; }
+
+.booking-card { background:var(--card); border:1px solid var(--border); border-top:3px solid var(--yellow); border-radius:3px; padding:34px 32px; }
+@media(max-width:600px) { .booking-card { padding:24px 20px; } }
+
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.form-row.one { grid-template-columns:1fr; }
+@media(max-width:600px) { .form-row { grid-template-columns:1fr; } }
+.fg { display:flex; flex-direction:column; gap:6px; }
+.fg label { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
+.fg input, .fg select, .fg textarea {
+  background:var(--raised); color:var(--white); border:1px solid var(--border); border-radius:2px; padding:12px 14px;
+  font-family:'Barlow',sans-serif; font-size:15px; transition:border-color .15s;
+}
+.fg input:focus, .fg select:focus, .fg textarea:focus { outline:0; border-color:var(--yellow); }
+.fg textarea { min-height:80px; resize:vertical; font-family:'Barlow',sans-serif; }
+.fg .helper { font-size:12px; color:var(--muted); margin-top:4px; }
+
+/* Service picker */
+.svc-picker { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:22px; }
+.svc-pick-card { background:var(--raised); border:1px solid var(--border); border-radius:2px; padding:14px 12px; cursor:pointer; transition:all .15s; text-align:center; }
+.svc-pick-card:hover { border-color:var(--mid); }
+.svc-pick-card.active { border-color:var(--yellow); background:rgba(245,197,24,.06); }
+.svc-pick-name { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:700; color:var(--white); margin-bottom:4px; }
+.svc-pick-price { font-size:12px; color:var(--muted); font-weight:600; }
+
+/* Time slot grid */
+.time-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(95px, 1fr)); gap:8px; margin-top:8px; }
+.time-slot { background:var(--raised); border:1px solid var(--border); border-radius:2px; padding:10px 8px; text-align:center; font-size:14px; font-weight:500; cursor:pointer; transition:all .15s; }
+.time-slot:hover:not(.disabled) { border-color:var(--yellow); color:var(--yellow); }
+.time-slot.active { background:var(--yellow); color:var(--black); border-color:var(--yellow); font-weight:700; }
+.time-slot.disabled { opacity:.3; cursor:not-allowed; }
+.time-empty { text-align:center; padding:18px; color:var(--muted); font-size:13px; background:var(--raised); border-radius:2px; border:1px dashed var(--border); }
+
+/* Submit */
+.submit-btn { width:100%; background:var(--yellow); color:var(--black); padding:18px; border:none; border-radius:2px; font-weight:800; font-size:15px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:background .15s; margin-top:20px; }
+.submit-btn:hover:not(:disabled) { background:var(--yellow2); }
+.submit-btn:disabled { opacity:.6; cursor:wait; }
+.form-note { text-align:center; font-size:12px; color:var(--muted); margin-top:14px; line-height:1.5; }
+.form-error { background:rgba(239,68,68,.1); border:1px solid var(--red); color:var(--red); padding:10px 14px; border-radius:2px; font-size:13px; margin-top:12px; display:none; }
+.form-error.show { display:block; }
+
+/* Success */
+.success-state { display:none; text-align:center; padding:32px 8px; }
+.success-state.show { display:block; }
+.success-circle { width:80px; height:80px; border-radius:50%; background:var(--yellow); color:var(--black); display:flex; align-items:center; justify-content:center; font-size:42px; font-weight:900; margin:0 auto 22px; box-shadow:0 0 0 8px rgba(245,197,24,.15); }
+.success-title { font-family:'Barlow Condensed',sans-serif; font-size:32px; font-weight:900; margin-bottom:10px; color:var(--white); }
+.success-sub { color:var(--light); font-size:15px; line-height:1.7; }
+.success-sub strong { color:var(--white); }
+.success-sub a { color:var(--yellow); text-decoration:none; }
+
+/* ── OTHER SERVICES ── */
+.other-section { padding:54px 24px; background:var(--dark); border-top:1px solid var(--border); }
+.other-inner { max-width:760px; margin:0 auto; }
+.other-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-top:18px; }
+.other-link { background:var(--card); border:1px solid var(--border); border-radius:2px; padding:14px 16px; text-decoration:none; color:var(--white); transition:all .15s; display:block; }
+.other-link:hover { border-color:var(--yellow); }
+.other-link .ol-name { font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700; }
+.other-link .ol-meta { font-size:12px; color:var(--muted); margin-top:2px; }
+
+/* ── FOOTER ── */
+footer { padding:36px 24px; text-align:center; border-top:1px solid var(--border); }
+.footer-logo { font-family:'Barlow Condensed',sans-serif; font-size:26px; font-weight:900; letter-spacing:3px; color:var(--white); }
+.footer-logo .pc { color:var(--yellow); }
+.footer-info { font-size:13px; color:var(--muted); margin-top:14px; line-height:1.8; }
+.footer-info a { color:var(--light); text-decoration:none; }
+.footer-info a:hover { color:var(--yellow); }
 </style>
 </head>
 <body>
+
+<!-- ── NAV ── -->
+<nav class="site-nav">
+  <a href="/" class="logo"><span class="pc">PC</span>TIRES</a>
+  <a href="tel:5193974686" class="nav-phone">519-397-4686</a>
+</nav>
 
 <!-- ── HERO ── -->
 <section class="hero">
   <div class="hero-inner">
     <div class="season-badge">
       <div class="dot"></div>
-      Spring 2025 · Chatham-Kent
+      <span id="badgeText">Loading…</span>
     </div>
     <h1 class="hero-headline">
-      <span class="line1">Time To</span>
-      <span class="line2">Swap</span>
-      <span class="line3">Your Tires</span>
+      <span class="line1" id="h1Top">—</span>
+      <span class="line2" id="h1Mid">—</span>
+      <span class="line3" id="h1Bot">—</span>
     </h1>
-    <p class="hero-sub">
-      Snow season's over. Get your winters off before the warm weather hits.
-      <strong>Certified techs. Same-day slots. Done in under an hour.</strong>
-    </p>
+    <p class="hero-sub" id="heroSub">—</p>
+    <div class="hero-meta" id="heroMeta"></div>
     <div class="hero-ctas">
-      <a href="#book" class="btn-primary">Book My Swap →</a>
-      <a href="#pricing" class="btn-ghost">See Pricing</a>
+      <a href="#book" class="btn-primary" id="heroBtn">Book Now →</a>
+      <a href="/" class="btn-ghost">Browse Tires</a>
     </div>
   </div>
 </section>
 
-<!-- ── URGENCY BAR ── -->
-<div class="urgency-bar">
-  <div class="urgency-inner">
-    <div class="urgency-left">
-      <div class="urgency-icon">🗓️</div>
-      <div class="urgency-text">
-        <strong>Limited Spots This Week</strong>
-        <span>We book a fixed number of swaps per week — grab yours before they fill up.</span>
-      </div>
+<!-- ── SERVICE INFO CARD ── -->
+<section class="svc-info-section">
+  <div class="svc-info-inner">
+    <div class="svc-info-card">
+      <div class="svc-info-label">Price</div>
+      <div class="svc-info-value" id="infoPrice">—</div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div class="slots-remaining" id="slotPips"></div>
-      <span class="slots-label" id="slotLabel">Loading…</span>
+    <div class="svc-info-card">
+      <div class="svc-info-label">Duration</div>
+      <div class="svc-info-value" id="infoDuration">—</div>
     </div>
-  </div>
-</div>
-
-<!-- ── PRICING ── -->
-<section class="pricing-section" id="pricing">
-  <div style="max-width:960px;margin:0 auto">
-    <div class="section-label">Transparent Pricing</div>
-    <div class="section-title">No Surprises.<br>Just Results.</div>
-    <div class="pricing-grid">
-
-      <div class="price-card">
-        <div class="price-tag"><sup>$</sup>20</div>
-        <div class="price-unit">per tire</div>
-        <div class="price-name">Single Tire Swap</div>
-        <ul class="price-includes">
-          <li>Dismount winter tire</li>
-          <li>Mount all-season or summer tire</li>
-          <li>Computer balance included</li>
-          <li>TPMS sensor reset</li>
-          <li>Torque to manufacturer spec</li>
-        </ul>
-        <div class="price-cta">
-          <a href="#book" class="btn-ghost" style="display:block;text-align:center">Book Now →</a>
-        </div>
-      </div>
-
-      <div class="price-card featured">
-        <div class="price-tag"><sup>$</sup>80</div>
-        <div class="price-unit">full set of 4 tires</div>
-        <div class="price-name">Full Set Swap</div>
-        <ul class="price-includes">
-          <li>All 4 tires dismounted & mounted</li>
-          <li>Computer balance on all 4</li>
-          <li>TPMS relearn on all sensors</li>
-          <li>Torque check to spec</li>
-          <li>Winter tires stored or disposed</li>
-          <li>Done in under 60 minutes</li>
-        </ul>
-        <div class="price-cta">
-          <a href="#book" class="btn-primary" style="display:block;text-align:center">Book My Set →</a>
-        </div>
-      </div>
-
+    <div class="svc-info-card">
+      <div class="svc-info-label">Where</div>
+      <div class="svc-info-value"><span class="small">7144 Grande River Line<br>Pain Court, ON</span></div>
     </div>
   </div>
 </section>
 
-<!-- ── TRUST ── -->
-<div class="trust-section">
-  <div class="trust-inner">
-    <div class="trust-item">
-      <strong>60</strong>
-      <span>Minutes or less</span>
-    </div>
-    <div class="trust-item">
-      <strong>$20</strong>
-      <span>Per tire, no hidden fees</span>
-    </div>
-    <div class="trust-item">
-      <strong>100%</strong>
-      <span>Certified technicians</span>
-    </div>
-    <div class="trust-item">
-      <strong>Pain Court</strong>
-      <span>Serving Chatham-Kent</span>
-    </div>
-  </div>
-</div>
-
-<!-- ── HOW IT WORKS ── -->
-<section style="padding:80px 24px;background:var(--black)">
-  <div style="max-width:960px;margin:0 auto">
-    <div class="section-label">Dead Simple</div>
-    <div class="section-title">How It Works</div>
-    <div class="steps-grid">
-      <div class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-title">Book Online</div>
-        <div class="step-desc">Pick your date and time slot below. Takes 60 seconds.</div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-title">We Confirm</div>
-        <div class="step-desc">You'll get an email confirmation with your appointment details.</div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-title">Drive In</div>
-        <div class="step-desc">Pull up to 7144 Grande River Line, Pain Court at your time.</div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">4</div>
-        <div class="step-title">Drive Away</div>
-        <div class="step-desc">Done in under an hour. Winter tires stored or ready to take home.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── BOOKING FORM ── -->
+<!-- ── BOOKING SECTION ── -->
 <section class="booking-section" id="book">
   <div class="booking-inner">
-    <div style="text-align:center;margin-bottom:36px">
-      <div class="section-label">Book Your Appointment</div>
-      <div class="section-title" style="font-size:clamp(36px,7vw,60px)">Grab Your Slot</div>
-      <p style="color:var(--muted);font-size:15px">Spots fill fast. Book now and we'll hold your time.</p>
-    </div>
+    <div class="section-label">Book Your Appointment</div>
+    <div class="section-title">Pick a Time That Works</div>
+    <p class="section-sub">Submit your request below — we'll confirm by email or phone within a few hours.</p>
 
     <div class="booking-card">
       <!-- Form -->
       <div id="bookForm">
-        <div style="margin-bottom:20px">
-          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Select Package</div>
-          <div class="pkg-select">
-            <div class="pkg-opt active" id="pkg-set" onclick="selectPkg('set')">
-              <div class="pkg-price">$80</div>
-              <div class="pkg-name">Full Set of 4</div>
-            </div>
-            <div class="pkg-opt" id="pkg-single" onclick="selectPkg('single')">
-              <div class="pkg-price">$20<span style="font-size:16px">/tire</span></div>
-              <div class="pkg-name">Single Tire</div>
-            </div>
+
+        <!-- Service confirmation row -->
+        <div class="form-row one" style="margin-bottom:18px">
+          <div class="fg">
+            <label>Service</label>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--yellow)" id="confirmedService">—</div>
+            <a href="#" onclick="event.preventDefault();document.getElementById('servicePickerWrap').style.display='block';this.style.display='none';" style="color:var(--muted);font-size:12px;text-decoration:underline;margin-top:4px">Change service</a>
           </div>
         </div>
 
+        <!-- Service picker (hidden until "Change service" clicked) -->
+        <div id="servicePickerWrap" style="display:none;margin-bottom:22px">
+          <label style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:10px">Choose Service</label>
+          <div class="svc-picker" id="svcPicker"></div>
+        </div>
+
         <div class="form-row">
-          <div class="fg"><label>First Name</label><input type="text" id="bFName" placeholder="Jane"></div>
+          <div class="fg"><label>First Name *</label><input type="text" id="bFName" placeholder="Jane"></div>
           <div class="fg"><label>Last Name</label><input type="text" id="bLName" placeholder="Smith"></div>
         </div>
-        <div class="form-row one">
-          <div class="fg"><label>Email Address</label><input type="email" id="bEmail" placeholder="jane@example.com"></div>
-        </div>
-        <div class="form-row one">
-          <div class="fg"><label>Phone Number</label><input type="tel" id="bPhone" placeholder="(519) 000-0000"></div>
-        </div>
         <div class="form-row">
-          <div class="fg">
-            <label>Preferred Date</label>
-            <input type="date" id="bDate" min="">
-          </div>
-          <div class="fg">
-            <label>Preferred Time</label>
-            <select id="bTime">
-              <option value="">Select a time</option>
-              <option>8:00 AM</option>
-              <option>8:30 AM</option>
-              <option>9:00 AM</option>
-              <option>9:30 AM</option>
-              <option>10:00 AM</option>
-              <option>10:30 AM</option>
-              <option>11:00 AM</option>
-              <option>11:30 AM</option>
-              <option>12:00 PM</option>
-              <option>12:30 PM</option>
-              <option>1:00 PM</option>
-              <option>1:30 PM</option>
-              <option>2:00 PM</option>
-              <option>2:30 PM</option>
-              <option>3:00 PM</option>
-              <option>3:30 PM</option>
-              <option>4:00 PM</option>
-              <option>4:30 PM</option>
-            </select>
-          </div>
+          <div class="fg"><label>Phone *</label><input type="tel" id="bPhone" placeholder="(519) 000-0000"></div>
+          <div class="fg"><label>Email</label><input type="email" id="bEmail" placeholder="jane@example.com"></div>
         </div>
         <div class="form-row one">
-          <div class="fg"><label>Vehicle (Year, Make, Model)</label><input type="text" id="bVehicle" placeholder="e.g. 2019 Honda CR-V"></div>
-        </div>
-        <div class="form-row one">
-          <div class="fg"><label>Tire Size (if known)</label><input type="text" id="bSize" placeholder="e.g. 225/65R17 — check your door jamb or tire sidewall"></div>
+          <div class="fg">
+            <label>Preferred Date *</label>
+            <input type="date" id="bDate" onchange="onDateChange()">
+            <div class="helper" id="dateHelper">Mon–Sat. Closed Sundays + holidays.</div>
+          </div>
         </div>
 
-        <button class="submit-btn" onclick="submitBooking()">
-          Reserve My Spot →
-        </button>
-        <p class="form-note">🔒 No payment required to book. You pay on the day of your appointment.<br>We'll confirm your slot by email within 1 hour.</p>
+        <div class="form-row one" id="timeRow">
+          <div class="fg">
+            <label>Preferred Time *</label>
+            <div class="time-grid" id="timeGrid">
+              <div class="time-empty">Pick a date to see available times</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row one">
+          <div class="fg"><label>Vehicle</label><input type="text" id="bVehicle" placeholder="e.g. 2019 Honda CR-V"></div>
+        </div>
+        <div class="form-row one">
+          <div class="fg"><label>Notes (optional)</label><textarea id="bNotes" placeholder="Anything we should know — tire size, special situation, etc."></textarea></div>
+        </div>
+
+        <div class="form-error" id="formError"></div>
+
+        <button class="submit-btn" id="submitBtn" onclick="submitBooking()">Reserve My Slot →</button>
+        <p class="form-note">No payment required to book. Payment is taken on the day of your appointment.</p>
       </div>
 
       <!-- Success -->
       <div class="success-state" id="bookSuccess">
         <div class="success-circle">✓</div>
-        <div class="success-title">You're Booked!</div>
-        <p class="success-sub">Check your email for confirmation.<br>We'll see you at <strong>7144 Grande River Line, Pain Court</strong>.<br><br>Questions? Call us at <a href="tel:5193974686" style="color:var(--yellow)">519-397-4686</a></p>
+        <div class="success-title">Request Received!</div>
+        <p class="success-sub">
+          We'll confirm your appointment by phone or email within a few hours.<br><br>
+          <strong id="successDetail">—</strong><br><br>
+          See you at <strong>7144 Grande River Line, Pain Court</strong>.<br>
+          Questions? Call us at <a href="tel:5193974686">519-397-4686</a>
+        </p>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ── OTHER SERVICES ── -->
+<section class="other-section">
+  <div class="other-inner">
+    <div class="section-label">Need Something Else?</div>
+    <div class="section-title" style="font-size:clamp(28px,5vw,38px)">Other Services We Book</div>
+    <div class="other-grid" id="otherGrid"></div>
+  </div>
+</section>
+
 <!-- ── FOOTER ── -->
-<footer class="footer">
-  <div class="footer-logo">PC <span>Tires</span></div>
+<footer>
+  <div class="footer-logo"><span class="pc">PC</span>TIRES</div>
   <div class="footer-info">
     7144 Grande River Line, Pain Court, Ontario N0P 1Z0<br>
-    <a href="tel:5193974686">519-397-4686</a> · <a href="mailto:Postmacontracting@gmail.com">Postmacontracting@gmail.com</a><br>
+    <a href="tel:5193974686">519-397-4686</a> · <a href="mailto:postmacontracting@gmail.com">postmacontracting@gmail.com</a><br>
     Mon–Fri 8am–6pm · Sat 8am–4pm · Sun Closed<br><br>
-    <a href="https://pctires.ca" style="color:var(--muted)">Shop tires online at pctires.ca →</a>
+    <a href="/" style="color:var(--yellow)">Shop tires online at pctires.ca →</a>
   </div>
 </footer>
 
+<!-- ── Booking-blocks config (defines BOOKING_BLOCKS + helpers) ── -->
+<script src="/booking-blocks.js"></script>
+
 <script>
-// ── SLOT COUNTER ── 
-// Simulate 12 slots/week, some taken
-const TOTAL_SLOTS = 12;
-const TAKEN_SLOTS = 8; // update manually or connect to backend
-const remaining   = TOTAL_SLOTS - TAKEN_SLOTS;
+// ─────────────────────────────────────────────────────────────────────
+//  SERVICE CONFIG — keys match the ?service=KEY URL param
+// ─────────────────────────────────────────────────────────────────────
+const SERVICES = {
+  torque: {
+    name: 'Wheel Torque Re-Check',
+    h1: ['Time For Your', 'Torque', 'Re-Check'],
+    badge: 'Follow-up · Chatham-Kent',
+    sub: '50–100 km after your tire install — we re-check torque to make sure every wheel stays tight. Takes 15 minutes. <strong>Complimentary follow-up.</strong>',
+    price: 'Free',
+    duration: 15,
+    title: 'Book Your Torque Re-Check — PC Tires',
+    desc: 'Free 15-minute torque re-check at PC Tires in Pain Court. Recommended 50–100 km after tire install.',
+    ctaShort: 'Book My Re-Check',
+  },
+  swap: {
+    name: 'Seasonal Tire Swap',
+    h1: ['Time To', 'Swap', 'Your Tires'],
+    badge: 'Seasonal · Chatham-Kent',
+    sub: 'Mount, balance, TPMS reset, torque to spec. <strong>Certified techs. Same-day slots. Done in under an hour.</strong>',
+    price: '$20/tire',
+    duration: 45,
+    title: 'Book Your Seasonal Tire Swap — PC Tires',
+    desc: 'Seasonal tire swap at PC Tires in Pain Court. $20/tire or $80/set. Certified techs, same-day slots.',
+    ctaShort: 'Book My Swap',
+  },
+  rotation: {
+    name: 'Tire Rotation',
+    h1: ['Even Out', 'Your', 'Tread Wear'],
+    badge: 'Maintenance · Chatham-Kent',
+    sub: 'Rotate all four tires for even tread life. <strong>Recommended every 10,000 km. Takes 30 minutes.</strong>',
+    price: '$30',
+    duration: 30,
+    title: 'Book Tire Rotation — PC Tires',
+    desc: 'Tire rotation at PC Tires in Pain Court. $30, 30 minutes. Recommended every 10,000 km.',
+    ctaShort: 'Book My Rotation',
+  },
+  mount: {
+    name: 'Mount & Balance',
+    h1: ['Mount Your', 'New', 'Tires'],
+    badge: 'Install · Chatham-Kent',
+    sub: 'Customer-supplied tires mounted, balanced, and TPMS reset. <strong>Old tire disposal included.</strong>',
+    price: '$25/tire',
+    duration: 60,
+    title: 'Book Mount & Balance — PC Tires',
+    desc: 'Tire mount and balance at PC Tires in Pain Court. $25/tire, includes TPMS reset and disposal.',
+    ctaShort: 'Book Mount & Balance',
+  },
+  tpms: {
+    name: 'TPMS Relearn',
+    h1: ['Fix Your', 'TPMS', 'Sensors'],
+    badge: 'Service · Chatham-Kent',
+    sub: 'Relearn your TPMS sensors after a tire change, rotation, or battery replacement. <strong>30 minutes, in and out.</strong>',
+    price: '$20',
+    duration: 30,
+    title: 'Book TPMS Relearn — PC Tires',
+    desc: 'TPMS sensor relearn at PC Tires in Pain Court. $20, 30 minutes.',
+    ctaShort: 'Book TPMS Relearn',
+  },
+  repair: {
+    name: 'Flat Repair / Plug',
+    h1: ['Fix That', 'Flat', 'Today'],
+    badge: 'Repair · Chatham-Kent',
+    sub: 'Quick plug for a tread puncture. <strong>Includes remount and balance. 20 minutes.</strong>',
+    price: '$20',
+    duration: 20,
+    title: 'Book Flat Repair — PC Tires',
+    desc: 'Flat tire repair at PC Tires in Pain Court. $20, 20 minutes including remount and balance.',
+    ctaShort: 'Book Flat Repair',
+  },
+  valve: {
+    name: 'Valve Stem Replacement',
+    h1: ['Replace', 'Your', 'Valve Stems'],
+    badge: 'Service · Chatham-Kent',
+    sub: 'Replace faulty, leaking, or corroded valve stems. <strong>$15 per stem, 20 minutes.</strong>',
+    price: '$15/stem',
+    duration: 20,
+    title: 'Book Valve Stem Replacement — PC Tires',
+    desc: 'Valve stem replacement at PC Tires in Pain Court. $15 per stem, 20 minutes.',
+    ctaShort: 'Book Valve Replacement',
+  },
+};
 
-function buildSlotPips() {
-  const container = document.getElementById('slotPips');
-  const label     = document.getElementById('slotLabel');
-  let html = '';
-  for (let i = 0; i < TOTAL_SLOTS; i++) {
-    if (i < TAKEN_SLOTS)         html += '<div class="slot-pip taken"></div>';
-    else if (i === TAKEN_SLOTS)  html += '<div class="slot-pip last"></div>';
-    else                         html += '<div class="slot-pip"></div>';
+// ─────────────────────────────────────────────────────────────────────
+//  READ URL PARAM + RENDER SERVICE
+// ─────────────────────────────────────────────────────────────────────
+function getServiceKey() {
+  try {
+    const url = new URL(window.location.href);
+    const k = (url.searchParams.get('service') || 'swap').toLowerCase();
+    return SERVICES[k] ? k : 'swap';
+  } catch(e) { return 'swap'; }
+}
+
+let activeServiceKey = getServiceKey();
+
+function renderService(key) {
+  activeServiceKey = key;
+  const s = SERVICES[key];
+  document.getElementById('pageTitle').textContent = s.title;
+  document.getElementById('pageDesc').setAttribute('content', s.desc);
+  document.getElementById('badgeText').textContent = s.badge;
+  document.getElementById('h1Top').textContent = s.h1[0];
+  document.getElementById('h1Mid').textContent = s.h1[1];
+  document.getElementById('h1Bot').textContent = s.h1[2];
+  document.getElementById('heroSub').innerHTML = s.sub;
+  document.getElementById('heroBtn').textContent = s.ctaShort + ' →';
+  document.getElementById('infoPrice').textContent = s.price;
+  document.getElementById('infoDuration').textContent = s.duration + ' min';
+  document.getElementById('confirmedService').textContent = s.name;
+  document.getElementById('heroMeta').innerHTML =
+    '<div class="meta-item"><strong>' + s.duration + ' min</strong> appointment</div>' +
+    '<div class="meta-item meta-sep">·</div>' +
+    '<div class="meta-item"><strong>' + s.price + '</strong></div>' +
+    '<div class="meta-item meta-sep">·</div>' +
+    '<div class="meta-item"><strong>Pain Court</strong>, ON</div>';
+  // Update "other services" grid — exclude current
+  const others = Object.keys(SERVICES).filter(k => k !== key).map(k => {
+    const o = SERVICES[k];
+    return '<a class="other-link" href="?service=' + k + '">' +
+           '<div class="ol-name">' + o.name + '</div>' +
+           '<div class="ol-meta">' + o.price + ' · ' + o.duration + ' min</div></a>';
+  }).join('');
+  document.getElementById('otherGrid').innerHTML = others;
+  // Update service picker (initially hidden until customer clicks Change)
+  const picker = document.getElementById('svcPicker');
+  picker.innerHTML = Object.keys(SERVICES).map(k => {
+    const o = SERVICES[k];
+    return '<div class="svc-pick-card' + (k === key ? ' active' : '') + '" onclick="selectPickerService(\'' + k + '\')">' +
+           '<div class="svc-pick-name">' + o.name + '</div>' +
+           '<div class="svc-pick-price">' + o.price + ' · ' + o.duration + ' min</div></div>';
+  }).join('');
+}
+
+function selectPickerService(key) {
+  renderService(key);
+  document.getElementById('servicePickerWrap').style.display = 'none';
+  // Re-render available slots in case service changed
+  onDateChange();
+}
+
+// ─────────────────────────────────────────────────────────────────────
+//  DATE INPUT + TIME GRID
+// ─────────────────────────────────────────────────────────────────────
+let selectedTime = null;
+
+function initDate() {
+  const range = bb_getDateRange();
+  const input = document.getElementById('bDate');
+  input.min = range.min;
+  input.max = range.max;
+  input.value = range.min;
+  onDateChange();
+}
+
+function onDateChange() {
+  selectedTime = null;
+  const date = document.getElementById('bDate').value;
+  const grid = document.getElementById('timeGrid');
+  if (!date) {
+    grid.innerHTML = '<div class="time-empty">Pick a date to see available times</div>';
+    return;
   }
-  container.innerHTML = html;
-  label.textContent   = `${remaining} spot${remaining !== 1 ? 's' : ''} left this week`;
-  label.style.color   = remaining <= 3 ? 'var(--orange)' : 'var(--light)';
-}
-buildSlotPips();
-
-// ── MIN DATE (24hrs out) ──
-function setMinDate() {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  if (d.getDay() === 0) d.setDate(d.getDate() + 1); // skip Sunday
-  const yyyy = d.getFullYear();
-  const mm   = String(d.getMonth() + 1).padStart(2, '0');
-  const dd   = String(d.getDate()).padStart(2, '0');
-  document.getElementById('bDate').min = `${yyyy}-${mm}-${dd}`;
-  document.getElementById('bDate').value = `${yyyy}-${mm}-${dd}`;
-}
-setMinDate();
-
-// ── PACKAGE SELECT ──
-let selectedPkg = 'set';
-function selectPkg(pkg) {
-  selectedPkg = pkg;
-  document.getElementById('pkg-set').classList.toggle('active', pkg === 'set');
-  document.getElementById('pkg-single').classList.toggle('active', pkg === 'single');
+  if (bb_isDateBlocked(date)) {
+    grid.innerHTML = '<div class="time-empty">We\'re closed on that date. Pick another day.</div>';
+    return;
+  }
+  const slots = bb_getAvailableSlots(date);
+  if (!slots.length) {
+    grid.innerHTML = '<div class="time-empty">No times available on that date. Pick another day.</div>';
+    return;
+  }
+  grid.innerHTML = slots.map(t =>
+    '<div class="time-slot" onclick="pickTime(this,\'' + t + '\')">' + t + '</div>'
+  ).join('');
 }
 
-// ── FORM SUBMISSION ──
+function pickTime(el, t) {
+  selectedTime = t;
+  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─────────────────────────────────────────────────────────────────────
+//  SUBMIT
+// ─────────────────────────────────────────────────────────────────────
 async function submitBooking() {
   const fname   = document.getElementById('bFName').value.trim();
   const lname   = document.getElementById('bLName').value.trim();
-  const email   = document.getElementById('bEmail').value.trim();
   const phone   = document.getElementById('bPhone').value.trim();
+  const email   = document.getElementById('bEmail').value.trim();
   const date    = document.getElementById('bDate').value;
-  const time    = document.getElementById('bTime').value;
   const vehicle = document.getElementById('bVehicle').value.trim();
-  const size    = document.getElementById('bSize').value.trim();
+  const notes   = document.getElementById('bNotes').value.trim();
 
-  if (!fname || !email || !date || !time) {
-    alert('Please fill in your name, email, date and time.');
-    return;
-  }
+  const errEl = document.getElementById('formError');
+  errEl.classList.remove('show');
 
-  const btn = document.querySelector('.submit-btn');
-  btn.textContent = 'Sending…';
-  btn.disabled = true;
+  // Validation
+  if (!fname)        return showErr(errEl, 'Please enter your first name.');
+  if (!phone)        return showErr(errEl, 'Please enter a phone number we can reach you at.');
+  if (!date)         return showErr(errEl, 'Please pick a date.');
+  if (!selectedTime) return showErr(errEl, 'Please pick a time.');
+  if (bb_isDateBlocked(date))               return showErr(errEl, "We're closed on that date. Pick another day.");
+  if (bb_isSlotBlocked(date, selectedTime)) return showErr(errEl, 'That slot is no longer available. Pick another time.');
 
-  // Format date nicely
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+
+  const svc = SERVICES[activeServiceKey];
+  // Format date for display
   const dateObj = new Date(date + 'T12:00:00');
-  const dateStr = dateObj.toLocaleDateString('en-CA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-  const pkgLabel = selectedPkg === 'set' ? 'Full Set of 4 — $80' : 'Single Tire Swap — $20/tire';
+  const dateDisplay = dateObj.toLocaleDateString('en-CA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  const payload = {
+    service: svc.name,
+    customerName: (fname + ' ' + lname).trim(),
+    customerPhone: phone,
+    customerEmail: email || '',
+    vehicle: vehicle || '',
+    notes: notes || '',
+    preferredDate: dateDisplay,
+    preferredTime: selectedTime,
+    duration: svc.duration,
+    price: svc.price,
+  };
 
   try {
-    await fetch('https://pctires-api.netlify.app/.netlify/functions/send-order-email', {
+    await fetch('/send-service-request', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        orderNumber:     'SWAP-' + Date.now().toString(36).toUpperCase(),
-        customerName:    `${fname} ${lname}`,
-        customerEmail:   email,
-        customerPhone:   phone,
-        vehicle:         vehicle || 'Not specified',
-        tireSize:        size || 'Not specified',
-        tires:           [{ qty: selectedPkg === 'set' ? 4 : 1, brand: 'Service', name: pkgLabel, size: size || 'TBD', price: selectedPkg === 'set' ? 80 : 20 }],
-        installation:    true,
-        appointmentDate: dateStr,
-        appointmentTime: time,
-        serviceName:     'Spring Tire Swap — ' + pkgLabel,
-        subtotal:        selectedPkg === 'set' ? 80 : 20,
-        installTotal:    0,
-        shipping:        0,
-        tax:             (selectedPkg === 'set' ? 80 : 20) * 0.13,
-        total:           (selectedPkg === 'set' ? 80 : 20) * 1.13,
-      }),
+      body: JSON.stringify(payload),
     });
   } catch(e) {
-    console.warn('Email send failed:', e.message);
-    // Still show success — booking was received
+    console.warn('Booking submit failed:', e.message);
+    // Still show success — we received their info via the catch
   }
 
-  // Show success
+  // Show success state
+  document.getElementById('successDetail').innerHTML =
+    svc.name + ' &middot; ' + dateDisplay + ' at ' + selectedTime;
   document.getElementById('bookForm').style.display = 'none';
-  document.getElementById('bookSuccess').style.display = 'block';
+  document.getElementById('bookSuccess').classList.add('show');
+  window.scrollTo({ top: document.getElementById('bookSuccess').offsetTop - 100, behavior:'smooth' });
 }
+
+function showErr(el, msg) {
+  el.textContent = msg;
+  el.classList.add('show');
+  window.scrollTo({ top: el.offsetTop - 200, behavior:'smooth' });
+}
+
+// ─────────────────────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────────────────────
+renderService(activeServiceKey);
+initDate();
 </script>
+
 </body>
 </html>
