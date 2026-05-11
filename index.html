@@ -1174,10 +1174,28 @@ function getRebateForBrand(brand) {
           <input type="checkbox" id="inStockOnly" onchange="applyRefinements()">
           <span>In Stock Only</span>
         </label>
+        <label class="refine-toggle">
+          <input type="checkbox" id="evOnly" onchange="applyRefinements()">
+          <span>EV Tires</span>
+        </label>
+        <label class="refine-toggle">
+          <input type="checkbox" id="runFlatOnly" onchange="applyRefinements()">
+          <span>Run-Flat</span>
+        </label>
         <div class="refine-divider"></div>
         <label class="refine-label">Brand</label>
         <select id="brandFilter" onchange="applyRefinements()">
           <option value="">All Brands</option>
+        </select>
+        <div class="refine-divider"></div>
+        <label class="refine-label">Speed</label>
+        <select id="speedFilter" onchange="applyRefinements()">
+          <option value="">Any Speed</option>
+          <option value="T">T (190 km/h)+</option>
+          <option value="H">H (210 km/h)+</option>
+          <option value="V">V (240 km/h)+</option>
+          <option value="W">W (270 km/h)+</option>
+          <option value="Y">Y (300 km/h)</option>
         </select>
         <div class="refine-divider"></div>
         <label class="refine-label">Price</label>
@@ -2727,13 +2745,28 @@ function populateBrandFilter() {
 
 function applyRefinements() {
   const inStockOnly = document.getElementById('inStockOnly')?.checked;
+  const evOnly      = document.getElementById('evOnly')?.checked;
+  const runFlat     = document.getElementById('runFlatOnly')?.checked;
   const brand       = document.getElementById('brandFilter')?.value  || '';
+  const speedMin    = document.getElementById('speedFilter')?.value  || '';
   const price       = document.getElementById('priceFilter')?.value  || '';
   const sort        = document.getElementById('sortOrder')?.value    || 'default';
 
   let tires = activeFilter === 'all' ? allTires : allTires.filter(t => t.type === activeFilter);
   if (inStockOnly) tires = tires.filter(t => t.stock !== 'out');
+  if (evOnly)      tires = tires.filter(t => t.evCompat);
+  if (runFlat)     tires = tires.filter(t => t.runFlat);
   if (brand)       tires = tires.filter(t => t.brand === brand);
+  if (speedMin) {
+    // Speed rating ladder (low → high). Z is treated as V-equivalent (240+).
+    const ORDER = ['S','T','U','H','V','Z','W','Y'];
+    const minIdx = ORDER.indexOf(speedMin);
+    tires = tires.filter(t => {
+      const letter = String(t.speed || '').toUpperCase().charAt(0);
+      const idx = ORDER.indexOf(letter);
+      return idx >= 0 && idx >= minIdx;
+    });
+  }
   if (price) {
     const [lo, hi] = price.split('-').map(Number);
     tires = tires.filter(t => { const p = retailPrice(t); return p >= lo && p <= hi; });
@@ -2749,7 +2782,7 @@ function applyRefinements() {
 }
 
 function clearRefinements() {
-  ['inStockOnly','brandFilter','priceFilter','sortOrder'].forEach(id => {
+  ['inStockOnly','evOnly','runFlatOnly','brandFilter','speedFilter','priceFilter','sortOrder'].forEach(id => {
     const el = document.getElementById(id); if (!el) return;
     if (el.type === 'checkbox') el.checked = false; else el.value = '';
   });
