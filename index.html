@@ -7,6 +7,15 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png">
+
+<!-- Google tag (gtag.js) — PC Tires Ads -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18156336783"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18156336783');
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=Barlow:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -4992,10 +5001,15 @@ async function finishOrder() {
     });
   } catch(e) { console.warn('Sheets write failed:', e.message); }
 
+  // Capture redirect data BEFORE clearing cart
+  const _firstName  = ((document.getElementById('fName')?.value) || name.split(' ')[0] || '').trim();
+  const _brandsList = [...new Set((orderPayload.tires || []).map(t => t.brand).filter(Boolean))].join(',');
+
   cart = []; tdgQuote = null; selectedAddons = new Set(); appliedPromo = null; updBadge();
   if (btn) btn.classList.remove('ld');
 
-  // Show rebate reminders on confirm screen
+  // Show rebate reminders on confirm screen (kept as a graceful fallback
+  // in case the redirect to /thank-you fails)
   const rebatesInOrder = [];
   const seenBrands = new Set();
   (orderPayload.tires || []).forEach(t => {
@@ -5015,6 +5029,26 @@ async function finishOrder() {
   }
 
   step = 5; updSteps();
+
+  // Redirect to /thank-you for a real URL + Google Ads conversion tracking.
+  // Done AFTER step=5 so the in-modal confirmation is the visual fallback
+  // if for any reason the redirect doesn't fire.
+  try {
+    const params = new URLSearchParams({
+      order: orderId,
+      total: grandTotal.toFixed(2),
+      first: _firstName,
+      email: email,
+      brands: _brandsList,
+    });
+    if (vehicleStr) params.set('vehicle', vehicleStr);
+    if (selDate)    params.set('date', selDate);
+    if (selTime)    params.set('time', selTime);
+    if (selectedService?.label) params.set('service', selectedService.label);
+    window.location.href = '/thank-you?' + params.toString();
+  } catch(e) {
+    console.warn('Thank-you redirect failed; in-modal confirmation shown instead:', e.message);
+  }
 }
 
 // ─────────────────────────────────────────────────
