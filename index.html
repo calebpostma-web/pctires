@@ -1150,19 +1150,19 @@ function getRebateForBrand(brand) {
         <div class="size-hint" style="margin-bottom:18px">
           <strong>📍 Where to find your tire size:</strong>
           Look on the sidewall of your current tire or on the sticker inside the driver's door frame.
-          You'll see a number like <strong>275/60R20</strong> — Width <strong>275</strong> · Sidewall <strong>60</strong> · Rim diameter <strong>20</strong>.
+          You'll see something like <strong>275/60R20</strong> (cars, SUVs) or <strong>33X12.50R18</strong> (trucks, ATVs, UTVs) — both formats work here.
         </div>
         <div class="size-preview" id="sizePreview">
           <span class="sp-part" id="sp-w">???</span>
-          <span class="sp-sep">/</span>
+          <span class="sp-sep" id="sp-sep1">/</span>
           <span class="sp-part" id="sp-s">??</span>
           <span class="sp-sep">R</span>
           <span class="sp-part" id="sp-d">??</span>
         </div>
         <div class="size-search-row">
           <div class="size-inputs">
-            <div class="field"><label>Width (mm)</label><select id="sWidth" onchange="onWidthChange()"><option value="">Select Width</option></select></div>
-            <div class="field"><label>Sidewall (%)</label><select id="sSidewall" onchange="onSidewallChange()" disabled><option value="">Select Width first</option></select></div>
+            <div class="field"><label id="lblWidth">Width (mm)</label><select id="sWidth" onchange="onWidthChange()"><option value="">Select Width</option></select></div>
+            <div class="field"><label id="lblSidewall">Sidewall (%)</label><select id="sSidewall" onchange="onSidewallChange()" disabled><option value="">Select Width first</option></select></div>
             <div class="field"><label>Rim Diameter</label><select id="sDiameter" onchange="onDiameterChange()" disabled><option value="">Select Sidewall first</option></select></div>
           </div>
           <button class="lookup-btn" id="sizeSearchBtn" onclick="doSizeSearch()" disabled style="opacity:.5;cursor:not-allowed">Search Tires →</button>
@@ -4318,12 +4318,37 @@ const TIRE_SIZES = [
   // R24 sizes — large luxury SUVs (Escalade, Navigator, custom trucks)
   '265/35R24','275/35R24','275/40R24','285/30R24','285/35R24','295/30R24','305/30R24','305/35R24','315/30R24','325/30R24','325/35R24','335/30R24',
   'LT245/70R17','LT245/75R16','LT265/60R20','LT265/65R18','LT265/70R17','LT265/75R16','LT275/55R20','LT275/55R22','LT275/65R18','LT275/65R20','LT285/45R22','LT285/55R20','LT285/65R18','LT285/70R17','LT285/75R16',
+  // ─── Flotation / imperial sizes ───
+  // Light truck / 4x4 flotation (Diameter × Section Width × Rim, all in inches)
+  '31X10.50R15',
+  '32X11.50R15','32X11.50R17',
+  '33X10.50R15','33X10.50R17','33X11.50R15','33X11.50R17','33X12.50R15','33X12.50R16','33X12.50R17','33X12.50R18','33X12.50R20','33X12.50R22','33X12.50R24','33X13.50R15','33X13.50R17','33X13.50R20','33X13.50R22',
+  '35X11.50R17','35X11.50R20','35X12.50R15','35X12.50R17','35X12.50R18','35X12.50R20','35X12.50R22','35X12.50R24','35X13.50R15','35X13.50R17','35X13.50R20','35X13.50R22','35X14.50R15','35X14.50R17','35X14.50R20','35X15.50R20',
+  '37X12.50R17','37X12.50R20','37X12.50R22','37X13.50R17','37X13.50R20','37X13.50R22','37X13.50R24','37X14.50R17','37X14.50R20','37X14.50R22','37X14.50R24',
+  '38X13.50R17','38X13.50R20','38X14.50R20','38X15.50R20',
+  '40X13.50R17','40X14.50R17','40X14.50R20','40X14.50R22','40X15.50R20','40X15.50R22','40X15.50R24',
+  '42X14.50R17','42X14.50R20','42X14.50R24','42X15.50R20','42X15.50R24','42X15.50R26',
+  // ATV / UTV / side-by-side (small rims: 8, 10, 12, 14, 15)
+  '22X7.00R10','22X7.00R12','22X8.00R10','22X8.00R12','22X10.00R10','22X10.00R12','22X11.00R10','22X11.00R12',
+  '23X8.00R10','23X8.00R12','23X10.00R10','23X10.00R12','23X11.00R10','23X11.00R12',
+  '24X8.00R12','24X9.00R12','24X10.00R11','24X10.00R12','24X11.00R10','24X11.00R12','24X11.00R14',
+  '25X8.00R12','25X10.00R12','25X10.00R14','25X11.00R12','25X11.00R14',
+  '26X8.00R14','26X9.00R12','26X9.00R14','26X10.00R12','26X10.00R14','26X11.00R12','26X11.00R14','26X12.00R12','26X12.00R14',
+  '27X9.00R12','27X9.00R14','27X11.00R12','27X11.00R14','27X12.00R14',
+  '28X9.00R14','28X10.00R12','28X10.00R14','28X11.00R14',
+  '29X9.00R14','29X11.00R14',
+  '30X10.00R14','30X10.00R15','30X10.00R16','30X11.00R14',
+  '31X10.00R14','31X10.00R15',
+  '32X10.00R14','32X10.00R15',
 ];
 
 function parseSizes() {
   const map = {};
   TIRE_SIZES.forEach(sz => {
-    const m = sz.match(/^(?:LT)?(\d+)\/(\d+)R(\d+)$/);
+    // Metric: 275/60R20 or LT265/60R20
+    let m = sz.match(/^(?:LT)?(\d+)\/(\d+)R(\d+)$/);
+    // Flotation: 33X12.50R18 or 30X10.00R14 (width = overall diameter in inches)
+    if (!m) m = sz.match(/^(\d+)[Xx](\d+(?:\.\d+)?)R(\d+)$/);
     if (!m) return;
     const [,w,s,d] = m;
     if (!map[w]) map[w] = {}; if (!map[w][s]) map[w][s] = [];
@@ -4331,22 +4356,37 @@ function parseSizes() {
   });
   return map;
 }
+// Width values under 100 are flotation (inches); 100+ are metric (mm).
+function isFlotationWidth(w) { return w !== '' && w != null && +w < 100; }
 const SIZE_MAP = parseSizes();
 
 function initSizeDropdowns() {
   const wEl = document.getElementById('sWidth');
   wEl.innerHTML = '<option value="">Select Width</option>';
-  Object.keys(SIZE_MAP).sort((a,b)=>+a-+b).forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + ' mm'; wEl.appendChild(o); });
+  Object.keys(SIZE_MAP).sort((a,b)=>+a-+b).forEach(w => {
+    const o = document.createElement('option'); o.value = w;
+    o.textContent = isFlotationWidth(w) ? w + '" (flotation)' : w + ' mm';
+    wEl.appendChild(o);
+  });
   updateSizePreview();
 }
 
 function onWidthChange() {
   const w = document.getElementById('sWidth').value;
   const sEl = document.getElementById('sSidewall'), dEl = document.getElementById('sDiameter');
-  sEl.innerHTML = '<option value="">Select Sidewall</option>'; dEl.innerHTML = '<option value="">Select Sidewall first</option>';
+  const lblS = document.getElementById('lblSidewall');
+  const flot = isFlotationWidth(w);
+  // Swap label + placeholder copy based on format
+  if (lblS) lblS.textContent = flot ? 'Section Width (in)' : 'Sidewall (%)';
+  sEl.innerHTML = '<option value="">' + (flot ? 'Select Section Width' : 'Select Sidewall') + '</option>';
+  dEl.innerHTML = '<option value="">' + (flot ? 'Select Section Width first' : 'Select Sidewall first') + '</option>';
   sEl.disabled = !w; dEl.disabled = true;
   setSizeSearchBtn(false);
-  if (w && SIZE_MAP[w]) Object.keys(SIZE_MAP[w]).sort((a,b)=>+a-+b).forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s + '%'; sEl.appendChild(o); });
+  if (w && SIZE_MAP[w]) Object.keys(SIZE_MAP[w]).sort((a,b)=>+a-+b).forEach(s => {
+    const o = document.createElement('option'); o.value = s;
+    o.textContent = flot ? s + '"' : s + '%';
+    sEl.appendChild(o);
+  });
   updateSizePreview();
 }
 
@@ -4369,6 +4409,8 @@ function setSizeSearchBtn(enabled) {
 function updateSizePreview() {
   const w = document.getElementById('sWidth').value, s = document.getElementById('sSidewall').value, d = document.getElementById('sDiameter').value;
   const wEl = document.getElementById('sp-w'), sEl = document.getElementById('sp-s'), dEl = document.getElementById('sp-d');
+  const sepEl = document.getElementById('sp-sep1');
+  if (sepEl) sepEl.textContent = isFlotationWidth(w) ? '×' : '/';
   wEl.textContent = w || '???'; wEl.className = 'sp-part' + (w ? '' : ' dim');
   sEl.textContent = s || '??';  sEl.className = 'sp-part' + (s ? '' : ' dim');
   dEl.textContent = d || '??';  dEl.className = 'sp-part' + (d ? '' : ' dim');
@@ -4379,11 +4421,25 @@ async function doSizeSearch() {
   lastSearchVehicle = null;
   const width = document.getElementById('sWidth').value, sidewall = document.getElementById('sSidewall').value, diameter = document.getElementById('sDiameter').value;
   if (!width || !sidewall || !diameter) return;
-  const tireSize = `${width}/${sidewall}R${diameter}`;
+  const flot = isFlotationWidth(width);
+  // Canonical display string (what we show the customer)
+  const tireSize = flot ? `${width}X${sidewall}R${diameter}` : `${width}/${sidewall}R${diameter}`;
+  // What we actually send TDG. Metric is unambiguous; flotation isn't (their docs don't
+  // show examples), so for flotation we send several plausible variants — uppercase/lowercase
+  // X, and with/without trailing zeros in the section width — letting TDG match any.
+  let queryTireSizes = [tireSize];
+  if (flot) {
+    const n = parseFloat(sidewall);
+    const swForms = [...new Set([sidewall, n.toString(), n.toFixed(2)])];
+    queryTireSizes = [...new Set(swForms.flatMap(sw => [
+      `${width}X${sw}R${diameter}`,
+      `${width}x${sw}R${diameter}`,
+    ]))];
+  }
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
   textEl.innerHTML = `Searching for <strong>${tireSize}</strong> tires…`; resultEl.classList.add('show');
   switchCatalogType('tires');
-  await loadTires({ tireSizes: [tireSize] });
+  await loadTires({ tireSizes: queryTireSizes });
   textEl.innerHTML = filteredTires.length > 0
     ? `Found <strong>${filteredTires.length}</strong> tire${filteredTires.length!==1?'s':''} in size <strong>${tireSize}</strong>.`
     : `No tires in stock for size <strong>${tireSize}</strong> right now — <a href="tel:5193974686" style="color:var(--yellow)">call us at 519-397-4686</a> and we'll source them for you.`;
@@ -5549,7 +5605,8 @@ function sgInferVehicleType(make, model) {
 function sgPopulateSizeWidths() {
   const sel = document.getElementById('sgWidth');
   sel.innerHTML = '<option value="">Select Width</option>';
-  const widths = [...new Set(TIRE_SIZES.map(s => s.split('/')[0]))].sort((a,b) => +a - +b);
+  // Selection guide is metric-only — filter out flotation sizes so the sort doesn't NaN
+  const widths = [...new Set(TIRE_SIZES.filter(s => s.includes('/')).map(s => s.split('/')[0].replace(/^LT/, '')))].sort((a,b) => +a - +b);
   widths.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w + ' mm'; sel.appendChild(o); });
 }
 
