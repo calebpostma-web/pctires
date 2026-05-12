@@ -855,6 +855,31 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   .time-grid{grid-template-columns:repeat(3,1fr)}
   .time-slot{font-size:12px;padding:9px 4px}
 }
+
+/* ─── MOBILE: lookup tabs + promo bar + size search ─── */
+.pb-short{display:none}
+@media(max-width:600px){
+  /* Promo bar: keep it 48px tall by hiding verbose copy so content fits in one row */
+  .pb-prefix,.pb-long,.pb-use,.promo-bar-sep{display:none}
+  .pb-short{display:inline}
+  .promo-bar-inner{flex-wrap:nowrap;gap:8px}
+
+  /* Lookup tabs: 2-column grid; help link spans full width */
+  .lookup-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;border-bottom:none;margin-bottom:16px}
+  .lookup-tab{border:1px solid var(--border);border-radius:4px;padding:12px 8px;font-size:11px;letter-spacing:.3px;text-align:center;margin-bottom:0;line-height:1.25;min-height:48px;display:flex;align-items:center;justify-content:center}
+  .lookup-tab.active{border-color:var(--yellow);background:rgba(245,197,24,.08);border-bottom-color:var(--yellow)}
+  .vin-badge{display:none}
+  #tab-guide{grid-column:1/-1 !important;margin-left:0 !important;border-color:rgba(245,197,24,.4) !important;background:rgba(245,197,24,.05);font-size:12px;padding:10px 8px;min-height:42px}
+
+  /* Size search: stack inputs into single column with full-width search button */
+  .size-inputs{grid-template-columns:1fr;gap:10px;min-width:0}
+  .size-search-row{flex-direction:column;align-items:stretch}
+  .size-search-row .lookup-btn{width:100%}
+
+  /* Size preview shrinks so it doesn't overflow */
+  .size-preview{font-size:26px;letter-spacing:1px}
+  .sp-sep{font-size:20px}
+}
 /* TIRE DETAIL MODAL */
 .td-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
 .td-overlay.show{opacity:1;pointer-events:all}
@@ -942,9 +967,9 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 <!-- PROMO BAR -->
 <div class="promo-bar" id="promoBar">
   <div class="promo-bar-inner">
-    <span class="promo-bar-msg"><strong>NEW CUSTOMER:</strong> Save 10% on your first order</span>
+    <span class="promo-bar-msg"><strong class="pb-prefix">NEW CUSTOMER:</strong> <span class="pb-long">Save 10% on your first order</span><span class="pb-short">10% off first order</span></span>
     <span class="promo-bar-sep">&middot;</span>
-    <span>Use code: <button class="promo-bar-code" onclick="copyPromoCode(this)" data-code="WELCOME10">WELCOME10</button></span>
+    <span><span class="pb-use">Use code: </span><button class="promo-bar-code" onclick="copyPromoCode(this)" data-code="WELCOME10">WELCOME10</button></span>
   </div>
   <button class="promo-bar-close" onclick="dismissPromoBar()" aria-label="Dismiss">&times;</button>
 </div>
