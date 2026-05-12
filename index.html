@@ -32,6 +32,7 @@ body.light-mode{
   --green:#16a34a;--green-dim:rgba(22,163,74,0.1);--red:#dc2626;
 }
 html{scroll-behavior:smooth}
+html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;scroll-padding-top:129px}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--mid);border-radius:3px}
 
@@ -1068,13 +1069,13 @@ function getRebateForBrand(brand) {
 <nav>
   <a class="logo" href="#"><span class="pc">PC</span> TIRES<span style="display:block;font-size:9px;font-weight:500;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:-4px">Chatham-Kent</span></a>
   <div class="nav-links">
-    <button class="nav-link" onclick="smoothScroll('#lookup')">Find Tires & Wheels</button>
-    <button class="nav-link" onclick="smoothScroll('#catalog')">Shop All</button>
-    <button class="nav-link" onclick="smoothScroll('#decision-guide')">Tire Finder</button>
-    <button class="nav-link" onclick="smoothScroll('#guide')">Tire Guide</button>
-    <button class="nav-link" onclick="smoothScroll('#install')">Installation</button>
-    <button class="nav-link" onclick="smoothScroll('#services')" style="color:var(--yellow)">Book a Service</button>
-    <button class="nav-link" onclick="smoothScroll('#location')">Location</button>
+    <a class="nav-link" href="#lookup">Find Tires & Wheels</a>
+    <a class="nav-link" href="#catalog">Shop All</a>
+    <a class="nav-link" href="#decision-guide">Tire Finder</a>
+    <a class="nav-link" href="#guide">Tire Guide</a>
+    <a class="nav-link" href="#install">Installation</a>
+    <a class="nav-link" href="#services" style="color:var(--yellow)">Book a Service</a>
+    <a class="nav-link" href="#location">Location</a>
   </div>
   <div class="nav-right">
     <a class="phone-link" href="tel:5193974686">📞 519-397-4686</a>
@@ -1087,12 +1088,12 @@ function getRebateForBrand(brand) {
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-menu-link" onclick="smoothScroll('#lookup');closeMenu()">Find Tires & Wheels</button>
-  <button class="mobile-menu-link" onclick="smoothScroll('#catalog');closeMenu()">Shop All</button>
-  <button class="mobile-menu-link" onclick="smoothScroll('#guide');closeMenu()">Tire Buying Guide</button>
-  <button class="mobile-menu-link" onclick="smoothScroll('#install');closeMenu()">Installation</button>
-  <button class="mobile-menu-link" onclick="smoothScroll('#services');closeMenu()" style="color:var(--yellow)">🔧 Book a Service</button>
-  <button class="mobile-menu-link" onclick="smoothScroll('#location');closeMenu()">Location & Hours</button>
+  <a class="mobile-menu-link" href="#lookup" onclick="closeMenu()">Find Tires & Wheels</a>
+  <a class="mobile-menu-link" href="#catalog" onclick="closeMenu()">Shop All</a>
+  <a class="mobile-menu-link" href="#guide" onclick="closeMenu()">Tire Buying Guide</a>
+  <a class="mobile-menu-link" href="#install" onclick="closeMenu()">Installation</a>
+  <a class="mobile-menu-link" href="#services" onclick="closeMenu()" style="color:var(--yellow)">🔧 Book a Service</a>
+  <a class="mobile-menu-link" href="#location" onclick="closeMenu()">Location & Hours</a>
   <a class="mobile-menu-link" href="tel:5193974686" style="text-decoration:none">📞 519-397-4686</a>
 </div>
 
@@ -5920,11 +5921,11 @@ function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.su
 //  SERVICE BOOKING SECTION
 // ─────────────────────────────────────────────────
 const BOOK_SERVICES = [
-  { id:'rotation',  icon:'🔄', name:'Tire Rotation',                  price:'$30',   unit:'flat',     duration:30,  desc:'Even out wear across all four tires. Recommended every 10,000 km.' },
-  { id:'swap',      icon:'❄️',  name:'Seasonal Swap',                  price:'$20',   unit:'per tire', duration:45,  desc:'Swap your pre-mounted stored set — no mounting needed. Torque check included.' },
-  { id:'tpms',      icon:'📡', name:'TPMS Relearn',                   price:'$20',   unit:'flat',     duration:30,  desc:'Relearn your TPMS sensors after a tire change, rotation, or battery replacement.' },
+  { id:'rotation',  icon:'🔄', name:'Tire Rotation & TPMS Relearn',    price:'$60',   unit:'flat',     duration:45,  desc:'Rotate all four tires for even tread life. TPMS relearn included. Recommended every 10,000 km.' },
+  { id:'swap',      icon:'❄️',  name:'Seasonal Swap',                  price:'$17.50',unit:'per tire', duration:45,  desc:'Swap your pre-mounted stored set — no mounting needed. Torque check included.' },
+  { id:'tpms',      icon:'📡', name:'TPMS Relearn',                   price:'$30',   unit:'flat',     duration:30,  desc:'Relearn your TPMS sensors after a tire change, rotation, or battery replacement.' },
   { id:'mount',     icon:'⚙️', name:'Mount & Balance',                 price:'$25',   unit:'per tire', duration:60,  desc:'Customer-supplied tires mounted, balanced, and TPMS reset. Old tire disposal included.' },
-  { id:'repair',    icon:'🩹', name:'Flat Repair / Plug',              price:'$20',   unit:'flat',     duration:20,  desc:'Quick plug for a simple tread puncture. Includes remount and balance.' },
+  { id:'repair',    icon:'🩹', name:'Flat Repair / Plug',              price:'$25',   unit:'flat',     duration:20,  desc:'Quick plug for a simple tread puncture. Includes remount and balance.' },
   { id:'valve',     icon:'🔩', name:'Valve Stem Replacement',          price:'$15',   unit:'per stem', duration:20,  desc:'Replace faulty, leaking, or corroded valve stems.' },
   { id:'torque',    icon:'✅', name:'Wheel Torque Re-check',           price:'Free',  unit:'',         duration:15,  desc:'Recommended 50–100 km after any tire install. Takes 15 minutes, total peace of mind.' },
 ];
