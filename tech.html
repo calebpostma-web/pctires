@@ -300,6 +300,51 @@
   }
   .full-width-note strong { color: var(--amber); font-weight: 700; }
 
+  /* JACK POINTS SECTION */
+  .jack-section {
+    margin-top: 12px;
+    background: var(--raised); border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    padding: 12px 14px;
+    border-radius: 2px;
+  }
+  .jack-header {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .jack-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .jack-construction {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px; font-weight: 900;
+    color: var(--yellow);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .jack-line {
+    font-size: 12.5px; color: var(--light);
+    line-height: 1.45; margin-top: 3px;
+  }
+  .jack-line strong { color: var(--white); font-weight: 700; }
+  .jack-warning {
+    margin-top: 8px; padding: 8px 10px;
+    border-radius: 2px; border-left: 3px solid var(--amber);
+    background: rgba(0,0,0,.25);
+    font-size: 12px; line-height: 1.4;
+  }
+  .jack-warning.critical { border-left-color: var(--red); background: var(--red-dim); }
+  .jack-warning.info { border-left-color: var(--blue); }
+  .jack-warning-title {
+    font-weight: 700; color: var(--amber);
+    font-size: 12.5px; margin-bottom: 2px;
+  }
+  .jack-warning.critical .jack-warning-title { color: var(--red); }
+  .jack-warning.info .jack-warning-title { color: var(--blue); }
+  .jack-warning-detail { color: var(--light); }
+
   /* ═══════════════════════════════════════════════════════════════
      LOADING STATE
      ═══════════════════════════════════════════════════════════════ */
@@ -1236,8 +1281,8 @@ function titleCase(s) {
 async function loadSpecsForVehicle(vin, vehicle) {
   showLoading('Looking up specs…');
 
-  // Parallel: verified torque check + AI specs
-  const [verifiedRes, aiRes] = await Promise.all([
+  // Parallel: verified torque check + AI specs + jack point rules
+  const [verifiedRes, aiRes, jackRes] = await Promise.all([
     fetch('/tech-sync', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
@@ -1248,6 +1293,12 @@ async function loadSpecsForVehicle(vin, vehicle) {
     }).then(r => r.json()).catch(() => ({ ok: false })),
 
     fetch('/tech-specs', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(vehicle),
+    }).then(r => r.json()).catch(() => ({ ok: false })),
+
+    fetch('/tech-jackpoints', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(vehicle),
@@ -1277,6 +1328,11 @@ async function loadSpecsForVehicle(vin, vehicle) {
   const tpms = aiRes.ok ? (aiRes.tpms || {}) : {};
   const pressure = aiRes.ok ? (aiRes.pressure || {}) : {};
   const notes = aiRes.ok ? (aiRes.notes || '') : '';
+  const jackpoints = jackRes.ok ? {
+    construction: jackRes.construction,
+    guidance: jackRes.guidance,
+    warnings: jackRes.warnings || [],
+  } : null;
 
   const scan = {
     vin,
@@ -1285,6 +1341,7 @@ async function loadSpecsForVehicle(vin, vehicle) {
     tpms,
     pressure,
     notes,
+    jackpoints,
   };
 
   currentScan = scan;
@@ -1376,6 +1433,29 @@ function renderPhoneResult(scan) {
 
   const notesNote = scan.notes ? `<div class="full-width-note"><strong>Note:</strong> ${escapeHtml(scan.notes)}</div>` : '';
 
+  // Jack points section (rule-based, deterministic)
+  const jp = scan.jackpoints;
+  const constructionLabel = jp && jp.construction === 'body_on_frame' ? 'Body-on-Frame'
+                          : jp && jp.construction === 'unibody' ? 'Unibody'
+                          : 'Unknown';
+  const jackSection = jp && jp.guidance ? `
+    <div class="jack-section">
+      <div class="jack-header">
+        <span class="jack-title">🔧 Jack Points</span>
+        <span class="jack-construction">${constructionLabel}</span>
+      </div>
+      <div class="jack-line"><strong>Jack:</strong> ${escapeHtml(jp.guidance.jack || '')}</div>
+      <div class="jack-line"><strong>Stands:</strong> ${escapeHtml(jp.guidance.stands || '')}</div>
+      <div class="jack-line"><strong>Pad:</strong> ${escapeHtml(jp.guidance.pad || '')}</div>
+      ${(jp.warnings || []).map(w => `
+        <div class="jack-warning ${escapeHtml(w.level || 'warning')}">
+          <div class="jack-warning-title">${w.level === 'critical' ? '⚠ ' : w.level === 'info' ? 'ℹ ' : '! '}${escapeHtml(w.title || '')}</div>
+          <div class="jack-warning-detail">${escapeHtml(w.detail || '')}</div>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
   const html = `
     <div class="result-card">
       <div class="vehicle-header">
@@ -1413,6 +1493,7 @@ function renderPhoneResult(scan) {
         </div>
         ${notesNote}
       </div>
+      ${jackSection}
     </div>
   `;
 
