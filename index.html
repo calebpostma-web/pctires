@@ -556,6 +556,28 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .vin-badge{display:inline-block;background:var(--yellow);color:var(--black);font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle}
 .vin-intro{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;margin-bottom:18px;font-size:13px;color:var(--light);line-height:1.6}
 .vin-intro-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+/* Shared "type your exact size" input — used on Size tab and Semi tab */
+.size-quick-divider{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;text-align:center;margin:20px 0 12px;position:relative}
+.size-quick-divider::before,.size-quick-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
+.size-quick-divider::before{left:0}.size-quick-divider::after{right:0}
+.size-quick-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.size-quick-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);width:100%;margin-bottom:-4px}
+.size-quick-input{flex:1;min-width:200px;background:var(--black);border:1px solid var(--border);color:var(--white);padding:11px 14px;font-family:'IBM Plex Mono',monospace;font-size:14px;border-radius:2px;outline:none;letter-spacing:.5px;transition:border-color .15s}
+.size-quick-input:focus{border-color:var(--yellow)}
+.size-quick-input.invalid{border-color:var(--red)}
+.size-quick-hint{font-size:11px;color:var(--muted);margin-top:8px;font-style:italic}
+.size-quick-hint.error{color:var(--red);font-style:normal;font-weight:600}
+
+/* Semi / Commercial panel */
+.semi-intro{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;margin-bottom:18px;font-size:14px;color:var(--light);line-height:1.55}
+.semi-intro-icon{font-size:32px;flex-shrink:0;line-height:1}
+.semi-intro strong{color:var(--white);display:block;margin-bottom:4px;font-size:15px}
+.semi-popular{margin-top:20px}
+.semi-popular-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.semi-popular-row{display:flex;gap:8px;flex-wrap:wrap}
+.semi-chip{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:9px 14px;border-radius:2px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;letter-spacing:.5px;transition:all .15s}
+.semi-chip:hover{border-color:var(--yellow);color:var(--yellow);background:var(--yellow-dim)}
+
 /* "Help Me Choose" lifestyle panel */
 .life-intro{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;margin-bottom:18px;font-size:13px;color:var(--light);line-height:1.55}
 .life-intro-icon{font-size:18px;flex-shrink:0;margin-top:1px}
@@ -1149,6 +1171,7 @@ function getRebateForBrand(brand) {
         <button class="lookup-tab" id="tab-size" onclick="switchLookupTab('size')">📏 By Tire Size</button>
         <button class="lookup-tab" id="tab-wheels" onclick="switchLookupTab('wheels')">🔩 Shop Wheels</button>
         <button class="lookup-tab" id="tab-life" onclick="switchLookupTab('life')">🎯 Help Me Choose</button>
+        <button class="lookup-tab" id="tab-semi" onclick="switchLookupTab('semi')">🚛 Semi / Commercial</button>
         <button class="lookup-tab" id="tab-guide" onclick="openSelectionGuide()" style="color:var(--yellow);border-bottom-color:transparent !important;margin-left:auto">✦ Not sure? Use our Tire Guide</button>
       </div>
 
@@ -1229,6 +1252,18 @@ function getRebateForBrand(brand) {
           </div>
           <button class="lookup-btn" id="sizeSearchBtn" onclick="doSizeSearch()" disabled style="opacity:.5;cursor:not-allowed">Search Tires →</button>
         </div>
+        <!-- Power-user: type exact size directly -->
+        <div class="size-quick-divider">or</div>
+        <div class="size-quick-row">
+          <label class="size-quick-label">Type your exact size:</label>
+          <input type="text" class="size-quick-input" id="sQuickInput"
+                 placeholder="e.g. 225/65R17  ·  33X12.50R18  ·  11R22.5"
+                 spellcheck="false" autocomplete="off"
+                 oninput="onQuickSizeInput(this)"
+                 onkeydown="if(event.key==='Enter') doQuickSizeSearch()">
+          <button class="lookup-btn" id="sQuickBtn" onclick="doQuickSizeSearch()" disabled style="opacity:.5;cursor:not-allowed">Search →</button>
+        </div>
+        <div class="size-quick-hint" id="sQuickHint">Works for passenger, light truck, flotation, and commercial truck sizes.</div>
       </div>
 
       <!-- Wheels panel -->
@@ -1316,6 +1351,41 @@ function getRebateForBrand(brand) {
         <div class="life-actions">
           <span class="life-count" id="lifeCount">0 selected</span>
           <button class="lookup-btn" id="lifeSearchBtn" onclick="doLifestyleSearch()" disabled style="opacity:.5;cursor:not-allowed">Find My Tires →</button>
+        </div>
+      </div>
+
+      <!-- Semi / Commercial panel -->
+      <div class="lookup-panel" id="panel-semi">
+        <div class="semi-intro">
+          <span class="semi-intro-icon">🚛</span>
+          <div>
+            <strong>Commercial truck, fleet, and medium-duty tires.</strong>
+            Class 7–8 tractors, drive/steer/trailer sets, 17.5″ · 19.5″ · 22.5″ · 24.5″ rims.
+            <br><span style="font-size:13px;color:var(--muted)">Volume order on 8+ tires? — <a href="tel:5193974686" style="color:var(--yellow);text-decoration:none;font-weight:700">Call 519-397-4686</a> for fleet quotes.</span>
+          </div>
+        </div>
+        <div class="size-quick-row">
+          <label class="size-quick-label">Your tire size:</label>
+          <input type="text" class="size-quick-input" id="semiInput"
+                 placeholder="e.g. 11R22.5  ·  295/75R22.5  ·  285/75R24.5"
+                 spellcheck="false" autocomplete="off"
+                 oninput="onSemiInput(this)"
+                 onkeydown="if(event.key==='Enter') doSemiSearch()">
+          <button class="lookup-btn" id="semiSearchBtn" onclick="doSemiSearch()" disabled style="opacity:.5;cursor:not-allowed">Search →</button>
+        </div>
+        <div class="size-quick-hint" id="semiHint">Type any commercial size — old-style (11R22.5) or metric (295/75R22.5).</div>
+        <div class="semi-popular">
+          <div class="semi-popular-label">Popular sizes — tap to search:</div>
+          <div class="semi-popular-row">
+            <button type="button" class="semi-chip" onclick="doSemiSearchFor('11R22.5')">11R22.5</button>
+            <button type="button" class="semi-chip" onclick="doSemiSearchFor('295/75R22.5')">295/75R22.5</button>
+            <button type="button" class="semi-chip" onclick="doSemiSearchFor('285/75R22.5')">285/75R22.5</button>
+            <button type="button" class="semi-chip" onclick="doSemiSearchFor('275/80R22.5')">275/80R22.5</button>
+            <button type="button" class="semi-chip" onclick="doSemiSearchFor('11R24.5')">11R24.5</button>
+            <button type="button" class="semi-chip" onclick="doSemiSearchFor('285/75R24.5')">285/75R24.5</button>
+            <button type="button" class="semi-chip" onclick="doSemiSearchFor('245/70R19.5')">245/70R19.5</button>
+            <button type="button" class="semi-chip" onclick="doSemiSearchFor('215/75R17.5')">215/75R17.5</button>
+          </div>
         </div>
       </div>
 
@@ -4146,7 +4216,7 @@ async function vinSearchWheels() {
 //  LOOKUP TAB SWITCHING
 // ─────────────────────────────────────────────────
 function switchLookupTab(tab) {
-  ['vin','vehicle','size','wheels','life'].forEach(t => {
+  ['vin','vehicle','size','wheels','life','semi'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('panel-' + t).classList.toggle('active', t === tab);
   });
@@ -4436,15 +4506,39 @@ const TIRE_SIZES = [
   '30X10.00R14','30X10.00R15','30X10.00R16','30X11.00R14',
   '31X10.00R14','31X10.00R15',
   '32X10.00R14','32X10.00R15',
+  // ─── Commercial truck / medium-duty (17.5", 19.5", 22.5", 24.5" rims) ───
+  // 17.5" rims — light commercial (Isuzu NPR, F-450/550, sprinter/transit-class)
+  '215/75R17.5','225/70R17.5','225/75R17.5','235/75R17.5','245/70R17.5','265/70R17.5',
+  // 19.5" rims — medium-duty (Hino, Freightliner M2, F-650/750)
+  '225/70R19.5','245/70R19.5','265/70R19.5','285/70R19.5','305/70R19.5',
+  // 22.5" rims — Class 7/8 tractor & trailer (most common commercial)
+  '11R22.5','12R22.5',
+  '255/70R22.5','265/70R22.5','275/70R22.5','275/80R22.5',
+  '285/70R22.5','285/75R22.5','295/60R22.5','295/75R22.5','295/80R22.5',
+  '305/70R22.5','315/70R22.5','315/80R22.5',
+  '385/55R22.5','385/65R22.5','425/65R22.5','445/50R22.5','445/65R22.5',
+  // 24.5" rims — older spec, still common on fleet tractors
+  '11R24.5','275/80R24.5','285/75R24.5','295/75R24.5',
 ];
 
 function parseSizes() {
   const map = {};
   TIRE_SIZES.forEach(sz => {
-    // Metric: 275/60R20 or LT265/60R20
-    let m = sz.match(/^(?:LT)?(\d+)\/(\d+)R(\d+)$/);
-    // Flotation: 33X12.50R18 or 30X10.00R14 (width = overall diameter in inches)
-    if (!m) m = sz.match(/^(\d+)[Xx](\d+(?:\.\d+)?)R(\d+)$/);
+    // 1. Metric (incl. decimal rim like 22.5 for commercial medium-duty): 275/60R20, LT265/60R20, 295/75R22.5
+    let m = sz.match(/^(?:LT)?(\d+)\/(\d+)R(\d+(?:\.\d+)?)$/);
+    // 2. Flotation: 33X12.50R18 or 30X10.00R14
+    if (!m) m = sz.match(/^(\d+)[Xx](\d+(?:\.\d+)?)R(\d+(?:\.\d+)?)$/);
+    // 3. Commercial truck no-aspect: 11R22.5, 12R22.5, 11R24.5
+    //    Store with a sentinel aspect of '—' so the dropdown can show "n/a"
+    if (!m) {
+      const cm = sz.match(/^(\d+)R(\d+(?:\.\d+)?)$/);
+      if (cm) {
+        const [,w,d] = cm;
+        if (!map[w]) map[w] = {}; if (!map[w]['—']) map[w]['—'] = [];
+        if (!map[w]['—'].includes(d)) map[w]['—'].push(d);
+        return;
+      }
+    }
     if (!m) return;
     const [,w,s,d] = m;
     if (!map[w]) map[w] = {}; if (!map[w][s]) map[w][s] = [];
@@ -4452,8 +4546,10 @@ function parseSizes() {
   });
   return map;
 }
-// Width values under 100 are flotation (inches); 100+ are metric (mm).
-function isFlotationWidth(w) { return w !== '' && w != null && +w < 100; }
+// Width values under 20 are commercial truck single-number (11R22.5).
+// Widths 20-99 are flotation (inches). 100+ are metric (mm).
+function isCommercialSingleWidth(w) { return w !== '' && w != null && +w > 0 && +w < 20; }
+function isFlotationWidth(w) { return w !== '' && w != null && +w >= 20 && +w < 100; }
 const SIZE_MAP = parseSizes();
 
 function initSizeDropdowns() {
@@ -4461,7 +4557,11 @@ function initSizeDropdowns() {
   wEl.innerHTML = '<option value="">Select Width</option>';
   Object.keys(SIZE_MAP).sort((a,b)=>+a-+b).forEach(w => {
     const o = document.createElement('option'); o.value = w;
-    o.textContent = isFlotationWidth(w) ? w + '" (flotation)' : w + ' mm';
+    o.textContent = isCommercialSingleWidth(w)
+      ? w + '" (commercial truck)'
+      : isFlotationWidth(w)
+        ? w + '" (flotation)'
+        : w + ' mm';
     wEl.appendChild(o);
   });
   updateSizePreview();
@@ -4472,17 +4572,26 @@ function onWidthChange() {
   const sEl = document.getElementById('sSidewall'), dEl = document.getElementById('sDiameter');
   const lblS = document.getElementById('lblSidewall');
   const flot = isFlotationWidth(w);
-  // Swap label + placeholder copy based on format
-  if (lblS) lblS.textContent = flot ? 'Section Width (in)' : 'Sidewall (%)';
-  sEl.innerHTML = '<option value="">' + (flot ? 'Select Section Width' : 'Select Sidewall') + '</option>';
-  dEl.innerHTML = '<option value="">' + (flot ? 'Select Section Width first' : 'Select Sidewall first') + '</option>';
+  const commercial = isCommercialSingleWidth(w);
+  // Swap label based on format
+  if (lblS) lblS.textContent = commercial ? 'Aspect Ratio' : (flot ? 'Section Width (in)' : 'Sidewall (%)');
+  sEl.innerHTML = '<option value="">' + (commercial ? 'No aspect (commercial)' : flot ? 'Select Section Width' : 'Select Sidewall') + '</option>';
+  dEl.innerHTML = '<option value="">' + (commercial ? 'Select aspect first' : flot ? 'Select Section Width first' : 'Select Sidewall first') + '</option>';
   sEl.disabled = !w; dEl.disabled = true;
   setSizeSearchBtn(false);
-  if (w && SIZE_MAP[w]) Object.keys(SIZE_MAP[w]).sort((a,b)=>+a-+b).forEach(s => {
+  if (w && SIZE_MAP[w]) Object.keys(SIZE_MAP[w]).sort((a,b) => {
+    // Sort commercial sentinel '—' last so numeric aspects appear first
+    if (a === '—') return 1; if (b === '—') return -1; return +a - +b;
+  }).forEach(s => {
     const o = document.createElement('option'); o.value = s;
-    o.textContent = flot ? s + '"' : s + '%';
+    o.textContent = s === '—' ? '— (no aspect)' : (flot ? s + '"' : s + '%');
     sEl.appendChild(o);
   });
+  // If commercial width has only the '—' aspect, auto-select it for the customer
+  if (commercial && SIZE_MAP[w] && Object.keys(SIZE_MAP[w]).length === 1 && SIZE_MAP[w]['—']) {
+    sEl.value = '—';
+    onSidewallChange();
+  }
   updateSizePreview();
 }
 
@@ -4506,10 +4615,138 @@ function updateSizePreview() {
   const w = document.getElementById('sWidth').value, s = document.getElementById('sSidewall').value, d = document.getElementById('sDiameter').value;
   const wEl = document.getElementById('sp-w'), sEl = document.getElementById('sp-s'), dEl = document.getElementById('sp-d');
   const sepEl = document.getElementById('sp-sep1');
-  if (sepEl) sepEl.textContent = isFlotationWidth(w) ? '×' : '/';
+  const commercial = isCommercialSingleWidth(w) && s === '—';
+  if (sepEl) sepEl.textContent = commercial ? '' : (isFlotationWidth(w) ? '×' : '/');
   wEl.textContent = w || '???'; wEl.className = 'sp-part' + (w ? '' : ' dim');
-  sEl.textContent = s || '??';  sEl.className = 'sp-part' + (s ? '' : ' dim');
+  // For commercial single-number sizes there's no aspect — hide it visually
+  if (commercial) {
+    sEl.textContent = ''; sEl.className = 'sp-part';
+    sEl.style.display = 'none';
+  } else {
+    sEl.style.display = '';
+    sEl.textContent = s || '??';  sEl.className = 'sp-part' + (s ? '' : ' dim');
+  }
   dEl.textContent = d || '??';  dEl.className = 'sp-part' + (d ? '' : ' dim');
+}
+
+// ─────────────────────────────────────────────────
+//  SHARED — parse a raw tire size string into a canonical query
+//  Accepts: 225/65R17, LT265/70R17, P225/65R17, 33X12.50R18, 11R22.5, 295/75R22.5
+//  Returns null if unrecognized.
+// ─────────────────────────────────────────────────
+function parseRawSize(raw) {
+  if (!raw) return null;
+  // Normalize: uppercase, strip whitespace, allow loose separators
+  const s = String(raw).trim().toUpperCase().replace(/\s+/g, '');
+  // Metric (incl. decimal rim) — optional P or LT prefix
+  let m = s.match(/^(?:LT|P)?(\d+)\/(\d+)R(\d+(?:\.\d+)?)$/);
+  if (m) {
+    const display = `${m[1]}/${m[2]}R${m[3]}`;
+    return { kind: 'metric', width: m[1], aspect: m[2], rim: m[3], display, queries: [display] };
+  }
+  // Flotation
+  m = s.match(/^(\d+)X(\d+(?:\.\d+)?)R(\d+(?:\.\d+)?)$/);
+  if (m) {
+    const display = `${m[1]}X${m[2]}R${m[3]}`;
+    const n = parseFloat(m[2]);
+    const swForms = [...new Set([m[2], n.toString(), n.toFixed(2)])];
+    const queries = [...new Set(swForms.flatMap(sw => [
+      `${m[1]}X${sw}R${m[3]}`, `${m[1]}x${sw}R${m[3]}`,
+    ]))];
+    return { kind: 'flotation', width: m[1], aspect: m[2], rim: m[3], display, queries };
+  }
+  // Commercial truck no-aspect: 11R22.5
+  m = s.match(/^(\d+)R(\d+(?:\.\d+)?)$/);
+  if (m) {
+    const display = `${m[1]}R${m[2]}`;
+    return { kind: 'commercial', width: m[1], rim: m[2], display, queries: [display, `${m[1]}r${m[2]}`] };
+  }
+  return null;
+}
+
+// Validate-as-you-type for the size tab's "type exact" input
+function onQuickSizeInput(el) {
+  const parsed = parseRawSize(el.value);
+  const btn = document.getElementById('sQuickBtn');
+  const hint = document.getElementById('sQuickHint');
+  const ok = !!parsed;
+  const empty = !el.value.trim();
+  el.classList.toggle('invalid', !empty && !ok);
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '.5';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+  if (empty) {
+    hint.textContent = 'Works for passenger, light truck, flotation, and commercial truck sizes.';
+    hint.classList.remove('error');
+  } else if (!ok) {
+    hint.textContent = "We didn't recognize that format. Try 225/65R17, 33X12.50R18, or 11R22.5.";
+    hint.classList.add('error');
+  } else {
+    hint.textContent = '✓ Recognized as ' + parsed.display + ' — press Enter or click Search.';
+    hint.classList.remove('error');
+  }
+}
+
+function onSemiInput(el) {
+  const parsed = parseRawSize(el.value);
+  const btn = document.getElementById('semiSearchBtn');
+  const hint = document.getElementById('semiHint');
+  const ok = !!parsed;
+  const empty = !el.value.trim();
+  el.classList.toggle('invalid', !empty && !ok);
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '.5';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+  if (empty) {
+    hint.textContent = 'Type any commercial size — old-style (11R22.5) or metric (295/75R22.5).';
+    hint.classList.remove('error');
+  } else if (!ok) {
+    hint.textContent = "We didn't recognize that. Try 11R22.5 or 295/75R22.5.";
+    hint.classList.add('error');
+  } else {
+    hint.textContent = '✓ Recognized as ' + parsed.display + ' — press Enter or click Search.';
+    hint.classList.remove('error');
+  }
+}
+
+// Shared core: run the loadTires + render flow for a parsed raw size
+async function runRawSizeSearch(parsed, sourceTag) {
+  lastSearchMethod = sourceTag || 'size';
+  lastSearchVehicle = null;
+  lastTireSearchSize = parsed.display;
+  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
+  textEl.innerHTML = 'Searching for <strong>' + parsed.display + '</strong> tires…';
+  resultEl.classList.add('show');
+  switchCatalogType('tires');
+  await loadTires({ tireSizes: parsed.queries });
+  textEl.innerHTML = filteredTires.length > 0
+    ? 'Found <strong>' + filteredTires.length + '</strong> tire' + (filteredTires.length !== 1 ? 's' : '') + ' in size <strong>' + parsed.display + '</strong>.'
+    : 'No tires in stock for size <strong>' + parsed.display + '</strong> right now — <a href="tel:5193974686" style="color:var(--yellow)">call us at 519-397-4686</a> and we\'ll source them for you.';
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
+function doQuickSizeSearch() {
+  const v = document.getElementById('sQuickInput').value;
+  const parsed = parseRawSize(v);
+  if (!parsed) return;
+  runRawSizeSearch(parsed, 'size');
+}
+
+function doSemiSearch() {
+  const v = document.getElementById('semiInput').value;
+  const parsed = parseRawSize(v);
+  if (!parsed) return;
+  runRawSizeSearch(parsed, 'semi');
+}
+
+// Quick-chip helper for the popular Semi sizes
+function doSemiSearchFor(sizeStr) {
+  const parsed = parseRawSize(sizeStr);
+  if (!parsed) return;
+  // Reflect into the input field so the customer sees what was selected
+  const inp = document.getElementById('semiInput');
+  if (inp) { inp.value = parsed.display; onSemiInput(inp); }
+  runRawSizeSearch(parsed, 'semi');
 }
 
 async function doSizeSearch() {
@@ -4518,8 +4755,13 @@ async function doSizeSearch() {
   const width = document.getElementById('sWidth').value, sidewall = document.getElementById('sSidewall').value, diameter = document.getElementById('sDiameter').value;
   if (!width || !sidewall || !diameter) return;
   const flot = isFlotationWidth(width);
+  const commercial = isCommercialSingleWidth(width) && sidewall === '—';
   // Canonical display string (what we show the customer)
-  const tireSize = flot ? `${width}X${sidewall}R${diameter}` : `${width}/${sidewall}R${diameter}`;
+  const tireSize = commercial
+    ? `${width}R${diameter}`
+    : flot
+      ? `${width}X${sidewall}R${diameter}`
+      : `${width}/${sidewall}R${diameter}`;
   // What we actually send TDG. Metric is unambiguous; flotation isn't (their docs don't
   // show examples), so for flotation we send several plausible variants — uppercase/lowercase
   // X, and with/without trailing zeros in the section width — letting TDG match any.
@@ -4531,6 +4773,9 @@ async function doSizeSearch() {
       `${width}X${sw}R${diameter}`,
       `${width}x${sw}R${diameter}`,
     ]))];
+  } else if (commercial) {
+    // Commercial truck sizes — TDG may accept either case-insensitive R
+    queryTireSizes = [`${width}R${diameter}`, `${width}r${diameter}`];
   }
   const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
   textEl.innerHTML = `Searching for <strong>${tireSize}</strong> tires…`; resultEl.classList.add('show');
@@ -6221,7 +6466,11 @@ function initLifeSizeDropdowns() {
   wEl.innerHTML = '<option value="">Select Width</option>';
   Object.keys(SIZE_MAP).sort((a,b)=>+a-+b).forEach(w => {
     const o = document.createElement('option'); o.value = w;
-    o.textContent = isFlotationWidth(w) ? w + '" (flotation)' : w + ' mm';
+    o.textContent = isCommercialSingleWidth(w)
+      ? w + '" (commercial truck)'
+      : isFlotationWidth(w)
+        ? w + '" (flotation)'
+        : w + ' mm';
     wEl.appendChild(o);
   });
   // Surface "use last search" button if a prior VIN/vehicle/size search produced a usable size
@@ -6237,15 +6486,22 @@ function onLWidthChange() {
   const sEl = document.getElementById('lSidewall'), dEl = document.getElementById('lDiameter');
   const lblS = document.getElementById('lblLSidewall');
   const flot = isFlotationWidth(w);
-  if (lblS) lblS.textContent = flot ? 'Section Width (in)' : 'Sidewall (%)';
-  sEl.innerHTML = '<option value="">' + (flot ? 'Select Section Width' : 'Select Sidewall') + '</option>';
-  dEl.innerHTML = '<option value="">' + (flot ? 'Select Section Width first' : 'Select Sidewall first') + '</option>';
+  const commercial = isCommercialSingleWidth(w);
+  if (lblS) lblS.textContent = commercial ? 'Aspect Ratio' : (flot ? 'Section Width (in)' : 'Sidewall (%)');
+  sEl.innerHTML = '<option value="">' + (commercial ? 'No aspect (commercial)' : flot ? 'Select Section Width' : 'Select Sidewall') + '</option>';
+  dEl.innerHTML = '<option value="">' + (commercial ? 'Select aspect first' : flot ? 'Select Section Width first' : 'Select Sidewall first') + '</option>';
   sEl.disabled = !w; dEl.disabled = true;
-  if (w && SIZE_MAP[w]) Object.keys(SIZE_MAP[w]).sort((a,b)=>+a-+b).forEach(s => {
+  if (w && SIZE_MAP[w]) Object.keys(SIZE_MAP[w]).sort((a,b) => {
+    if (a === '—') return 1; if (b === '—') return -1; return +a - +b;
+  }).forEach(s => {
     const o = document.createElement('option'); o.value = s;
-    o.textContent = flot ? s + '"' : s + '%';
+    o.textContent = s === '—' ? '— (no aspect)' : (flot ? s + '"' : s + '%');
     sEl.appendChild(o);
   });
+  if (commercial && SIZE_MAP[w] && Object.keys(SIZE_MAP[w]).length === 1 && SIZE_MAP[w]['—']) {
+    sEl.value = '—';
+    onLSidewallChange();
+  }
   refreshLifeSearchBtn();
 }
 
@@ -6301,7 +6557,12 @@ async function doLifestyleSearch() {
   const d = document.getElementById('lDiameter')?.value;
   if (!w || !s || !d) return;
   const flot = isFlotationWidth(w);
-  const tireSize = flot ? (w + 'X' + s + 'R' + d) : (w + '/' + s + 'R' + d);
+  const commercial = isCommercialSingleWidth(w) && s === '—';
+  const tireSize = commercial
+    ? (w + 'R' + d)
+    : flot
+      ? (w + 'X' + s + 'R' + d)
+      : (w + '/' + s + 'R' + d);
   // For flotation widths we send a few variants since TDG's accepted form is ambiguous
   let queryTireSizes = [tireSize];
   if (flot) {
@@ -6311,6 +6572,8 @@ async function doLifestyleSearch() {
       w + 'X' + sw + 'R' + d,
       w + 'x' + sw + 'R' + d,
     ]))];
+  } else if (commercial) {
+    queryTireSizes = [w + 'R' + d, w + 'r' + d];
   }
 
   const resultEl = document.getElementById('lookupResult');
