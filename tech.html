@@ -711,6 +711,98 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════
+     TIRES 101 — bay reference / wiki
+     ═══════════════════════════════════════════════════════════════ */
+  .tires101 {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 2px; padding: 18px; margin-bottom: 16px;
+  }
+  .t101-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .t101-tile {
+    text-align: left; background: var(--raised);
+    border: 1px solid var(--border); border-radius: 2px;
+    padding: 14px 12px; color: var(--white);
+    cursor: pointer; transition: all .15s;
+    font-family: 'Barlow', sans-serif;
+  }
+  .t101-tile:hover, .t101-tile:focus {
+    border-color: var(--yellow); outline: none;
+  }
+  .t101-tile .t-icon { font-size: 22px; margin-bottom: 6px; display: block; }
+  .t101-tile .t-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .t101-tile .t-blurb {
+    font-size: 11px; color: var(--muted);
+    margin-top: 4px; line-height: 1.35;
+  }
+
+  /* Topic detail (rendered inside the topic modal) */
+  .topic-body { font-size: 14px; line-height: 1.55; color: var(--white); }
+  .topic-body h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--yellow);
+    margin: 18px 0 8px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .topic-body h3:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .topic-body p { margin-bottom: 10px; color: var(--light); }
+  .topic-body strong { color: var(--white); font-weight: 700; }
+  .topic-body em { color: var(--light); font-style: italic; }
+  .topic-body ul { list-style: none; margin: 8px 0 12px; padding: 0; }
+  .topic-body li {
+    padding: 7px 11px; border-left: 2px solid var(--border);
+    background: var(--raised); border-radius: 2px;
+    margin-bottom: 5px; font-size: 13.5px; color: var(--light);
+  }
+  .topic-body li strong { color: var(--white); }
+  .topic-body ul.good li { border-left-color: var(--green); }
+  .topic-body ul.warn li { border-left-color: var(--amber); }
+  .topic-body ul.bad  li { border-left-color: var(--red); }
+  .topic-body code {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;
+    background: var(--black); border: 1px solid var(--border);
+    padding: 1px 6px; border-radius: 2px; color: var(--yellow);
+  }
+  .topic-body .callout {
+    background: var(--raised); border-left: 3px solid var(--blue);
+    padding: 10px 12px; margin: 12px 0; border-radius: 2px;
+    font-size: 13px; color: var(--light);
+  }
+  .topic-body .callout.warn { border-left-color: var(--amber); }
+  .topic-body .callout.tip  { border-left-color: var(--green); }
+  .topic-body .callout-title {
+    font-weight: 800; font-size: 11px; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+    color: var(--blue); font-family: 'Barlow Condensed', sans-serif;
+  }
+  .topic-body .callout.warn .callout-title { color: var(--amber); }
+  .topic-body .callout.tip  .callout-title { color: var(--green); }
+  .topic-body table {
+    width: 100%; border-collapse: collapse; margin: 8px 0 14px;
+    font-size: 13px;
+  }
+  .topic-body table th, .topic-body table td {
+    padding: 7px 10px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic-body table th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10.5px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .topic-body table td:first-child {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--yellow); font-weight: 700; font-size: 12.5px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
      ADMIN — verified torque list
      ═══════════════════════════════════════════════════════════════ */
   .admin-section {
@@ -802,6 +894,14 @@
       <button class="note-add-btn" id="noteAddBtn" onclick="addNote()">Save Note</button>
       <div class="notes-list" id="notesList">
         <div class="notes-empty">No notes yet.</div>
+      </div>
+    </section>
+
+    <!-- Tires 101 — bay reference -->
+    <section class="tires101">
+      <div class="section-title">Tires 101</div>
+      <div class="t101-tiles" id="t101Tiles">
+        <!-- populated by JS -->
       </div>
     </section>
 
@@ -994,6 +1094,20 @@
   </div>
 </div>
 
+<!-- TIRES 101 TOPIC MODAL -->
+<div class="modal" id="topicModal" hidden>
+  <div class="modal-card">
+    <div class="modal-title">
+      <span id="topicTitle">Topic</span>
+      <button class="modal-close" onclick="closeTopic()">×</button>
+    </div>
+    <div class="topic-body" id="topicBody"></div>
+    <div class="modal-btn-row">
+      <button class="modal-btn secondary" onclick="closeTopic()">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -1015,6 +1129,447 @@ const MANUALS = [
   { name: 'Wheel Balancer', model: 'CAE-3446WB', file: '/manuals/cae-3446wb.pdf', icon: '⚖️' },
   { name: 'TPMS Reader', model: 'Autel TS508WF', file: '/manuals/autel-ts508wf.pdf', icon: '📡' },
   { name: 'TPMS Sensors', model: 'Autel MX-Sensor', file: '/manuals/autel-mx-sensor.pdf', icon: '🔩' },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   TIRES 101 — reference content (edit topics here)
+   Each entry: { id, icon, title, blurb, content (HTML string) }
+   ═══════════════════════════════════════════════════════════════ */
+const TIRES_101 = [
+  {
+    id: 'sidewall',
+    icon: '📖',
+    title: 'Reading the Sidewall',
+    blurb: 'Decode every marking',
+    content: `
+      <h3>The Full Code</h3>
+      <p>A standard passenger tire sidewall reads something like <code>235/65R17 104H M+S</code>. Each piece does a specific job.</p>
+      <ul>
+        <li><strong>235</strong> — section width in mm (tread edge to tread edge, inflated, unloaded)</li>
+        <li><strong>65</strong> — aspect ratio: sidewall height as a % of width (152.75 mm here)</li>
+        <li><strong>R</strong> — radial construction (nearly universal; "B" = bias, "D" = diagonal)</li>
+        <li><strong>17</strong> — wheel diameter in inches</li>
+        <li><strong>104</strong> — load index (104 = 900 kg per tire — see Load Index)</li>
+        <li><strong>H</strong> — speed rating (H = 210 km/h — see Speed Ratings)</li>
+        <li><strong>M+S</strong> — Mud + Snow marking (basic all-season; <em>not</em> a true winter rating)</li>
+      </ul>
+
+      <h3>Service Type Prefix (if present)</h3>
+      <ul>
+        <li><strong>P</strong> — Passenger (cars, light SUVs)</li>
+        <li><strong>LT</strong> — Light Truck (heavier carcass, higher load, higher pressures)</li>
+        <li><strong>ST</strong> — Special Trailer (utility trailers only — never on a powered axle)</li>
+        <li><em>No letter</em> — Euro-metric / hard-metric; treat as P-equivalent unless reinforced</li>
+      </ul>
+      <div class="callout warn">
+        <div class="callout-title">Watch for</div>
+        Customer rolls in with a 1/2-ton truck wearing P-rated tires. Common downgrade — cheaper but cuts load capacity. Verify against the door-jamb spec before approving install.
+      </div>
+
+      <h3>Other Common Markings</h3>
+      <ul>
+        <li><strong>DOT XXXX</strong> — last 4 digits are week + year of manufacture</li>
+        <li><strong>TWI</strong> — Tread Wear Indicator; points to wear bars in the grooves</li>
+        <li><strong>Max Load / Max Press</strong> — tire's own ceiling, not the vehicle's recommended pressure</li>
+        <li><strong>Outside / Inside</strong> — asymmetric tire; that face must point outward</li>
+        <li><strong>Rotation arrow</strong> — directional tire; must roll in that direction</li>
+      </ul>
+    `,
+  },
+  {
+    id: 'sizing',
+    icon: '📏',
+    title: 'Tire Sizing Math',
+    blurb: 'Width, aspect, diameter',
+    content: `
+      <h3>Decoding 235/65R17</h3>
+      <p>Each number does a specific job:</p>
+      <ul>
+        <li><strong>Width (235)</strong> — section width in millimetres, tread-edge to tread-edge, inflated and unloaded</li>
+        <li><strong>Aspect ratio (65)</strong> — sidewall height as a % of width. 235 × 0.65 = <strong>152.75 mm</strong> sidewall</li>
+        <li><strong>Construction (R)</strong> — radial; cords run 90° to direction of travel</li>
+        <li><strong>Rim diameter (17)</strong> — in inches. Hybrid imperial/metric is just how the standard evolved</li>
+      </ul>
+
+      <h3>Calculating Overall Tire Diameter</h3>
+      <p>Overall diameter = rim diameter + 2 × sidewall height.</p>
+      <ul>
+        <li>Rim: 17″ × 25.4 = <strong>431.8 mm</strong></li>
+        <li>Sidewall: 235 × 0.65 = 152.75 mm × 2 = <strong>305.5 mm</strong></li>
+        <li>Total: 431.8 + 305.5 = <strong>737.3 mm</strong> (≈ 29.0″)</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-title">Shop rule</div>
+        When changing sizes (winter swap, plus-sizing), keep overall diameter within <strong>±3% of OE</strong>. Outside that range and the speedo, ABS, traction control and stability systems all read wrong.
+      </div>
+
+      <h3>Lower Aspect = Stiffer Sidewall</h3>
+      <p>A 245/35R20 has a 35% aspect — sidewall only 85.75 mm. Sharper steering response, but rougher ride and far less protection against potholes. Performance car upgrade path; not always right for daily drivers on Chatham-Kent roads.</p>
+    `,
+  },
+  {
+    id: 'loadindex',
+    icon: '⚖️',
+    title: 'Load Index',
+    blurb: 'kg per tire, never downgrade',
+    content: `
+      <h3>What the Number Means</h3>
+      <p>The 2- or 3-digit number after the size is a coded reference to the maximum weight one tire can carry at its rated cold pressure. <strong>Per tire</strong> — not per axle, not per vehicle.</p>
+
+      <h3>Common Values</h3>
+      <table>
+        <thead><tr><th>Index</th><th>kg</th><th>lb</th><th>Typical</th></tr></thead>
+        <tbody>
+          <tr><td>88</td><td>560</td><td>1235</td><td>compact car</td></tr>
+          <tr><td>91</td><td>615</td><td>1356</td><td>midsize car</td></tr>
+          <tr><td>94</td><td>670</td><td>1477</td><td>large sedan</td></tr>
+          <tr><td>100</td><td>800</td><td>1764</td><td>small SUV</td></tr>
+          <tr><td>104</td><td>900</td><td>1984</td><td>midsize SUV</td></tr>
+          <tr><td>110</td><td>1060</td><td>2337</td><td>1/2-ton truck</td></tr>
+          <tr><td>118</td><td>1320</td><td>2910</td><td>3/4-ton truck</td></tr>
+          <tr><td>121</td><td>1450</td><td>3197</td><td>1-ton truck</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <div class="callout-title">Never downgrade</div>
+        Match or exceed OE load index. A lower index on a loaded truck = sidewall failure under heat. Even on a passenger car, downgrading voids the tire manufacturer's warranty and can cause insurance grief after a blowout claim.
+      </div>
+
+      <h3>XL / Reinforced</h3>
+      <p>"XL" or "Reinforced" means a higher load index <strong>at higher pressures</strong>. Common on heavy German sedans and EVs. Don't run an XL tire at the same psi as a standard-load tire — it won't hit its rated capacity.</p>
+    `,
+  },
+  {
+    id: 'speedrating',
+    icon: '🏁',
+    title: 'Speed Rating',
+    blurb: 'The letter after load index',
+    content: `
+      <h3>What the Letter Means</h3>
+      <p>The single letter after the load index is the maximum sustained speed the tire is rated for. It's a safety ceiling, not a target.</p>
+
+      <table>
+        <thead><tr><th>Rating</th><th>km/h</th><th>mph</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr><td>Q</td><td>160</td><td>99</td><td>winter / studded</td></tr>
+          <tr><td>S</td><td>180</td><td>112</td><td>economy passenger</td></tr>
+          <tr><td>T</td><td>190</td><td>118</td><td>family sedan</td></tr>
+          <tr><td>H</td><td>210</td><td>130</td><td>sport sedan, most SUVs</td></tr>
+          <tr><td>V</td><td>240</td><td>149</td><td>sport / performance</td></tr>
+          <tr><td>W</td><td>270</td><td>168</td><td>high-perf / sports car</td></tr>
+          <tr><td>Y</td><td>300</td><td>186</td><td>supercar</td></tr>
+          <tr><td>(Y)</td><td>300+</td><td>186+</td><td>uncapped, hypercar</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <div class="callout-title">Winter exception</div>
+        Most winter tires are rated Q (160 km/h) or T (190 km/h). Lower than OE summer ratings — this is OK and intentional. Winter compound can't survive sustained high-speed heat. Inform the customer and note it on the work order.
+      </div>
+
+      <h3>Matching Across the Set</h3>
+      <p>All four tires should share the same speed rating. If a customer is replacing only two, the new pair must match or exceed the existing pair — and go on the <strong>rear axle</strong> regardless of drivetrain (for stability under hard braking).</p>
+    `,
+  },
+  {
+    id: 'winter',
+    icon: '❄️',
+    title: 'M+S vs 3PMSF',
+    blurb: 'Real winter rating',
+    content: `
+      <h3>Two Symbols, Big Difference</h3>
+      <p>Canada has two markings that <em>sound</em> like winter ratings but mean very different things:</p>
+      <ul class="warn">
+        <li><strong>M+S</strong> (Mud + Snow) — Self-certified by the manufacturer. No traction test required. Almost every all-season carries it. <em>Not</em> a true winter rating.</li>
+      </ul>
+      <ul class="good">
+        <li><strong>3PMSF</strong> (Three-Peak Mountain Snowflake) — Industry test. Tire must hit a measured traction threshold on packed snow. <em>This</em> is the real winter rating.</li>
+      </ul>
+
+      <h3>Ontario Context</h3>
+      <p>Ontario doesn't mandate winter tires (Quebec does, Dec 1 – Mar 15; BC does on designated highways). But Ontario auto insurers offer a discount (typically 2–5%) for vehicles equipped with 3PMSF tires Dec 1 – Mar 31. M+S alone doesn't qualify with most insurers.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Customer talking point</div>
+        "Your tires have M+S on the sidewall — that's the lowest bar. For Chatham-Kent winters look for the mountain snowflake symbol. It's a real traction test, not a self-certification. Most insurers give you a small discount for running them."
+      </div>
+
+      <h3>All-Weather vs All-Season vs Winter</h3>
+      <table>
+        <thead><tr><th>Type</th><th>M+S</th><th>3PMSF</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td>All-Season</td><td>yes</td><td>no</td><td>3-season; OK in light snow</td></tr>
+          <tr><td>All-Weather</td><td>yes</td><td>yes</td><td>year-round in mild Canadian winters</td></tr>
+          <tr><td>Winter</td><td>yes</td><td>yes</td><td>dedicated cold-weather; soft compound below 7°C</td></tr>
+        </tbody>
+      </table>
+
+      <p>A dedicated winter still outperforms an all-weather below about -10°C. All-weather is a compromise for customers who don't want a second set.</p>
+    `,
+  },
+  {
+    id: 'utqg',
+    icon: '🎯',
+    title: 'UTQG Ratings',
+    blurb: 'Treadwear / Traction / Temp',
+    content: `
+      <h3>What UTQG Is</h3>
+      <p>Uniform Tire Quality Grading — three ratings printed on every passenger tire (LT tires are exempt). Designed for cross-shopping by spec rather than by brand alone.</p>
+
+      <h3>Treadwear (e.g. 500)</h3>
+      <p>A relative score. A "500" tire is theoretically expected to last twice as long as a "250" tire — but only when tested by the <em>same manufacturer</em>. No calibration between brands. Use it within a brand's catalogue, not across brands.</p>
+      <ul>
+        <li><strong>200–300</strong> — performance / summer compound</li>
+        <li><strong>400–600</strong> — standard all-season</li>
+        <li><strong>700–800+</strong> — long-life touring</li>
+      </ul>
+
+      <h3>Traction (AA / A / B / C)</h3>
+      <p>Wet braking grip on asphalt and concrete test pads. <strong>AA is best</strong>, C is the legal minimum. Most modern passenger tires hit A or AA.</p>
+
+      <h3>Temperature (A / B / C)</h3>
+      <p>Heat resistance at sustained high speed. A is best (over 185 km/h sustained), C is the minimum allowed for sale (160 km/h). Almost all modern tires hit A or B.</p>
+
+      <div class="callout">
+        <div class="callout-title">In the bay</div>
+        UTQG is most useful for ranking tires <em>within a single brand's lineup</em>. For cross-brand comparison, the manufacturer's treadwear warranty mileage is more reliable — they stand behind those numbers contractually.
+      </div>
+    `,
+  },
+  {
+    id: 'datecode',
+    icon: '📅',
+    title: 'DOT Date Code',
+    blurb: 'How old is this tire?',
+    content: `
+      <h3>Where to Find It</h3>
+      <p>Look for <code>DOT</code> on the sidewall, followed by a string of characters. The <strong>last 4 digits</strong> are the date code.</p>
+
+      <h3>Reading the Code</h3>
+      <p>Format: <strong>WWYY</strong> (week + year)</p>
+      <ul>
+        <li><code>1224</code> — week 12 of 2024 (mid-March 2024)</li>
+        <li><code>4923</code> — week 49 of 2023 (early December 2023)</li>
+        <li><code>0526</code> — week 5 of 2026 (late January 2026)</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Pre-2000 tires</div>
+        Tires made before 2000 used a 3-digit code (week + single year digit). If you see only 3 digits at the end, that tire is at least 25 years old. Replace immediately regardless of tread depth.
+      </div>
+
+      <h3>How Old Is Too Old?</h3>
+      <ul class="good">
+        <li><strong>0–5 years</strong> — normal. Tread depth determines life.</li>
+      </ul>
+      <ul>
+        <li><strong>5–6 years</strong> — inspect carefully. Look for fine sidewall cracking, dry rot in tread blocks. Usually still serviceable.</li>
+      </ul>
+      <ul class="warn">
+        <li><strong>6–10 years</strong> — recommend replacement even with tread remaining. Compound has hardened, traction degraded, sidewall weakened.</li>
+      </ul>
+      <ul class="bad">
+        <li><strong>10+ years</strong> — don't reinstall. Michelin, Continental, Bridgestone all recommend retirement at 10 years regardless of appearance.</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-title">Spare tire trap</div>
+        Customers driving 8-year-old vehicles often have a never-used spare from new sitting under the cargo floor. Looks brand new. Compound is shot. Mention it on every seasonal swap.
+      </div>
+    `,
+  },
+  {
+    id: 'tread',
+    icon: '🪙',
+    title: 'Tread Depth',
+    blurb: 'When to replace',
+    content: `
+      <h3>How Tread Is Measured</h3>
+      <p>In 32nds of an inch — the standard imperial unit even in Canada. A new passenger tire has roughly 10–11/32″, a new winter tire 11–13/32″, a new LT/all-terrain 13–18/32″.</p>
+
+      <h3>Wear Bars (TWI)</h3>
+      <p>Every passenger tire has raised rubber bars molded into the tread grooves at <strong>2/32″ (1.6 mm)</strong>. When the surrounding tread wears down level with the bars, the tire is at the legal minimum and must be replaced.</p>
+      <p>Look for small <code>TWI</code> letters near the shoulder — they point to where the bars sit.</p>
+
+      <h3>Real Replacement Thresholds</h3>
+      <table>
+        <thead><tr><th>Depth</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>2/32″</td><td>legal minimum — already dangerous on wet roads</td></tr>
+          <tr><td>4/32″</td><td>recommended replace for winter tires</td></tr>
+          <tr><td>5/32″</td><td>wet-traction drops noticeably on all-seasons</td></tr>
+          <tr><td>6/32″</td><td>replace for safety-critical use (long highway, winter)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Coin Test (No Gauge Handy)</h3>
+      <ul>
+        <li><strong>Quarter</strong> — insert with the Caribou's nose down. If you can see the top of the nose, you have less than 6/32″. Time to think about replacement.</li>
+        <li><strong>Toonie</strong> — tread reaches the silver/gold border ≈ 6/32″. Only to the bear's paws ≈ 4/32″. Down to "CANADA" text ≈ 2/32″ (replace now).</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Uneven wear</div>
+        Always check inner shoulder, centre, and outer shoulder. Differences over 2/32″ across the same tire mean alignment, pressure, or suspension issues. Flag for the customer — don't just sell new tires onto a misaligned vehicle.
+      </div>
+    `,
+  },
+  {
+    id: 'tpms',
+    icon: '📡',
+    title: 'TPMS Basics',
+    blurb: 'Sensors, relearn, lifespan',
+    content: `
+      <h3>Direct vs Indirect</h3>
+      <ul>
+        <li><strong>Direct TPMS</strong> — a pressure sensor inside each wheel transmits a reading by radio. Required on all US-sold vehicles since 2008; most Canadian-spec post-2008 also have it. <strong>What we deal with 95% of the time.</strong></li>
+        <li><strong>Indirect TPMS</strong> — no sensors. The ABS module compares wheel rotation speeds; a low tire spins slightly faster. Less accurate; resets via a button or menu after each inflation. Common on some older Hondas, Toyotas, a few Subarus.</li>
+      </ul>
+
+      <h3>Radio Frequency</h3>
+      <table>
+        <thead><tr><th>Freq</th><th>Region</th></tr></thead>
+        <tbody>
+          <tr><td>315 MHz</td><td>North America (domestic + most Japanese)</td></tr>
+          <tr><td>433 MHz</td><td>European (BMW, Mercedes, Audi, VW, Volvo)</td></tr>
+        </tbody>
+      </table>
+      <p>Programmable sensors (Autel MX-Sensor in our bay) can be set to either. Verify the vehicle's expected frequency before programming — wrong band = no signal to the ECU.</p>
+
+      <h3>Relearn Procedures</h3>
+      <ul>
+        <li><strong>Auto</strong> — drive 15–20 min above 30 km/h. ECU learns positions automatically. (Toyota, Honda, most domestic.)</li>
+        <li><strong>OBD-II</strong> — plug Autel TS508 into the OBD port, follow menu prompts. (Most Ford, Chrysler, some GM.)</li>
+        <li><strong>Manual</strong> — specific sequence with a magnet or activation tool at each wheel. (Older GM, some Asian.)</li>
+      </ul>
+
+      <h3>Sensor Life</h3>
+      <p>Lithium battery, non-replaceable. Typical life <strong>5–10 years</strong>. Expect to start replacing sensors on vehicles 7+ years old, often during winter swaps when one wakes up dead after summer storage. Quote pre-emptively.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Bundle pricing</div>
+        Offer a discount on replacing all 4 sensors at once if one fails. Wheels are already off, install labour is already on the bill. The other three are the same age and will likely follow within a year.
+      </div>
+    `,
+  },
+  {
+    id: 'rotation',
+    icon: '🔄',
+    title: 'Rotation Patterns',
+    blurb: 'Right pattern for the drivetrain',
+    content: `
+      <h3>Why Rotate?</h3>
+      <p>Front and rear tires wear differently. On FWD vehicles, fronts take steering, braking, and acceleration loads — they wear roughly <strong>twice as fast</strong> as rear. Rotation evens it out, extending overall set life by 20–30%.</p>
+
+      <h3>Recommended Interval</h3>
+      <p>Every <strong>8,000–10,000 km</strong>, or every second oil change. Sooner if uneven wear shows up.</p>
+
+      <h3>Forward Cross (FWD)</h3>
+      <p>Fronts go straight back. Rears cross over to the opposite front. Most common pattern.</p>
+
+      <h3>Rearward Cross (RWD / AWD)</h3>
+      <p>Rears go straight forward. Fronts cross over to the opposite rear.</p>
+
+      <h3>X-Pattern (any drivetrain)</h3>
+      <p>Diagonal swap — front-left ↔ rear-right, front-right ↔ rear-left. More aggressive evening-out; used less often.</p>
+
+      <h3>Directional Tires (rotation arrow on sidewall)</h3>
+      <p><strong>Front-to-rear on the same side only.</strong> Never cross sides — would run the tire backwards against its tread design.</p>
+
+      <h3>Asymmetric Tires (Outside/Inside markings)</h3>
+      <p>Treat the same as standard — Forward Cross or Rearward Cross. The asymmetric pattern is about which face points outward, not direction of travel.</p>
+
+      <h3>Staggered Setup (different sizes front vs rear)</h3>
+      <p>Side-to-side swap on the same axle only. FL ↔ FR, RL ↔ RR. Common on 911, M3, Corvette.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">When NOT to rotate</div>
+        Tread depth difference over 4/32″ between sets — rotating won't fix it, just spreads the worn pair to a new axle. Flag for replacement instead.
+      </div>
+    `,
+  },
+  {
+    id: 'plus',
+    icon: '➕',
+    title: 'Plus Sizing',
+    blurb: 'Bigger rim, same diameter',
+    content: `
+      <h3>What Plus Sizing Is</h3>
+      <p>Going to a larger rim diameter with a lower-profile tire while keeping the <strong>overall tire diameter</strong> the same. Mostly cosmetic + handling — more wheel visible, less sidewall flex.</p>
+
+      <h3>Plus 1 / Plus 2 / Plus 3</h3>
+      <ul>
+        <li><strong>Plus 1</strong> — rim up 1″, sidewall down to compensate. Most common.</li>
+        <li><strong>Plus 2</strong> — up 2″. Noticeable harshness.</li>
+        <li><strong>Plus 3</strong> — show-car territory. Comfort and pothole tolerance go out the window.</li>
+      </ul>
+
+      <h3>The Math (Keep Overall Diameter ±3%)</h3>
+      <p>Original: <code>215/65R16</code> = 16 × 25.4 + 2 × (215 × 0.65) = <strong>686.1 mm</strong></p>
+      <ul>
+        <li><strong>Plus 1:</strong> <code>225/55R17</code> = 17 × 25.4 + 2 × (225 × 0.55) = 679.3 mm (–1.0%, within tolerance ✓)</li>
+        <li><strong>Plus 2:</strong> <code>235/45R18</code> = 18 × 25.4 + 2 × (235 × 0.45) = 668.7 mm (–2.5%, close to limit)</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Why ±3% matters</div>
+        Outside that range = speedo error, ABS confusion, traction control intervening at the wrong moment, fuel economy calculations off, odometer/lease-km off. Stability control on modern vehicles is calibrated tightly to OE diameter.
+      </div>
+
+      <h3>Load + Speed Match Still Required</h3>
+      <p>A plus-sized tire must still meet or exceed the OE load index and speed rating. Lower-profile tires often carry higher load ratings at the same width — verify each candidate against the door-jamb sticker.</p>
+    `,
+  },
+  {
+    id: 'select',
+    icon: '🛒',
+    title: 'Selecting Tires',
+    blurb: 'Matching the right tire to the customer',
+    content: `
+      <h3>Start With the Use Case</h3>
+      <p>Before pricing, before brand — ask how they drive:</p>
+      <ul>
+        <li>Daily commute distance? Mostly highway, mostly city, mixed?</li>
+        <li>Carry loads, tow, haul gear?</li>
+        <li>Second set for winter, or one set year-round?</li>
+        <li>Priorities — comfort, fuel economy, noise, grip?</li>
+      </ul>
+
+      <h3>OE Specs Are the Floor, Not the Ceiling</h3>
+      <p>Match or exceed the OE values for:</p>
+      <ul>
+        <li><strong>Size</strong> — width × aspect × rim. Stick to OE for safest install. Plus-sizing only on aftermarket wheels.</li>
+        <li><strong>Load index</strong> — equal or greater. Never lower.</li>
+        <li><strong>Speed rating</strong> — equal or greater. Exception: dedicated winter tires can drop one or two ratings.</li>
+      </ul>
+
+      <h3>Category Quick Reference</h3>
+      <table>
+        <thead><tr><th>Driver</th><th>Best fit</th></tr></thead>
+        <tbody>
+          <tr><td>Commuter, mild climate</td><td>Touring all-season, 500+ treadwear</td></tr>
+          <tr><td>Highway warrior, high km</td><td>Grand touring, 600–800 treadwear, low rolling resistance</td></tr>
+          <tr><td>One set year-round</td><td>All-weather, 3PMSF rated</td></tr>
+          <tr><td>Two-set Canadian</td><td>All-season summer + dedicated winter</td></tr>
+          <tr><td>1/2-ton, light hauling</td><td>LT-rated highway tire</td></tr>
+          <tr><td>1/2-ton, tow + off-road</td><td>LT-rated all-terrain</td></tr>
+          <tr><td>Sport sedan / coupe</td><td>UHP summer + dedicated winter</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <div class="callout-title">Anchor pricing</div>
+        Quote three tiers — good / better / best — from the same brand family when possible. Most customers pick the middle. The conversation shifts from "do I buy?" to "which one?"
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">Two tires, not four</div>
+        If a customer can only afford 2, match them as closely as possible to the existing pair (same brand and model if available) and mount the new pair on the <strong>rear axle</strong> regardless of drivetrain — more stability under hard braking.
+      </div>
+    `,
+  },
 ];
 
 // Current vehicle state (phone mode)
@@ -1077,7 +1632,39 @@ function unlock() {
   document.getElementById('lockScreen').hidden = true;
   document.getElementById('app').classList.add('active');
   renderManuals();
+  renderTires101Tiles();
   if (TV_MODE) enterTVMode();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TIRES 101 — render + open/close
+   ═══════════════════════════════════════════════════════════════ */
+function renderTires101Tiles() {
+  const host = document.getElementById('t101Tiles');
+  if (!host) return;
+  host.innerHTML = TIRES_101.map(t => `
+    <button class="t101-tile" type="button" onclick="openTopic('${t.id}')">
+      <span class="t-icon">${t.icon}</span>
+      <div class="t-name">${t.title}</div>
+      <div class="t-blurb">${t.blurb}</div>
+    </button>
+  `).join('');
+}
+
+function openTopic(id) {
+  const topic = TIRES_101.find(t => t.id === id);
+  if (!topic) return;
+  document.getElementById('topicTitle').textContent = topic.title;
+  document.getElementById('topicBody').innerHTML = topic.content;
+  const m = document.getElementById('topicModal');
+  m.hidden = false;
+  // Scroll modal content to top whenever a topic opens
+  const card = m.querySelector('.modal-card');
+  if (card) card.scrollTop = 0;
+}
+
+function closeTopic() {
+  document.getElementById('topicModal').hidden = true;
 }
 
 function logout() {
