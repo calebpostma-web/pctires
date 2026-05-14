@@ -4859,7 +4859,8 @@ function addToCart(itemNumber, itemType) {
   const ex = cart.find(c => c.itemNumber === itemNumber);
   const priceToCharge = displayedPrice(item);
   if (ex) ex.qty++;
-  else cart.push({ ...item, price: priceToCharge, qty: itemType === 'wheel' ? 4 : 4, install: true, itemType: itemType || 'tire' });
+  // Commercial truck tires (17.5/19.5/22.5/24.5 rims) are sell-only — we don't install them
+  else cart.push({ ...item, price: priceToCharge, qty: itemType === 'wheel' ? 4 : 4, install: !isCommercialTire(item), itemType: itemType || 'tire' });
   updBadge();
   const qty = ex ? ex.qty : 4;
   const label = itemType === 'wheel' ? 'wheels' : 'tires';
@@ -4871,7 +4872,24 @@ function chgQty(itemNumber, d) {
   const item = cart.find(c => c.itemNumber === itemNumber); if (!item) return;
   item.qty += d; if (item.qty <= 0) { removeFromCart(itemNumber); return; } saveCartToStorage(); renderCart();
 }
-function togInst(itemNumber) { const item = cart.find(c => c.itemNumber === itemNumber); if (item) item.install = !item.install; saveCartToStorage(); renderCart(); }
+// Detect commercial truck tire by size: old-style single-width (11R22.5) or any 17.5/19.5/22.5/24.5 rim
+function isCommercialTire(item) {
+  if (!item || item.itemType === 'wheel') return false;
+  const size = String(item.size || '').toUpperCase().trim();
+  if (!size) return false;
+  if (/^\d+R\d+\.5$/.test(size)) return true;                            // 11R22.5, 12R24.5
+  if (/R(?:17\.5|19\.5|22\.5|24\.5)\b/.test(size)) return true;          // 295/75R22.5, 215/75R17.5
+  return false;
+}
+function togInst(itemNumber) {
+  const item = cart.find(c => c.itemNumber === itemNumber);
+  if (!item) return;
+  // Commercial tires can't be installed in-shop — ignore any toggle attempts
+  if (isCommercialTire(item)) { item.install = false; saveCartToStorage(); renderCart(); return; }
+  item.install = !item.install;
+  saveCartToStorage();
+  renderCart();
+}
 function updBadge() { document.getElementById('cartCount').textContent = cart.reduce((s, c) => s + c.qty, 0); saveCartToStorage(); }
 
 function renderCart() {
@@ -4884,6 +4902,7 @@ function renderCart() {
     const icon = item.itemType === 'wheel' ? (item.category === 'steel' ? '⚙️' : '💿') : '🔵';
     const rebate = item.itemType !== 'wheel' && typeof getRebateForBrand === 'function' ? getRebateForBrand(item.brand) : null;
     const rebateNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:3px">💰 $${rebate.amount} mail-in rebate available — <a href="${rebate.url}" target="_blank" style="color:var(--yellow);text-decoration:none">apply here →</a></div>` : '';
+    const commercial = isCommercialTire(item);
     return `
     <div class="cart-item">
       <div class="ci-icon">${icon}</div>
@@ -4891,8 +4910,12 @@ function renderCart() {
         <div class="ci-brand">${item.brand}</div>
         <div class="ci-name">${item.name}</div>
         <div class="ci-size">${item.size || (item.diameter ? item.diameter+'" · '+item.boltPattern : '')}</div>
-        ${item.install && item.itemType !== 'wheel' ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
-        ${item.itemType !== 'wheel' ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${TDG.INSTALL_PRICE}/tire</b></span></label>` : ''}
+        ${item.install && item.itemType !== 'wheel' && !commercial ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
+        ${commercial
+          ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">🚛 <strong style="color:var(--light)">Commercial size</strong> — sell-only, no in-shop install. We'll source &amp; ship or arrange pickup.</div>`
+          : (item.itemType !== 'wheel'
+              ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${TDG.INSTALL_PRICE}/tire</b></span></label>`
+              : '')}
         ${rebateNote}
       </div>
       <div class="ci-right">
@@ -5062,7 +5085,11 @@ function loadCartFromStorage() {
       localStorage.removeItem(CART_STORAGE_KEY);
       return;
     }
-    if (Array.isArray(data.cart)) cart = data.cart;
+    if (Array.isArray(data.cart)) {
+      cart = data.cart;
+      // Defensive: legacy carts may have install=true on commercial sizes; commercial is sell-only.
+      cart.forEach(c => { if (isCommercialTire(c)) c.install = false; });
+    }
     if (data.appliedPromo) appliedPromo = data.appliedPromo;
     updBadge();
   } catch(e) {
