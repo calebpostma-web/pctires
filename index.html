@@ -52,7 +52,12 @@ body.with-promo-bar .rebate-ticker{top:56px}
 body.with-promo-bar .trust-bar{top:89px}
 body.with-promo-bar nav{top:127px}
 body.with-promo-bar{scroll-padding-top:185px}
-@media(max-width:960px){body.with-promo-bar nav{top:89px}}
+/* Push lookup-section down when the promo bar is visible so the heading isn't clipped */
+body.with-promo-bar .lookup-section{padding-top:195px}
+@media(max-width:960px){
+  body.with-promo-bar nav{top:89px}
+  body.with-promo-bar .lookup-section{padding-top:155px}
+}
 @media(max-width:600px){
   .promo-bar{font-size:13px;padding:10px 44px 10px 14px;gap:10px;height:48px}
   .promo-bar-msg{font-size:13px}
@@ -60,6 +65,7 @@ body.with-promo-bar{scroll-padding-top:185px}
   .promo-bar-code{font-size:12px;padding:4px 10px;letter-spacing:1.5px}
   body.with-promo-bar .rebate-ticker{top:48px}
   body.with-promo-bar nav{top:81px}
+  body.with-promo-bar .lookup-section{padding-top:145px}
 }
 
 .rebate-ticker{background:var(--yellow);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:7px 0;overflow:hidden;position:fixed;top:0;left:0;right:0;z-index:502}
@@ -550,6 +556,18 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .vin-badge{display:inline-block;background:var(--yellow);color:var(--black);font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle}
 .vin-intro{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;margin-bottom:18px;font-size:13px;color:var(--light);line-height:1.6}
 .vin-intro-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+/* "Help Me Choose" lifestyle panel */
+.life-intro{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;margin-bottom:18px;font-size:13px;color:var(--light);line-height:1.55}
+.life-intro-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.life-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:18px}
+.life-chip{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:12px 14px;border-radius:2px;cursor:pointer;text-align:left;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;transition:all .15s;line-height:1.2}
+.life-chip:hover{border-color:var(--yellow)}
+.life-chip.selected{background:var(--yellow-dim);border-color:var(--yellow);color:var(--yellow)}
+.life-chip .lc-ic{font-size:18px;flex-shrink:0}
+.life-chip .lc-tx{flex:1}
+.life-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.life-count{font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:.5px}
+@media(max-width:600px){.life-chips{grid-template-columns:1fr 1fr}.life-actions{flex-direction:column;align-items:stretch}.life-actions .lookup-btn{width:100%}}
 .vin-input-row{display:flex;gap:10px;align-items:flex-end}
 .vin-field-wrap{flex:1;position:relative}
 .vin-input{width:100%;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:12px 80px 12px 16px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:16px;letter-spacing:3px;text-transform:uppercase;outline:none;transition:border-color .2s}
@@ -897,9 +915,20 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .td-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;line-height:1;margin-bottom:4px}
 .td-size{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);margin-bottom:14px}
 .td-specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px}
-.td-spec{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:7px 10px}
+.td-spec{background:var(--raised);border:1px solid var(--border);border-radius:2px;padding:8px 10px}
 .td-spec-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px}
 .td-spec-value{font-size:13px;font-weight:600;color:var(--white)}
+.td-spec-explain{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.35;font-weight:400}
+/* "What this tire is built for" summary card — auto-generated from specs */
+.td-summary{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:2px;padding:14px 16px;margin-bottom:14px}
+.td-summary-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--yellow);margin-bottom:10px}
+.td-summary-group{margin-bottom:12px}
+.td-summary-group:last-child{margin-bottom:0}
+.td-summary-group-label{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--light);margin-bottom:5px}
+.td-summary-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px}
+.td-summary-list li{font-size:13px;color:var(--light);line-height:1.45;padding-left:20px;position:relative}
+.td-summary-list.good li::before{content:'✓';position:absolute;left:2px;color:var(--green);font-weight:800;font-size:12px;top:1px}
+.td-summary-list.consider li::before{content:'→';position:absolute;left:2px;color:var(--muted);font-weight:700;top:0}
 .td-desc{font-size:13px;color:var(--light);line-height:1.75;margin-bottom:14px}
 .td-features{list-style:none;padding:0;margin:0 0 18px}
 .td-features li{font-size:13px;color:var(--light);padding:5px 0 5px 18px;position:relative;border-bottom:1px solid var(--border);line-height:1.5}
@@ -1113,6 +1142,7 @@ function getRebateForBrand(brand) {
         <button class="lookup-tab" id="tab-vehicle" onclick="switchLookupTab('vehicle')">🚗 By Vehicle</button>
         <button class="lookup-tab" id="tab-size" onclick="switchLookupTab('size')">📏 By Tire Size</button>
         <button class="lookup-tab" id="tab-wheels" onclick="switchLookupTab('wheels')">🔩 Shop Wheels</button>
+        <button class="lookup-tab" id="tab-life" onclick="switchLookupTab('life')">🎯 Help Me Choose</button>
         <button class="lookup-tab" id="tab-guide" onclick="openSelectionGuide()" style="color:var(--yellow);border-bottom-color:transparent !important;margin-left:auto">✦ Not sure? Use our Tire Guide</button>
       </div>
 
@@ -1247,6 +1277,29 @@ function getRebateForBrand(brand) {
             <div class="field"><label>Width</label><select id="wWidth2"><option value="">Any Width</option></select></div>
           </div>
           <div style="font-size:11px;color:var(--muted);margin-top:6px">Both sizes will be included in results. Common on sports cars with wider rears.</div>
+        </div>
+      </div>
+
+      <!-- Help Me Choose panel — match tires to lifestyle/preferences -->
+      <div class="lookup-panel" id="panel-life">
+        <div class="life-intro">
+          <span class="life-intro-icon">🎯</span>
+          <div>Tell us what matters to <strong>you</strong> — not the spec sheet. We'll match tires to how you actually drive. Pick as many as fit, then hit search.</div>
+        </div>
+        <div class="life-chips" id="lifeChips">
+          <button class="life-chip" type="button" data-pref="smooth" onclick="toggleLifeChip(this)"><span class="lc-ic">🛋️</span><span class="lc-tx">Smooth ride</span></button>
+          <button class="life-chip" type="button" data-pref="quiet" onclick="toggleLifeChip(this)"><span class="lc-ic">🔇</span><span class="lc-tx">Quiet</span></button>
+          <button class="life-chip" type="button" data-pref="wet" onclick="toggleLifeChip(this)"><span class="lc-ic">🌧️</span><span class="lc-tx">Grippy in rain</span></button>
+          <button class="life-chip" type="button" data-pref="winter" onclick="toggleLifeChip(this)"><span class="lc-ic">❄️</span><span class="lc-tx">Snow &amp; winter</span></button>
+          <button class="life-chip" type="button" data-pref="longlife" onclick="toggleLifeChip(this)"><span class="lc-ic">⏳</span><span class="lc-tx">Long-lasting</span></button>
+          <button class="life-chip" type="button" data-pref="budget" onclick="toggleLifeChip(this)"><span class="lc-ic">💰</span><span class="lc-tx">Easy on the wallet</span></button>
+          <button class="life-chip" type="button" data-pref="offroad" onclick="toggleLifeChip(this)"><span class="lc-ic">🏔️</span><span class="lc-tx">Off-road / trail</span></button>
+          <button class="life-chip" type="button" data-pref="performance" onclick="toggleLifeChip(this)"><span class="lc-ic">🏎️</span><span class="lc-tx">Sporty handling</span></button>
+          <button class="life-chip" type="button" data-pref="ev" onclick="toggleLifeChip(this)"><span class="lc-ic">🔋</span><span class="lc-tx">Electric vehicle</span></button>
+        </div>
+        <div class="life-actions">
+          <span class="life-count" id="lifeCount">0 selected</span>
+          <button class="lookup-btn" id="lifeSearchBtn" onclick="doLifestyleSearch()" disabled style="opacity:.5;cursor:not-allowed">Find My Tires →</button>
         </div>
       </div>
 
@@ -1645,6 +1698,7 @@ function getRebateForBrand(brand) {
         <div class="td-brand" id="tdBrand"></div>
         <div class="td-title" id="tdTitle"></div>
         <div class="td-size" id="tdSize"></div>
+        <div class="td-summary" id="tdSummary" style="display:none"></div>
         <div class="td-specs-grid" id="tdSpecs"></div>
         <div class="td-desc" id="tdDesc"></div>
         <ul class="td-features" id="tdFeatures"></ul>
@@ -4076,7 +4130,7 @@ async function vinSearchWheels() {
 //  LOOKUP TAB SWITCHING
 // ─────────────────────────────────────────────────
 function switchLookupTab(tab) {
-  ['vin','vehicle','size','wheels'].forEach(t => {
+  ['vin','vehicle','size','wheels','life'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('panel-' + t).classList.toggle('active', t === tab);
   });
@@ -5827,8 +5881,367 @@ async function applySelectionGuideFilters() {
 function smoothScroll(sel) { document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' }); }
 
 // ─────────────────────────────────────────────────
-//  TIRE DETAIL MODAL
+//  TIRE DETAIL MODAL — spec translations + auto summary
 // ─────────────────────────────────────────────────
+
+// Load Index → kg lookup (industry-standard table, common range)
+const LOAD_INDEX_KG = {
+  70:335, 71:345, 72:355, 73:365, 74:375, 75:387, 76:400, 77:412, 78:425, 79:437,
+  80:450, 81:462, 82:475, 83:487, 84:500, 85:515, 86:530, 87:545, 88:560, 89:580,
+  90:600, 91:615, 92:630, 93:650, 94:670, 95:690, 96:710, 97:730, 98:750, 99:775,
+  100:800, 101:825, 102:850, 103:875, 104:900, 105:925, 106:950, 107:975, 108:1000,
+  109:1030, 110:1060, 111:1090, 112:1120, 113:1150, 114:1180, 115:1215, 116:1250,
+  117:1285, 118:1320, 119:1360, 120:1400, 121:1450, 122:1500, 123:1550, 124:1600,
+  125:1650, 126:1700, 127:1750, 128:1800, 129:1850, 130:1900,
+};
+
+// Translate one spec value into a plain-English subtitle. Returns null if no good fit.
+function specExplain(label, value) {
+  if (value == null || value === '' || value === '—') return null;
+  const v = String(value).trim();
+  switch (label) {
+    case 'Season': {
+      const map = {
+        'All Season': 'Year-round driving in mild weather',
+        'All-Season': 'Year-round driving in mild weather',
+        'Summer': 'Warm-weather performance — not for cold or snow',
+        'Winter': 'Cold-weather grip — soft compound below 7°C',
+        'All Weather': 'Year-round with real winter capability',
+        'All-Weather': 'Year-round with real winter capability',
+      };
+      return map[v] || null;
+    }
+    case 'Speed Rating': {
+      const map = {
+        'L':'Up to 120 km/h — off-road / light truck',
+        'M':'Up to 130 km/h',
+        'N':'Up to 140 km/h',
+        'P':'Up to 150 km/h',
+        'Q':'Up to 160 km/h — typical winter rating',
+        'R':'Up to 170 km/h',
+        'S':'Up to 180 km/h — economy passenger',
+        'T':'Up to 190 km/h — family sedans',
+        'U':'Up to 200 km/h',
+        'H':'Up to 210 km/h — sport sedans, SUVs',
+        'V':'Up to 240 km/h — performance',
+        'W':'Up to 270 km/h — high-performance',
+        'Y':'Up to 300 km/h — supercar',
+        '(Y)':'Over 300 km/h — uncapped',
+        'ZR':'Over 240 km/h — high-performance',
+      };
+      return map[v.toUpperCase()] || null;
+    }
+    case 'Load Index': {
+      const li = parseInt(v, 10);
+      if (!li) return null;
+      const kg = LOAD_INDEX_KG[li];
+      if (!kg) return null;
+      const lb = Math.round(kg * 2.2046);
+      return '≈ ' + kg.toLocaleString() + ' kg (' + lb.toLocaleString() + ' lb) per tire';
+    }
+    case 'Service Type': {
+      const map = {
+        'Passenger': 'Cars, small SUVs — daily driving',
+        'Light Truck': 'Heavy-duty trucks, towing, off-road',
+        'LT': 'Heavy-duty trucks, towing, off-road',
+        'Special Trailer': 'Trailers only — never on a powered axle',
+        'ST': 'Trailers only — never on a powered axle',
+        'Euro-Metric': 'European spec — equivalent to Passenger',
+        'P-Metric': 'Passenger — cars and small SUVs',
+      };
+      return map[v] || null;
+    }
+    case 'Run-Flat':
+      return v === 'Yes'
+        ? 'Drive ~80 km at 80 km/h after a puncture — no spare needed'
+        : 'Standard tire — needs spare or roadside help if flat';
+    case 'EV Compatible':
+      return v === 'Yes' ? 'Built for EV weight, with quieter cabin noise' : null;
+    case 'Treadwear': {
+      const tw = parseInt(v, 10);
+      if (!tw) return null;
+      if (tw < 300) return 'Performance compound — shorter tread life';
+      if (tw < 500) return 'Standard wear life';
+      if (tw < 700) return 'Long-lasting all-season';
+      return 'Premium long-life touring tire';
+    }
+    case 'Traction': {
+      const map = {
+        'AA': 'Best wet-grip rating',
+        'A': 'Excellent wet grip',
+        'B': 'Good wet grip',
+        'C': 'Acceptable wet grip — legal minimum',
+      };
+      return map[v.toUpperCase()] || null;
+    }
+    case 'Temperature': {
+      const map = {
+        'A': 'Best heat resistance at sustained speed',
+        'B': 'Good heat resistance',
+        'C': 'Acceptable — legal minimum',
+      };
+      return map[v.toUpperCase()] || null;
+    }
+  }
+  return null;
+}
+
+// Pre-compute searchable traits for a tire — used by the modal summary AND the lifestyle search.
+function tireTraits(t) {
+  const season = (t.season || '').toLowerCase();
+  const service = (t.serviceType || '').toLowerCase();
+  const speed = (t.speed || '').toUpperCase();
+  const tw = parseInt(t.treadwear, 10) || 0;
+  const traction = (t.traction || '').toUpperCase();
+  const hay = ((t.name || '') + ' ' + (t.description || '') + ' ' + ((t.features || []).join(' '))).toLowerCase();
+  const isAllWeather = season.includes('all weather') || season.includes('all-weather');
+  return {
+    season, service, speed, treadwear: tw, traction, hay,
+    isLT: service.includes('light truck') || service === 'lt',
+    isWinter: season.includes('winter') || /3pmsf|mountain snowflake|snow tire|winter tire/.test(hay),
+    isAllWeather,
+    isAllSeason: !isAllWeather && (season.includes('all season') || season.includes('all-season')),
+    isSummer: season === 'summer',
+    isAT: /\ball[- ]?terrain\b|\ba\/?t\b/i.test(hay),
+    isMT: /\bmud[- ]?terrain\b|\bm\/?t\b/i.test(hay),
+    isTouring: /\btouring|grand touring|highway|comfort|quiet\b/i.test(hay),
+    isHighPerf: ['V','W','Y','(Y)','ZR'].includes(speed) || /\bperformance|sport|uhp\b/i.test(hay),
+    isLongLife: tw >= 600,
+    isGreatWet: traction === 'AA' || traction === 'A',
+    isEV: !!t.evCompat,
+    isRunFlat: !!t.runFlat,
+  };
+}
+
+// Build a customer-friendly "Best for / Consider another option if" summary from the tire's specs.
+// Tone: friendly + reassuring (not salesy, not bossy).
+function buildTireSummary(t) {
+  const tr = tireTraits(t);
+  const { isLT, isWinter, isAllWeather, isAllSeason, isSummer, isAT, isMT, isTouring, isHighPerf, isLongLife, isGreatWet } = tr;
+  const tw = tr.treadwear;
+
+  const good = [];
+  const consider = [];
+
+  // GOOD FOR — pick the most distinctive 2–4 traits, lead with biggest signal
+  if (isMT) good.push('Built for serious off-road, mud, and trail work');
+  else if (isLT && isAT) good.push('Made for heavy-duty trucks that mix highway driving with off-road');
+  else if (isLT) good.push('Built for trucks and SUVs that haul, tow, or work hard');
+
+  if (isWinter) good.push('Confident grip in snow, ice, and Canadian winter cold');
+  else if (isAllWeather) good.push('A real one-set-year-round option — winter-rated without sacrificing summer drivability');
+  else if (isAllSeason && isTouring) good.push('Smooth, quiet daily driving — focused on comfort and low road noise');
+  else if (isAllSeason) good.push('Reliable three-season driving in mild Canadian weather');
+
+  if (isSummer && !isHighPerf) good.push('Sharp dry-weather handling and crisp steering response');
+  if (isHighPerf && !isLT) good.push('Sport-tuned grip and responsive handling for performance driving');
+  if (isLongLife) good.push('Long tread life — strong kilometres-per-dollar value');
+  if (isGreatWet) good.push('Excellent grip in rain and wet conditions');
+  if (t.evCompat) good.push('Designed for electric vehicles — extra load capacity, quieter ride');
+  if (t.runFlat) good.push('Run-flat technology — keep driving after a puncture, no spare needed');
+
+  // CONSIDER ANOTHER IF — honest trade-offs, not pushy
+  if (isLT && !isHighPerf) consider.push('You drive a passenger car or compact crossover — these are heavier-duty than you need');
+  if (isAT || isMT) consider.push("You're after a whisper-quiet highway ride — aggressive tread does add some road noise");
+  if (isWinter) consider.push("You don't store winters separately — winter compound wears quickly in warm weather");
+  if (isSummer) consider.push('You see snow or cold winters — summer compound loses grip below 7°C');
+  if (isHighPerf && tw && tw < 400) consider.push('You want maximum tread mileage — performance compounds wear faster by design');
+  if (isAllSeason && !isAllWeather && !isWinter) consider.push('You drive in heavy snow regularly — a dedicated winter tire will outperform any all-season');
+  if (t.runFlat) consider.push("You prefer a softer ride — run-flats have stiffer sidewalls that transmit more road feel");
+
+  // Fallback so the card never looks empty
+  if (good.length === 0) good.push('A solid choice for everyday Canadian driving');
+  if (consider.length === 0) consider.push('Not sure if this fits how you drive? Give us a call — we know what works in Chatham-Kent');
+
+  return { goodFor: good.slice(0, 4), consider: consider.slice(0, 3) };
+}
+
+// ─────────────────────────────────────────────────
+//  LIFESTYLE / "Help Me Choose" SEARCH
+//  Each preference scores a tire 0–60. Multi-select sums.
+// ─────────────────────────────────────────────────
+const LIFESTYLE_PREFS = {
+  smooth: {
+    label: 'Smooth ride', icon: '🛋️',
+    score: (t, tr) => {
+      let s = 0;
+      if (/touring|comfort|smooth|cushion/i.test(tr.hay)) s += 40;
+      if (tr.isTouring) s += 20;
+      if (tr.isMT) s -= 40;
+      if (tr.isAT) s -= 20;
+      if (tr.isRunFlat) s -= 10;
+      return s;
+    },
+  },
+  quiet: {
+    label: 'Quiet', icon: '🔇',
+    score: (t, tr) => {
+      let s = 0;
+      if (/quiet|silent|low.?noise|touring|comfort/i.test(tr.hay)) s += 40;
+      if (tr.isTouring) s += 15;
+      if (tr.isMT) s -= 50;
+      if (tr.isAT) s -= 25;
+      return s;
+    },
+  },
+  wet: {
+    label: 'Grippy in rain', icon: '🌧️',
+    score: (t, tr) => {
+      let s = 0;
+      if (tr.traction === 'AA') s += 50;
+      else if (tr.traction === 'A') s += 35;
+      else if (tr.traction === 'B') s += 12;
+      if (/wet|hydroplan|rain|all.?weather/i.test(tr.hay)) s += 20;
+      if (tr.isSummer) s += 8;
+      return s;
+    },
+  },
+  winter: {
+    label: 'Snow & winter', icon: '❄️',
+    score: (t, tr) => {
+      let s = 0;
+      if (tr.isWinter) s += 55;
+      else if (tr.isAllWeather) s += 40;
+      if (/3pmsf|mountain snowflake|snow|ice|winter/i.test(tr.hay)) s += 15;
+      if (tr.isSummer) s -= 70;
+      if (tr.isAllSeason && !tr.isAllWeather) s -= 15;
+      return s;
+    },
+  },
+  longlife: {
+    label: 'Long-lasting', icon: '⏳',
+    score: (t, tr) => {
+      let s = 0;
+      const tw = tr.treadwear;
+      if (tw >= 800) s += 55;
+      else if (tw >= 600) s += 40;
+      else if (tw >= 500) s += 25;
+      else if (tw >= 400) s += 10;
+      if (tr.isTouring) s += 10;
+      if (/long.?life|long.?lasting|warranty|mileage/i.test(tr.hay)) s += 15;
+      if (tr.isHighPerf && tw && tw < 400) s -= 20;
+      return s;
+    },
+  },
+  budget: {
+    label: 'Easy on the wallet', icon: '💰',
+    // Lower-priced tires (relative to catalog median) score higher.
+    // ctx.medianPrice is computed once per search.
+    score: (t, tr, ctx) => {
+      if (!ctx || !ctx.medianPrice || !ctx.priceLookup) return 0;
+      const p = ctx.priceLookup(t);
+      if (!p || p <= 0) return 0;
+      const ratio = p / ctx.medianPrice;
+      if (ratio < 0.6) return 55;
+      if (ratio < 0.8) return 40;
+      if (ratio < 1.0) return 22;
+      if (ratio < 1.2) return 8;
+      return 0;
+    },
+  },
+  offroad: {
+    label: 'Off-road / trail', icon: '🏔️',
+    score: (t, tr) => {
+      let s = 0;
+      if (tr.isMT) s += 55;
+      if (tr.isAT) s += 40;
+      if (tr.isLT && !tr.isMT && !tr.isAT) s += 18;
+      if (/off.?road|trail|terrain|rugged|gravel|mud/i.test(tr.hay)) s += 15;
+      if (tr.isTouring) s -= 10;
+      return s;
+    },
+  },
+  performance: {
+    label: 'Sporty handling', icon: '🏎️',
+    score: (t, tr) => {
+      let s = 0;
+      const sp = tr.speed;
+      if (sp === 'Y' || sp === '(Y)') s += 55;
+      else if (sp === 'W') s += 42;
+      else if (sp === 'V') s += 28;
+      else if (sp === 'H') s += 10;
+      if (/performance|uhp|sport|track|max performance/i.test(tr.hay)) s += 18;
+      if (tr.isLT && !tr.isAT && !tr.isMT) s -= 15;
+      if (tr.isMT) s -= 30;
+      return s;
+    },
+  },
+  ev: {
+    label: 'Electric vehicle', icon: '🔋',
+    score: (t, tr) => {
+      let s = 0;
+      if (tr.isEV) s += 55;
+      if (/\bev\b|electric|tesla|self.?seal|low.?rolling/i.test(tr.hay)) s += 20;
+      return s;
+    },
+  },
+};
+
+function toggleLifeChip(btn) {
+  btn.classList.toggle('selected');
+  const count = document.querySelectorAll('.life-chip.selected').length;
+  document.getElementById('lifeCount').textContent = count + ' selected';
+  const searchBtn = document.getElementById('lifeSearchBtn');
+  searchBtn.disabled = count === 0;
+  searchBtn.style.opacity = count === 0 ? '.5' : '1';
+  searchBtn.style.cursor = count === 0 ? 'not-allowed' : 'pointer';
+}
+
+async function doLifestyleSearch() {
+  const selected = Array.from(document.querySelectorAll('.life-chip.selected')).map(el => el.dataset.pref);
+  if (!selected.length) return;
+
+  const resultEl = document.getElementById('lookupResult');
+  const textEl = document.getElementById('lookupText');
+  textEl.innerHTML = 'Matching tires to your priorities…';
+  resultEl.classList.add('show');
+
+  // Ensure catalog is loaded
+  if (!allTires || !allTires.length) {
+    await loadTires();
+  }
+  switchCatalogType('tires');
+
+  // Median price for budget scoring
+  const priceLookup = (t) => {
+    try { return typeof displayedPrice === 'function' ? displayedPrice(t) : (t.price || 0); }
+    catch (e) { return t.price || 0; }
+  };
+  const prices = allTires.map(priceLookup).filter(p => p > 0).sort((a,b) => a-b);
+  const medianPrice = prices.length ? prices[Math.floor(prices.length/2)] : 0;
+  const ctx = { medianPrice, priceLookup };
+
+  // Score, filter, sort
+  const scored = allTires.map(t => {
+    const tr = tireTraits(t);
+    const score = selected.reduce((sum, key) => {
+      const pref = LIFESTYLE_PREFS[key];
+      return sum + (pref ? (pref.score(t, tr, ctx) || 0) : 0);
+    }, 0);
+    return { tire: t, score };
+  }).filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  filteredTires = scored.map(x => x.tire);
+  const tireCountEl = document.getElementById('tireCount');
+  if (tireCountEl) tireCountEl.textContent = filteredTires.length;
+  if (typeof renderTires === 'function') renderTires();
+
+  // Clear chip filter highlight in catalog (since we used a custom filter)
+  document.querySelectorAll('#tire-chips-row .chip').forEach(c => c.classList.remove('active'));
+
+  // Build result summary
+  const chipLabels = selected.map(k => LIFESTYLE_PREFS[k].icon + ' ' + LIFESTYLE_PREFS[k].label).join(' · ');
+  if (filteredTires.length) {
+    textEl.innerHTML = 'Showing <strong>' + filteredTires.length + '</strong> tire' + (filteredTires.length !== 1 ? 's' : '') + ' ranked for: ' + chipLabels;
+  } else {
+    textEl.innerHTML = "No tires in stock matched those priorities — <a href=\"tel:5193974686\" style=\"color:var(--yellow)\">call us at 519-397-4686</a> and we'll find what fits.";
+  }
+
+  lastSearchMethod = 'lifestyle';
+  setTimeout(() => smoothScroll('#catalog'), 300);
+}
+
 function openTireDetail(itemNumber) {
   const t = [...allTires, ...(filteredTires || [])].find(x => x.itemNumber === itemNumber);
   if (!t) return;
@@ -5845,7 +6258,7 @@ function openTireDetail(itemNumber) {
   document.getElementById('tdTitle').textContent = t.name;
   document.getElementById('tdSize').textContent = t.size + (t.sidewall ? ' · ' + t.sidewall : '');
 
-  // Specs grid
+  // Specs grid (with plain-English explainer under each value)
   const specItems = [
     ['Season', t.season], ['Speed Rating', t.speed || '—'],
     ['Load Index', t.loadIndex || '—'], ['Service Type', t.serviceType || '—'],
@@ -5854,9 +6267,25 @@ function openTireDetail(itemNumber) {
     ...(t.traction    ? [['Traction', t.traction]]        : []),
     ...(t.temperature ? [['Temperature', t.temperature]]  : []),
   ];
-  document.getElementById('tdSpecs').innerHTML = specItems.map(([l,v]) =>
-    `<div class="td-spec"><div class="td-spec-label">${l}</div><div class="td-spec-value">${v}</div></div>`
-  ).join('');
+  document.getElementById('tdSpecs').innerHTML = specItems.map(([l,v]) => {
+    const explain = specExplain(l, v);
+    return `<div class="td-spec"><div class="td-spec-label">${l}</div><div class="td-spec-value">${v}</div>${explain ? `<div class="td-spec-explain">${explain}</div>` : ''}</div>`;
+  }).join('');
+
+  // Customer-friendly summary card ("Best for / Consider another option if")
+  const summaryEl = document.getElementById('tdSummary');
+  const sum = buildTireSummary(t);
+  summaryEl.innerHTML =
+    '<div class="td-summary-title">What this tire is built for</div>' +
+    '<div class="td-summary-group">' +
+      '<div class="td-summary-group-label">Great for</div>' +
+      '<ul class="td-summary-list good">' + sum.goodFor.map(x => '<li>' + x + '</li>').join('') + '</ul>' +
+    '</div>' +
+    '<div class="td-summary-group">' +
+      '<div class="td-summary-group-label">Consider another option if</div>' +
+      '<ul class="td-summary-list consider">' + sum.consider.map(x => '<li>' + x + '</li>').join('') + '</ul>' +
+    '</div>';
+  summaryEl.style.display = 'block';
 
   // Description & features
   const descEl = document.getElementById('tdDesc');
