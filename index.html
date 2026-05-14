@@ -559,6 +559,12 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 /* "Help Me Choose" lifestyle panel */
 .life-intro{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--yellow-dim);border:1px solid rgba(245,197,24,.2);border-radius:2px;margin-bottom:18px;font-size:13px;color:var(--light);line-height:1.55}
 .life-intro-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.life-step-label{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.life-step-num{background:var(--yellow);color:var(--black);width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800}
+.life-size-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;margin-bottom:6px;align-items:end}
+.life-use-last{background:transparent;border:1px solid var(--border);color:var(--light);padding:10px 14px;border-radius:2px;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Barlow',sans-serif}
+.life-use-last:hover{border-color:var(--yellow);color:var(--yellow)}
+@media(max-width:600px){.life-size-row{grid-template-columns:1fr 1fr 1fr}.life-use-last{grid-column:1/-1}}
 .life-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:18px}
 .life-chip{background:var(--raised);border:1px solid var(--border);color:var(--white);padding:12px 14px;border-radius:2px;cursor:pointer;text-align:left;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;transition:all .15s;line-height:1.2}
 .life-chip:hover{border-color:var(--yellow)}
@@ -1284,8 +1290,18 @@ function getRebateForBrand(brand) {
       <div class="lookup-panel" id="panel-life">
         <div class="life-intro">
           <span class="life-intro-icon">🎯</span>
-          <div>Tell us what matters to <strong>you</strong> — not the spec sheet. We'll match tires to how you actually drive. Pick as many as fit, then hit search.</div>
+          <div>Tell us your tire size and what matters to <strong>you</strong> — not the spec sheet. We'll match tires that fit your vehicle to how you actually drive.</div>
         </div>
+        <!-- Step 1: Size (required) -->
+        <div class="life-step-label"><span class="life-step-num">1</span> Your tire size</div>
+        <div class="life-size-row">
+          <div class="field"><label id="lblLWidth">Width (mm)</label><select id="lWidth" onchange="onLWidthChange()"><option value="">Select Width</option></select></div>
+          <div class="field"><label id="lblLSidewall">Sidewall (%)</label><select id="lSidewall" onchange="onLSidewallChange()" disabled><option value="">Select Width first</option></select></div>
+          <div class="field"><label>Rim Diameter</label><select id="lDiameter" onchange="onLDiameterChange()" disabled><option value="">Select Sidewall first</option></select></div>
+          <button type="button" class="life-use-last" id="lifeUseLastBtn" onclick="lifeUseLastSearch()" style="display:none">Use my last search ↺</button>
+        </div>
+        <!-- Step 2: Preferences -->
+        <div class="life-step-label" style="margin-top:18px"><span class="life-step-num">2</span> What matters to you?</div>
         <div class="life-chips" id="lifeChips">
           <button class="life-chip" type="button" data-pref="smooth" onclick="toggleLifeChip(this)"><span class="lc-ic">🛋️</span><span class="lc-tx">Smooth ride</span></button>
           <button class="life-chip" type="button" data-pref="quiet" onclick="toggleLifeChip(this)"><span class="lc-ic">🔇</span><span class="lc-tx">Quiet</span></button>
@@ -6181,25 +6197,129 @@ function toggleLifeChip(btn) {
   btn.classList.toggle('selected');
   const count = document.querySelectorAll('.life-chip.selected').length;
   document.getElementById('lifeCount').textContent = count + ' selected';
-  const searchBtn = document.getElementById('lifeSearchBtn');
-  searchBtn.disabled = count === 0;
-  searchBtn.style.opacity = count === 0 ? '.5' : '1';
-  searchBtn.style.cursor = count === 0 ? 'not-allowed' : 'pointer';
+  refreshLifeSearchBtn();
+}
+
+// Enable Find My Tires only when BOTH a tire size and at least one chip are selected
+function refreshLifeSearchBtn() {
+  const chipCount = document.querySelectorAll('.life-chip.selected').length;
+  const haveSize = !!(document.getElementById('lWidth')?.value &&
+                      document.getElementById('lSidewall')?.value &&
+                      document.getElementById('lDiameter')?.value);
+  const ok = chipCount > 0 && haveSize;
+  const btn = document.getElementById('lifeSearchBtn');
+  if (!btn) return;
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '.5';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+}
+
+// Init the Help Me Choose width dropdown from the shared SIZE_MAP
+function initLifeSizeDropdowns() {
+  const wEl = document.getElementById('lWidth');
+  if (!wEl || typeof SIZE_MAP === 'undefined') return;
+  wEl.innerHTML = '<option value="">Select Width</option>';
+  Object.keys(SIZE_MAP).sort((a,b)=>+a-+b).forEach(w => {
+    const o = document.createElement('option'); o.value = w;
+    o.textContent = isFlotationWidth(w) ? w + '" (flotation)' : w + ' mm';
+    wEl.appendChild(o);
+  });
+  // Surface "use last search" button if a prior VIN/vehicle/size search produced a usable size
+  const lastBtn = document.getElementById('lifeUseLastBtn');
+  if (lastBtn && (typeof lastTireSearchSize !== 'undefined') && lastTireSearchSize) {
+    lastBtn.textContent = 'Use ' + lastTireSearchSize + ' ↺';
+    lastBtn.style.display = '';
+  }
+}
+
+function onLWidthChange() {
+  const w = document.getElementById('lWidth').value;
+  const sEl = document.getElementById('lSidewall'), dEl = document.getElementById('lDiameter');
+  const lblS = document.getElementById('lblLSidewall');
+  const flot = isFlotationWidth(w);
+  if (lblS) lblS.textContent = flot ? 'Section Width (in)' : 'Sidewall (%)';
+  sEl.innerHTML = '<option value="">' + (flot ? 'Select Section Width' : 'Select Sidewall') + '</option>';
+  dEl.innerHTML = '<option value="">' + (flot ? 'Select Section Width first' : 'Select Sidewall first') + '</option>';
+  sEl.disabled = !w; dEl.disabled = true;
+  if (w && SIZE_MAP[w]) Object.keys(SIZE_MAP[w]).sort((a,b)=>+a-+b).forEach(s => {
+    const o = document.createElement('option'); o.value = s;
+    o.textContent = flot ? s + '"' : s + '%';
+    sEl.appendChild(o);
+  });
+  refreshLifeSearchBtn();
+}
+
+function onLSidewallChange() {
+  const w = document.getElementById('lWidth').value, s = document.getElementById('lSidewall').value;
+  const dEl = document.getElementById('lDiameter');
+  dEl.innerHTML = '<option value="">Select Diameter</option>'; dEl.disabled = !s;
+  if (w && s && SIZE_MAP[w]?.[s]) SIZE_MAP[w][s].sort((a,b)=>+a-+b).forEach(d => {
+    const o = document.createElement('option'); o.value = d; o.textContent = 'R' + d + '  (' + d + '")'; dEl.appendChild(o);
+  });
+  refreshLifeSearchBtn();
+}
+
+function onLDiameterChange() { refreshLifeSearchBtn(); }
+
+// Pre-fill from a prior VIN / Vehicle / Size search if one happened
+function lifeUseLastSearch() {
+  if (typeof lastTireSearchSize === 'undefined' || !lastTireSearchSize) return;
+  const m = String(lastTireSearchSize).match(/^(\d+(?:\.\d+)?)[\/xX](\d+(?:\.\d+)?)R(\d+)/i);
+  if (!m) return;
+  const w = m[1], s = m[2], d = m[3];
+  const wEl = document.getElementById('lWidth');
+  wEl.value = w;
+  if (wEl.value !== w) {
+    // Width wasn't in dropdown — add it manually
+    const o = document.createElement('option'); o.value = w; o.textContent = w;
+    wEl.appendChild(o); wEl.value = w;
+  }
+  onLWidthChange();
+  const sEl = document.getElementById('lSidewall');
+  sEl.value = s;
+  if (sEl.value !== s) {
+    const o = document.createElement('option'); o.value = s; o.textContent = s;
+    sEl.appendChild(o); sEl.value = s;
+  }
+  onLSidewallChange();
+  const dEl = document.getElementById('lDiameter');
+  dEl.value = d;
+  if (dEl.value !== d) {
+    const o = document.createElement('option'); o.value = d; o.textContent = 'R' + d;
+    dEl.appendChild(o); dEl.value = d;
+  }
+  onLDiameterChange();
 }
 
 async function doLifestyleSearch() {
   const selected = Array.from(document.querySelectorAll('.life-chip.selected')).map(el => el.dataset.pref);
   if (!selected.length) return;
 
+  // Tire size is required so results actually fit the customer's vehicle
+  const w = document.getElementById('lWidth')?.value;
+  const s = document.getElementById('lSidewall')?.value;
+  const d = document.getElementById('lDiameter')?.value;
+  if (!w || !s || !d) return;
+  const flot = isFlotationWidth(w);
+  const tireSize = flot ? (w + 'X' + s + 'R' + d) : (w + '/' + s + 'R' + d);
+  // For flotation widths we send a few variants since TDG's accepted form is ambiguous
+  let queryTireSizes = [tireSize];
+  if (flot) {
+    const n = parseFloat(s);
+    const swForms = [...new Set([s, n.toString(), n.toFixed(2)])];
+    queryTireSizes = [...new Set(swForms.flatMap(sw => [
+      w + 'X' + sw + 'R' + d,
+      w + 'x' + sw + 'R' + d,
+    ]))];
+  }
+
   const resultEl = document.getElementById('lookupResult');
   const textEl = document.getElementById('lookupText');
-  textEl.innerHTML = 'Matching tires to your priorities…';
+  textEl.innerHTML = 'Searching for <strong>' + tireSize + '</strong> tires that match your priorities…';
   resultEl.classList.add('show');
 
-  // Ensure catalog is loaded
-  if (!allTires || !allTires.length) {
-    await loadTires();
-  }
+  // Load tires for the selected size — this populates allTires with size-matching candidates
+  await loadTires({ tireSizes: queryTireSizes });
   switchCatalogType('tires');
 
   // Median price for budget scoring
@@ -6233,9 +6353,9 @@ async function doLifestyleSearch() {
   // Build result summary
   const chipLabels = selected.map(k => LIFESTYLE_PREFS[k].icon + ' ' + LIFESTYLE_PREFS[k].label).join(' · ');
   if (filteredTires.length) {
-    textEl.innerHTML = 'Showing <strong>' + filteredTires.length + '</strong> tire' + (filteredTires.length !== 1 ? 's' : '') + ' ranked for: ' + chipLabels;
+    textEl.innerHTML = 'Showing <strong>' + filteredTires.length + '</strong> <strong>' + tireSize + '</strong> tire' + (filteredTires.length !== 1 ? 's' : '') + ' ranked for: ' + chipLabels;
   } else {
-    textEl.innerHTML = "No tires in stock matched those priorities — <a href=\"tel:5193974686\" style=\"color:var(--yellow)\">call us at 519-397-4686</a> and we'll find what fits.";
+    textEl.innerHTML = "No <strong>" + tireSize + "</strong> tires in stock matched those priorities — <a href=\"tel:5193974686\" style=\"color:var(--yellow)\">call us at 519-397-4686</a> and we'll find what fits.";
   }
 
   lastSearchMethod = 'lifestyle';
@@ -6745,6 +6865,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initYears();
   initWheelYears();
   initSizeDropdowns();
+  initLifeSizeDropdowns();
   initWheelDropdowns();
   initMemberState();
   loadCartFromStorage();
