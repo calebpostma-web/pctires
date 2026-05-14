@@ -1,0 +1,5 @@
+# Local-only files — not for GitHub
+.pctires-token
+*.token
+.DS_Store
+Thumbs.db
