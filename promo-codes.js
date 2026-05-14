@@ -27,7 +27,7 @@ const PROMO_CODES = {
   'WINDMILL2026': { type: 'markup', value: 1.25, label: 'Windmill Cabinets — Partner Pricing' },
 
   // ── Member / friends & family ──
-  'POSTMAH&C':   { type: 'markup', value: 1.15, label: 'Postma H&C' },
+  'POSTMAH&C':   { type: 'markup', value: 1.1, label: 'Postma H&C' },
   'EZRA2026':    { type: 'percent', value: 10, label: '10% Off — Ezra' },
 
   // ── Promo / marketing codes ──
