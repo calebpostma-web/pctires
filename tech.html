@@ -897,10 +897,18 @@
       </div>
     </section>
 
-    <!-- Tires 101 — bay reference -->
+    <!-- Tires 101 — passenger / light truck bay reference -->
     <section class="tires101">
-      <div class="section-title">Tires 101</div>
+      <div class="section-title">Tires 101 <span style="font-size:11px;color:var(--muted);letter-spacing:1px;font-weight:600">· passenger / light truck</span></div>
       <div class="t101-tiles" id="t101Tiles">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
+    <!-- Commercial / Semi Tires reference — different format, position-specific tires, etc -->
+    <section class="tires101">
+      <div class="section-title">Commercial / Semi <span style="font-size:11px;color:var(--muted);letter-spacing:1px;font-weight:600">· Class 7–8 + medium-duty</span></div>
+      <div class="t101-tiles" id="commercial101Tiles">
         <!-- populated by JS -->
       </div>
     </section>
@@ -1572,6 +1580,451 @@ const TIRES_101 = [
   },
 ];
 
+/* ═══════════════════════════════════════════════════════════════
+   COMMERCIAL / SEMI TIRE REFERENCE
+   Different format, position-specific tires, casing programs, etc.
+   ═══════════════════════════════════════════════════════════════ */
+const COMMERCIAL_101 = [
+  {
+    id: 'c-sidewall',
+    icon: '📖',
+    title: 'Commercial Sidewall',
+    blurb: 'Old-style vs new metric',
+    content: `
+      <h3>Two Common Formats</h3>
+      <p>Commercial truck sidewalls come in two styles — both still used today, often side-by-side in the same fleet.</p>
+      <ul>
+        <li><strong>Old-style:</strong> <code>11R22.5 LRH</code> — single-number width in inches, no aspect ratio, decimal rim, Load Range letter</li>
+        <li><strong>New metric:</strong> <code>295/75R22.5 144/141L</code> — mm width, aspect ratio %, Load Index pair, speed rating</li>
+      </ul>
+      <p>Both fit the same 22.5″ wheel — they're alternative naming conventions for similar tires.</p>
+
+      <h3>Breaking Down 11R22.5 LRH</h3>
+      <ul>
+        <li><strong>11</strong> — section width in inches (≈ 280 mm)</li>
+        <li><strong>R</strong> — radial construction</li>
+        <li><strong>22.5</strong> — wheel diameter in inches</li>
+        <li><strong>LRH</strong> — Load Range H = 16-ply rated, max 120 psi cold</li>
+      </ul>
+
+      <h3>Breaking Down 295/75R22.5 144/141L</h3>
+      <ul>
+        <li><strong>295</strong> — section width in mm</li>
+        <li><strong>75</strong> — aspect ratio (sidewall = 75% of width)</li>
+        <li><strong>R / 22.5</strong> — radial, 22.5″ rim</li>
+        <li><strong>144/141</strong> — load index pair: 144 single (≈ 2800 kg) / 141 dual (≈ 2575 kg per tire when paired)</li>
+        <li><strong>L</strong> — speed rating, 120 km/h max</li>
+      </ul>
+
+      <h3>Other Markings You'll See</h3>
+      <ul>
+        <li><strong>14PR / 16PR / 18PR</strong> — legacy ply rating (equivalent to Load Range letter)</li>
+        <li><strong>STEER / DRIVE / TRAILER / ALL-POSITION</strong> — designed axle position</li>
+        <li><strong>RETREAD</strong> — re-treaded casing (drive + trailer common)</li>
+        <li><strong>DOT XXXX</strong> — last 4 digits are week + year of manufacture (same as passenger)</li>
+        <li><strong>TUBELESS</strong> — modern standard; old tube-type still rare on older trailers</li>
+      </ul>
+    `,
+  },
+  {
+    id: 'c-sizing',
+    icon: '📏',
+    title: 'Old vs New Sizing',
+    blurb: '11R22.5 ↔ 295/75R22.5',
+    content: `
+      <h3>Why Two Formats?</h3>
+      <p>The old-style code (<code>11R22.5</code>) was the original commercial standard going back to the 1970s — single-number width in inches with no aspect ratio assumed. The new metric format (<code>295/75R22.5</code>) follows the passenger sizing convention with mm width and aspect ratio %. Both still circulate.</p>
+
+      <h3>Direct Conversions</h3>
+      <table>
+        <thead><tr><th>Old-style</th><th>New metric (≈)</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr><td>11R22.5</td><td>295/75R22.5</td><td>most common drive / steer / trailer</td></tr>
+          <tr><td>11R24.5</td><td>285/75R24.5</td><td>older fleet, older trailers</td></tr>
+          <tr><td>12R22.5</td><td>315/80R22.5</td><td>wide-base, off-road, severe service</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Wide-Base / Super-Single</h3>
+      <p>Tires like <code>445/50R22.5</code> or <code>455/55R22.5</code> are wide-base singles that replace a dual pair on one hub. Saves weight (~200 lb per axle), improves fuel economy ~3-5%, but the single point of failure means a flat = roadside. Growing on long-haul tractors and trailers.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">Always confirm size + load range together</div>
+        A 11R22.5 LR-G (14-ply) and a 11R22.5 LR-H (16-ply) fit the same wheel but have very different load capacities. Fleets specify both when ordering — match exactly.
+      </div>
+    `,
+  },
+  {
+    id: 'c-loadrange',
+    icon: '🏋️',
+    title: 'Load Range Letters',
+    blurb: 'LR-G, LR-H, LR-J, LR-L',
+    content: `
+      <h3>The Letter System</h3>
+      <p>Commercial tires use a letter rating that traces back to "ply rating" — historically the number of fabric plies in construction. Modern tires don't actually have that many plies, but the letter still indicates strength and maximum cold inflation.</p>
+
+      <table>
+        <thead><tr><th>Letter</th><th>Ply rating</th><th>Max PSI</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr><td>LR-F</td><td>12</td><td>95</td><td>light commercial, older equipment</td></tr>
+          <tr><td>LR-G</td><td>14</td><td>105</td><td>medium-duty, some drive tires</td></tr>
+          <tr><td>LR-H</td><td>16</td><td>120</td><td>most Class 7–8 steer / drive / trailer</td></tr>
+          <tr><td>LR-J</td><td>18</td><td>130</td><td>heavy haul, severe service</td></tr>
+          <tr><td>LR-L</td><td>20</td><td>140</td><td>severe service, off-road logging</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <div class="callout-title">Never downgrade load range</div>
+        Match or exceed the OE/fleet spec. Putting LR-G where LR-H is required overloads the tire under load and risks blowout — and is a regulatory violation under MTO/CVSE rules. Fleets check this on every invoice.
+      </div>
+
+      <h3>Max PSI ≠ Operating PSI</h3>
+      <p>The max cold PSI on the sidewall is what the tire can safely hold. The actual <em>operating</em> pressure depends on the load on each axle — typically 105–115 psi for steer, 95–105 for drive duals, 100–115 for trailer duals. Always cross-reference against the tire manufacturer's load/inflation chart for the specific model.</p>
+    `,
+  },
+  {
+    id: 'c-positions',
+    icon: '🚛',
+    title: 'Steer / Drive / Trailer',
+    blurb: 'Position-specific tires',
+    content: `
+      <h3>Three Different Jobs</h3>
+      <p>A Class 7–8 tractor-trailer has tires in three positions, each with different forces. Each uses a different tread design.</p>
+
+      <h3>Steer Tires (Front Axle)</h3>
+      <ul>
+        <li><strong>Tread:</strong> solid 4–5 rib pattern, no aggressive lugs</li>
+        <li><strong>Job:</strong> straight-line tracking, even wear, high mileage</li>
+        <li><strong>Pull at:</strong> 4–5/32″ remaining (safety + casing value)</li>
+        <li><strong>Cost:</strong> highest per tire — premium casings built for retreading</li>
+      </ul>
+
+      <h3>Drive Tires (Powered Axles)</h3>
+      <ul>
+        <li><strong>Tread:</strong> lug or block pattern for traction</li>
+        <li><strong>Job:</strong> forward grip under acceleration, snow, mud</li>
+        <li><strong>Pull at:</strong> 4/32″ on highway, deeper for off-road/severe</li>
+        <li><strong>Wear:</strong> fastest of the three positions</li>
+      </ul>
+
+      <h3>Trailer Tires (Non-Powered Axles)</h3>
+      <ul>
+        <li><strong>Tread:</strong> rib pattern, often shallower</li>
+        <li><strong>Job:</strong> scrubbing under tight turns, low rolling resistance</li>
+        <li><strong>Pull at:</strong> 2–4/32″ — cheapest position</li>
+        <li><strong>Common use of retreads</strong> — biggest cost savings here</li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout-title">All-position tires</div>
+        Some tires are rated all-position — usable on steer, drive, or trailer. Common on Class 5–6 trucks (F-650, Hino). Premium fleets running Class 7–8 still use position-specific tires for best wear life and fuel economy.
+      </div>
+    `,
+  },
+  {
+    id: 'c-pressure',
+    icon: '💨',
+    title: 'Inflation Pressure',
+    blurb: '95–120 psi cold',
+    content: `
+      <h3>Commercial Pressures vs Passenger</h3>
+      <p>Where a passenger car runs 30–40 psi, a Class 7–8 truck runs <strong>95–120 psi cold</strong>. The higher pressure carries the load — without it, the tire flexes excessively, builds heat, and fails.</p>
+
+      <h3>Typical Operating Ranges</h3>
+      <table>
+        <thead><tr><th>Position</th><th>PSI range</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Steer</td><td>105–115</td><td>specific to axle load — check manufacturer's chart</td></tr>
+          <tr><td>Drive (dual)</td><td>95–105</td><td>both tires in dual must be within 5 psi</td></tr>
+          <tr><td>Trailer (dual)</td><td>100–115</td><td>high end for loaded trailers</td></tr>
+          <tr><td>Wide-base single</td><td>115–130</td><td>needs higher pressure than duals it replaces</td></tr>
+        </tbody>
+      </table>
+
+      <h3>The #1 Cause of Commercial Tire Failure</h3>
+      <p>Under-inflation. A tire running 20% below recommended PSI builds enough heat to separate plies and blow out — often catastrophically at highway speed. Pre-trip inspections check pressure every morning, no exceptions.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">Don't bleed hot tires</div>
+        Pressure rises as tires heat up — that's normal. Never bleed off a hot tire to "correct" the reading. <strong>Cold pressure is what matters</strong>; the hot reading just tells you the tire is working.
+      </div>
+
+      <h3>ATI Systems</h3>
+      <p>Auto Tire Inflation systems on trailers maintain pressure automatically from the truck's air supply. Standard on premium fleet trailers. Worth mentioning to a customer who's repeatedly bringing in heat-damaged tires.</p>
+    `,
+  },
+  {
+    id: 'c-tread',
+    icon: '📐',
+    title: 'Tread Wear & Pull Points',
+    blurb: 'Save the casing value',
+    content: `
+      <h3>Pull Points by Position</h3>
+      <p>Fleet operators don't run tires to the legal minimum — they pull early to preserve casing value for retreading. Standard pull points:</p>
+
+      <table>
+        <thead><tr><th>Position</th><th>Pull at</th><th>Reason</th></tr></thead>
+        <tbody>
+          <tr><td>Steer</td><td>4–5/32″</td><td>safety + casing value</td></tr>
+          <tr><td>Drive</td><td>4/32″</td><td>casing value</td></tr>
+          <tr><td>Trailer</td><td>2–4/32″</td><td>cheapest position; closest to minimum</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Run to Wear-Bar = Lose Casing Value</h3>
+      <p>A casing pulled at 4/32″ with even wear and no damage is worth <strong>$50–150</strong> as a retreadable carcass. Same tire run to 2/32″ with shoulder damage or sidewall cracks is worth nothing. Fleet ops pull EARLY to capture this value — it adds up across hundreds of tires a year.</p>
+
+      <h3>Common Wear Issues — Diagnose, Don't Just Replace</h3>
+      <ul>
+        <li><strong>One-shoulder wear:</strong> alignment off (toe or camber)</li>
+        <li><strong>Centre wear:</strong> over-inflation</li>
+        <li><strong>Both-shoulder wear:</strong> under-inflation</li>
+        <li><strong>Cupping / chopping:</strong> shock absorber failure, loose suspension, bad bearing</li>
+        <li><strong>One-spot flat wear:</strong> hard braking event or stuck brake</li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout-title">Always inspect — don't just sell new</div>
+        Uneven wear means the truck has a mechanical issue. Selling new tires onto a misaligned truck gets the customer back in a few months with the same problem. Flag the issue, recommend the alignment, document on the work order.
+      </div>
+    `,
+  },
+  {
+    id: 'c-retread',
+    icon: '♻️',
+    title: 'Casing & Retreading',
+    blurb: 'Trade-in value of worn tires',
+    content: `
+      <h3>What Retreading Is</h3>
+      <p>A retread is a used commercial casing that's had the worn tread stripped, the casing inspected, and new tread rubber bonded on. The result: a tire that costs <strong>40–60% less than new</strong> with similar performance and life.</p>
+
+      <h3>Why Fleets Love Retreads</h3>
+      <ul>
+        <li><strong>Cost:</strong> new premium drive ≈ $550; retread ≈ $250–300</li>
+        <li><strong>Reusable casings:</strong> quality casings can be retreaded 2–3 times in their life</li>
+        <li><strong>Performance:</strong> certified retreads (Bandag, Recamic, Bridgestone) run within 5% of new on most metrics</li>
+        <li><strong>Environmental:</strong> reuses ~75% of the original tire material</li>
+      </ul>
+
+      <h3>Where Retreads Go (and Don't Go)</h3>
+      <ul>
+        <li><strong>Trailer:</strong> retreads are standard — cheapest position, low risk</li>
+        <li><strong>Drive:</strong> retreads are common, especially at second-cycle</li>
+        <li><strong>Steer:</strong> Ontario permits retreads on steer but most fleets use new only — safety policy</li>
+      </ul>
+
+      <h3>How a Casing Program Works</h3>
+      <p>Fleet customer buys a new $550 drive tire. We take the worn casing as part of the deal. The worn casing is worth $50–100 to a retreader. Customer effectively buys new at $450–500 net. Win all around.</p>
+      <p>For PCTires without a casing program yet: suggest the customer keep their good casings for their own retreader instead of scrapping them — builds goodwill, and a great talking point for fleet quotes.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">What disqualifies a casing</div>
+        Sidewall cuts, bead damage, exposed steel cords, repaired punctures over 6 mm, heat-separation damage from under-inflation, or oil/chemical contamination. Inspect casings BEFORE promising trade-in value — once a customer expects $X, they expect $X.
+      </div>
+    `,
+  },
+  {
+    id: 'c-torque',
+    icon: '🔧',
+    title: 'Torque & Re-torque',
+    blurb: '450–500 ft-lb · re-torque mandatory',
+    content: `
+      <h3>Commercial Wheel Torque</h3>
+      <p>Where a passenger car uses 80–100 ft-lb, a Class 7–8 wheel needs <strong>450–500 ft-lb</strong>. These are heavy-duty fastenings holding hundreds of kg of rotating mass.</p>
+
+      <table>
+        <thead><tr><th>Mount Type</th><th>Stud</th><th>Torque</th></tr></thead>
+        <tbody>
+          <tr><td>Hub-pilot (modern)</td><td>M22 × 1.5</td><td>450–500 ft-lb</td></tr>
+          <tr><td>Stud-pilot (older Budd)</td><td>3/4″ inner / 1-1/8″ outer</td><td>450–500 inner / 250–300 outer</td></tr>
+          <tr><td>Medium-duty (F-650, NPR)</td><td>M20 × 1.5</td><td>300–350 ft-lb</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Hub-Pilot vs Stud-Pilot</h3>
+      <ul>
+        <li><strong>Hub-pilot (modern, ~90% of fleet):</strong> wheel centres on the hub, fasteners are flat-faced nuts on studs. Single torque value.</li>
+        <li><strong>Stud-pilot (older Budd):</strong> wheel centres on the studs themselves, uses ball-seat nuts. Different inner and outer torque on dual wheels. Found on older trailers and classic tractors.</li>
+      </ul>
+
+      <h3>Re-torque Rules — CRITICAL</h3>
+      <p>Every commercial wheel install MUST include a re-torque after the first <strong>50–100 km</strong> of operation. Skipping this = wheel-off risk, which is the #1 catastrophic failure mode for commercial trucks.</p>
+      <ul>
+        <li>Initial install: cross-pattern, 3 passes (50% → 80% → full)</li>
+        <li>Re-torque 50–100 km later: verify spec, retighten if loose</li>
+        <li>If retightened: check again after another 50 km</li>
+        <li><strong>Document every re-torque</strong> on the work order with odometer reading</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Wheel-offs are reportable in Ontario</div>
+        A wheel coming off a commercial vehicle at highway speed is a CVOR-reportable incident. Carriers face penalties, insurance hits, and potential operating authority review. EVERY install must include the re-torque schedule communicated to the customer. Document everything.
+      </div>
+    `,
+  },
+  {
+    id: 'c-beads',
+    icon: '⚖️',
+    title: 'Balance Beads',
+    blurb: 'Inside the tire — no weights',
+    content: `
+      <h3>Why Beads, Not Weights</h3>
+      <p>Passenger cars use stick-on or clip-on lead/zinc weights. Commercial trucks almost universally use <strong>balance beads</strong> — small ceramic or glass beads installed INSIDE the tire that dynamically position themselves under rotation to counteract imbalance.</p>
+
+      <h3>How They Work</h3>
+      <ul>
+        <li>Beads poured into the tire during mount (through the valve stem or before bead seating)</li>
+        <li>At driving speed, centrifugal force pins them to the inner liner</li>
+        <li>Beads naturally cluster opposite the heaviest point of the rotating assembly</li>
+        <li>Self-correcting: as the tire wears or load shifts, beads reposition automatically</li>
+      </ul>
+
+      <h3>Common Brands</h3>
+      <ul>
+        <li><strong>Counteract</strong> — Canadian brand, most popular in Ontario fleets</li>
+        <li><strong>Centramatic</strong> — external rotor-mounted alternative (no bead install needed)</li>
+        <li><strong>Magnum+</strong> — competitor</li>
+        <li><strong>Equal</strong> — older brand, still in service</li>
+      </ul>
+
+      <h3>Dosage</h3>
+      <table>
+        <thead><tr><th>Tire</th><th>Counteract dose</th></tr></thead>
+        <tbody>
+          <tr><td>11R22.5 / 295/75R22.5</td><td>10–12 oz (≈ 283–340 g)</td></tr>
+          <tr><td>11R24.5 / 285/75R24.5</td><td>11–12 oz</td></tr>
+          <tr><td>Wide-base 445/50R22.5</td><td>14–18 oz</td></tr>
+          <tr><td>17.5″ medium-duty</td><td>4–6 oz</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Why They Beat Wheel Weights</h3>
+      <ul>
+        <li><strong>No rebalancing ever needed</strong> — beads adjust as the tire wears</li>
+        <li><strong>Survive rotation</strong> — beads move with the tire to its new position</li>
+        <li><strong>Don't fall off</strong> — weights can detach, beads can't</li>
+        <li><strong>Cost-comparable</strong> at the shop: $15–25 per tire's worth of beads vs $20–40 in weights + labour</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-title">Selling beads as an upsell</div>
+        Pitch: "Modern commercial standard. We pour these into your tire when we mount it. Your tire stays balanced for its entire life — no return trips for rebalancing. About the same price as traditional weights but you never come back for it again."
+      </div>
+    `,
+  },
+  {
+    id: 'c-duals',
+    icon: '👯',
+    title: 'Dual Tire Matching',
+    blurb: 'Match OD within 6 mm',
+    content: `
+      <h3>The Dual Tire Rule</h3>
+      <p>Trucks have dual wheels at drive and trailer positions — two tires on the same side share one axle hub. <strong>Both tires in a dual pair must match in overall diameter within 6 mm (¼″)</strong> or the smaller tire carries no load and the larger one carries double.</p>
+
+      <h3>Why It Matters</h3>
+      <ul>
+        <li><strong>Bigger tire = overloaded:</strong> takes more than its share, runs hotter, fails early</li>
+        <li><strong>Smaller tire = freeloads:</strong> barely touches ground, but contributes no carrying capacity</li>
+        <li><strong>Inflation matters too:</strong> tires in a dual pair must be within 5 psi of each other — pressure affects effective diameter</li>
+      </ul>
+
+      <h3>How to Check</h3>
+      <p>Measure the "tape size" — a string or tape around the tire's tread circumference. Two tires in a dual pair should be within 1–2% of each other (about 6 mm on a 22.5″ tire). Don't trust the size code alone — actual OD varies between brands and depending on wear.</p>
+
+      <h3>When Mixing Is Acceptable</h3>
+      <ul>
+        <li><strong>Same brand + model + size + load range:</strong> always OK if measurements match</li>
+        <li><strong>Same size, different brand:</strong> may differ in OD — verify before installing</li>
+        <li><strong>New + retread on same dual:</strong> common and fine if OD matches</li>
+        <li><strong>Mixed size codes (11R22.5 + 295/75R22.5):</strong> the OD is similar but not identical — measure first</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Steer position — never dual, never mixed</div>
+        Steer is single-tire each end. Both must match brand, model, size, AND load range. Mixed steer tires cause uneven braking and pulling, plus regulatory non-compliance under MTO / CVSE.
+      </div>
+    `,
+  },
+  {
+    id: 'c-compliance',
+    icon: '📋',
+    title: 'Compliance & Mixing',
+    blurb: 'Ontario / MTO / CVSE rules',
+    content: `
+      <h3>Ontario Commercial Tire Regulations</h3>
+      <p>The MTO and federal CVSE rules limit how commercial vehicles can mix tire types. Customers who mix incorrectly face out-of-service violations during roadside inspections — costly, and they go on the carrier's CVOR record.</p>
+
+      <h3>Same-Axle Rules</h3>
+      <ul>
+        <li><strong>Steer axle:</strong> both tires identical brand, model, size, load range. No exceptions.</li>
+        <li><strong>Drive axle (dual on each side):</strong> two tires in a single dual pair must match size + load range + OD within 6 mm. Pairs left vs right should match tread pattern.</li>
+        <li><strong>Trailer axle:</strong> same as drive — match within each dual pair.</li>
+      </ul>
+
+      <h3>What's Allowed</h3>
+      <ul class="good">
+        <li>Different brands across different axles (steer one brand, drive another)</li>
+        <li>Mixed retread + new in the same dual pair (if OD matches)</li>
+        <li>Different tread patterns between drive and trailer axles</li>
+      </ul>
+
+      <h3>What's NOT Allowed</h3>
+      <ul class="bad">
+        <li>Mismatched brands or models on the same steer axle</li>
+        <li>Mismatched OD on the same dual pair (any axle)</li>
+        <li>Below DOT minimum tread: 4/32″ steer, 2/32″ all other → auto out-of-service</li>
+        <li>Visible cord exposure, sidewall cracks, unrepaired punctures, or improper repairs</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Out-of-service penalties</div>
+        A truck flagged out-of-service at roadside inspection cannot move until corrected. The carrier pays for emergency roadside service, lost revenue, AND the violation hits their CVOR record — affecting insurance premiums and operating authority renewal. Fleets are strict about tire compliance for this reason.
+      </div>
+    `,
+  },
+  {
+    id: 'c-select',
+    icon: '🎯',
+    title: 'Selecting Commercial Tires',
+    blurb: 'Match the tire to the work',
+    content: `
+      <h3>Start With Operation Type</h3>
+      <p>Commercial tires are highly specialized by use case. Match the tire to how the truck actually runs:</p>
+
+      <table>
+        <thead><tr><th>Operation</th><th>Recommended tread family</th></tr></thead>
+        <tbody>
+          <tr><td>Long-haul highway</td><td>Premium fuel-efficient, rib steer + closed-shoulder drive</td></tr>
+          <tr><td>Regional / P&amp;D</td><td>Standard rib steer + open-shoulder drive</td></tr>
+          <tr><td>Urban / city stop-go</td><td>Reinforced sidewall, scuff-resistant, slower wear</td></tr>
+          <tr><td>Vocational (dump, gravel, construction)</td><td>Aggressive on/off-road, severe service rated</td></tr>
+          <tr><td>Off-road heavy</td><td>Logger or mining specific — deep tread, cut-resistant</td></tr>
+          <tr><td>Trailer over-the-road</td><td>Low rolling resistance rib, retreadable casing</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Tier Choices Within Each Category</h3>
+      <ul>
+        <li><strong>Premium (Michelin, Bridgestone, Continental, Goodyear):</strong> $500–700 new, best fuel economy, longest life, multi-cycle casings for retreading</li>
+        <li><strong>Mid-tier (Hankook, Yokohama, Sailun, Roadx):</strong> $300–470, 80–90% of premium at substantial savings</li>
+        <li><strong>Budget (Sailmax, Westlake, Linglong):</strong> $200–300, single-cycle casings, run-and-discard</li>
+        <li><strong>Retreads:</strong> $200–350, near-new performance on quality casings; standard at drive + trailer</li>
+      </ul>
+
+      <h3>Total Cost of Ownership Math</h3>
+      <p>Fleets don't shop on sticker price — they calculate cost per kilometre:</p>
+      <p style="text-align:center; font-family:'IBM Plex Mono',monospace; padding: 10px 12px; background: var(--raised); border-radius: 2px; font-size:13px;"><strong>$/km = (tire + install + casing value lost) ÷ km of useful life</strong></p>
+      <p>A premium tire at $600 lasting 250,000 km = <strong>$0.0024/km</strong>. A budget tire at $250 lasting 90,000 km = $0.0028/km — actually MORE expensive per km despite the lower sticker. Plus the budget tire generates zero retread value.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Sales approach</div>
+        When quoting a fleet customer, always quote in <strong>cost-per-km</strong>, not just sticker price. Shows you understand their economics. "This Bridgestone works out to $0.0024 per km on average — saves you about $X per year over the budget option across your fleet."
+      </div>
+    `,
+  },
+];
+
 // Current vehicle state (phone mode)
 let currentScan = null;
 
@@ -1633,16 +2086,17 @@ function unlock() {
   document.getElementById('app').classList.add('active');
   renderManuals();
   renderTires101Tiles();
+  renderCommercial101Tiles();
   if (TV_MODE) enterTVMode();
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   TIRES 101 — render + open/close
+   TIRES 101 — render + open/close (passenger AND commercial sections)
    ═══════════════════════════════════════════════════════════════ */
-function renderTires101Tiles() {
-  const host = document.getElementById('t101Tiles');
+function renderTiles(hostId, list) {
+  const host = document.getElementById(hostId);
   if (!host) return;
-  host.innerHTML = TIRES_101.map(t => `
+  host.innerHTML = list.map(t => `
     <button class="t101-tile" type="button" onclick="openTopic('${t.id}')">
       <span class="t-icon">${t.icon}</span>
       <div class="t-name">${t.title}</div>
@@ -1650,9 +2104,12 @@ function renderTires101Tiles() {
     </button>
   `).join('');
 }
+function renderTires101Tiles()    { renderTiles('t101Tiles', TIRES_101); }
+function renderCommercial101Tiles() { renderTiles('commercial101Tiles', COMMERCIAL_101); }
 
 function openTopic(id) {
-  const topic = TIRES_101.find(t => t.id === id);
+  // Look across both reference libraries
+  const topic = TIRES_101.find(t => t.id === id) || COMMERCIAL_101.find(t => t.id === id);
   if (!topic) return;
   document.getElementById('topicTitle').textContent = topic.title;
   document.getElementById('topicBody').innerHTML = topic.content;
