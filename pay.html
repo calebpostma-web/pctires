@@ -22,6 +22,14 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'AW-18156336783');
+
+  // Click-to-call conversion — fires on any tel: link click
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest && e.target.closest('a[href^="tel:"]');
+    if (a && typeof gtag === 'function') {
+      gtag('event', 'conversion', { 'send_to': 'AW-18156336783/SbSRCNu5nbEcEI_tztFD' });
+    }
+  }, true);
 </script>
 
 <script src="https://js.stripe.com/v3/"></script>
