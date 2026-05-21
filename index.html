@@ -15,6 +15,18 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'AW-18156336783');
+
+  // Click-to-call conversion — fires on ANY tel: link click site-wide.
+  // Uses event delegation so it catches dynamically-built links too
+  // (e.g. "call us to confirm fitment" messages in search results).
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest && e.target.closest('a[href^="tel:"]');
+    if (a && typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18156336783/SbSRCNu5nbEcEI_tztFD'
+      });
+    }
+  }, true);
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=Barlow:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
