@@ -3464,7 +3464,7 @@ function buildRecCard(t, tier) {
   const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} mail-in rebate</span>` : '';
   const effectiveNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:4px">Effective after rebate: ~$${Math.max(0, shown - rebate.amount / 4).toFixed(2)}/tire</div>` : '';
   return `
-  <div class="rec-card ${cls}" style="animation-delay:.05s">
+  <div class="rec-card ${cls}" style="animation-delay:.05s;cursor:pointer" onclick="openTireDetail('${t.itemNumber}')">
     <div class="rec-badge ${cls}">${label}</div>
     <div class="tc-top"><div class="tc-brand">${t.brand}</div><span class="stock-pill ${stockClass}">${stockLabel}</span></div>
     ${t.imageUrl ? `<div style="text-align:center;margin:8px 0 4px"><img src="${t.imageUrl}" alt="${t.name}" style="height:90px;object-fit:contain;opacity:.92" onerror="this.parentNode.style.display='none'"></div>` : ''}
@@ -3485,7 +3485,7 @@ function buildRecCard(t, tier) {
       <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}${effectiveNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
         <div class="price-each">per tire · HST extra</div>
       </div>
-      <button class="add-btn" onclick="addToCart('${t.itemNumber}','tire')">Add to Cart +</button>
+      <button class="add-btn" onclick="event.stopPropagation();addToCart('${t.itemNumber}','tire')">Add to Cart +</button>
     </div>
   </div>`;
 }
