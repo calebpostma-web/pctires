@@ -519,6 +519,8 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .qb:hover{border-color:var(--yellow);color:var(--yellow)}
 .qn{font-family:'IBM Plex Mono',monospace;font-size:14px;width:20px;text-align:center}
 .ci-price{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800}
+.ci-pick{background:var(--yellow);color:var(--black);border:none;padding:7px 12px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;margin-top:6px;font-family:'Barlow',sans-serif;white-space:nowrap;transition:background .2s}
+.ci-pick:hover{background:var(--yellow-dark)}
 .ci-remove{font-size:11px;color:var(--muted);cursor:pointer;background:none;border:none;transition:color .2s;font-family:'Barlow',sans-serif}
 .ci-remove:hover{color:var(--red)}
 .inst-toggle{display:flex;align-items:center;gap:6px;margin-top:5px;cursor:pointer;user-select:none}
@@ -5155,6 +5157,16 @@ function addToCart(itemNumber, itemType) {
 }
 
 function removeFromCart(itemNumber) { cart = cart.filter(c => c.itemNumber !== itemNumber); updBadge(); renderCart(); }
+// Keep only the selected option in the cart — used when customer picks one option from a quote comparison
+function pickOnlyThis(itemNumber) {
+  const picked = cart.find(c => c.itemNumber === itemNumber);
+  if (!picked) return;
+  cart = [picked];
+  saveCartToStorage();
+  updBadge();
+  renderCart();
+  if (typeof showToast === 'function') showToast('Set selected', 'Other options removed from your cart');
+}
 function chgQty(itemNumber, d) {
   const item = cart.find(c => c.itemNumber === itemNumber); if (!item) return;
   item.qty += d; if (item.qty <= 0) { removeFromCart(itemNumber); return; } saveCartToStorage(); renderCart();
@@ -5212,6 +5224,7 @@ function renderCart() {
           <button class="qb" onclick="chgQty('${item.itemNumber}',+1)">+</button>
         </div>
         <div class="ci-price">$${((item.price + (item.install && item.itemType !== 'wheel' ? TDG.INSTALL_PRICE : 0)) * item.qty).toFixed(2)}</div>
+        ${cart.length > 1 ? `<button class="ci-pick" onclick="pickOnlyThis('${item.itemNumber}')">Pick this set &rarr;</button>` : ''}
         <button class="ci-remove" onclick="removeFromCart('${item.itemNumber}')">Remove</button>
       </div>
     </div>`; }).join('');
@@ -7598,10 +7611,15 @@ function showQuoteBanner(quote) {
   if (existing) existing.remove();
   const firstName = (quote.customerName || '').split(' ')[0] || 'there';
   const noteHtml = quote.note ? '<div style="font-weight:400;font-size:13px;margin-top:4px;line-height:1.4">&ldquo;' + escapeHtml(quote.note) + '&rdquo;</div>' : '';
+  // If the cart has multiple items, treat it as a comparison and tell the customer how to pick
+  const isComparison = cart.length > 1;
+  const reviewMsg = isComparison
+    ? 'Caleb sent you <strong>' + cart.length + ' sets</strong> to compare. Tap <strong>&ldquo;Pick this set&rdquo;</strong> on the one you want, or remove items individually. Call 519-397-4686 to discuss.'
+    : 'Review your cart and remove any items you don&rsquo;t want before checking out. Call 519-397-4686 if anything needs to change.';
   const banner = document.createElement('div');
   banner.id = 'quoteBanner';
   banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--yellow);color:#111;padding:14px 50px 14px 20px;text-align:center;font-family:Barlow,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:14px';
-  banner.innerHTML = '<strong style="font-size:15px">&#9889; Hi ' + escapeHtml(firstName) + ' &mdash; quote from Caleb at PC Tires.</strong>' + noteHtml + '<div style="font-size:12px;margin-top:6px;opacity:.85">Review your cart and check out below. Call 519-397-4686 if anything needs to change.</div><button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.12);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700">&times;</button>';
+  banner.innerHTML = '<strong style="font-size:15px">&#9889; Hi ' + escapeHtml(firstName) + ' &mdash; quote from Caleb at PC Tires.</strong>' + noteHtml + '<div style="font-size:12px;margin-top:6px;opacity:.85">' + reviewMsg + '</div><button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.12);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700">&times;</button>';
   document.body.appendChild(banner);
 }
 
