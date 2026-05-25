@@ -2077,7 +2077,54 @@ function getRebateForBrand(brand) {
       <div class="sum-row"><span>Tax (13% HST)</span><span id="sumTax">$0.00</span></div>
       <div class="sum-row total"><span>Total</span><span id="sumTotal">$0.00</span></div>
       <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout →</button>
+      <button class="checkout-btn" id="shareQuoteBtn" onclick="openShareQuote()" style="display:none;margin-top:8px;background:var(--green);color:white">⚡ Share as Quote →</button>
       <div class="stripe-note">🔒 Secured by <strong style="color:var(--light);margin-left:3px">Stripe</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE QUOTE MODAL (owner only) -->
+<div class="overlay" id="shareQuoteOverlay" onclick="bgClose(event,'shareQuoteOverlay')">
+  <div class="cart-drawer" style="margin:auto;max-width:520px;width:92%;height:auto;max-height:90vh;border:1px solid var(--border);border-radius:2px">
+    <div class="dhead">
+      <div class="dtitle">⚡ Share Quote</div>
+      <button class="close-x" onclick="closeShareQuote()">✕</button>
+    </div>
+    <div style="padding:20px;overflow-y:auto">
+      <div id="quoteFormStep">
+        <div style="color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5">
+          Build a shareable link for the current cart. Text or email it to the customer — they open the link, see this exact cart, and check out themselves.
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Customer Name</label>
+          <input type="text" id="quoteName" placeholder="e.g. Sam Brown" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:10px;font-family:Barlow,sans-serif;font-size:14px" autocomplete="off">
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Phone (optional)</label>
+          <input type="tel" id="quotePhone" placeholder="519-555-1234" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:10px;font-family:Barlow,sans-serif;font-size:14px" autocomplete="off">
+        </div>
+        <div style="margin-bottom:16px">
+          <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Personal Note (optional)</label>
+          <textarea id="quoteNote" rows="3" placeholder="e.g. Per our call — these are the winters we talked about for your F-150. $25/tire install at Pain Court shop." style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:10px;font-family:Barlow,sans-serif;font-size:13px;resize:vertical"></textarea>
+        </div>
+        <button class="checkout-btn" onclick="createQuoteLink()" style="background:var(--green);color:white">Create Link →</button>
+        <div id="quoteError" style="display:none;color:#ef4444;font-size:12px;margin-top:10px"></div>
+      </div>
+      <div id="quoteResultStep" style="display:none">
+        <div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);padding:14px;margin-bottom:16px;border-radius:2px">
+          <div style="font-size:12px;color:var(--green);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">✓ Quote Created</div>
+          <div style="font-size:13px;color:var(--muted)">Share this link with the customer — it stays valid for 30 days.</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <input type="text" id="quoteUrl" readonly onclick="this.select()" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:10px;font-family:'IBM Plex Mono',monospace;font-size:13px">
+          <button onclick="copyQuoteUrl()" id="copyQuoteBtn" style="background:var(--yellow);color:var(--black);border:none;padding:0 16px;font-weight:700;cursor:pointer;font-size:12px;letter-spacing:1px">COPY</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <a id="quoteSmsLink" href="#" style="text-align:center;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:10px;text-decoration:none;font-size:13px">📱 Send by SMS</a>
+          <a id="quoteEmailLink" href="#" style="text-align:center;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:10px;text-decoration:none;font-size:13px">✉ Send by Email</a>
+        </div>
+        <button onclick="closeShareQuote()" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px;cursor:pointer;font-size:13px">Close</button>
+      </div>
     </div>
   </div>
 </div>
@@ -5118,6 +5165,7 @@ function renderCart() {
       </div>
     </div>`; }).join('');
   foot.style.display = 'block'; updTotals();
+  if (typeof updateShareQuoteButton === 'function') updateShareQuoteButton();
 }
 
 function getTotals() {
@@ -5500,6 +5548,9 @@ async function processPayment() {
 
     window._stripePaymentIntentId = result.paymentIntent.id;
     await finishOrder();
+    // If this checkout originated from a shared quote link, mark the quote as paid
+    // so it can't be reused / double-charged.
+    if (typeof markQuoteAsPaid === 'function') { try { await markQuoteAsPaid(); } catch(e) {} }
     // Order succeeded — clear the stable ID so the NEXT checkout starts clean.
     window._pendingOrderId = null;
 
@@ -7347,8 +7398,149 @@ document.addEventListener('DOMContentLoaded', () => {
   buildSvcGrid();
   initDecisionGuide();
   showCatalogIdle();
+  // Shareable quote links: detect /q/CODE in URL and load the quote
+  checkForQuoteInUrl();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTireDetail(); });
+
+// ─────────────────────────────────────────────────
+//  SHAREABLE QUOTE LINKS
+//  Owner builds a cart, hits "Share Quote", gets a link to text to a customer.
+//  Customer opens link, sees pre-built cart, checks out via existing Stripe flow.
+// ─────────────────────────────────────────────────
+
+function openShareQuote() {
+  if (!isOwner()) { alert('Sign in as owner to share quotes.'); return; }
+  if (!cart.length) { alert('Add items to the cart first.'); return; }
+  document.getElementById('quoteFormStep').style.display = 'block';
+  document.getElementById('quoteResultStep').style.display = 'none';
+  document.getElementById('quoteError').style.display = 'none';
+  document.getElementById('shareQuoteOverlay').classList.add('show');
+}
+
+function closeShareQuote() {
+  document.getElementById('shareQuoteOverlay').classList.remove('show');
+}
+
+async function createQuoteLink() {
+  const errEl = document.getElementById('quoteError');
+  errEl.style.display = 'none';
+  if (!isOwner()) { errEl.textContent = 'Sign in as owner first.'; errEl.style.display = 'block'; return; }
+  if (!cart.length) { errEl.textContent = 'Cart is empty.'; errEl.style.display = 'block'; return; }
+  const name  = document.getElementById('quoteName').value.trim();
+  const phone = document.getElementById('quotePhone').value.trim();
+  const note  = document.getElementById('quoteNote').value.trim();
+  try {
+    const res = await fetch('/quote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ownerCode: currentMember ? currentMember.code : '',
+        cart, appliedPromo,
+        customerName: name, customerPhone: phone, note,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) { errEl.textContent = data.error || 'Quote creation failed.'; errEl.style.display = 'block'; return; }
+    document.getElementById('quoteFormStep').style.display = 'none';
+    document.getElementById('quoteResultStep').style.display = 'block';
+    document.getElementById('quoteUrl').value = data.url;
+    const greeting = name ? 'Hi ' + name.split(' ')[0] + ', ' : '';
+    const msg = greeting + "here's the quote from PC Tires: " + data.url;
+    document.getElementById('quoteSmsLink').href   = 'sms:' + (phone || '') + '?&body=' + encodeURIComponent(msg);
+    document.getElementById('quoteEmailLink').href = 'mailto:?subject=' + encodeURIComponent('Your quote from PC Tires') + '&body=' + encodeURIComponent(msg);
+  } catch(e) {
+    errEl.textContent = 'Network error: ' + e.message; errEl.style.display = 'block';
+  }
+}
+
+function copyQuoteUrl() {
+  const inp = document.getElementById('quoteUrl');
+  inp.select(); inp.setSelectionRange(0, 99999);
+  try { document.execCommand('copy'); } catch(e) {}
+  const btn = document.getElementById('copyQuoteBtn');
+  const orig = btn.textContent;
+  btn.textContent = '✓ COPIED';
+  setTimeout(() => { btn.textContent = orig; }, 1500);
+}
+
+// Toggle the owner-only Share Quote button — called from renderCart and member-state changes
+function updateShareQuoteButton() {
+  const btn = document.getElementById('shareQuoteBtn');
+  if (!btn) return;
+  btn.style.display = (isOwner() && cart.length > 0) ? 'block' : 'none';
+}
+
+// Check URL for /q/CODE on page load — if present, fetch the quote and load it into the cart
+async function checkForQuoteInUrl() {
+  const m = location.pathname.match(/^\/q\/([A-Z0-9]+)/i);
+  const code = m ? m[1].toUpperCase() : (new URLSearchParams(location.search).get('q') || '').toUpperCase();
+  if (!code) return;
+  try {
+    const res = await fetch('/quote?code=' + encodeURIComponent(code));
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      showQuoteError(err.error || 'This quote link is no longer valid.');
+      return;
+    }
+    const quote = await res.json();
+    if (quote.status === 'paid') {
+      showQuoteError('This quote has already been paid. Thank you!');
+      return;
+    }
+    cart = Array.isArray(quote.cart) ? quote.cart : [];
+    appliedPromo = quote.appliedPromo || null;
+    saveCartToStorage();
+    updBadge();
+    renderCart();
+    showQuoteBanner(quote);
+    window._activeQuoteCode = code;
+    setTimeout(function() { try { openCart(); } catch(e) {} }, 800);
+  } catch(e) {
+    console.warn('Quote load failed:', e.message);
+  }
+}
+
+function showQuoteBanner(quote) {
+  const existing = document.getElementById('quoteBanner');
+  if (existing) existing.remove();
+  const firstName = (quote.customerName || '').split(' ')[0] || 'there';
+  const noteHtml = quote.note ? '<div style="font-weight:400;font-size:13px;margin-top:4px;line-height:1.4">&ldquo;' + escapeHtml(quote.note) + '&rdquo;</div>' : '';
+  const banner = document.createElement('div');
+  banner.id = 'quoteBanner';
+  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--yellow);color:#111;padding:14px 50px 14px 20px;text-align:center;font-family:Barlow,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:14px';
+  banner.innerHTML = '<strong style="font-size:15px">&#9889; Hi ' + escapeHtml(firstName) + ' &mdash; quote from Caleb at PC Tires.</strong>' + noteHtml + '<div style="font-size:12px;margin-top:6px;opacity:.85">Review your cart and check out below. Call 519-380-5104 if anything needs to change.</div><button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.12);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700">&times;</button>';
+  document.body.appendChild(banner);
+}
+
+function showQuoteError(msg) {
+  const banner = document.createElement('div');
+  banner.id = 'quoteBanner';
+  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#ef4444;color:white;padding:14px 50px 14px 20px;text-align:center;font-family:Barlow,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:14px';
+  banner.innerHTML = '<strong>Quote link error.</strong> ' + escapeHtml(msg) + ' <div style="font-size:12px;margin-top:4px">Please call us at 519-380-5104.</div><button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.2);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700;color:white">&times;</button>';
+  document.body.appendChild(banner);
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, function(c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]; });
+}
+
+// PATCH the quote to "paid" so the link can't be reused. Called from finishOrder after Stripe success.
+async function markQuoteAsPaid() {
+  if (!window._activeQuoteCode) return;
+  try {
+    await fetch('/quote', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        code: window._activeQuoteCode,
+        status: 'paid',
+        paymentIntentId: window._stripePaymentIntentId || '',
+      }),
+    });
+  } catch(e) { console.warn('Quote mark-paid failed:', e.message); }
+  window._activeQuoteCode = null;
+}
 
 </script>
 </body>
