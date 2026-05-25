@@ -294,6 +294,8 @@ nav{position:fixed;top:71px;left:0;right:0;z-index:500;display:flex;align-items:
 .nav-links{display:flex;align-items:center;gap:28px}
 .nav-link{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;cursor:pointer;transition:color .2s;background:none;border:none;font-family:'Barlow',sans-serif}
 .nav-link:hover{color:var(--white)}
+.nav-link.active{color:var(--yellow)}
+.mobile-menu-link.active{color:var(--yellow)}
 .nav-right{display:flex;align-items:center;gap:14px}
 .phone-link{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--light);text-decoration:none;transition:color .2s}
 .phone-link:hover{color:var(--yellow)}
@@ -1342,7 +1344,7 @@ function getRebateForBrand(brand) {
     <a class="nav-link" href="#decision-guide">Tire Finder</a>
     <a class="nav-link" href="#guide">Tire Guide</a>
     <a class="nav-link" href="#install">Installation</a>
-    <a class="nav-link" href="#services" style="color:var(--yellow)">Book a Service</a>
+    <a class="nav-link" href="#services">Book a Service</a>
     <a class="nav-link" href="#location">Location</a>
   </div>
   <div class="nav-right">
@@ -1361,7 +1363,7 @@ function getRebateForBrand(brand) {
   <a class="mobile-menu-link" href="#catalog" onclick="closeMenu()">Shop All</a>
   <a class="mobile-menu-link" href="#guide" onclick="closeMenu()">Tire Buying Guide</a>
   <a class="mobile-menu-link" href="#install" onclick="closeMenu()">Installation</a>
-  <a class="mobile-menu-link" href="#services" onclick="closeMenu()" style="color:var(--yellow)">🔧 Book a Service</a>
+  <a class="mobile-menu-link" href="#services" onclick="closeMenu()">🔧 Book a Service</a>
   <a class="mobile-menu-link" href="#location" onclick="closeMenu()">Location & Hours</a>
   <a class="mobile-menu-link" href="tel:5193974686" style="text-decoration:none">📞 519-397-4686</a>
 </div>
@@ -7449,6 +7451,31 @@ async function wizardShowResults() {
 }
 
 
+// ─────────────────────────────────────────────────
+//  NAV SCROLL-SPY — highlights the section currently in view
+// ─────────────────────────────────────────────────
+const NAV_SECTION_IDS = ['lookup','catalog','decision-guide','guide','install','services','location'];
+function updateActiveNav() {
+  let current = null;
+  // Find the section whose top is closest to (but above) ~30% down the viewport
+  const targetY = window.innerHeight * 0.3;
+  for (const id of NAV_SECTION_IDS) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const rect = el.getBoundingClientRect();
+    if (rect.top <= targetY && rect.bottom > targetY) { current = id; break; }
+  }
+  document.querySelectorAll('.nav-link, .mobile-menu-link').forEach(link => {
+    const href = link.getAttribute('href') || '';
+    link.classList.toggle('active', current ? href === '#' + current : false);
+  });
+}
+let _navScrollTimer = null;
+window.addEventListener('scroll', () => {
+  if (_navScrollTimer) return;
+  _navScrollTimer = setTimeout(() => { updateActiveNav(); _navScrollTimer = null; }, 120);
+}, { passive: true });
+
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initYears();
@@ -7465,6 +7492,7 @@ document.addEventListener('DOMContentLoaded', () => {
   showCatalogIdle();
   // Shareable quote links: detect /q/CODE in URL and load the quote
   checkForQuoteInUrl();
+  if (typeof updateActiveNav === 'function') updateActiveNav();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTireDetail(); });
 
