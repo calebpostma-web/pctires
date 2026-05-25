@@ -4591,8 +4591,8 @@ async function doWheelSizeSearch() {
   textEl.innerHTML = `Searching wheels — ${desc}…`;
   resultEl.classList.add('show');
   const params = { boltPatterns: [bolt] };
-  if (dia) params.diameters = [dia];
-  if (wid) params.widths = [wid];
+  if (dia) params.diameters = [String(dia)];
+  if (wid) params.widths = [String(wid)];
   if (cat) params.category = cat;
   // For staggered, merge both bolt patterns so API returns wheels for both sizes
   if (isStaggered && (bolt2 || dia2)) {
