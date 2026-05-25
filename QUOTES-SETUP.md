@@ -58,13 +58,23 @@ After a customer pays, the quote auto-locks so the same link can't be used to ch
 
 ## What's stored in each quote
 
-- Cart items (with locked prices — TDG cost moves don't affect the customer's total)
-- Applied promo code if any
+- Item references only: `itemNumber`, `qty`, `install`, `itemType` per line
 - Customer name + phone + note (your text)
 - Created/paid timestamps
 - Payment intent ID once paid
+
+## Why no prices are stored
+
+When the customer opens the link, the site fetches **live TDG data** for each item so they see the same prices as if they had searched themselves. Matches the rest of the site's behaviour. If TDG cost moves between quote creation and the customer opening the link, they see the current price — same as any other shopper. No surprise discrepancies between phone quote and live site.
+
+## Customer View toggle
+
+Separate feature shipped at the same time. When you're signed in as owner, you see TDG cost pricing by default — useful for ordering decisions, but awkward when a customer is looking over your shoulder.
+
+A new **⚡ Cost View** button in the nav (only visible when signed in as owner) flips your display to **👁 Retail View** — the same prices the customer sees. Click again to flip back. State persists across page loads.
 
 ## What's NOT stored
 
 - Card numbers (Stripe handles those)
 - Sensitive customer info — only what you typed in
+- Prices — always fetched live from TDG
