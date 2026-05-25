@@ -1345,6 +1345,7 @@ function getRebateForBrand(brand) {
   </div>
   <div class="nav-right">
     <a class="phone-link" href="tel:5193974686">📞 519-397-4686</a>
+    <button class="member-btn" id="customerViewBtn" onclick="toggleCustomerView()" title="Toggle owner cost view ↔ customer retail view" style="display:none">&#9889; Cost View</button>
     <button class="member-btn" id="memberNavBtn" onclick="openMemberModal()">Member Login</button>
     <button id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode" style="background:none;border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:2px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0">🌙</button>
     <button class="cart-btn" onclick="openCart()">🛒 Cart <span class="cart-badge" id="cartCount">0</span></button>
@@ -2793,8 +2794,18 @@ function retailPrice(item) {
 function memberPrice(item) { return Math.round(retailPrice(item) * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100; }
 function ownerPrice(item) { return Math.round(item.price * 100) / 100; }
 function isOwner() { return currentMember && currentMember.code.toLowerCase() === OWNER_CODE.toLowerCase(); }
-function displayedPrice(item) { return isOwner() ? ownerPrice(item) : currentMember ? memberPrice(item) : retailPrice(item); }
-function priceBadgeHTML() { return isOwner() ? '<div class="owner-price-badge">&#9889; Cost Price</div>' : currentMember ? '<div class="member-price-badge">★ Member Price</div>' : ''; }
+function displayedPrice(item) {
+  // Customer View mode: even when signed in as owner, show retail prices.
+  // Lets Caleb walk through the site with a customer without doing markup math in his head.
+  if (isOwner() && !window._customerViewMode) return ownerPrice(item);
+  if (currentMember && !isOwner()) return memberPrice(item);
+  return retailPrice(item);
+}
+function priceBadgeHTML() {
+  if (isOwner() && !window._customerViewMode) return '<div class="owner-price-badge">&#9889; Cost Price</div>';
+  if (currentMember && !isOwner()) return '<div class="member-price-badge">★ Member Price</div>';
+  return '';
+}
 
 // ─────────────────────────────────────────────────
 //  MEMBER SYSTEM
@@ -2803,6 +2814,45 @@ const MEMBER_CODE = 'postmah&c';
 const OWNER_CODE = 'pctowner2026';
 const APPROVED_MEMBERS = {};
 let currentMember = null;
+
+// Customer View mode — when active, owner sees retail prices instead of cost.
+// Lets Caleb show a customer prices on the site without doing markup math.
+window._customerViewMode = false;
+try { window._customerViewMode = localStorage.getItem('pc_customer_view') === '1'; } catch(e) {}
+
+function toggleCustomerView() {
+  if (!isOwner()) return;
+  window._customerViewMode = !window._customerViewMode;
+  try { localStorage.setItem('pc_customer_view', window._customerViewMode ? '1' : '0'); } catch(e) {}
+  // Recompute each cart line's locked price so the cart drawer matches the new view.
+  // Without this, items added in Cost View would still show at cost when toggled to Customer View.
+  cart.forEach(c => {
+    const pool = c.itemType === 'wheel' ? allWheels : allTires;
+    const orig = pool.find(t => t.itemNumber === c.itemNumber);
+    if (orig) c.price = displayedPrice(orig);
+  });
+  saveCartToStorage();
+  updateCustomerViewBtn();
+  if (typeof renderCatalog === 'function') renderCatalog();
+  if (typeof renderCart === 'function') renderCart();
+  if (typeof showToast === 'function') showToast(window._customerViewMode ? 'Customer View on' : 'Cost View on', window._customerViewMode ? 'Showing retail prices' : 'Showing TDG cost pricing');
+}
+
+function updateCustomerViewBtn() {
+  const btn = document.getElementById('customerViewBtn');
+  if (!btn) return;
+  if (!isOwner()) { btn.style.display = 'none'; return; }
+  btn.style.display = 'inline-flex';
+  if (window._customerViewMode) {
+    btn.innerHTML = '&#128065; Retail View';
+    btn.classList.add('logged-in');
+    btn.style.color = 'var(--yellow)';
+  } else {
+    btn.innerHTML = '&#9889; Cost View';
+    btn.classList.remove('logged-in');
+    btn.style.color = '';
+  }
+}
 
 function initMemberState() {
   try {
@@ -2832,6 +2882,7 @@ function updateMemberNav() {
     else btn.style.color = '';
   }
   else { btn.textContent = 'Member Login'; btn.classList.remove('logged-in'); }
+  if (typeof updateCustomerViewBtn === 'function') updateCustomerViewBtn();
 }
 
 function openMemberModal() {
@@ -7393,6 +7444,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLifeSizeDropdowns();
   initWheelDropdowns();
   initMemberState();
+  if (typeof updateCustomerViewBtn === 'function') updateCustomerViewBtn();
   loadCartFromStorage();
   initCookie();
   buildSvcGrid();
@@ -7430,13 +7482,22 @@ async function createQuoteLink() {
   const name  = document.getElementById('quoteName').value.trim();
   const phone = document.getElementById('quotePhone').value.trim();
   const note  = document.getElementById('quoteNote').value.trim();
+  // Quote stores SKUs/qty/install only — no prices. Customer opens link, site
+  // fetches live TDG data so they see the same prices as if they searched themselves.
+  const quoteItems = cart.map(c => ({
+    itemNumber: c.itemNumber,
+    qty: c.qty,
+    install: !!c.install,
+    itemType: c.itemType || 'tire',
+  }));
   try {
     const res = await fetch('/quote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ownerCode: currentMember ? currentMember.code : '',
-        cart, appliedPromo,
+        cart: quoteItems,
+        appliedPromo: null,
         customerName: name, customerPhone: phone, note,
       }),
     });
@@ -7477,10 +7538,21 @@ async function checkForQuoteInUrl() {
   const code = m ? m[1].toUpperCase() : (new URLSearchParams(location.search).get('q') || '').toUpperCase();
   if (!code) return;
   try {
-    const res = await fetch('/quote?code=' + encodeURIComponent(code));
+    // Retry on 404 — Cloudflare KV is eventually consistent. If a customer opens the
+    // link within a few seconds of creation, KV reads may briefly return not-found.
+    let res, lastBody;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      res = await fetch('/quote?code=' + encodeURIComponent(code));
+      if (res.ok) break;
+      lastBody = await res.clone().json().catch(() => ({}));
+      if (res.status === 404 && attempt < 2) {
+        await new Promise(r => setTimeout(r, 800));
+        continue;
+      }
+      break;
+    }
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      showQuoteError(err.error || 'This quote link is no longer valid.');
+      showQuoteError((lastBody && lastBody.error) || 'This quote link is no longer valid.');
       return;
     }
     const quote = await res.json();
@@ -7488,12 +7560,32 @@ async function checkForQuoteInUrl() {
       showQuoteError('This quote has already been paid. Thank you!');
       return;
     }
-    cart = Array.isArray(quote.cart) ? quote.cart : [];
-    appliedPromo = quote.appliedPromo || null;
+    const quoteItems = Array.isArray(quote.cart) ? quote.cart : [];
+    // If the customer has items already in their cart, ask before replacing
+    if (cart.length > 0) {
+      const ok = confirm('You have ' + cart.length + ' item' + (cart.length !== 1 ? 's' : '') + ' in your cart. Replace them with this quote?');
+      if (!ok) return;
+    }
+    // Fetch live TDG data for each item — customer sees current prices/stock
+    const fetched = await fetchQuoteItems(quoteItems);
+    // If TDG fetch totally failed (returned nothing for a non-empty quote), bail with a clear error
+    if (quoteItems.length > 0 && fetched.length === 0) {
+      showQuoteError('Could not load the items in this quote. Please call us at 519-397-4686.');
+      return;
+    }
+    cart = fetched;
+    appliedPromo = null;
     saveCartToStorage();
     updBadge();
     renderCart();
     showQuoteBanner(quote);
+    // If some items were dropped, surface that as a toast so the customer knows
+    if (fetched.length < quoteItems.length) {
+      const missing = quoteItems.length - fetched.length;
+      setTimeout(function() {
+        if (typeof showToast === 'function') showToast('Heads up', missing + ' item' + (missing !== 1 ? 's' : '') + ' from this quote couldn\'t be loaded \u2014 call 519-397-4686.');
+      }, 1200);
+    }
     window._activeQuoteCode = code;
     setTimeout(function() { try { openCart(); } catch(e) {} }, 800);
   } catch(e) {
@@ -7509,7 +7601,7 @@ function showQuoteBanner(quote) {
   const banner = document.createElement('div');
   banner.id = 'quoteBanner';
   banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--yellow);color:#111;padding:14px 50px 14px 20px;text-align:center;font-family:Barlow,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:14px';
-  banner.innerHTML = '<strong style="font-size:15px">&#9889; Hi ' + escapeHtml(firstName) + ' &mdash; quote from Caleb at PC Tires.</strong>' + noteHtml + '<div style="font-size:12px;margin-top:6px;opacity:.85">Review your cart and check out below. Call 519-380-5104 if anything needs to change.</div><button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.12);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700">&times;</button>';
+  banner.innerHTML = '<strong style="font-size:15px">&#9889; Hi ' + escapeHtml(firstName) + ' &mdash; quote from Caleb at PC Tires.</strong>' + noteHtml + '<div style="font-size:12px;margin-top:6px;opacity:.85">Review your cart and check out below. Call 519-397-4686 if anything needs to change.</div><button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.12);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700">&times;</button>';
   document.body.appendChild(banner);
 }
 
@@ -7517,7 +7609,7 @@ function showQuoteError(msg) {
   const banner = document.createElement('div');
   banner.id = 'quoteBanner';
   banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#ef4444;color:white;padding:14px 50px 14px 20px;text-align:center;font-family:Barlow,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:14px';
-  banner.innerHTML = '<strong>Quote link error.</strong> ' + escapeHtml(msg) + ' <div style="font-size:12px;margin-top:4px">Please call us at 519-380-5104.</div><button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.2);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700;color:white">&times;</button>';
+  banner.innerHTML = '<strong>Quote link error.</strong> ' + escapeHtml(msg) + ' <div style="font-size:12px;margin-top:4px">Please call us at 519-397-4686.</div><button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.2);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700;color:white">&times;</button>';
   document.body.appendChild(banner);
 }
 
@@ -7525,20 +7617,83 @@ function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, function(c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]; });
 }
 
+// Fetch live TDG data for items in a quote — used when a customer opens a quote link.
+// Returns a cart array with current retail prices + customer's qty/install choices.
+async function fetchQuoteItems(quoteItems) {
+  if (!Array.isArray(quoteItems) || !quoteItems.length) return [];
+  const tireNums  = quoteItems.filter(q => q.itemType !== 'wheel').map(q => q.itemNumber);
+  const wheelNums = quoteItems.filter(q => q.itemType === 'wheel').map(q => q.itemNumber);
+  const extractData = r => {
+    if (Array.isArray(r)) return r;
+    if (r && r.data && Array.isArray(r.data)) return r.data;
+    if (r && r.products && Array.isArray(r.products)) return r.products;
+    if (r && r.items && Array.isArray(r.items)) return r.items;
+    if (r && r.results && Array.isArray(r.results)) return r.results;
+    return [];
+  };
+  const result = [];
+  if (tireNums.length) {
+    try {
+      const [prodRes, invRes] = await Promise.all([
+        tdgFetch('search', { itemnumbers: tireNums }),
+        tdgFetch('inventory', { itemnumbers: tireNums }),
+      ]);
+      const invMap = {};
+      extractData(invRes).forEach(i => { if (i && i.itemNumber) invMap[i.itemNumber] = i; });
+      extractData(prodRes)
+        .filter(p => p.type === 'Tire' || p.type === 'tire')
+        .forEach(p => {
+          const tire = normaliseTire(p, invMap[p.itemNumber]);
+          const q = quoteItems.find(x => x.itemNumber === tire.itemNumber);
+          if (q) result.push(Object.assign({}, tire, { price: retailPrice(tire), qty: q.qty, install: !!q.install, itemType: 'tire' }));
+        });
+    } catch(e) { console.warn('Quote tire fetch failed:', e.message); }
+  }
+  if (wheelNums.length) {
+    try {
+      const [prodRes, invRes] = await Promise.all([
+        tdgFetch('search', { itemnumbers: wheelNums }),
+        tdgFetch('inventory', { itemnumbers: wheelNums }),
+      ]);
+      const invMap = {};
+      extractData(invRes).forEach(i => { if (i && i.itemNumber) invMap[i.itemNumber] = i; });
+      extractData(prodRes)
+        .filter(p => p.type === 'Wheel' || p.type === 'wheel' || p.type === 'Rim')
+        .forEach(p => {
+          const wheel = normaliseWheel(p, invMap[p.itemNumber]);
+          const q = quoteItems.find(x => x.itemNumber === wheel.itemNumber);
+          if (q) result.push(Object.assign({}, wheel, { price: retailPrice(wheel), qty: q.qty, install: !!q.install, itemType: 'wheel' }));
+        });
+    } catch(e) { console.warn('Quote wheel fetch failed:', e.message); }
+  }
+  return result;
+}
+
 // PATCH the quote to "paid" so the link can't be reused. Called from finishOrder after Stripe success.
 async function markQuoteAsPaid() {
   if (!window._activeQuoteCode) return;
-  try {
-    await fetch('/quote', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        code: window._activeQuoteCode,
-        status: 'paid',
-        paymentIntentId: window._stripePaymentIntentId || '',
-      }),
-    });
-  } catch(e) { console.warn('Quote mark-paid failed:', e.message); }
+  // Retry up to 3x — if PATCH fails, the link stays "open" and could be reused.
+  // Three layers of double-charge protection still kick in (frontend lock,
+  // Stripe Idempotency-Key, in-memory email dedup) but this is the cleanest belt-and-braces.
+  const payload = JSON.stringify({
+    code: window._activeQuoteCode,
+    status: 'paid',
+    paymentIntentId: window._stripePaymentIntentId || '',
+  });
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch('/quote', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+      });
+      if (res.ok) { window._activeQuoteCode = null; return; }
+    } catch(e) {
+      console.warn('Quote mark-paid attempt ' + (attempt + 1) + ' failed:', e.message);
+    }
+    if (attempt < 2) await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+  }
+  console.warn('Quote mark-paid: gave up after 3 attempts');
   window._activeQuoteCode = null;
 }
 
