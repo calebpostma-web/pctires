@@ -1,0 +1,3 @@
+# Cloudflare Pages redirect rules
+# Quote share links: /q/CODE → serve the SPA, JS reads the path
+/q/* /index.html 200
