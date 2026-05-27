@@ -165,7 +165,7 @@
         "itemOffered": {
           "@type": "Service",
           "name": "Flat Tire Repair",
-          "description": "Plug and patch repair for puncture tires."
+          "description": "Proper off-car internal patch repair — tire dismounted, patched from the inside, remounted, balanced, and reinstalled."
         }
       },
       {
@@ -1056,7 +1056,10 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   nav{padding:0 20px}
   .nav-links{display:none}
   .hamburger{display:flex}
-  .phone-link{display:none}
+  .phone-link{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--yellow);background:transparent;color:var(--yellow);padding:6px 9px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;border-radius:2px;text-decoration:none;white-space:nowrap}
+  .phone-link:hover,.phone-link:active{background:var(--yellow);color:var(--black)}
+  #memberNavBtn,#themeToggle{display:none!important}
+  .nav-right{gap:10px}
   .lookup-section{padding:110px 24px 48px}
   .guide-section,.reviews-section,.location-section{padding:48px 24px}
   .guide-grid{grid-template-columns:1fr}
@@ -1079,9 +1082,11 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   .cart-drawer{width:100%;max-width:480px}
 }
 @media(max-width:600px){
-  nav{padding:0 16px;height:54px}
+  nav{padding:0 14px;height:54px}
   .logo{font-size:22px}
-  .cart-btn{padding:8px 14px;font-size:12px}
+  .cart-btn{padding:8px 12px;font-size:12px}
+  .phone-link{font-size:11px;padding:5px 8px;gap:4px}
+  .nav-right{gap:8px}
   .mobile-menu{top:87px}
   .lookup-section{padding:100px 16px 40px}
   .hero-pattern{display:none}
@@ -1366,6 +1371,8 @@ function getRebateForBrand(brand) {
   <a class="mobile-menu-link" href="#services" onclick="closeMenu()">🔧 Book a Service</a>
   <a class="mobile-menu-link" href="#location" onclick="closeMenu()">Location & Hours</a>
   <a class="mobile-menu-link" href="tel:5193974686" style="text-decoration:none">📞 519-397-4686</a>
+  <a class="mobile-menu-link" href="#" onclick="closeMenu();openMemberModal();return false">👤 Member Login</a>
+  <a class="mobile-menu-link" href="#" onclick="closeMenu();toggleTheme();return false">🌓 Toggle Light/Dark</a>
 </div>
 
 
@@ -1886,6 +1893,10 @@ function getRebateForBrand(brand) {
     <p class="section-sub" style="margin-bottom:0">Select a service below, pick a time, and we'll confirm within a few hours. No purchase required.</p>
 
     <div class="svc-grid" id="svcGrid"></div>
+
+    <p style="font-size:12px;color:var(--muted);font-style:italic;line-height:1.6;margin:0 0 28px;max-width:900px">
+      All repairs are subject to inspection. Tires with sidewall damage, dry rot, tread under 3/32", or punctures outside the safely repairable centre tread area cannot be repaired and will need to be replaced. Customer-supplied tires: we reserve the right to refuse installation of any tire we deem unsafe. If a TPMS sensor is found defective during service, a replacement charge applies (sensor + labour, typically $60/sensor). Bead leak repair effectiveness depends on wheel condition — severely corroded or damaged wheels may need to be replaced. Prices shown are for standard passenger and light-truck tires; oversized, run-flat, or low-profile tires may be quoted separately.
+    </p>
 
     <!-- Booking panel — appears after service selected -->
     <div class="svc-booking-panel" id="svcBookingPanel">
@@ -5785,13 +5796,14 @@ async function finishOrder() {
 //  CALENDAR + SERVICE MENU
 // ─────────────────────────────────────────────────
 const SERVICES = [
-  { id:'mount4',  label:'4-Tire Mount & Balance',         duration:60, price:25, unit:'per tire', desc:'Mount, balance, TPMS reset & old tire disposal' },
-  { id:'swap',    label:'Seasonal Swap (pre-mounted set)', duration:60, price:20, unit:'per tire', desc:'Swap your stored set — no mounting needed' },
-  { id:'repair',  label:'Tire Repair (off car + balance)', duration:60, price:30, unit:'flat',     desc:'Remove, patch, remount and balance' },
-  { id:'valve',   label:'Valve Stem Replacement',          duration:45, price:15, unit:'per stem', desc:'Replace faulty or leaking valve stems' },
-  { id:'tpms',    label:'TPMS Sensor Relearn',             duration:30, price:20, unit:'flat',     desc:'Relearn sensors after tire or battery change' },
-  { id:'single',  label:'Single Tire Mount & Balance',     duration:30, price:25, unit:'flat',     desc:'Mount and balance one tire' },
-  { id:'plug',    label:'Plug Repair (tire stays on car)', duration:15, price:20, unit:'flat',     desc:'Quick plug for a simple puncture in the tread' },
+  { id:'mount4',   label:'4-Tire Mount & Balance',         duration:60, price:25, unit:'per tire', desc:'Mount, balance, TPMS reset & old tire disposal (tires purchased from PC Tires)' },
+  { id:'swap',     label:'Seasonal Swap (pre-mounted set)', duration:60, price:20, unit:'per tire', desc:'Swap your stored set — no mounting needed' },
+  { id:'patch',    label:'Flat Repair — Proper Patch',     duration:45, price:45, unit:'flat',     desc:'Tire dismounted, internally patched, remounted, balanced, reinstalled. No plug repairs.' },
+  { id:'bead',     label:'Bead Leak Repair',               duration:60, price:55, unit:'flat',     desc:'Dismount, wire-wheel the bead seat, apply sealer, remount, balance & leak-test' },
+  { id:'valve',    label:'Valve Stem Replacement (rubber)', duration:45, price:25, unit:'per stem', desc:'Replace faulty or leaking rubber valve stems' },
+  { id:'tpmsvalve',label:'TPMS Valve Service Kit',         duration:45, price:40, unit:'flat',     desc:'Replace leaking TPMS valve assembly (grommet, core, seal). Reuses your existing sensor.' },
+  { id:'tpms',     label:'TPMS Sensor Relearn',            duration:30, price:20, unit:'flat',     desc:'Relearn sensors after tire or battery change' },
+  { id:'single',   label:'Single Tire Mount & Balance',    duration:30, price:25, unit:'flat',     desc:'Mount and balance one tire (purchased from PC Tires)' },
 ];
 let selectedService = null;
 function buildServiceMenu() {
@@ -7062,11 +7074,14 @@ function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.su
 // ─────────────────────────────────────────────────
 const BOOK_SERVICES = [
   { id:'rotation',  icon:'🔄', name:'Tire Rotation & TPMS Relearn',    price:'$60',   unit:'flat',     duration:45,  desc:'Rotate all four tires for even tread life. TPMS relearn included. Recommended every 10,000 km.' },
-  { id:'swap',      icon:'❄️',  name:'Seasonal Swap',                  price:'$17.50',unit:'per tire', duration:45,  desc:'Swap your pre-mounted stored set — no mounting needed. Torque check included.' },
+  { id:'swap',      icon:'❄️',  name:'Seasonal Swap',                  price:'$20',   unit:'per tire', duration:45,  desc:'Swap your pre-mounted stored set — no mounting needed. Torque check included.' },
   { id:'tpms',      icon:'📡', name:'TPMS Relearn',                   price:'$30',   unit:'flat',     duration:30,  desc:'Relearn your TPMS sensors after a tire change, rotation, or battery replacement.' },
-  { id:'mount',     icon:'⚙️', name:'Mount & Balance',                 price:'$25',   unit:'per tire', duration:60,  desc:'Customer-supplied tires mounted, balanced, and TPMS reset. Old tire disposal included.' },
-  { id:'repair',    icon:'🩹', name:'Flat Repair / Plug',              price:'$25',   unit:'flat',     duration:20,  desc:'Quick plug for a simple tread puncture. Includes remount and balance.' },
-  { id:'valve',     icon:'🔩', name:'Valve Stem Replacement',          price:'$15',   unit:'per stem', duration:20,  desc:'Replace faulty, leaking, or corroded valve stems.' },
+  { id:'mountnew',  icon:'⚙️', name:'Install Tires Purchased Here',   price:'$25',   unit:'per tire', duration:60,  desc:'Mount, balance, TPMS reset, and disposal of old tires — included pricing for tires bought from PC Tires.' },
+  { id:'mountown',  icon:'🛠️', name:'Customer-Supplied Tire Install',  price:'$40',   unit:'per tire', duration:60,  desc:'You bring the tires, we install them. Mount, balance, TPMS reset, and disposal of old tires included. Subject to inspection — see disclaimer below.' },
+  { id:'patch',     icon:'🩹', name:'Flat Repair — Proper Patch',  price:'$45',   unit:'flat',     duration:45,  desc:'Tire dismounted, internally patched, remounted, balanced, and reinstalled. We do not offer plug repairs — patches are the safe, long-term fix.' },
+  { id:'bead',      icon:'💧', name:'Bead Leak Repair',                price:'$55',   unit:'flat',     duration:60,  desc:'Tire dismounted, bead seat cleaned with wire wheel, sealer applied, remounted, balanced, and leak-tested. Severely corroded wheels may require replacement.' },
+  { id:'valve',     icon:'🔩', name:'Valve Stem Replacement (rubber)', price:'$25',   unit:'per stem', duration:30,  desc:'Replace faulty, leaking, or corroded rubber valve stems. Tire dismounted and rebalanced.' },
+  { id:'tpmsvalve', icon:'📡', name:'TPMS Valve Service Kit',          price:'$40',   unit:'flat',     duration:45,  desc:'Replace leaking TPMS valve assembly (grommet, core, seal) — reuses your existing sensor. If sensor needs replacing, add $60/sensor (parts + labour).' },
   { id:'torque',    icon:'✅', name:'Wheel Torque Re-check',           price:'Free',  unit:'',         duration:15,  desc:'Recommended 50–100 km after any tire install. Takes 15 minutes, total peace of mind.' },
 ];
 
