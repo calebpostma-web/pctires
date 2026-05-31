@@ -1342,7 +1342,7 @@ function getRebateForBrand(brand) {
 
 <!-- NAV -->
 <nav>
-  <a class="logo" href="#"><span class="pc">PC</span> TIRES<span style="display:block;font-size:9px;font-weight:500;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:-4px">Chatham-Kent</span></a>
+  <a class="logo" href="/"><span class="pc">PC</span> TIRES<span style="display:block;font-size:9px;font-weight:500;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:-4px">Chatham-Kent</span></a>
   <div class="nav-links">
     <a class="nav-link" href="#lookup">Find Tires & Wheels</a>
     <a class="nav-link" href="#catalog">Shop All</a>
@@ -1371,8 +1371,8 @@ function getRebateForBrand(brand) {
   <a class="mobile-menu-link" href="#services" onclick="closeMenu()">🔧 Book a Service</a>
   <a class="mobile-menu-link" href="#location" onclick="closeMenu()">Location & Hours</a>
   <a class="mobile-menu-link" href="tel:5193974686" style="text-decoration:none">📞 519-397-4686</a>
-  <a class="mobile-menu-link" href="#" onclick="closeMenu();openMemberModal();return false">👤 Member Login</a>
-  <a class="mobile-menu-link" href="#" onclick="closeMenu();toggleTheme();return false">🌓 Toggle Light/Dark</a>
+  <button class="mobile-menu-link" type="button" onclick="closeMenu();openMemberModal()" style="background:none;border:none;text-align:left;width:100%;cursor:pointer;font:inherit;color:inherit;padding:inherit">👤 Member Login</button>
+  <button class="mobile-menu-link" type="button" onclick="closeMenu();toggleTheme()" style="background:none;border:none;text-align:left;width:100%;cursor:pointer;font:inherit;color:inherit;padding:inherit">🌓 Toggle Light/Dark</button>
 </div>
 
 
@@ -1941,9 +1941,9 @@ function getRebateForBrand(brand) {
   <div class="social-bar-inner">
     <div class="social-bar-text"><strong>Follow PC Tires</strong> — seasonal tips, deals, and local driving advice</div>
     <div class="social-links">
-      <a class="social-link" href="#" target="_blank"><span class="social-icon">📘</span> Facebook</a>
-      <a class="social-link" href="#" target="_blank"><span class="social-icon">📸</span> Instagram</a>
-      <a class="social-link" href="#" target="_blank"><span class="social-icon">▶️</span> TikTok</a>
+      <a class="social-link" href="https://www.facebook.com/profile.php?id=61589602674471" target="_blank" rel="noopener"><span class="social-icon">📘</span> Facebook</a>
+      <button type="button" class="social-link" disabled style="background:var(--card);font:inherit;cursor:default;opacity:0.55"><span class="social-icon">📸</span> Instagram</button>
+      <button type="button" class="social-link" disabled style="background:var(--card);font:inherit;cursor:default;opacity:0.55"><span class="social-icon">▶️</span> TikTok</button>
       <a class="social-link" href="https://maps.google.com/?cid=11770934583290184135" target="_blank"><span class="social-icon">G</span> Google</a>
     </div>
   </div>
@@ -2012,7 +2012,7 @@ function getRebateForBrand(brand) {
 
 <!-- COOKIE BANNER -->
 <div class="cookie-banner" id="cookieBanner">
-  <div class="cookie-text">🍪 We use cookies to improve your experience, remember your cart, and analyze site traffic. By continuing you agree to our <a href="#">Privacy Policy</a>. Required under PIPEDA and Quebec Law 25.</div>
+  <div class="cookie-text">🍪 We use cookies to improve your experience, remember your cart, and analyze site traffic. By continuing you agree to our <a href="/privacy.html">Privacy Policy</a>. Required under PIPEDA and Quebec Law 25.</div>
   <div class="cookie-btns">
     <button class="cookie-decline" onclick="dismissCookie(false)">Decline Non-Essential</button>
     <button class="cookie-accept" onclick="dismissCookie(true)">Accept All</button>
@@ -2055,9 +2055,9 @@ function getRebateForBrand(brand) {
   <div class="footer-inner">
     <div class="footer-grid">
       <div><div class="footer-logo"><span>PC</span> TIRES</div><p class="footer-desc">Buy tires and wheels online and get them installed locally. The best of both worlds — great prices, expert local service.</p></div>
-      <div class="footer-col"><h3>Shop</h3><div class="footer-links"><a>All-Season Tires</a><a>Winter Tires</a><a>Summer / Performance</a><a>Truck &amp; SUV Tires</a><a>Steel &amp; Alloy Wheels</a></div></div>
-      <div class="footer-col"><h3>Services</h3><div class="footer-links"><a>Tire Installation</a><a>Mount &amp; Balance</a><a>TPMS Service</a><a>Seasonal Changeover</a><a>Book Appointment</a></div></div>
-      <div class="footer-col"><h3>Help</h3><div class="footer-links"><a onclick="smoothScroll('#location')">Location &amp; Hours</a><a href="tel:5193974686">519-397-4686</a><a href="/cdn-cgi/l/email-protection#45152a36312824262a2b31372426312c2b22052228242c296b262a28"><span class="__cf_email__" data-cfemail="55053a26213834363a3b21273436213c3b32153238343c397b363a38">[email&#160;protected]</span></a><a href="#">Privacy Policy</a><a href="#">Returns &amp; Warranty</a></div></div>
+      <div class="footer-col"><h3>Shop</h3><div class="footer-links"><a href="#catalog">All-Season Tires</a><a href="#catalog">Winter Tires</a><a href="#catalog">Summer / Performance</a><a href="#catalog">Truck &amp; SUV Tires</a><a href="#catalog">Steel &amp; Alloy Wheels</a></div></div>
+      <div class="footer-col"><h3>Services</h3><div class="footer-links"><a href="#install">Tire Installation</a><a href="#install">Mount &amp; Balance</a><a href="#services">TPMS Service</a><a href="#services">Seasonal Changeover</a><a href="#services">Book Appointment</a></div></div>
+      <div class="footer-col"><h3>Help</h3><div class="footer-links"><a href="#location">Location &amp; Hours</a><a href="tel:5193974686">519-397-4686</a><a href="/cdn-cgi/l/email-protection#45152a36312824262a2b31372426312c2b22052228242c296b262a28"><span class="__cf_email__" data-cfemail="55053a26213834363a3b21273436213c3b32153238343c397b363a38">[email&#160;protected]</span></a><a href="/privacy.html">Privacy Policy</a><a href="/returns.html">Returns &amp; Warranty</a></div></div>
     </div>
     <div class="footer-bottom">
       <div class="footer-copy">© 2026 PC Tires (Postma Contracting Inc.). All rights reserved.</div>
@@ -2136,8 +2136,8 @@ function getRebateForBrand(brand) {
           <button onclick="copyQuoteUrl()" id="copyQuoteBtn" style="background:var(--yellow);color:var(--black);border:none;padding:0 16px;font-weight:700;cursor:pointer;font-size:12px;letter-spacing:1px">COPY</button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-          <a id="quoteSmsLink" href="#" style="text-align:center;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:10px;text-decoration:none;font-size:13px">📱 Send by SMS</a>
-          <a id="quoteEmailLink" href="#" style="text-align:center;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:10px;text-decoration:none;font-size:13px">✉ Send by Email</a>
+          <a id="quoteSmsLink" href="sms:" style="text-align:center;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:10px;text-decoration:none;font-size:13px">📱 Send by SMS</a>
+          <a id="quoteEmailLink" href="mailto:" style="text-align:center;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:10px;text-decoration:none;font-size:13px">✉ Send by Email</a>
         </div>
         <button onclick="closeShareQuote()" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px;cursor:pointer;font-size:13px">Close</button>
       </div>
@@ -2394,7 +2394,7 @@ function getRebateForBrand(brand) {
       <div class="mm-field"><label>Email Address</label><input type="email" id="mmEmail" placeholder="you@example.com" autocomplete="email"></div>
       <div class="mm-field"><label>Invite Code</label><input type="text" id="mmCode" placeholder="Enter invite code" style="letter-spacing:2px;font-family:'IBM Plex Mono',monospace" autocomplete="off"></div>
       <button class="mm-submit" onclick="memberLogin()">SIGN IN → UNLOCK PRICING</button>
-      <p class="mm-note">Don't have an invite code? <a onclick="switchMmTab('request')">Request access</a></p>
+      <p class="mm-note">Don't have an invite code? <a href="#" onclick="switchMmTab('request');return false">Request access</a></p>
     </div>
     <div id="mmRequest" style="display:none">
       <div class="mm-field"><label>Your Name</label><input type="text" id="mmReqName" placeholder="Jane Smith" autocomplete="name"></div>
@@ -4617,7 +4617,7 @@ async function doLookupDirect(mk, md, trim, y) {
     await loadTires({ tireSizes: [tireSize] });
     textEl.innerHTML = `Found <strong>${mk} ${md}</strong> — showing <strong>${filteredTires.length}</strong> compatible tires for size <strong>${tireSize}</strong>.`;
   } else {
-    textEl.innerHTML = `Found <strong>${mk} ${md}</strong>. Showing full inventory — <a onclick="smoothScroll('#guide')" style="color:var(--yellow);cursor:pointer">not sure what size you need?</a>`;
+    textEl.innerHTML = `Found <strong>${mk} ${md}</strong>. Showing full inventory — <a href="#guide" onclick="smoothScroll('#guide');return false" style="color:var(--yellow);cursor:pointer">not sure what size you need?</a>`;
     resultEl.classList.add('show');
     switchCatalogType('tires');
     await loadTires();
