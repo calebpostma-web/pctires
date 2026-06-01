@@ -322,37 +322,119 @@ function buildCustomerEmail(order, tdgOrder) {
 function buildInternalEmail(order, tdgOrder, tdgError) {
   const tdgRef = extractTDGRef(tdgOrder) || 'NOT FOUND';
   const tdgStatus = tdgError
-    ? `❌ TDG ORDER FAILED: ${JSON.stringify(tdgError)}`
+    ? `&#x274C; TDG ORDER FAILED: ${JSON.stringify(tdgError)}`
     : tdgOrder?.skipped
-    ? `⚠️ SKIPPED: ${tdgOrder.reason}`
-    : `✅ TDG Order: ${tdgRef}`;
+    ? `&#x26A0;&#xFE0F; SKIPPED: ${tdgOrder.reason}`
+    : `&#x2705; TDG Order: ${tdgRef}`;
+
+  // TDG cost breakdown -- replaces the old Raw TDG Response JSON dump
+  const t = (!tdgError && tdgOrder && !tdgOrder.skipped) ? tdgOrder : null;
+  const cost = t ? {
+    subtotal: Number(t.subtotal || 0),
+    shipping: Number(t.shipping || 0),
+    fees:     Number(t.fees || 0),
+    tax:      Number(t.tax || 0),
+    total:    Number(t.total || 0),
+    currency: t.currency || 'CAD',
+    orderNum: t.orderNumber || '-',
+    ref:      t.reference || '-',
+  } : null;
+
+  // Gross margin = customer total - TDG total (both incl. tax/fees)
+  const margin = (cost && order.total) ? (Number(order.total) - cost.total) : null;
+  const marginPct = (margin !== null && order.total) ? Math.round((margin / Number(order.total)) * 100) : null;
+
+  const money = n => `$${Number(n).toFixed(2)}`;
+
+  const itemsHtml = (order.tires || [])
+    .map(t => `${t.qty}&times; ${t.brand} ${t.name} <span style="color:#888">(${t.size || (t.diameter + '\"')})</span>`)
+    .join('<br>');
+
+  const phoneDigits = String(order.customerPhone || '').replace(/\D/g, '');
+
+  const cardStyle = 'background:#161616;border:1px solid #2a2a2a;border-radius:4px;padding:16px 20px;margin-bottom:14px';
+  const hdrStyle  = 'font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:10px;font-weight:700';
+  const rowLbl    = 'padding:5px 0;color:#888;width:55%;font-size:14px';
+  const rowVal    = 'padding:5px 0;text-align:right;color:#e0e0e0;font-size:14px';
 
   return `<!DOCTYPE html>
 <html>
-<body style="font-family:monospace;background:#0e0e0e;color:#e0e0e0;padding:24px">
-  <h2 style="color:#f5c518">🛞 New PC Tires Order — ${order.orderNumber}</h2>
-  <p style="color:${tdgError ? '#ef4444' : tdgOrder?.skipped ? '#f5c518' : '#4ade80'}">${tdgStatus}</p>
-  <hr style="border-color:#2a2a2a">
-  <table style="border-collapse:collapse;width:100%">
-    <tr><td style="padding:4px 12px 4px 0;color:#888">Customer</td><td>${order.customerName}</td></tr>
-    <tr><td style="padding:4px 12px 4px 0;color:#888">Email</td><td>${order.customerEmail}</td></tr>
-    <tr><td style="padding:4px 12px 4px 0;color:#888">Phone</td><td>${order.customerPhone || '—'}</td></tr>
-    <tr><td style="padding:4px 12px 4px 0;color:#888">Vehicle</td><td>${order.vehicle || '—'}</td></tr>
-    <tr><td style="padding:4px 12px 4px 0;color:#888">Items</td><td>${(order.tires||[]).map(t=>`${t.qty}× ${t.brand} ${t.name} (${t.size||t.diameter+'"'})`).join('<br>')}</td></tr>
-    <tr><td style="padding:4px 12px 4px 0;color:#888">Add-ons</td><td>${order.addons || 'None'}</td></tr>
-    ${order.discount && Number(order.discount) > 0 ? `<tr><td style="padding:4px 12px 4px 0;color:#888">Discount</td><td style="color:#22c55e">-$${Number(order.discount).toFixed(2)}${order.discountCode ? ` (${order.discountCode})` : ''}</td></tr>` : ''}
-    <tr><td style="padding:4px 12px 4px 0;color:#888">Total</td><td style="color:#f5c518;font-weight:bold">$${order.total?.toFixed(2)} CAD</td></tr>
-    <tr><td style="padding:4px 12px 4px 0;color:#888">Install</td><td>${order.appointmentDate ? `${order.appointmentDate} at ${order.appointmentTime} — ${order.serviceName}` : 'Not booked'}</td></tr>
-    <tr><td style="padding:4px 12px 4px 0;color:#888">Search Method</td><td>${order.searchMethod || '—'}</td></tr>
-    <tr><td style="padding:4px 12px 4px 0;color:#888">CASL Opt-in</td><td>${order.caslOptIn ? 'Yes' : 'No'}</td></tr>
-  </table>
-  ${tdgOrder && !tdgOrder.skipped && !tdgError ? `<hr style="border-color:#2a2a2a"><h3 style="color:#4ade80">Raw TDG Response</h3>
-  <pre style="color:#e0e0e0;background:#1a1a1a;padding:12px;border-radius:4px;overflow:auto">${JSON.stringify(tdgOrder, null, 2)}</pre>` : ''}
+<body style="font-family:'Helvetica Neue',Arial,sans-serif;background:#0e0e0e;color:#e0e0e0;padding:24px;margin:0">
+<div style="max-width:640px;margin:0 auto">
+
+  <h2 style="color:#f5c518;margin:0 0 6px;font-size:22px;font-weight:800">&#x1F6DE; New Order &mdash; ${order.orderNumber}</h2>
+  <p style="margin:0 0 18px;color:${tdgError ? '#ef4444' : tdgOrder?.skipped ? '#f5c518' : '#4ade80'};font-size:14px">${tdgStatus}</p>
+
+  <!-- Customer -->
+  <div style="${cardStyle}">
+    <div style="${hdrStyle}">Customer</div>
+    <table style="border-collapse:collapse;width:100%">
+      <tr><td style="${rowLbl}">Name</td><td style="${rowVal}">${order.customerName || '-'}</td></tr>
+      <tr><td style="${rowLbl}">Email</td><td style="${rowVal}">${order.customerEmail ? `<a href="mailto:${order.customerEmail}" style="color:#f5c518;text-decoration:none">${order.customerEmail}</a>` : '-'}</td></tr>
+      <tr><td style="${rowLbl}">Phone</td><td style="${rowVal}">${order.customerPhone ? `<a href="tel:${phoneDigits}" style="color:#f5c518;text-decoration:none">${order.customerPhone}</a>` : '-'}</td></tr>
+      <tr><td style="${rowLbl}">Vehicle</td><td style="${rowVal}">${order.vehicle || '-'}</td></tr>
+    </table>
+  </div>
+
+  <!-- Items -->
+  <div style="${cardStyle}">
+    <div style="${hdrStyle}">Items</div>
+    <div style="font-size:14px;line-height:1.7">${itemsHtml || '-'}</div>
+    <div style="margin-top:10px;font-size:13px;color:#888">Add-ons: <span style="color:#e0e0e0">${order.addons || 'None'}</span></div>
+  </div>
+
+  <!-- Customer charge breakdown (with HST line item) -->
+  <div style="${cardStyle}">
+    <div style="${hdrStyle}">Customer Charged</div>
+    <table style="border-collapse:collapse;width:100%">
+      <tr><td style="${rowLbl}">Subtotal (tires)</td><td style="${rowVal}">${money(order.subtotal || 0)}</td></tr>
+      ${order.discount && Number(order.discount) > 0 ? `<tr><td style="padding:5px 0;color:#22c55e;font-size:14px">Discount${order.discountCode ? ` (${order.discountCode})` : ''}</td><td style="padding:5px 0;text-align:right;color:#22c55e;font-size:14px">-${money(order.discount)}</td></tr>` : ''}
+      ${order.addonTotal > 0 ? `<tr><td style="${rowLbl}">Add-ons</td><td style="${rowVal}">${money(order.addonTotal)}</td></tr>` : ''}
+      <tr><td style="${rowLbl}">HST (13%)</td><td style="${rowVal}">${money(order.tax || 0)}</td></tr>
+      <tr style="border-top:1px solid #2a2a2a">
+        <td style="padding:9px 0 0;color:#fff;font-weight:700;font-size:14px">Total Charged</td>
+        <td style="padding:9px 0 0;text-align:right;color:#f5c518;font-weight:800;font-size:17px">${money(order.total || 0)} ${order.currency || 'CAD'}</td>
+      </tr>
+    </table>
+  </div>
+
+  ${cost ? `
+  <!-- PC Tires cost (TDG) -- formatted, no more raw JSON -->
+  <div style="${cardStyle}">
+    <div style="${hdrStyle}">PC Tires Cost (TDG)</div>
+    <table style="border-collapse:collapse;width:100%">
+      <tr><td style="${rowLbl}">TDG Order #</td><td style="${rowVal};font-family:monospace;font-size:13px">${cost.orderNum}</td></tr>
+      <tr><td style="${rowLbl}">Reference</td><td style="${rowVal};font-family:monospace;font-size:13px">${cost.ref}</td></tr>
+      <tr><td style="${rowLbl}">Subtotal</td><td style="${rowVal}">${money(cost.subtotal)}</td></tr>
+      ${cost.shipping > 0 ? `<tr><td style="${rowLbl}">Shipping</td><td style="${rowVal}">${money(cost.shipping)}</td></tr>` : ''}
+      ${cost.fees > 0 ? `<tr><td style="${rowLbl}">Fees</td><td style="${rowVal}">${money(cost.fees)}</td></tr>` : ''}
+      <tr><td style="${rowLbl}">HST (TDG paid)</td><td style="${rowVal}">${money(cost.tax)}</td></tr>
+      <tr style="border-top:1px solid #2a2a2a">
+        <td style="padding:9px 0 0;color:#fff;font-weight:700;font-size:14px">Total Cost</td>
+        <td style="padding:9px 0 0;text-align:right;color:#fff;font-weight:800;font-size:15px">${money(cost.total)} ${cost.currency}</td>
+      </tr>
+      ${margin !== null ? `<tr>
+        <td style="padding:5px 0 0;color:#4ade80;font-weight:700;font-size:14px">Gross Margin</td>
+        <td style="padding:5px 0 0;text-align:right;color:#4ade80;font-weight:800;font-size:17px">${money(margin)}${marginPct !== null ? ` <span style="color:#888;font-weight:500;font-size:12px">(${marginPct}%)</span>` : ''}</td>
+      </tr>` : ''}
+    </table>
+    <div style="font-size:11px;color:#666;margin-top:8px;line-height:1.4">Margin = Customer Total &minus; TDG Total. Both include HST and fees. Net margin after HST reconciliation will differ.</div>
+  </div>` : ''}
+
+  <!-- Install + source -->
+  <div style="${cardStyle}">
+    <div style="${hdrStyle}">Install &amp; Source</div>
+    <table style="border-collapse:collapse;width:100%">
+      <tr><td style="${rowLbl}">Install</td><td style="${rowVal}">${order.appointmentDate ? `${order.appointmentDate} at ${order.appointmentTime} &mdash; ${order.serviceName}` : 'Not booked'}</td></tr>
+      <tr><td style="${rowLbl}">Search Method</td><td style="${rowVal}">${order.searchMethod || '-'}</td></tr>
+      <tr><td style="${rowLbl}">CASL Opt-in</td><td style="${rowVal}">${order.caslOptIn ? 'Yes' : 'No'}</td></tr>
+    </table>
+  </div>
+
+</div>
 </body>
 </html>`;
 }
-
-// ─── Send email via Resend ─────────────────────────────────────────────────────
 async function sendEmail(resendKey, { to, subject, html }) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
