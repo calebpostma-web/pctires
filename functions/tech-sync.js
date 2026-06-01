@@ -24,6 +24,8 @@ import { classifyVehicle } from './tech-vehicle-type.js';
 
 const BAY_KEY = 'scan:bay:1';
 const BAY_TTL = 60 * 60 * 24; // 24h — auto-clears if forgotten overnight
+const RECENTS_KEY = 'recents:bay:1';
+const RECENTS_MAX = 10;
 
 const NOTE_PREFIX = 'notes:vin:';
 const TORQUE_PREFIX = 'torque:verified:';
@@ -87,6 +89,48 @@ export async function onRequestPost(context) {
       case 'clear': {
         await env.TECH_KV.delete(BAY_KEY);
         return json({ ok: true });
+      }
+
+      // === RECENT VINS PER BAY (last 10) ===
+      case 'getRecents': {
+        const raw = await env.TECH_KV.get(RECENTS_KEY);
+        return json({ ok: true, recents: raw ? JSON.parse(raw) : [] });
+      }
+
+      case 'addRecent': {
+        if (!body.entry || !body.entry.vin) {
+          return json({ ok: false, error: 'Missing entry.vin' }, 400);
+        }
+        const raw = await env.TECH_KV.get(RECENTS_KEY);
+        let recents = raw ? JSON.parse(raw) : [];
+        const entry = body.entry;
+        const veh = entry.vehicle || {};
+        const vinUp = String(entry.vin).toUpperCase();
+        const isManual = vinUp.startsWith('MANUAL-');
+        const dedupKey = isManual
+          ? 'MANUAL|' + (veh.year || '') + '|' + String(veh.make || '').toUpperCase() + '|' + String(veh.model || '').toUpperCase()
+          : vinUp;
+        recents = recents.filter(r => {
+          const rVin = String(r.vin || '').toUpperCase();
+          const rVeh = r.vehicle || {};
+          const rKey = rVin.startsWith('MANUAL-')
+            ? 'MANUAL|' + (rVeh.year || '') + '|' + String(rVeh.make || '').toUpperCase() + '|' + String(rVeh.model || '').toUpperCase()
+            : rVin;
+          return rKey !== dedupKey;
+        });
+        recents.unshift({
+          vin: entry.vin,
+          vehicle: {
+            year: veh.year || null,
+            make: veh.make || '',
+            model: veh.model || '',
+            trim: veh.trim || '',
+          },
+          ts: Date.now(),
+        });
+        if (recents.length > RECENTS_MAX) recents.length = RECENTS_MAX;
+        await env.TECH_KV.put(RECENTS_KEY, JSON.stringify(recents));
+        return json({ ok: true, recents });
       }
 
       // ── NOTES PER VIN ────────────────────────────────────────────────
