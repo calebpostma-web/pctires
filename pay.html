@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pay Your Invoice — PC Tires</title>
-<meta name="description" content="Pay your PC Tires invoice online — secure card payment. Service, repairs, custom invoices.">
+<title>Pay Your Invoice &mdash; PC Tires</title>
+<meta name="description" content="Pay your PC Tires invoice online â€” secure card payment. Service, repairs, custom invoices.">
 <meta name="robots" content="noindex, follow">
 
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -15,15 +15,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 
-<!-- Google tag (gtag.js) — page-view tracking only; no conversion event on this page -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18156336783"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'AW-18156336783');
-
-  // Click-to-call conversion — fires on any tel: link click
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest && e.target.closest('a[href^="tel:"]');
     if (a && typeof gtag === 'function') {
@@ -61,9 +59,7 @@ h1 .accent { color:var(--yellow); }
   background:var(--card); border:1px solid var(--border); border-top:3px solid var(--yellow);
   border-radius:2px; padding:24px 26px; margin-bottom:22px;
 }
-.amount-display {
-  text-align:center; padding:14px 0 18px; border-bottom:1px solid var(--border); margin-bottom:18px;
-}
+.amount-display { text-align:center; padding:14px 0 18px; border-bottom:1px solid var(--border); margin-bottom:18px; }
 .amount-label { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); font-weight:700; margin-bottom:6px; }
 .amount-value { font-family:'Barlow Condensed',sans-serif; font-size:46px; font-weight:900; color:var(--yellow); line-height:1; }
 .amount-value .cur { font-size:18px; color:var(--muted); font-weight:600; letter-spacing:1px; margin-left:6px; }
@@ -73,9 +69,8 @@ h1 .accent { color:var(--yellow); }
 .invoice-row .label { color:var(--muted); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.8px; }
 .invoice-row .value { color:var(--white); font-weight:500; text-align:right; max-width:60%; }
 
-.form-card {
-  background:var(--card); border:1px solid var(--border); border-radius:2px; padding:24px 26px;
-}
+.form-card { background:var(--card); border:1px solid var(--border); border-radius:2px; padding:24px 26px; }
+.form-card + .form-card { margin-top:16px; }
 .form-section-head { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; color:var(--white); margin-bottom:14px; }
 
 .fg { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
@@ -85,7 +80,7 @@ h1 .accent { color:var(--yellow); }
   font-family:'Barlow',sans-serif; font-size:15px; transition:border-color .15s;
 }
 .fg input:focus, .fg textarea:focus { outline:0; border-color:var(--yellow); }
-.fg input[readonly] { background:var(--dark); color:var(--muted); cursor:default; }
+.fg input[readonly] { background:var(--dark); color:var(--light); cursor:default; }
 .fg .helper { font-size:12px; color:var(--muted); margin-top:3px; }
 .amount-input-wrap { position:relative; }
 .amount-input-wrap::before {
@@ -135,6 +130,41 @@ h1 .accent { color:var(--yellow); }
 .success-meta .meta-row .lbl { color:var(--muted); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.6px; }
 .success-meta .meta-row .val { color:var(--white); font-family:'IBM Plex Mono',monospace; font-size:12px; }
 
+/* LINK GENERATOR (owner mode) */
+.gen-result-card { background:var(--card); border:1px solid var(--yellow); border-top:3px solid var(--yellow); border-radius:2px; padding:22px 26px; margin-top:16px; }
+.gen-url-box { background:var(--raised); border:1px solid var(--border); border-radius:2px; padding:14px; word-break:break-all; font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--yellow); margin-bottom:14px; cursor:pointer; user-select:all; }
+.action-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.action-btn {
+  padding:13px 8px; border:1px solid var(--border); background:var(--raised); color:var(--white);
+  border-radius:2px; cursor:pointer; font-family:'Barlow',sans-serif;
+  font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.5px;
+  transition: background .15s, border-color .15s, color .15s;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.action-btn:hover { background:var(--mid); border-color:var(--yellow); color:var(--yellow); }
+.action-btn.copy { color:var(--yellow); border-color:var(--yellow); }
+.action-btn.copy:hover { background:var(--yellow); color:var(--black); }
+.qr-toggle { margin-top:16px; }
+.qr-toggle summary { color:var(--muted); cursor:pointer; font-size:13px; padding:6px 0; list-style:none; }
+.qr-toggle summary::-webkit-details-marker { display:none; }
+.qr-toggle summary::before { content:'\25B8 '; color:var(--yellow); display:inline-block; transition:transform .15s; margin-right:6px; }
+.qr-toggle[open] summary::before { content:'\25BE '; }
+.qr-toggle .qr-box { text-align:center; padding:14px 0; }
+.qr-toggle img { max-width:220px; height:auto; background:white; padding:10px; border-radius:2px; }
+
+.toast-popup {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+  background:var(--yellow); color:var(--black); padding:11px 22px; border-radius:2px;
+  font-weight:800; font-size:14px; letter-spacing:1px; text-transform:uppercase;
+  z-index:1000; opacity:0; pointer-events:none; transition: opacity .2s;
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+.toast-popup.show { opacity:1; }
+
+.preview-line { background:var(--raised); border:1px solid var(--border); border-radius:2px; padding:10px 14px; margin-top:10px; font-size:13px; color:var(--light); display:none; }
+.preview-line.show { display:block; }
+.preview-line .pv-amount { color:var(--yellow); font-weight:800; }
+
 footer { padding:30px 24px; text-align:center; color:var(--muted); font-size:12px; border-top:1px solid var(--border); }
 footer a { color:var(--muted); text-decoration:none; }
 footer a:hover { color:var(--yellow); }
@@ -149,8 +179,82 @@ footer a:hover { color:var(--yellow); }
 
 <div class="wrap">
 
-  <!-- BEFORE PAY: form view -->
-  <div id="payForm">
+  <!-- ============================================================ -->
+  <!-- OWNER MODE: link generator (shown when no URL params present) -->
+  <!-- ============================================================ -->
+  <div id="linkGenerator" style="display:none">
+
+    <h1>Build <span class="accent">Payment Link</span></h1>
+    <p class="subline">Type the amount, generate a link, send it to your customer. They pay; you both get a receipt.</p>
+
+    <div class="form-card">
+      <div class="form-section-head">Invoice Details</div>
+
+      <div class="fg">
+        <label for="genAmount">Amount (CAD) *</label>
+        <div class="amount-input-wrap">
+          <input type="number" id="genAmount" step="0.01" min="0.50" max="5000" placeholder="0.00" inputmode="decimal" autocomplete="off">
+        </div>
+        <div class="helper">Enter the total amount the customer owes, including HST if applicable.</div>
+      </div>
+
+      <div class="fg">
+        <label for="genDesc">What is this for?</label>
+        <input type="text" id="genDesc" placeholder="e.g. Flat repair, brake service" autocomplete="off">
+        <div class="helper">Optional. Shown on customer's payment page and receipt.</div>
+      </div>
+
+      <div class="form-row">
+        <div class="fg">
+          <label for="genName">Customer Name</label>
+          <input type="text" id="genName" placeholder="Jane Smith" autocomplete="off">
+        </div>
+        <div class="fg">
+          <label for="genEmail">Customer Email</label>
+          <input type="email" id="genEmail" placeholder="jane@example.com" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="fg">
+        <label for="genInvoice">Invoice / Reference #</label>
+        <input type="text" id="genInvoice" placeholder="auto-generates if blank" autocomplete="off">
+        <div class="helper">Optional. If blank, an INV-XXXXXXX number is generated when the customer pays.</div>
+      </div>
+
+      <div class="preview-line" id="genPreview"></div>
+
+      <button class="pay-btn" id="genBtn" onclick="generateLink()">Generate Link &rarr;</button>
+    </div>
+
+    <!-- Generated link card -->
+    <div class="gen-result-card" id="generatedCard" style="display:none">
+      <div class="form-section-head" style="color:var(--yellow);margin-bottom:10px">Your Link</div>
+      <div class="helper" style="margin-bottom:14px">Tap to copy, then share with your customer however you like.</div>
+      <div class="gen-url-box" id="generatedUrl" onclick="copyLink()" title="Click to copy">Generated link goes here</div>
+
+      <div class="action-row">
+        <button class="action-btn copy" onclick="copyLink()">&#x1F4CB; Copy</button>
+        <button class="action-btn" onclick="sendSMS()">&#x1F4AC; Text</button>
+        <button class="action-btn" onclick="sendEmail()">&#x2709;&#xFE0F; Email</button>
+      </div>
+
+      <details class="qr-toggle">
+        <summary>Show QR code (for in-person)</summary>
+        <div class="qr-box">
+          <img id="qrImage" src="" alt="QR code for payment link" loading="lazy">
+          <div class="helper" style="margin-top:10px">Customer points their phone camera at this to open the payment page.</div>
+        </div>
+      </details>
+
+      <button class="pay-btn" style="background:var(--mid);color:var(--white);margin-top:18px" onclick="resetGenerator()">Build Another Link</button>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CUSTOMER MODE: payment form (shown when ?amount= is present)  -->
+  <!-- ============================================================ -->
+  <div id="payForm" style="display:none">
 
     <h1>Pay Your <span class="accent">Invoice</span></h1>
     <p class="subline">Secure card payment via Stripe. Receipt sent by email.</p>
@@ -166,7 +270,6 @@ footer a:hover { color:var(--yellow); }
     <div class="form-card">
       <div class="form-section-head">Payment Details</div>
 
-      <!-- Amount field (always present, may be readonly if URL provided amount) -->
       <div class="fg" id="amountFieldWrap">
         <label for="payAmount">Amount (CAD)</label>
         <div class="amount-input-wrap">
@@ -175,7 +278,6 @@ footer a:hover { color:var(--yellow); }
         <div class="helper" id="amountHelper">Enter the amount you were quoted by PC Tires.</div>
       </div>
 
-      <!-- Description field (only shown when not pre-filled in URL) -->
       <div class="fg" id="descFieldWrap" style="display:none">
         <label for="payDesc">What is this for?</label>
         <input type="text" id="payDesc" placeholder="e.g. Flat Repair, Mar 12">
@@ -210,15 +312,15 @@ footer a:hover { color:var(--yellow); }
   <div class="success-state" id="paySuccess">
     <div class="success-circle">&check;</div>
     <div class="success-title">Payment Received!</div>
-    <div class="success-amount">$<span id="paidAmount">—</span></div>
+    <div class="success-amount">$<span id="paidAmount">&mdash;</span></div>
     <p class="success-sub">
       Thank you, <strong id="paidName">customer</strong>.<br>
       A receipt has been sent to <strong id="paidEmail">your email</strong>.
     </p>
     <div class="success-meta">
-      <div class="meta-row"><span class="lbl">Reference</span><span class="val" id="paidRef">—</span></div>
-      <div class="meta-row" id="paidDescRow" style="display:none"><span class="lbl">For</span><span class="val" id="paidDesc">—</span></div>
-      <div class="meta-row"><span class="lbl">Payment ID</span><span class="val" id="paidPiId">—</span></div>
+      <div class="meta-row"><span class="lbl">Reference</span><span class="val" id="paidRef">&mdash;</span></div>
+      <div class="meta-row" id="paidDescRow" style="display:none"><span class="lbl">For</span><span class="val" id="paidDesc">&mdash;</span></div>
+      <div class="meta-row"><span class="lbl">Payment ID</span><span class="val" id="paidPiId">&mdash;</span></div>
     </div>
     <p style="margin-top:24px;font-size:14px;color:var(--muted)">
       Questions? Call us at <a href="tel:5193974686" style="color:var(--yellow);text-decoration:none">519-397-4686</a>
@@ -227,19 +329,23 @@ footer a:hover { color:var(--yellow); }
 
 </div>
 
+<div class="toast-popup" id="toastPopup">Copied</div>
+
 <footer>
   PC Tires &middot; 7144 Grande River Line, Pain Court, ON N0P 1Z0<br>
   <a href="tel:5193974686">519-397-4686</a> &middot; <a href="/">pctires.ca</a>
 </footer>
 
 <script>
-// ─────────────────────────────────────────────────────────────────
-// READ URL PARAMS + RENDER
-// ?amount=30&desc=Flat+Repair&invoice=INV-042&name=Bob&email=bob@x.com
-// ─────────────────────────────────────────────────────────────────
+// ============================================================
+// URL PARAM HELPERS
+// ============================================================
 function urlParam(name) {
   try { return (new URL(window.location.href)).searchParams.get(name) || ''; }
   catch(e) { return ''; }
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 const initial = {
@@ -255,8 +361,177 @@ const STRIPE_PK = 'pk_live_51T86uxRufNpmOxQPt6KAjj4Yb8UOOpJqJAQ2KIae2d9adLFF9Ty8
 
 let stripe = null, elements = null, cardEl = null;
 
+// ============================================================
+// DECIDE WHICH MODE
+// ============================================================
+function decideView() {
+  if (initial.amount && initial.amount > 0) {
+    // Customer mode
+    document.getElementById('payForm').style.display = '';
+    document.getElementById('linkGenerator').style.display = 'none';
+    renderInvoiceCard();
+    initStripe();
+  } else {
+    // Owner mode (link generator)
+    document.getElementById('payForm').style.display = 'none';
+    document.getElementById('linkGenerator').style.display = '';
+    initGenerator();
+  }
+}
+
+// ============================================================
+// OWNER MODE: LINK GENERATOR
+// ============================================================
+function initGenerator() {
+  // Live preview of amount as they type
+  document.getElementById('genAmount').addEventListener('input', updatePreview);
+  document.getElementById('genDesc').addEventListener('input', updatePreview);
+  document.getElementById('genName').addEventListener('input', updatePreview);
+}
+
+function updatePreview() {
+  const amount = parseFloat(document.getElementById('genAmount').value);
+  const desc = document.getElementById('genDesc').value.trim();
+  const name = document.getElementById('genName').value.trim();
+  const pv = document.getElementById('genPreview');
+  if (!isNaN(amount) && amount > 0) {
+    const parts = [`<span class="pv-amount">$${amount.toFixed(2)}</span>`];
+    if (desc) parts.push(`for ${escapeHtml(desc)}`);
+    if (name) parts.push(`to ${escapeHtml(name)}`);
+    pv.innerHTML = 'Preview: ' + parts.join(' ');
+    pv.classList.add('show');
+  } else {
+    pv.classList.remove('show');
+  }
+}
+
+function generateLink() {
+  const amount = parseFloat(document.getElementById('genAmount').value);
+  const desc = document.getElementById('genDesc').value.trim();
+  const name = document.getElementById('genName').value.trim();
+  const email = document.getElementById('genEmail').value.trim();
+  const invoice = document.getElementById('genInvoice').value.trim();
+
+  if (isNaN(amount) || amount < 0.50) {
+    showToast('Enter an amount of at least $0.50', 'error');
+    document.getElementById('genAmount').focus();
+    return;
+  }
+  if (amount > 5000) {
+    showToast('Max amount is $5000', 'error');
+    return;
+  }
+
+  const params = new URLSearchParams();
+  params.set('amount', amount.toFixed(2));
+  if (desc)    params.set('desc',    desc);
+  if (name)    params.set('name',    name);
+  if (email)   params.set('email',   email);
+  if (invoice) params.set('invoice', invoice);
+
+  const url = 'https://pctires.ca/pay?' + params.toString();
+
+  document.getElementById('generatedUrl').textContent = url;
+  document.getElementById('generatedCard').style.display = '';
+
+  // QR code via api.qrserver.com (free, no auth)
+  const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=' + encodeURIComponent(url);
+  document.getElementById('qrImage').src = qrSrc;
+
+  // Scroll the result into view
+  setTimeout(() => {
+    document.getElementById('generatedCard').scrollIntoView({behavior:'smooth', block:'start'});
+  }, 50);
+}
+
+function getGeneratedUrl() {
+  return document.getElementById('generatedUrl').textContent.trim();
+}
+
+function copyLink() {
+  const url = getGeneratedUrl();
+  if (!url || url === 'Generated link goes here') return;
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(
+      () => showToast('Link copied'),
+      () => fallbackCopy(url)
+    );
+  } else {
+    fallbackCopy(url);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); showToast('Link copied'); }
+  catch(e) { showToast('Could not copy. Long-press the link.', 'error'); }
+  document.body.removeChild(ta);
+}
+
+function sendSMS() {
+  const url = getGeneratedUrl();
+  if (!url) return;
+  const amount = document.getElementById('genAmount').value;
+  const name = document.getElementById('genName').value.trim();
+  const desc = document.getElementById('genDesc').value.trim();
+  const greeting = name ? ('Hi ' + name.split(' ')[0] + ', ') : 'Hi, ';
+  const what = desc ? (' for ' + desc) : '';
+  const body = greeting + 'your PC Tires invoice' + what + ' is ready: $' + amount + '. Pay here: ' + url;
+  // sms: scheme works on iOS and most Android; ?&body= is the cross-platform form
+  window.location.href = 'sms:?&body=' + encodeURIComponent(body);
+}
+
+function sendEmail() {
+  const url = getGeneratedUrl();
+  if (!url) return;
+  const amount = document.getElementById('genAmount').value;
+  const email = document.getElementById('genEmail').value.trim();
+  const name = document.getElementById('genName').value.trim();
+  const desc = document.getElementById('genDesc').value.trim();
+  const invoice = document.getElementById('genInvoice').value.trim();
+
+  const subject = 'PC Tires Invoice' + (invoice ? ' ' + invoice : '') + (desc ? ' - ' + desc : '');
+  const greeting = name ? ('Hi ' + name.split(' ')[0] + ',') : 'Hi,';
+  const lines = [
+    greeting, '',
+    'Your PC Tires invoice is ready.',
+    '',
+    'Amount: $' + amount,
+  ];
+  if (desc) lines.push('For: ' + desc);
+  lines.push('', 'Pay securely here:', url, '', 'Questions? Call us at 519-397-4686.', '', 'Thanks,', 'PC Tires');
+  const body = lines.join('\n');
+
+  const to = email ? encodeURIComponent(email) : '';
+  window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+
+function resetGenerator() {
+  ['genAmount','genDesc','genName','genEmail','genInvoice'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('generatedCard').style.display = 'none';
+  document.getElementById('genPreview').classList.remove('show');
+  document.getElementById('genAmount').focus();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function showToast(msg, kind) {
+  const t = document.getElementById('toastPopup');
+  t.textContent = msg;
+  t.style.background = (kind === 'error') ? 'var(--red)' : 'var(--yellow)';
+  t.style.color = (kind === 'error') ? 'white' : 'black';
+  t.classList.add('show');
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ============================================================
+// CUSTOMER MODE: PAYMENT FORM
+// ============================================================
 function renderInvoiceCard() {
-  // Pre-fill amount from URL if present
   if (initial.amount && initial.amount > 0) {
     document.getElementById('payAmount').value = initial.amount.toFixed(2);
     document.getElementById('payAmount').readOnly = true;
@@ -264,7 +539,6 @@ function renderInvoiceCard() {
     document.getElementById('amountDisplay').style.display = 'block';
     document.getElementById('displayAmount').textContent = initial.amount.toFixed(2);
   }
-  // Description: if URL provided, lock and show in invoice card; else show editable input
   const meta = document.getElementById('invoiceMetaRows');
   let rows = '';
   if (initial.invoice) rows += `<div class="invoice-row"><span class="label">Invoice #</span><span class="value">${escapeHtml(initial.invoice)}</span></div>`;
@@ -273,11 +547,9 @@ function renderInvoiceCard() {
   if (!initial.desc) {
     document.getElementById('descFieldWrap').style.display = 'block';
   }
-  // Hide the empty invoice card if nothing to show
   if (!initial.amount && !initial.invoice && !initial.desc) {
     document.getElementById('invoiceCard').style.display = 'none';
   }
-  // Pre-fill customer fields
   if (initial.name)  document.getElementById('payName').value = initial.name;
   if (initial.email) document.getElementById('payEmail').value = initial.email;
 }
@@ -290,13 +562,6 @@ function onAmountChange() {
   }
 }
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-// ─────────────────────────────────────────────────────────────────
-// STRIPE ELEMENTS INIT
-// ─────────────────────────────────────────────────────────────────
 function initStripe() {
   if (typeof Stripe === 'undefined') {
     setTimeout(initStripe, 200);
@@ -322,9 +587,6 @@ function initStripe() {
   });
 }
 
-// ─────────────────────────────────────────────────────────────────
-// PROCESS PAYMENT
-// ─────────────────────────────────────────────────────────────────
 async function processPayment() {
   const errEl = document.getElementById('formError');
   errEl.classList.remove('show');
@@ -335,22 +597,19 @@ async function processPayment() {
   const phone  = document.getElementById('payPhone').value.trim();
   const email  = document.getElementById('payEmail').value.trim();
 
-  // Validation
   if (isNaN(amount) || amount < 0.50)  return showErr('Enter an amount of at least $0.50.');
-  if (amount > 5000)                   return showErr('Amounts over $5000 — please call the shop at 519-397-4686.');
+  if (amount > 5000)                   return showErr('Amounts over $5000 â€” please call the shop at 519-397-4686.');
   if (!name)                           return showErr('Please enter your name.');
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showErr('Please enter a valid email address.');
   if (!stripe || !cardEl)              return showErr('Payment form not ready. Reload the page and try again.');
 
   const btn = document.getElementById('payBtn');
-  btn.textContent = 'Processing…'; btn.disabled = true;
+  btn.textContent = 'Processing...'; btn.disabled = true;
 
-  // Reference number for this payment (prefix INV to distinguish from tire orders PCT)
   const reference = initial.invoice || ('INV-' + Date.now().toString(36).toUpperCase().slice(-7));
   const amountCents = Math.round(amount * 100);
 
   try {
-    // 1) Create PaymentIntent
     const piRes = await fetch('/create-pi', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -360,17 +619,15 @@ async function processPayment() {
     if (piData.error) throw new Error(piData.error);
     if (!piData.clientSecret) throw new Error('Server did not return a payment session.');
 
-    // 2) Confirm payment with card
     const result = await stripe.confirmCardPayment(piData.clientSecret, {
       payment_method: { card: cardEl, billing_details: { name, email, phone } },
-            receipt_email: email,
+      receipt_email: email,
     });
     if (result.error) throw new Error(result.error.message);
     if (result.paymentIntent.status !== 'succeeded') throw new Error('Payment did not complete. Try again or call the shop.');
 
     const piId = result.paymentIntent.id;
 
-    // 3) Notify Caleb via email
     try {
       await fetch('/send-payment-notification', {
         method: 'POST',
@@ -389,7 +646,6 @@ async function processPayment() {
       });
     } catch(e) { console.warn('Notification email failed:', e.message); }
 
-    // 4) Show success
     document.getElementById('paidAmount').textContent = amount.toFixed(2);
     document.getElementById('paidName').textContent = name.split(' ')[0] || name;
     document.getElementById('paidEmail').textContent = email;
@@ -417,11 +673,10 @@ function showErr(msg) {
   window.scrollTo({ top: el.offsetTop - 200, behavior:'smooth' });
 }
 
-// ─────────────────────────────────────────────────────────────────
+// ============================================================
 // INIT
-// ─────────────────────────────────────────────────────────────────
-renderInvoiceCard();
-initStripe();
+// ============================================================
+decideView();
 </script>
 
 </body>
