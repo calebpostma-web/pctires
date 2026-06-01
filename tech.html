@@ -821,6 +821,72 @@
     padding: 8px 10px; border-bottom: 1px solid var(--border);
   }
   .admin-table td.num { font-family: 'IBM Plex Mono', monospace; color: var(--yellow); font-weight: 700; }
+
+  /* Recent VINs strip (phone mode only) */
+  .recent-row { margin-bottom: 14px; }
+  .recent-row .recent-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .recent-chips {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .recent-chips::-webkit-scrollbar { height: 4px; }
+  .recent-chips::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .recent-chip {
+    flex: 0 0 auto;
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--white);
+    padding: 8px 12px; border-radius: 2px; cursor: pointer;
+    text-align: left; font-family: 'Barlow', sans-serif;
+    min-width: 120px;
+    transition: border-color .15s, color .15s;
+  }
+  .recent-chip:hover { border-color: var(--yellow); }
+  .recent-chip .rc-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700; line-height: 1.1;
+    white-space: nowrap;
+  }
+  .recent-chip .rc-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--muted); margin-top: 3px;
+    letter-spacing: .5px;
+  }
+
+  /* Type-in VIN row inside Scan VIN modal */
+  .vin-typein-row { margin-top: 14px; }
+  .vin-typein-row .vin-or {
+    text-align: center; font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--muted); letter-spacing: 2px;
+    margin: 10px 0 8px; text-transform: uppercase;
+  }
+  .vin-typein-row label {
+    display: block; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); font-weight: 700; margin-bottom: 5px;
+  }
+  .vin-typein-row .vin-input-wrap { display: flex; gap: 8px; }
+  .vin-typein-row input {
+    flex: 1; background: var(--raised); border: 1px solid var(--border);
+    color: var(--white); padding: 10px 12px; border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+    letter-spacing: 1px; text-transform: uppercase;
+    outline: none;
+  }
+  .vin-typein-row input:focus { border-color: var(--yellow); }
+  .vin-typein-row .vin-go {
+    background: var(--yellow); color: var(--black);
+    border: 1px solid var(--yellow); border-radius: 2px;
+    padding: 0 16px; font-weight: 800; cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1.5px; text-transform: uppercase; font-size: 13px;
+    white-space: nowrap;
+  }
+  .vin-typein-row .vin-go:hover { filter: brightness(0.92); }
 </style>
 </head>
 <body>
@@ -868,6 +934,12 @@
         <div class="icon">⌨️</div>
         <div class="label">Manual Entry</div>
       </button>
+    </section>
+
+    <!-- Recent VINs (phone mode, KV-backed, last 10) -->
+    <section class="recent-row" id="recentRow" hidden>
+      <div class="recent-label">Recent</div>
+      <div class="recent-chips" id="recentChips"></div>
     </section>
 
     <!-- Loading state -->
@@ -1031,6 +1103,14 @@
       <div class="cam-hint">Tap below to open camera</div>
     </div>
     <input type="file" id="camInput" accept="image/*" capture="environment" style="display:none" onchange="handleCamCapture(event)">
+    <div class="vin-typein-row">
+      <div class="vin-or">— or type it in —</div>
+      <label for="vinTypeIn">VIN (17 characters)</label>
+      <div class="vin-input-wrap">
+        <input type="text" id="vinTypeIn" placeholder="1FTFW1ET5DKE12345" maxlength="17" autocapitalize="characters" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();submitTypedVIN();}">
+        <button type="button" class="vin-go" onclick="submitTypedVIN()">Look Up</button>
+      </div>
+    </div>
     <div class="modal-btn-row">
       <button class="modal-btn secondary" onclick="closeCamera()">Cancel</button>
       <button class="modal-btn primary" onclick="document.getElementById('camInput').click()">Take Photo</button>
@@ -2027,6 +2107,7 @@ const COMMERCIAL_101 = [
 
 // Current vehicle state (phone mode)
 let currentScan = null;
+let currentRecents = [];
 
 /* ═══════════════════════════════════════════════════════════════
    AUTH
@@ -2088,6 +2169,7 @@ function unlock() {
   renderTires101Tiles();
   renderCommercial101Tiles();
   if (TV_MODE) enterTVMode();
+  else loadRecents();
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2392,6 +2474,7 @@ async function loadSpecsForVehicle(vin, vehicle) {
   await pushToTV(scan);
   renderPhoneResult(scan);
   await loadNotes(vin);
+  pushRecent(vin, vehicle);
   hideLoading();
   toast('Specs loaded — TV updated', 'success');
 }
@@ -2543,6 +2626,107 @@ function renderPhoneResult(scan) {
 
   document.getElementById('resultArea').innerHTML = html;
   document.getElementById('notesSection').hidden = false;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RECENT VINS (KV-backed, per bay)
+   ═══════════════════════════════════════════════════════════════ */
+async function loadRecents() {
+  if (TV_MODE) return;
+  try {
+    const r = await fetch('/tech-sync', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: 'getRecents' }),
+    });
+    const d = await r.json();
+    if (d.ok) renderRecents(d.recents || []);
+  } catch (e) {
+    // silent — recents are nice-to-have, not critical
+  }
+}
+
+function renderRecents(list) {
+  currentRecents = Array.isArray(list) ? list : [];
+  const row = document.getElementById('recentRow');
+  const host = document.getElementById('recentChips');
+  if (!row || !host) return;
+  if (!currentRecents.length) { row.hidden = true; host.innerHTML = ''; return; }
+  row.hidden = false;
+  host.innerHTML = currentRecents.map(function(r) {
+    const v = r.vehicle || {};
+    const label = ((v.year || '') + ' ' + (v.make || '') + ' ' + (v.model || '')).trim() || 'Vehicle';
+    const isManual = String(r.vin || '').startsWith('MANUAL-');
+    const sub = isManual ? 'manual' : ('VIN …' + String(r.vin || '').slice(-5));
+    const safeVin = String(r.vin || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return '<button type="button" class="recent-chip" onclick="tapRecent(\'' + safeVin + '\')">'
+         + '<div class="rc-label">' + escapeHtml(label) + '</div>'
+         + '<div class="rc-sub">' + escapeHtml(sub) + '</div>'
+         + '</button>';
+  }).join('');
+}
+
+function tapRecent(vinStr) {
+  const r = currentRecents.find(function(x) { return String(x.vin) === String(vinStr); });
+  if (!r) { toast('Recent entry missing', 'error'); return; }
+  const veh = r.vehicle || {};
+  if (vinStr.startsWith('MANUAL-')) {
+    if (!veh.make || !veh.model) { toast('Recent entry incomplete', 'error'); return; }
+    loadSpecsForVehicle(vinStr, {
+      vin: null,
+      year: veh.year,
+      make: veh.make,
+      model: veh.model,
+      trim: veh.trim || '',
+    });
+  } else {
+    processVIN(vinStr);
+  }
+}
+
+function pushRecent(vin, vehicle) {
+  if (!vin) return;
+  fetch('/tech-sync', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      action: 'addRecent',
+      entry: {
+        vin: vin,
+        vehicle: {
+          year: (vehicle && vehicle.year) || null,
+          make: (vehicle && vehicle.make) || '',
+          model: (vehicle && vehicle.model) || '',
+          trim: (vehicle && vehicle.trim) || '',
+        },
+      },
+    }),
+  }).then(function(r) { return r.json(); })
+    .then(function(d) { if (d && d.ok) renderRecents(d.recents); })
+    .catch(function() { /* ignore */ });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPE-IN VIN (fallback when camera scan fails)
+   ═══════════════════════════════════════════════════════════════ */
+function submitTypedVIN() {
+  const inp = document.getElementById('vinTypeIn');
+  if (!inp) return;
+  const vin = (inp.value || '').toUpperCase().replace(/\s+/g, '').trim();
+  if (vin.length !== 17) {
+    toast('VIN must be 17 characters (' + vin.length + ' entered)', 'error');
+    inp.focus();
+    return;
+  }
+  // VINs exclude I, O, Q
+  if (/[IOQ]/.test(vin)) {
+    toast('VINs do not contain I, O, or Q — check for misreads', 'error');
+    inp.focus();
+    return;
+  }
+  inp.value = '';
+  closeCamera();
+  processVIN(vin);
 }
 
 function clearVehicle() {
