@@ -4488,7 +4488,7 @@ function closeCart() { document.getElementById('cartOverlay').classList.remove('
 // ─────────────────────────────────────────────────
 //  CHECKOUT
 // ─────────────────────────────────────────────────
-function openCheckout() { closeCart(); step = 1; selectedAddons = new Set(); updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
+function openCheckout() { closeCart(); step = 1; selectedAddons = new Set(); _calAutoPickPending = true; updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
 function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('show'); }
 
 const mTitles = ['', 'Contact Info', 'Book Installation', 'Add-ons', 'Payment', 'Order Confirmed!'];
@@ -4890,7 +4890,7 @@ function selectService(id) {
   selectedService = SERVICES.find(s => s.id === id); buildServiceMenu();
   document.getElementById('calSection').style.display = 'block';
   document.getElementById('durationNote').innerHTML = `<b>⏱ ${selectedService.duration} minutes</b> reserved — we'll block enough time so your appointment never feels rushed.`;
-  selDate = null; selTime = null; buildCal();
+  selDate = null; selTime = null; _calAutoPickPending = true; buildCal();
 }
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const BOOKED_SLOTS = {};
@@ -4899,7 +4899,29 @@ const BOOKED_SLOTS = {};
 // TDG delivers fast — in-stock tires ordered by 9 AM often arrive same-day by noon.
 // We assume a 1 business-day lead as the default safety buffer, plus a morning cutoff
 // on the first bookable day to account for late-morning delivery.
-const INSTALL_LEAD_BUSINESS_DAYS = 1;   // earliest install = today + 1 business day
+// London DC (TDG warehouse 6) is our local servicing branch. Order by 1 PM to make todays
+// outbound truck so tires arrive same afternoon - install always next business day at earliest.
+// Orangeville and other DCs need an extra business day to transfer to London first.
+const LONDON_LOCATION_ID          = 6;
+const LOCAL_LEAD_BUSINESS_DAYS    = 1;   // London stock: install next business day
+const NONLOCAL_LEAD_BUSINESS_DAYS = 2;   // ships from elsewhere: one extra business day
+const TRUCK_CUTOFF_HOUR           = 13;  // order by 1 PM to make todays London->shop truck
+let   _calAutoPickPending = true;        // reset to true each time the checkout opens
+
+function isLondonLocation(loc) {
+  if (!loc) return false;
+  if (loc.locationId === LONDON_LOCATION_ID) return true;
+  return /london/i.test(loc.locationName || loc.name || '');
+}
+function londonQtyForItem(item) {
+  const locs = (item && item.locations) || [];
+  const london = locs.find(isLondonLocation);
+  return london ? (london.qtyAvailable || 0) : 0;
+}
+function cartFullyLocal() {
+  if (!cart || !cart.length) return true;
+  return cart.every(function(item) { return londonQtyForItem(item) >= (item.qty || 1); });
+}
 const FIRST_DAY_EARLIEST_HOUR    = 10;  // on the first eligible day, no slots before 10 AM
 
 // Add N business days (Mon–Fri only) to a date.
@@ -4915,13 +4937,20 @@ function addBusinessDays(date, n) {
 }
 
 function getEarliestInstallDate() {
-  const today = new Date(); today.setHours(0,0,0,0);
-  // If it's already past 2 PM, a same-day TDG order likely won't ship until tomorrow
-  // — push the lead-time clock forward by one day.
-  const startFrom = (new Date().getHours() >= 14)
-    ? (() => { const d = new Date(today); d.setDate(d.getDate()+1); return d; })()
-    : today;
-  return addBusinessDays(startFrom, INSTALL_LEAD_BUSINESS_DAYS);
+  const now = new Date();
+  const today = new Date(now); today.setHours(0,0,0,0);
+  const dow = now.getDay();          // 0 = Sun, 6 = Sat
+  const pastCutoff = now.getHours() >= TRUCK_CUTOFF_HOUR;
+  // Move the start-of-clock forward when TDG cant ship today:
+  //   - past 1 PM, missed todays last truck
+   //   - weekend, TDG isn't shipping
+  let startFrom = new Date(today);
+  if (pastCutoff || dow === 0 || dow === 6) {
+    do { startFrom.setDate(startFrom.getDate() + 1); }
+    while (startFrom.getDay() === 0 || startFrom.getDay() === 6);
+  }
+  const leadDays = cartFullyLocal() ? LOCAL_LEAD_BUSINESS_DAYS : NONLOCAL_LEAD_BUSINESS_DAYS;
+  return addBusinessDays(startFrom, leadDays);
 }
 
 function getSlotsForDuration(duration) {
@@ -4947,11 +4976,20 @@ function slotLabelToHour24(label) {
 function buildCal() {
   document.getElementById('calMo').textContent = `${MONTHS[calMo]} ${calY}`;
   const minDate = getEarliestInstallDate();
+  // Auto-pick the earliest valid day on initial open (reset by openCheckout/selectService).
+  if (_calAutoPickPending) {
+    _calAutoPickPending = false;
+    if (calY !== minDate.getFullYear() || calMo !== minDate.getMonth()) {
+      calY = minDate.getFullYear(); calMo = minDate.getMonth();
+      document.getElementById('calMo').textContent = MONTHS[calMo] + ' ' + calY;
+    }
+    selDate = MONTHS[minDate.getMonth()] + ' ' + minDate.getDate() + ', ' + minDate.getFullYear();
+  }
   const firstDay = new Date(calY, calMo, 1).getDay(), days = new Date(calY, calMo+1, 0).getDate();
   let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
   for (let d = 1; d <= days; d++) {
-    const dt = new Date(calY, calMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun;
+    const dt = new Date(calY, calMo, d), past = dt < minDate, wknd = (dt.getDay() === 0 || dt.getDay() === 6), dis = past || wknd;
     const dateStr = `${MONTHS[calMo]} ${d}, ${calY}`, isSel = selDate === dateStr;
     html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="pickDate('${dateStr}')"`:''}>${d}</div>`;
   }
@@ -4963,7 +5001,11 @@ function buildCal() {
     const earliest = minDate.toLocaleDateString('en-CA', { weekday:'long', month:'long', day:'numeric' });
     const h12 = FIRST_DAY_EARLIEST_HOUR > 12 ? FIRST_DAY_EARLIEST_HOUR - 12 : FIRST_DAY_EARLIEST_HOUR;
     const ampm = FIRST_DAY_EARLIEST_HOUR >= 12 ? 'PM' : 'AM';
-    leadNote.innerHTML = `<b>📦 Earliest install: ${earliest}</b> — tires typically arrive by late morning. First-day slots start at ${h12}:00 ${ampm}.`;
+    const _localFlag = cartFullyLocal();
+    const _reason = _localFlag
+      ? 'shipping from our local London warehouse'
+      : 'one or more items ship from outside London (one extra business day for the transfer)';
+    leadNote.innerHTML = '<b>Earliest install: ' + earliest + '</b> &mdash; ' + _reason + '. First-day slots start at ' + h12 + ':00 ' + ampm + '.';
   }
 
   if (selDate) { document.getElementById('timeSec').style.display = 'block'; buildTimes(); }
