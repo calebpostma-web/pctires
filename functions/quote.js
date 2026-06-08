@@ -89,6 +89,7 @@ export async function onRequest(context) {
         code,
         cart: body.cart,
         appliedPromo: body.appliedPromo || null,
+        finalTotal: (typeof body.finalTotal === 'number' && body.finalTotal > 0) ? Math.round(body.finalTotal * 100) / 100 : null,
         customerName:  (body.customerName  || '').toString().slice(0, 100),
         customerPhone: (body.customerPhone || '').toString().slice(0, 30),
         note:          (body.note          || '').toString().slice(0, 1000),
