@@ -2102,6 +2102,10 @@ function getRebateForBrand(brand) {
   </div>
 </div>
 
+<style>
+.qlocked .qb,.qlocked .ci-remove,.qlocked .ci-pick,.qlocked .inst-toggle{display:none !important;}
+.qlocked .qty-row{opacity:.65;}
+</style>
 <!-- SHARE QUOTE MODAL (owner only) -->
 <div class="overlay" id="shareQuoteOverlay" onclick="bgClose(event,'shareQuoteOverlay')">
   <div class="cart-drawer" style="margin:auto;max-width:520px;width:92%;height:auto;max-height:90vh;border:1px solid var(--border);border-radius:2px">
@@ -2121,6 +2125,11 @@ function getRebateForBrand(brand) {
         <div style="margin-bottom:12px">
           <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Phone (optional)</label>
           <input type="tel" id="quotePhone" placeholder="519-555-1234" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:10px;font-family:Barlow,sans-serif;font-size:14px" autocomplete="off">
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Final All-In Price (optional)</label>
+          <input type="number" id="quoteFinalTotal" step="0.01" min="0" placeholder="e.g. 1116.00" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:10px;font-family:Barlow,sans-serif;font-size:14px" autocomplete="off">
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4">Leave blank for live pricing. If set, this is the total the customer pays &mdash; HST is backed out of it, install is included, and add-ons won&rsquo;t change the price.</div>
         </div>
         <div style="margin-bottom:16px">
           <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Personal Note (optional)</label>
@@ -4241,9 +4250,17 @@ function addToCart(itemNumber, itemType) {
   showToast(item.brand + ' ' + item.name, `${qty} ${label} added to your cart`);
 }
 
-function removeFromCart(itemNumber) { cart = cart.filter(c => c.itemNumber !== itemNumber); updBadge(); renderCart(); }
+function quoteLockBlocked() {
+  if (window._quoteLocked) {
+    if (typeof showToast === 'function') showToast('Fixed quote', 'This is a locked price from Caleb \u2014 call 519-397-4686 to change it.');
+    return true;
+  }
+  return false;
+}
+function removeFromCart(itemNumber) { if (quoteLockBlocked()) return; cart = cart.filter(c => c.itemNumber !== itemNumber); updBadge(); renderCart(); }
 // Keep only the selected option in the cart — used when customer picks one option from a quote comparison
 function pickOnlyThis(itemNumber) {
+  if (quoteLockBlocked()) return;
   const picked = cart.find(c => c.itemNumber === itemNumber);
   if (!picked) return;
   cart = [picked];
@@ -4253,6 +4270,7 @@ function pickOnlyThis(itemNumber) {
   if (typeof showToast === 'function') showToast('Set selected', 'Other options removed from your cart');
 }
 function chgQty(itemNumber, d) {
+  if (quoteLockBlocked()) return;
   const item = cart.find(c => c.itemNumber === itemNumber); if (!item) return;
   item.qty += d; if (item.qty <= 0) { removeFromCart(itemNumber); return; } saveCartToStorage(); renderCart();
 }
@@ -4266,6 +4284,7 @@ function isCommercialTire(item) {
   return false;
 }
 function togInst(itemNumber) {
+  if (quoteLockBlocked()) return;
   const item = cart.find(c => c.itemNumber === itemNumber);
   if (!item) return;
   // Commercial tires can't be installed in-shop — ignore any toggle attempts
@@ -4318,6 +4337,13 @@ function renderCart() {
 }
 
 function getTotals() {
+  // All-in quote override: customer pays a fixed total; HST is backed out of it.
+  if (typeof window._quoteFinalTotal === 'number' && window._quoteFinalTotal > 0) {
+    const ft = window._quoteFinalTotal;
+    const preTax = Math.round((ft / 1.13) * 100) / 100;
+    const tax = Math.round((ft - preTax) * 100) / 100;
+    return { sub: preTax, inst: 0, ship: 0, tax: tax, total: ft, discount: 0, override: true };
+  }
   const baseInst = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
   let sub;
   if (tdgQuote) { sub = tdgQuote.subtotal; }
@@ -4455,7 +4481,11 @@ const CART_EXPIRY_DAYS = 30;
 function saveCartToStorage() {
   try {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({
-      cart, appliedPromo, savedAt: Date.now()
+      cart, appliedPromo,
+      quoteFinalTotal: (typeof window._quoteFinalTotal === 'number' ? window._quoteFinalTotal : null),
+      quoteLocked: !!window._quoteLocked,
+      activeQuoteCode: window._activeQuoteCode || null,
+      savedAt: Date.now()
     }));
   } catch(e) {}
 }
@@ -4477,6 +4507,12 @@ function loadCartFromStorage() {
       cart.forEach(c => { if (isCommercialTire(c)) c.install = false; });
     }
     if (data.appliedPromo) appliedPromo = data.appliedPromo;
+    if (typeof data.quoteFinalTotal === 'number' && data.quoteFinalTotal > 0) {
+      window._quoteFinalTotal = data.quoteFinalTotal;
+      window._quoteLocked = !!data.quoteLocked;
+      window._activeQuoteCode = data.activeQuoteCode || window._activeQuoteCode || null;
+      try { document.body.classList.add('qlocked'); } catch(e) {}
+    }
     updBadge();
   } catch(e) {
     try { localStorage.removeItem(CART_STORAGE_KEY); } catch(e2) {}
@@ -4597,12 +4633,29 @@ function updateAddonTotal() {
 
 function getAddonTotal() { return ADDONS.filter(a => selectedAddons.has(a.id)).reduce((s,a) => s + a.price, 0); }
 
+// Single source of truth for the amount charged. An all-in quote override is
+// authoritative: add-ons are NOT added on top of a fixed quoted price.
+function payableGrandTotal() {
+  if (typeof window._quoteFinalTotal === 'number' && window._quoteFinalTotal > 0) return window._quoteFinalTotal;
+  const t = getTotals();
+  const addonAmt = (typeof getAddonTotal === 'function') ? getAddonTotal() : 0;
+  return t.total + addonAmt;
+}
+
 async function buildPaymentSummary() {
   const box = document.getElementById('payBox'); if (!box) return;
   const t = getTotals();
+  const grandTotal = payableGrandTotal();
+  if (t.override) {
+    box.innerHTML = `
+    <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
+    <div class="ptrow"><span>Tax (HST 13%)</span><span>$${t.tax.toFixed(2)}</span></div>
+    <div class="ptrow bold"><span>Total Due Today (quoted, all-in)</span><span>$${grandTotal.toFixed(2)}</span></div>
+    `;
+    return;
+  }
   const instTotal = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
   const addonAmt = getAddonTotal();
-  const grandTotal = t.total + addonAmt;
   const addonLines = ADDONS.filter(a => selectedAddons.has(a.id))
     .map(a => `<div class="ptrow"><span>${a.name}</span><span>${a.price === 0 ? '<span style="color:var(--green)">FREE</span>' : '$' + a.price.toFixed(2)}</span></div>`)
     .join('');
@@ -4668,7 +4721,7 @@ async function processPayment() {
   try {
     const t = getTotals();
     const addonAmt = typeof getAddonTotal === 'function' ? getAddonTotal() : 0;
-    const grandTotal = t.total + addonAmt;
+    const grandTotal = payableGrandTotal();
     const amountCents = Math.round(grandTotal * 100);
     const email = document.getElementById('email').value || '';
     // Stable order ID — same value on first click, retry, or any re-entry within this session.
@@ -4722,7 +4775,7 @@ async function finishOrder() {
   if (btn) { btn.textContent = 'Placing order…'; btn.classList.add('ld'); }
   const t = getTotals();
   const addonAmt = getAddonTotal();
-  const grandTotal = t.total + addonAmt;
+  const grandTotal = payableGrandTotal();
   const name = (document.getElementById('fName').value || 'Customer') + ' ' + (document.getElementById('lName').value || '');
   const email = document.getElementById('email').value || '';
   const phone = document.getElementById('phone')?.value || '';
@@ -4818,7 +4871,7 @@ async function finishOrder() {
   const _firstName  = ((document.getElementById('fName')?.value) || name.split(' ')[0] || '').trim();
   const _brandsList = [...new Set((orderPayload.tires || []).map(t => t.brand).filter(Boolean))].join(',');
 
-  cart = []; tdgQuote = null; selectedAddons = new Set(); appliedPromo = null; updBadge();
+  cart = []; tdgQuote = null; selectedAddons = new Set(); appliedPromo = null; window._quoteFinalTotal = null; window._quoteLocked = false; try { document.body.classList.remove('qlocked'); } catch(e) {} updBadge();
   if (btn) btn.classList.remove('ld');
 
   // Show rebate reminders on confirm screen (kept as a graceful fallback
@@ -6652,6 +6705,8 @@ async function createQuoteLink() {
   const name  = document.getElementById('quoteName').value.trim();
   const phone = document.getElementById('quotePhone').value.trim();
   const note  = document.getElementById('quoteNote').value.trim();
+  const finalTotalRaw = parseFloat(document.getElementById('quoteFinalTotal').value);
+  const finalTotal = (!isNaN(finalTotalRaw) && finalTotalRaw > 0) ? finalTotalRaw : null;
   // Quote stores SKUs/qty/install only — no prices. Customer opens link, site
   // fetches live TDG data so they see the same prices as if they searched themselves.
   const quoteItems = cart.map(c => ({
@@ -6668,6 +6723,7 @@ async function createQuoteLink() {
         ownerCode: currentMember ? currentMember.code : '',
         cart: quoteItems,
         appliedPromo: null,
+        finalTotal,
         customerName: name, customerPhone: phone, note,
       }),
     });
@@ -6745,6 +6801,16 @@ async function checkForQuoteInUrl() {
     }
     cart = fetched;
     appliedPromo = null;
+    // All-in price override: if the owner set a fixed total, lock the cart to it.
+    if (typeof quote.finalTotal === 'number' && quote.finalTotal > 0) {
+      window._quoteFinalTotal = quote.finalTotal;
+      window._quoteLocked = true;
+      try { document.body.classList.add('qlocked'); } catch(e) {}
+    } else {
+      window._quoteFinalTotal = null;
+      window._quoteLocked = false;
+      try { document.body.classList.remove('qlocked'); } catch(e) {}
+    }
     saveCartToStorage();
     updBadge();
     renderCart();
@@ -6757,6 +6823,7 @@ async function checkForQuoteInUrl() {
       }, 1200);
     }
     window._activeQuoteCode = code;
+    saveCartToStorage();
     setTimeout(function() { try { openCart(); } catch(e) {} }, 800);
   } catch(e) {
     console.warn('Quote load failed:', e.message);
@@ -6770,9 +6837,12 @@ function showQuoteBanner(quote) {
   const noteHtml = quote.note ? '<div style="font-weight:400;font-size:13px;margin-top:4px;line-height:1.4">&ldquo;' + escapeHtml(quote.note) + '&rdquo;</div>' : '';
   // If the cart has multiple items, treat it as a comparison and tell the customer how to pick
   const isComparison = cart.length > 1;
-  const reviewMsg = isComparison
+  let reviewMsg = isComparison
     ? 'Caleb sent you <strong>' + cart.length + ' sets</strong> to compare. Tap <strong>&ldquo;Pick this set&rdquo;</strong> on the one you want, or remove items individually. Call 519-397-4686 to discuss.'
     : 'Review your cart and remove any items you don&rsquo;t want before checking out. Call 519-397-4686 if anything needs to change.';
+  if (typeof quote.finalTotal === 'number' && quote.finalTotal > 0) {
+    reviewMsg = 'Your all-in price is <strong>$' + quote.finalTotal.toFixed(2) + '</strong> &mdash; HST and installation included. Just complete checkout. Call 519-397-4686 with any questions.';
+  }
   const banner = document.createElement('div');
   banner.id = 'quoteBanner';
   banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--yellow);color:#111;padding:14px 50px 14px 20px;text-align:center;font-family:Barlow,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:14px';
