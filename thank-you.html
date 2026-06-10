@@ -35,7 +35,7 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'AW-18156336783');
+  gtag('config', 'AW-18156336783', { 'allow_enhanced_conversions': true });
 
   // Click-to-call conversion — fires on any tel: link click
   document.addEventListener('click', function(e){
@@ -375,7 +375,7 @@ footer a:hover{color:var(--yellow)}
   // Google Ads Purchase conversion — fires when a valid order lands here.
   // The transaction_id ensures duplicates from refreshes/back-button don't
   // double-count. value + currency feed the optimizer real revenue data.
-  if (typeof gtag === 'function' && order && total > 0) {
+  if (typeof gtag === 'function' && order && total > 0) { if (email) { gtag('set', 'user_data', { 'email': email }); }
     gtag('event', 'conversion', {
       'send_to': 'AW-18156336783/OxLRCI7XpKscEI_tztFD',
       'value': total,
