@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Order Confirmed — Thank You | PC Tires</title>
+<meta name="description" content="Thank you for your order. Your tires are on the way and your installation is booked.">
+<meta name="robots" content="noindex, nofollow"><!-- internal confirmation, don't index -->
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- ─────────────────────────────────────────────────────────────────────
+     GOOGLE ADS CONVERSION TRACKING
+
+     STEP 1: Replace AW-XXXXXXXXX below with YOUR Google Ads Conversion ID
+             (Google Ads → Tools → Conversions → click your conversion →
+              "Tag setup" → "Use Google tag" → copy the AW-XXXXXXXXX value)
+
+     STEP 2: Replace YOUR_CONVERSION_LABEL below with the label for that
+             conversion (same screen, looks like "abcDEF123_GHIjkl45")
+
+     STEP 3: When ready, uncomment the gtag script block. The conversion
+             will fire automatically on this page with the order's $ value.
+     ─────────────────────────────────────────────────────────────────── -->
+
+<!-- Google tag (gtag.js) — PC Tires Ads -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18156336783"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18156336783');
+
+  // Click-to-call conversion — fires on any tel: link click
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest && e.target.closest('a[href^="tel:"]');
+    if (a && typeof gtag === 'function') {
+      gtag('event', 'conversion', { 'send_to': 'AW-18156336783/SbSRCNu5nbEcEI_tztFD' });
+    }
+  }, true);
+</script>
+
+<style>
+:root{
+  --black:#0a0a0a; --dark:#121212; --card:#161616; --raised:#1d1d1d;
+  --border:#252525; --mid:#2d2d2d; --muted:#888;
+  --light:#cfcfcf; --white:#f4f4f4;
+  --yellow:#f5c518; --yellow-dim:rgba(245,197,24,0.1); --yellow-dark:#dba900;
+  --green:#16a34a; --red:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;min-height:100vh}
+
+/* HEADER */
+.site-header{background:rgba(10,10,10,.96);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none}
+.logo .pc{color:var(--yellow)}
+.nav-actions{display:flex;align-items:center;gap:18px}
+.nav-actions a{font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-actions a:hover{color:var(--white)}
+.cta-btn{background:var(--yellow);color:var(--black);padding:9px 18px;font-weight:700;border-radius:2px;font-size:13px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;transition:background .2s}
+.cta-btn:hover{background:var(--yellow-dark)}
+
+/* CONTAINER */
+.wrap{max-width:760px;margin:0 auto;padding:56px 24px 80px}
+
+/* SUCCESS HERO */
+.confirm-circle{width:96px;height:96px;border-radius:50%;background:var(--yellow);color:var(--black);display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:900;margin:0 auto 28px;box-shadow:0 0 0 8px rgba(245,197,24,.15)}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5vw,52px);line-height:1.05;font-weight:900;color:var(--white);text-align:center;margin-bottom:14px;letter-spacing:-.5px}
+h1 .accent{color:var(--yellow)}
+.lead{text-align:center;font-size:18px;color:var(--light);margin-bottom:36px;line-height:1.6}
+.lead strong{color:var(--white)}
+
+/* ORDER CARD */
+.order-card{background:var(--card);border:1px solid var(--border);border-top:3px solid var(--yellow);border-radius:2px;padding:28px 30px;margin-bottom:24px}
+.order-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.order-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700;margin-bottom:4px}
+.order-num{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--yellow);letter-spacing:1px}
+.order-total{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;color:var(--white);line-height:1}
+.order-total .cur{font-size:14px;color:var(--muted);margin-left:6px;font-weight:600;letter-spacing:1px}
+
+.order-row{display:grid;grid-template-columns:140px 1fr;gap:14px;padding:10px 0;font-size:15px;align-items:start}
+.order-row .label{color:var(--muted);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.8px}
+.order-row .value{color:var(--white)}
+.order-row .value.yellow{color:var(--yellow)}
+.order-row + .order-row{border-top:1px solid var(--border)}
+
+/* NEXT STEPS */
+.steps-section{margin:36px 0}
+.section-head{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:var(--white);margin-bottom:18px;letter-spacing:-.2px}
+.steps-list{display:flex;flex-direction:column;gap:14px}
+.step{background:var(--raised);border:1px solid var(--border);border-left:3px solid var(--yellow);padding:18px 22px;border-radius:2px;display:flex;align-items:start;gap:16px}
+.step-num{flex-shrink:0;width:36px;height:36px;background:var(--yellow);color:var(--black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800}
+.step-content{flex:1}
+.step-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--white);margin-bottom:4px}
+.step-desc{font-size:14px;color:var(--light);line-height:1.55}
+
+/* REBATES */
+.rebates-section{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--green);padding:22px 26px;margin:28px 0;border-radius:2px}
+.rebates-section h3{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--green);margin-bottom:8px}
+.rebates-section .rebate-note{font-size:13px;color:var(--muted);margin-bottom:14px}
+.rebate-item{padding:8px 0;font-size:15px;color:var(--light);border-top:1px solid var(--border)}
+.rebate-item:first-of-type{border-top:0}
+.rebate-item strong{color:var(--white)}
+.rebate-item a{color:var(--yellow);text-decoration:none;font-weight:600}
+.rebate-item a:hover{text-decoration:underline}
+
+/* CTA ROW */
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:36px 0 18px}
+.cta-btn-prim{background:var(--yellow);color:var(--black);padding:14px 24px;font-weight:800;border-radius:2px;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:background .15s}
+.cta-btn-prim:hover{background:var(--yellow-dark)}
+.cta-btn-sec{background:transparent;color:var(--white);padding:14px 24px;font-weight:700;border:1px solid var(--mid);border-radius:2px;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:border-color .15s}
+.cta-btn-sec:hover{border-color:var(--yellow);color:var(--yellow)}
+
+/* REVIEW REQUEST */
+.review-box{background:linear-gradient(135deg,var(--card) 0%,var(--raised) 100%);border:1px solid var(--border);padding:26px 28px;border-radius:2px;text-align:center;margin:28px 0}
+.review-box h3{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--yellow);margin-bottom:8px}
+.review-box p{font-size:15px;color:var(--light);margin-bottom:18px}
+.review-stars{color:var(--yellow);font-size:24px;letter-spacing:4px;margin-bottom:12px}
+
+/* SOCIAL */
+.social-row{display:flex;justify-content:center;gap:14px;margin:24px 0}
+.social-link{display:inline-flex;align-items:center;gap:8px;background:var(--raised);border:1px solid var(--border);padding:10px 18px;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.5px;color:var(--light);text-decoration:none;transition:all .15s}
+.social-link:hover{border-color:var(--yellow);color:var(--yellow)}
+
+/* FOOTER */
+footer{padding:36px 24px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:13px}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--yellow)}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .wrap{padding:36px 16px 60px}
+  .site-header{padding:12px 14px}
+  .nav-actions{gap:10px}
+  .nav-actions a{font-size:11px}
+  .cta-btn{padding:7px 12px;font-size:11px}
+  .order-card{padding:22px 18px}
+  .order-card-head{flex-direction:column;gap:10px}
+  .order-num{font-size:18px}
+  .order-total{font-size:24px}
+  .order-row{grid-template-columns:1fr;gap:4px}
+  .order-row .label{font-size:11px}
+  h1{font-size:30px}
+  .confirm-circle{width:80px;height:80px;font-size:42px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="logo"><span class="pc">PC</span>TIRES</a>
+  <div class="nav-actions">
+    <a href="/#catalog">Shop More</a>
+    <a href="tel:5193974686" class="cta-btn">519-397-4686</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="confirm-circle">✓</div>
+  <h1>Thank You<span id="firstName"></span>, <span class="accent">You're All Set!</span></h1>
+  <p class="lead">
+    Your order has been received and your tires are on the way.<br>
+    A confirmation email is on its way to <strong id="customerEmail">your inbox</strong>.
+  </p>
+
+  <!-- ORDER SUMMARY CARD -->
+  <div class="order-card">
+    <div class="order-card-head">
+      <div>
+        <div class="order-label">Order Number</div>
+        <div class="order-num" id="orderNum">—</div>
+      </div>
+      <div>
+        <div class="order-label" style="text-align:right">Order Total</div>
+        <div class="order-total"><span id="orderTotal">—</span><span class="cur">CAD</span></div>
+      </div>
+    </div>
+    <div class="order-row">
+      <span class="label">Confirmation</span>
+      <span class="value" id="emailRow">Sent to your email</span>
+    </div>
+    <div class="order-row" id="vehicleRowWrap" style="display:none">
+      <span class="label">Vehicle</span>
+      <span class="value" id="vehicleRow">—</span>
+    </div>
+    <div class="order-row" id="apptRowWrap" style="display:none">
+      <span class="label">Install</span>
+      <span class="value yellow" id="apptRow">—</span>
+    </div>
+  </div>
+
+  <!-- WHAT HAPPENS NEXT -->
+  <div class="steps-section">
+    <div class="section-head">What Happens Next</div>
+    <div class="steps-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">We're prepping your order</div>
+          <div class="step-desc">Your tires are pulled from our supplier and routed to our Pain Court shop. Usually 2-4 business days for arrival.</div>
+        </div>
+      </div>
+      <div class="step" id="installStep" style="display:none">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">We'll see you at your install appointment</div>
+          <div class="step-desc">Bring your vehicle to <strong>7144 Grande River Line, Pain Court</strong>. Mount, balance, TPMS reset — typically 60 minutes. Stay or come back, your call.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" id="finalStepNum">2</div>
+        <div class="step-content">
+          <div class="step-title">Questions before then?</div>
+          <div class="step-desc">Call us at <a href="tel:5193974686" style="color:var(--yellow);text-decoration:none">519-397-4686</a> or reply to your confirmation email. We answer fast.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REBATES SECTION -->
+  <div class="rebates-section" id="rebatesBox" style="display:none">
+    <h3>💰 Manufacturer Rebates Available</h3>
+    <div class="rebate-note">Your tires qualify for these mail-in rebates. Apply directly with each manufacturer using the links below — instructions are also in your confirmation email.</div>
+    <div id="rebatesList"></div>
+  </div>
+
+  <!-- REVIEW REQUEST -->
+  <div class="review-box">
+    <div class="review-stars">★ ★ ★ ★ ★</div>
+    <h3>How did we do?</h3>
+    <p>Your support means everything to a local Chatham-Kent business. If we've earned it, a quick Google review helps more drivers find us.</p>
+    <a href="https://search.google.com/local/writereview?placeid=ChIJ11770934583290184135" target="_blank" rel="noopener" class="cta-btn-prim">Leave a Google Review ★</a>
+  </div>
+
+  <!-- SOCIAL -->
+  <div style="text-align:center;margin-top:32px">
+    <div class="section-head" style="margin-bottom:10px;font-size:16px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px">Follow PC Tires</div>
+    <div class="social-row">
+      <a href="https://www.facebook.com/pctireschatham" target="_blank" rel="noopener" class="social-link">Facebook</a>
+      <a href="https://www.instagram.com/pctires" target="_blank" rel="noopener" class="social-link">Instagram</a>
+      <a href="https://maps.google.com/?cid=11770934583290184135" target="_blank" rel="noopener" class="social-link">Google</a>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <div class="cta-row" style="margin-top:40px">
+    <a href="/" class="cta-btn-prim">Back to Home</a>
+    <a href="/#catalog" class="cta-btn-sec">Shop More Tires</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>PC Tires — Chatham-Kent, Ontario · <a href="tel:5193974686">519-397-4686</a> · <a href="/">pctires.ca</a></p>
+  <p style="margin-top:8px;font-size:12px">7144 Grande River Line, Pain Court, ON · © 2026 PC Tires (Postma Contracting Inc.)</p>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────────────────────────
+// READ URL PARAMS + POPULATE PAGE
+// ─────────────────────────────────────────────────────────────────
+(function(){
+  function getParam(name) {
+    try {
+      var url = new URL(window.location.href);
+      return url.searchParams.get(name) || '';
+    } catch(e) { return ''; }
+  }
+  function escapeHTML(s){ return String(s).replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]); }); }
+
+  var order   = getParam('order');
+  var total   = parseFloat(getParam('total')) || 0;
+  var first   = (getParam('first') || '').trim();
+  var email   = getParam('email');
+  var brands  = (getParam('brands') || '').split(',').map(function(b){return b.trim();}).filter(Boolean);
+  var date    = getParam('date');
+  var time    = getParam('time');
+  var service = getParam('service');
+  var vehicle = getParam('vehicle');
+
+  // Personalize greeting
+  if (first) {
+    document.getElementById('firstName').textContent = ', ' + first;
+  }
+  // Order number
+  if (order) {
+    document.getElementById('orderNum').textContent = order;
+  } else {
+    document.getElementById('orderNum').textContent = 'Confirmed';
+  }
+  // Total
+  if (total > 0) {
+    document.getElementById('orderTotal').textContent = '$' + total.toLocaleString('en-CA', {minimumFractionDigits:2, maximumFractionDigits:2});
+  } else {
+    document.getElementById('orderTotal').textContent = '—';
+  }
+  // Email
+  if (email) {
+    document.getElementById('customerEmail').textContent = email;
+    document.getElementById('emailRow').textContent = 'Sent to ' + email;
+  }
+  // Vehicle
+  if (vehicle) {
+    document.getElementById('vehicleRow').textContent = vehicle;
+    document.getElementById('vehicleRowWrap').style.display = 'grid';
+  }
+  // Install appointment
+  if (date && time) {
+    var apptStr = (service ? service + ' — ' : '') + date + ' at ' + time;
+    document.getElementById('apptRow').textContent = apptStr;
+    document.getElementById('apptRowWrap').style.display = 'grid';
+    document.getElementById('installStep').style.display = 'flex';
+    document.getElementById('finalStepNum').textContent = '3';
+  }
+
+  // ─── REBATES (synced with index.html — update both files seasonally) ───
+  var REBATES = [
+    { brand:'BFGoodrich',   amount:100, type:'up to', expires:'May 29, 2026',  url:'https://www.bfgoodrichtires.ca/en/rebates.html' },
+    { brand:'Bridgestone',  amount:100, type:'up to', expires:'May 30, 2026',  url:'https://www.bridgestonetire.ca/en-ca/promotions' },
+    { brand:'Continental',  amount:110, type:'up to', expires:'May 31, 2026',  url:'https://www.continental-tires.com/car/promotions/canada' },
+    { brand:'Dunlop',       amount:200, type:'get a', expires:'May 31, 2026',  url:'https://www.dunloptires.ca/en-ca/promotions' },
+    { brand:'Falken',       amount:80,  type:'up to', expires:'May 31, 2026',  url:'https://www.falkentire.com/en-CA/rebates' },
+    { brand:'Firestone',    amount:80,  type:'up to', expires:'May 30, 2026',  url:'https://www.firestonetire.ca/en-ca/promotions' },
+    { brand:'General Tire', amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.generaltire.ca/en-ca/promotions' },
+    { brand:'Hankook',      amount:100, type:'get a', expires:'Jun 30, 2026',  url:'https://www.hankooktire.com/ca/en/campaign/promotions.html' },
+    { brand:'Kumho',        amount:60,  type:'get a', expires:'Jun 15, 2026',  url:'https://www.kumhotire.ca/en/promotion' },
+    { brand:'Laufenn',      amount:40,  type:'get a', expires:'Jun 30, 2026',  url:'https://www.laufenn.com/promotion' },
+    { brand:'Michelin',     amount:100, type:'get a', expires:'May 29, 2026',  url:'https://www.michelin.ca/en/promotions/' },
+    { brand:'Nexen',        amount:80,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nexentire.ca/promotion' },
+    { brand:'Nitto',        amount:70,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nittotire.com/rebates' },
+    { brand:'Pirelli',      amount:100, type:'up to', expires:'May 8, 2026',   url:'https://www.pirelli.com/tyres/en-ca/car/promotions' },
+    { brand:'Toyo',         amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.toyotires.ca/promotions/' },
+    { brand:'Uniroyal',     amount:50,  type:'get a', expires:'May 29, 2026',  url:'https://www.uniroyaltire.ca/en-ca/promotions' },
+    { brand:'Yokohama',     amount:125, type:'up to', expires:'May 31, 2026',  url:'https://www.yokohamatire.ca/en-ca/promotions' },
+  ];
+
+  if (brands.length) {
+    var seen = {};
+    var matched = [];
+    brands.forEach(function(b){
+      var found = REBATES.find(function(r){
+        return r.brand.toLowerCase() === b.toLowerCase();
+      });
+      if (found && !seen[found.brand]) {
+        seen[found.brand] = true;
+        matched.push(found);
+      }
+    });
+    if (matched.length) {
+      var html = matched.map(function(r){
+        return '<div class="rebate-item"><strong>' + escapeHTML(r.brand) + '</strong> — ' +
+               escapeHTML(r.type) + ' $' + r.amount + ' rebate · expires ' + escapeHTML(r.expires) +
+               ' · <a href="' + escapeHTML(r.url) + '" target="_blank" rel="noopener">Apply here →</a></div>';
+      }).join('');
+      document.getElementById('rebatesList').innerHTML = html;
+      document.getElementById('rebatesBox').style.display = 'block';
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // FIRE GOOGLE ADS CONVERSION
+  // (Uncomment the gtag loader in <head> first, replace AW-XXXXXXXXX
+  //  and YOUR_CONVERSION_LABEL with your actual values, and this fires
+  //  the conversion event with the order value automatically.)
+  // ─────────────────────────────────────────────────────────────────
+  // Google Ads Purchase conversion — fires when a valid order lands here.
+  // The transaction_id ensures duplicates from refreshes/back-button don't
+  // double-count. value + currency feed the optimizer real revenue data.
+  if (typeof gtag === 'function' && order && total > 0) {
+    gtag('event', 'conversion', {
+      'send_to': 'AW-18156336783/OxLRCI7XpKscEI_tztFD',
+      'value': total,
+      'currency': 'CAD',
+      'transaction_id': order
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
