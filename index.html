@@ -1241,6 +1241,30 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 <script src="https://js.stripe.com/v3/" defer></script>
 <script src="/promo-codes.js" defer></script>
 <script src="/vehicle-db.js" defer></script>
+<style id="pc-callfirst-css">
+/* ===== Mobile call-first layer (added 2026-06) ===== */
+/* mobile-only: desktop stays Caleb's quoting tool, untouched */
+.pc-callfirst{display:none;margin:0 0 22px;border:1px solid rgba(245,197,24,.35);background:linear-gradient(180deg,rgba(245,197,24,.10),rgba(245,197,24,.03));border-radius:4px;padding:18px 20px;max-width:600px}
+.pc-cf-offer{font-family:'Barlow Condensed',sans-serif;font-weight:900;line-height:1.05;letter-spacing:-.3px;color:var(--white);font-size:clamp(25px,6vw,38px);margin:0 0 6px;text-transform:uppercase}
+.pc-cf-offer .y{color:var(--yellow)}
+.pc-cf-sub{color:var(--light);font-size:14px;margin:0 0 16px;line-height:1.5}
+.pc-cf-call{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;background:#19a957;color:#fff;font-family:'Barlow Condensed',sans-serif;text-decoration:none;padding:14px 18px;border-radius:3px;box-shadow:0 4px 14px rgba(25,169,87,.32);transition:transform .12s,box-shadow .12s}
+.pc-cf-call:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(25,169,87,.46)}
+.pc-cf-call-main{font-weight:800;font-size:23px;letter-spacing:.5px}
+.pc-cf-call-sub{font-weight:600;font-size:12px;letter-spacing:.3px;opacity:.82}
+.pc-cf-note{text-align:center;color:var(--muted);font-size:12px;margin:11px 0 0;line-height:1.45}
+@media(max-width:600px){
+  /* turn the tiny nav number into a real tap-to-call button */
+  .phone-link{font-size:13px !important;font-weight:800 !important;background:#19a957 !important;color:#fff !important;padding:8px 12px !important;border-radius:3px !important;gap:6px !important}
+  .pc-callfirst{display:block;padding:16px 16px}
+  /* collapse the rebate ticker on mobile + close the gap it leaves */
+  .rebate-ticker{display:none !important}
+  body.with-promo-bar nav{top:48px !important}
+  body.with-promo-bar .lookup-section{padding-top:112px !important}
+  body:not(.with-promo-bar) nav{top:0 !important}
+  body:not(.with-promo-bar) .lookup-section{padding-top:64px !important}
+}
+</style>
 </head>
 <body>
 
@@ -1382,6 +1406,15 @@ function getRebateForBrand(brand) {
 <!-- VEHICLE / TIRE / WHEEL LOOKUP — main hero -->
 <section class="lookup-section" id="lookup">
   <div class="lookup-inner">
+    <div class="pc-callfirst">
+      <p class="pc-cf-offer">Tires installed in Chatham-Kent &mdash; <span class="y">$25/tire, all in.</span></p>
+      <p class="pc-cf-sub">Mount, balance, TPMS reset &amp; disposal included. Open Saturdays.</p>
+      <a class="pc-cf-call" href="tel:5193974686">
+        <span class="pc-cf-call-main">&#128222; Call 519-397-4686</span>
+        <span class="pc-cf-call-sub">Talk to the owner &mdash; fast, fair, all-in pricing</span>
+      </a>
+      <p class="pc-cf-note">Or find your fit below.</p>
+    </div>
     <div style="margin-bottom:24px">
       <h1 class="section-title" style="font-size:clamp(26px,4vw,38px);margin-bottom:6px">Find the Right Tire or Wheel</h1>
       <p style="font-size:14px;color:var(--muted);margin:0">Search by VIN, vehicle, tire size, or wheel specs — we'll show exactly what fits.</p>
@@ -1887,6 +1920,31 @@ function getRebateForBrand(brand) {
 <!-- REVIEWS SECTION removed 2026-05-22 — add back once 5+ real GBP reviews are in.
      To restore: paste the reviews-section HTML, populate the REVIEWS array below in the
      JS block, and add `buildReviews();` to the DOMContentLoaded listener. -->
+
+<!-- REVIEWS + FAMILY (restored 2026-06-10) -->
+<section id="reviews" style="padding:64px 40px;background:var(--black);border-top:1px solid var(--border)">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="reviews-header">
+      <div>
+        <div class="eyebrow">What customers say</div>
+        <h2 class="section-title">Reviews</h2>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:var(--yellow);line-height:1">5.0 <span style="font-size:20px">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+        <a href="https://www.google.com/search?q=PC+Tires+Pain+Court" target="_blank" rel="noopener" style="font-size:13px;color:var(--muted);text-decoration:none">2 Google reviews &middot; read them on Google &rarr;</a>
+      </div>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+    <div style="display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:4px;padding:20px 22px;margin-top:24px;flex-wrap:wrap">
+      <div style="flex:0 0 78px;width:78px;height:78px;border-radius:6px;background:var(--raised);border:1px dashed var(--mid);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;text-align:center;line-height:1.3;padding:6px">photo of the crew coming soon</div>
+      <div style="flex:1;min-width:220px">
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--white);margin-bottom:6px">A family-run Chatham-Kent shop</h3>
+        <p style="font-size:14px;color:var(--light);line-height:1.65;margin:0">PC Tires is a family shop in Pain Court &mdash; owned by the Postma family, with the next generation doing the hands-on work. The young crew shows up, hustles, and gets you back on the road. Call and you&rsquo;ll reach a real local who&rsquo;ll sort your size and price fast.</p>
+      </div>
+    </div>
+  </div>
+  <script>window.addEventListener('load',function(){if(typeof buildReviews==='function'){try{buildReviews();}catch(e){}}});</script>
+</section>
 
 <!-- SERVICE BOOKING -->
 <section class="services-section" id="services">
@@ -5129,7 +5187,10 @@ function toggleFAQ(i) {
 // ─────────────────────────────────────────────────
 //  REVIEWS
 // ─────────────────────────────────────────────────
-const REVIEWS = [];  // populated when real GBP reviews are collected
+const REVIEWS = [
+  { rating:5, date:'4 days ago',  text:"These young fellas really nailed it. No hesitation on such short notice, and the price was very good. Thanks guys, much appreciated.", name:'Paul',   initials:'P', avatar:'#19a957' },
+  { rating:5, date:'4 weeks ago', text:"I love my new rims and tires! Ordering through their website was easy.", name:'Andrea', initials:'A', avatar:'#f5c518' },
+];
 function buildReviews() {
   const grid = document.getElementById('reviewsGrid');
   if (!grid) return;  // reviews section currently removed — function is dormant until section is re-added
@@ -6943,5 +7004,6 @@ async function markQuoteAsPaid() {
 }
 
 </script>
+<script id="pc-size-default">window.addEventListener('load',function(){try{if(typeof switchLookupTab==='function'){switchLookupTab('size');}}catch(e){}});</script>
 </body>
 </html>
