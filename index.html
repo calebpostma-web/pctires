@@ -1265,6 +1265,14 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
   body:not(.with-promo-bar) .lookup-section{padding-top:64px !important}
 }
 </style>
+<style id="pc-polish-css">
+@media(max-width:600px){
+  /* duplicate hero headline hidden on mobile (call-first banner covers it) */
+  .pc-hide-mobile{display:none !important}
+  /* keep the two-line logo from clipping in the compact mobile nav */
+  .logo{font-size:20px !important;line-height:1.15 !important}
+}
+</style>
 </head>
 <body>
 
@@ -1415,7 +1423,7 @@ function getRebateForBrand(brand) {
       </a>
       <p class="pc-cf-note">Or find your fit below.</p>
     </div>
-    <div style="margin-bottom:24px">
+    <div class="pc-hide-mobile" style="margin-bottom:24px">
       <h1 class="section-title" style="font-size:clamp(26px,4vw,38px);margin-bottom:6px">Find the Right Tire or Wheel</h1>
       <p style="font-size:14px;color:var(--muted);margin:0">Search by VIN, vehicle, tire size, or wheel specs — we'll show exactly what fits.</p>
     </div>
