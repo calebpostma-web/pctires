@@ -5058,7 +5058,7 @@ async function finishOrder() {
 // ─────────────────────────────────────────────────
 const SERVICES = [
   { id:'mount4',   label:'4-Tire Mount & Balance',         duration:60, price:25, unit:'per tire', desc:'Mount, balance, TPMS reset & old tire disposal (tires purchased from PC Tires)' },
-  { id:'swap',     label:'Seasonal Swap (pre-mounted set)', duration:60, price:20, unit:'per tire', desc:'Swap your stored set — no mounting needed' },
+  { id:'swap',     label:'Seasonal Swap (pre-mounted set)', duration:60, price:15, unit:'per tire', desc:'Swap your stored set — no mounting needed' },
   { id:'patch',    label:'Flat Repair — Proper Patch',     duration:45, price:45, unit:'flat',     desc:'Tire dismounted, internally patched, remounted, balanced, reinstalled. No plug repairs.' },
   { id:'bead',     label:'Bead Leak Repair',               duration:60, price:55, unit:'flat',     desc:'Dismount, wire-wheel the bead seat, apply sealer, remount, balance & leak-test' },
   { id:'valve',    label:'Valve Stem Replacement (rubber)', duration:45, price:25, unit:'per stem', desc:'Replace faulty or leaking rubber valve stems' },
@@ -6380,7 +6380,7 @@ function fmtExp(el) { let v = el.value.replace(/\D/g,''); if(v.length>=2) v=v.su
 // ─────────────────────────────────────────────────
 const BOOK_SERVICES = [
   { id:'rotation',  icon:'🔄', name:'Tire Rotation & TPMS Relearn',    price:'$60',   unit:'flat',     duration:45,  desc:'Rotate all four tires for even tread life. TPMS relearn included. Recommended every 10,000 km.' },
-  { id:'swap',      icon:'❄️',  name:'Seasonal Swap',                  price:'$20',   unit:'per tire', duration:45,  desc:'Swap your pre-mounted stored set — no mounting needed. Torque check included.' },
+  { id:'swap',      icon:'❄️',  name:'Seasonal Swap',                  price:'$15',   unit:'per tire', duration:45,  desc:'Swap your pre-mounted stored set — no mounting needed. Torque check included.' },
   { id:'tpms',      icon:'📡', name:'TPMS Relearn',                   price:'$30',   unit:'flat',     duration:30,  desc:'Relearn your TPMS sensors after a tire change, rotation, or battery replacement.' },
   { id:'mountnew',  icon:'⚙️', name:'Install Tires Purchased Here',   price:'$25',   unit:'per tire', duration:60,  desc:'Mount, balance, TPMS reset, and disposal of old tires — included pricing for tires bought from PC Tires.' },
   { id:'mountown',  icon:'🛠️', name:'Customer-Supplied Tire Install',  price:'$40',   unit:'per tire', duration:60,  desc:'You bring the tires, we install them. Mount, balance, TPMS reset, and disposal of old tires included. Subject to inspection — see disclaimer below.' },
