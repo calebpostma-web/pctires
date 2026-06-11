@@ -2599,7 +2599,15 @@ function retailPrice(item) {
   if (item.map && item.map > price) price = item.map;
   return Math.round(price * 100) / 100;
 }
-function memberPrice(item) { return Math.round(retailPrice(item) * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100; }
+function discountEligible(item) {
+  // "Lowest end" exclusion: if the $20 margin floor set this item's price
+  // (cost x 1.35 would land below the floor), the 10% never applies.
+  return (item.price * TDG.MARKUP) >= ((item.price + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT));
+}
+function memberPrice(item) {
+  if (!discountEligible(item)) return retailPrice(item);
+  return Math.round(retailPrice(item) * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100;
+}
 function ownerPrice(item) { return Math.round(item.price * 100) / 100; }
 function isOwner() { return currentMember && currentMember.code.toLowerCase() === OWNER_CODE.toLowerCase(); }
 function displayedPrice(item) {
@@ -2609,9 +2617,9 @@ function displayedPrice(item) {
   if (currentMember && !isOwner()) return memberPrice(item);
   return retailPrice(item);
 }
-function priceBadgeHTML() {
+function priceBadgeHTML(item) {
   if (isOwner() && !window._customerViewMode) return '<div class="owner-price-badge">&#9889; Cost Price</div>';
-  if (currentMember && !isOwner()) return '<div class="member-price-badge">★ Member Price</div>';
+  if (currentMember && !isOwner()) { if (item && !discountEligible(item)) return ''; return '<div class="member-price-badge">★ Member Price</div>'; }
   return '';
 }
 
@@ -3263,7 +3271,7 @@ function buildRecCard(t, tier) {
   const stockClass = t.stock === 'in' ? 'in-stock' : 'low-stock';
   const stockLabel = t.stock === 'in' ? 'In Stock' : 'Low Stock';
   const retail = retailPrice(t), shown = displayedPrice(t);
-  const memberBadge = priceBadgeHTML();
+  const memberBadge = priceBadgeHTML(t);
   const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
   const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
   const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
@@ -3332,7 +3340,7 @@ function renderTires() {
     const stockClass = t.stock === 'in' ? 'in-stock' : 'low-stock';
     const stockLabel = t.stock === 'in' ? 'In Stock' : t.stock === 'low' ? 'Low Stock' : 'Call Us';
     const retail = retailPrice(t), shown = displayedPrice(t);
-    const memberBadge = priceBadgeHTML();
+    const memberBadge = priceBadgeHTML(t);
     const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
     const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
     const dimStyle = recIds.has(t.itemNumber) ? 'opacity:.55' : '';
@@ -3394,7 +3402,7 @@ function renderWheels() {
     const stockClass = w.stock === 'in' ? 'in-stock' : 'low-stock';
     const stockLabel = w.stock === 'in' ? 'In Stock' : w.stock === 'low' ? 'Low Stock' : 'Call Us';
     const retail = retailPrice(w), shown = displayedPrice(w);
-    const memberBadge = priceBadgeHTML();
+    const memberBadge = priceBadgeHTML(w);
     const msrpNote = w.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${w.msrp.toFixed(2)}</div>` : '';
     const noImgSVG = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px">
       <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" opacity="0.35">
@@ -4312,7 +4320,7 @@ function addToCart(itemNumber, itemType) {
   const priceToCharge = displayedPrice(item);
   if (ex) ex.qty++;
   // Commercial truck tires (17.5/19.5/22.5/24.5 rims) are sell-only — we don't install them
-  else cart.push({ ...item, price: priceToCharge, qty: itemType === 'wheel' ? 4 : 4, install: !isCommercialTire(item), itemType: itemType || 'tire' });
+  else cart.push({ ...item, price: priceToCharge, retailEach: retailPrice(item), discEligible: discountEligible(item), qty: itemType === 'wheel' ? 4 : 4, install: !isCommercialTire(item), itemType: itemType || 'tire' });
   updBadge();
   const qty = ex ? ex.qty : 4;
   const label = itemType === 'wheel' ? 'wheels' : 'tires';
@@ -4365,6 +4373,7 @@ function togInst(itemNumber) {
 function updBadge() { document.getElementById('cartCount').textContent = cart.reduce((s, c) => s + c.qty, 0); saveCartToStorage(); }
 
 function renderCart() {
+  repriceCart();
   const body = document.getElementById('cartBody'), foot = document.getElementById('cartFoot');
   if (!cart.length) {
     body.innerHTML = `<div class="cart-empty"><div class="empty-icon">🛒</div><div class="empty-msg">Your cart is empty</div><div style="font-size:13px;color:var(--muted)">Browse tires or wheels above to get started</div></div>`;
@@ -4375,6 +4384,12 @@ function renderCart() {
     const rebate = item.itemType !== 'wheel' && typeof getRebateForBrand === 'function' ? getRebateForBrand(item.brand) : null;
     const rebateNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:3px">💰 $${rebate.amount} mail-in rebate available — <a href="${rebate.url}" target="_blank" style="color:var(--yellow);text-decoration:none">apply here →</a></div>` : '';
     const commercial = isCommercialTire(item);
+    let memberNote = '';
+    if (currentMember && !isOwner() && item.discEligible === true && item.qty < 4) {
+      memberNote = '<div style="font-size:11px;color:var(--yellow);margin-top:3px">Member 10% applies on a full set of 4+</div>';
+    } else if (currentMember && !isOwner() && item.discEligible === false) {
+      memberNote = '<div style="font-size:11px;color:var(--muted);margin-top:3px">Member discount not available on this item</div>';
+    }
     return `
     <div class="cart-item">
       <div class="ci-icon">${icon}</div>
@@ -4388,7 +4403,7 @@ function renderCart() {
           : (item.itemType !== 'wheel'
               ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${TDG.INSTALL_PRICE}/tire</b></span></label>`
               : '')}
-        ${rebateNote}
+        ${rebateNote}${memberNote}
       </div>
       <div class="ci-right">
         <div class="qty-row">
@@ -4405,6 +4420,30 @@ function renderCart() {
   if (typeof updateShareQuoteButton === 'function') updateShareQuoteButton();
 }
 
+// -- 10% discount rules: eligibility + set-of-4 repricing --
+// The 10% (member pricing and percent promo codes) applies only to items
+// above the budget floor (discountEligible) AND only on qty 4+ of the same item.
+function repriceCartLine(c) {
+  if (typeof c.retailEach !== 'number' || typeof c.discEligible !== 'boolean') {
+    const pool = c.itemType === 'wheel'
+      ? (typeof allWheels !== 'undefined' ? allWheels : [])
+      : (typeof allTires !== 'undefined' ? allTires : []);
+    const orig = pool.find(t => t.itemNumber === c.itemNumber);
+    if (orig) { c.retailEach = retailPrice(orig); c.discEligible = discountEligible(orig); }
+  }
+  if (isOwner()) return;
+  if (typeof c.retailEach !== 'number') return;
+  const memberOk = currentMember && c.qty >= 4 && c.discEligible === true;
+  c.price = memberOk
+    ? Math.round(c.retailEach * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100
+    : c.retailEach;
+}
+function repriceCart() {
+  if (window._quoteLocked) return;
+  if (typeof window._quoteFinalTotal === 'number' && window._quoteFinalTotal > 0) return;
+  cart.forEach(repriceCartLine);
+}
+
 function getTotals() {
   // All-in quote override: customer pays a fixed total; HST is backed out of it.
   if (typeof window._quoteFinalTotal === 'number' && window._quoteFinalTotal > 0) {
@@ -4413,6 +4452,7 @@ function getTotals() {
     const tax = Math.round((ft - preTax) * 100) / 100;
     return { sub: preTax, inst: 0, ship: 0, tax: tax, total: ft, discount: 0, override: true };
   }
+  repriceCart();
   const baseInst = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
   let sub;
   if (tdgQuote) { sub = tdgQuote.subtotal; }
@@ -4471,6 +4511,11 @@ function validatePromoCode(input) {
     const sub = cart.reduce((s, c) => s + c.price * c.qty, 0);
     if (sub < def.minCart) return { ok: false, error: `Minimum order $${def.minCart} required.` };
   }
+  if (def.type === 'percent' && cart.length) {
+    if (typeof repriceCart === 'function') repriceCart();
+    const anyElig = cart.some(c => c.qty >= 4 && (typeof c.discEligible === 'boolean' ? c.discEligible : true));
+    if (!anyElig) return { ok: false, error: 'This code applies to full sets of 4 or more (select budget items excluded).' };
+  }
   return { ok: true, code: actualKey, def };
 }
 
@@ -4478,7 +4523,16 @@ function calculatePromoDiscount(promo, sub, inst, cartItems) {
   if (!promo || !promo.def) return { sub: 0, inst: 0 };
   const def = promo.def;
   switch (def.type) {
-    case 'percent':      return { sub: sub * (def.value / 100), inst: 0 };
+    case 'percent': {
+      // Percent codes follow the same rules as member pricing:
+      // only items above the budget floor, only on qty 4+ of the same item.
+      let elig = 0;
+      for (const c of cartItems) {
+        const ok = (typeof c.discEligible === 'boolean') ? c.discEligible : true;
+        if (c.qty >= 4 && ok) elig += c.price * c.qty;
+      }
+      return { sub: Math.min(elig, sub) * (def.value / 100), inst: 0 };
+    }
     case 'flat':         return { sub: Math.min(def.value, sub), inst: 0 };
     case 'per_tire': {
       const tireQty = cartItems.filter(c => c.itemType !== 'wheel').reduce((s, c) => s + c.qty, 0);
@@ -6331,7 +6385,7 @@ function openTireDetail(itemNumber) {
 
   // Price
   const priceEl = document.getElementById('tdPrice');
-  const badge = priceBadgeHTML();
+  const badge = priceBadgeHTML(t);
   if (shown > 0) {
     priceEl.innerHTML = `${badge}<sup>$</sup>${Math.floor(shown)}<span style="font-size:18px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span>`;
   } else {
