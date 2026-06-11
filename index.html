@@ -4766,6 +4766,73 @@ function initStripeElements() {
 // Stable order ID for this checkout session.
 // Generated ONCE on first use, reused on every retry within this session.
 // Prevents duplicate orders if the customer double-taps Pay or retries after an error.
+// -- PHONE ORDER MODE (owner only) -----------------------------------
+// Badge appears only when signed in as owner. Tap badge to toggle.
+// When ON: kills browser autofill on checkout fields and tags the
+// order as [PHONE ORDER] in the internal email and order log.
+var staffPhoneOrder = false;
+(function () {
+  try {
+    var pm = new URLSearchParams(location.search).get('phone');
+    if (pm === '1') sessionStorage.setItem('pcPhoneMode', '1');
+    if (pm === '0') sessionStorage.removeItem('pcPhoneMode');
+  } catch (e) {}
+
+  function setAutofill(off) {
+    ['fName', 'lName', 'email', 'phone', 'cardName'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (off) {
+        el.setAttribute('autocomplete', 'off');
+        el.setAttribute('name', 'pc-x-' + id);
+        el.setAttribute('data-lpignore', 'true');
+      } else {
+        el.removeAttribute('autocomplete');
+        el.removeAttribute('name');
+        el.removeAttribute('data-lpignore');
+      }
+    });
+  }
+
+  function render() {
+    var owner = (typeof isOwner === 'function') && isOwner();
+    var b = document.getElementById('phoneModeBadge');
+    if (!owner) {
+      if (staffPhoneOrder) setAutofill(false);
+      staffPhoneOrder = false;
+      if (b) b.remove();
+      return;
+    }
+    var on = false;
+    try { on = sessionStorage.getItem('pcPhoneMode') === '1'; } catch (e) {}
+    staffPhoneOrder = on;
+    setAutofill(on);
+    if (!b) {
+      b = document.createElement('div');
+      b.id = 'phoneModeBadge';
+      b.style.cssText = 'position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:99999;font:700 11px Barlow,sans-serif;letter-spacing:1.5px;padding:4px 14px;border-radius:0 0 2px 2px;cursor:pointer;white-space:nowrap';
+      b.onclick = function () {
+        try {
+          if (sessionStorage.getItem('pcPhoneMode') === '1') sessionStorage.removeItem('pcPhoneMode');
+          else sessionStorage.setItem('pcPhoneMode', '1');
+        } catch (e) {}
+        render();
+      };
+      document.body.appendChild(b);
+    }
+    b.textContent = on ? 'PHONE ORDER: ON' : 'PHONE ORDER: OFF';
+    b.style.background = on ? '#f5c518' : '#1d1d1d';
+    b.style.color = on ? '#0a0a0a' : '#888888';
+    b.style.border = on ? 'none' : '1px solid #333333';
+  }
+
+  function boot() { render(); setInterval(render, 2000); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
 function getOrCreateOrderId() {
   if (!window._pendingOrderId) {
     window._pendingOrderId = 'PCT-' + Math.random().toString(36).substr(2,6).toUpperCase();
@@ -4881,7 +4948,7 @@ async function finishOrder() {
     caslOptIn,
     vin,
     vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
-    searchMethod: lastSearchMethod || 'unknown',
+    searchMethod: (lastSearchMethod || 'unknown') + (staffPhoneOrder ? ' [PHONE ORDER]' : ''),
     tires: cart.map(c => ({ tdgId: c.tdgId, qty: c.qty, brand: c.brand, name: c.name, size: c.size || c.diameter + '"', price: c.price })),
     addons: addonNames,
     installation: !!selectedService,
@@ -4917,7 +4984,7 @@ async function finishOrder() {
         vin,
         vehicle: vehicleStr,
         vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
-        searchMethod: lastSearchMethod || 'unknown',
+        searchMethod: (lastSearchMethod || 'unknown') + (staffPhoneOrder ? ' [PHONE ORDER]' : ''),
         items: cart.map(c => `${c.qty}× ${c.brand} ${c.name} (${c.size || c.diameter + '"'})`).join(' | '),
         addons: addonNames,
         subtotal: t.sub.toFixed(2),
