@@ -2495,6 +2495,7 @@ const TDG = {
   INSTALL_PRICE:   25,
   MARKUP:          1.35,
   MEMBER_DISCOUNT: 0.10,
+  MIN_MARGIN:      20,   // minimum dollars kept per tire/wheel, survives member discount
   SEASON_MAP:   { 1:'summer', 2:'allseason', 3:'allweather', 4:'winter' },
   SEASON_LABEL: { 1:'Summer', 2:'All-Season', 3:'All-Weather', 4:'Winter' },
 };
@@ -2593,6 +2594,8 @@ const WHEEL_WIDTHS    = [5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,12.0
 // ─────────────────────────────────────────────────
 function retailPrice(item) {
   let price = item.price * TDG.MARKUP;
+  const _floor = (item.price + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT);
+  if (_floor > price) price = _floor;
   if (item.map && item.map > price) price = item.map;
   return Math.round(price * 100) / 100;
 }
@@ -3183,7 +3186,7 @@ function wheelRetailPrice(w) {
   if (!w) return 0;
   const cost = w.price || 0;
   if (!cost) return 0;
-  return Math.max(cost * TDG.MARKUP, w.map || 0);
+  return Math.max(cost * TDG.MARKUP, (cost + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT), w.map || 0);
 }
 
 function populateWheelRefineDropdowns() {
