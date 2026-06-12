@@ -9,6 +9,7 @@ import { findTorque as halderman } from './tech-torque-db.js';
 import { findOverlay } from './tech-torque-overlay-2022-2026.js';
 import { findCorrection } from './tech-torque-corrections.js';
 import { classifyVehicle } from './tech-vehicle-type.js';
+import { findLug } from './tech-lugnut-db.js';
 
 
 //
@@ -169,11 +170,14 @@ export async function onRequestPost(context) {
         //      catchall tier ordering for truck-platform SUVs)
         //   5. Null (client falls back to AI via /tech-specs)
 
+        // Lug hardware spec rides along on every getTorque response
+        const lug = findLug({ year: body.year, make: body.make, model: body.model });
+
         const key = normTorqueKey(body);
         const raw = await env.TECH_KV.get(key);
         if (raw) {
           const entry = JSON.parse(raw);
-          return json({ ok: true, torque: { ...entry, source: 'verified' } });
+          return json({ ok: true, torque: { ...entry, source: 'verified' }, lug });
         }
 
         // Classify once up front. Used by Halderman to reorder catchall tiers.
@@ -193,6 +197,7 @@ export async function onRequestPost(context) {
               reference: `${o.sourceTag} · ${o.entry.make} ${o.entry.model} ${o.entry.yearFrom}-${o.entry.yearTo}`,
               vehicleType,
             },
+            lug,
           });
         }
 
@@ -209,6 +214,7 @@ export async function onRequestPost(context) {
               reference: `${c.sourceTag} · ${c.entry.make} ${c.entry.model} ${c.entry.yearFrom}-${c.entry.yearTo}`,
               vehicleType,
             },
+            lug,
           });
         }
 
@@ -228,10 +234,11 @@ export async function onRequestPost(context) {
               reference: `Halderman ${h.entry.yearFrom}-${h.entry.yearTo} · ${h.entry.make} ${h.entry.model}`,
               vehicleType,
             },
+            lug,
           });
         }
 
-        return json({ ok: true, torque: null });
+        return json({ ok: true, torque: null, lug });
       }
 
       case 'saveTorque': {
