@@ -16,6 +16,8 @@
  *   TDG_PAYMENT_METHOD  — Amex on account
  */
 
+import { findLug } from './tech-lugnut-db.js';
+
 const TDG_API_BASE       = 'https://www.tdgaccess.ca/api';
 const TDG_API_KEY        = 'rst715Wr18hFpHpbi346TGuMLBBQDZZbF5lHZQSi27hfpLGey3TH3YRHYWWPJRyi7rkx';
 const TDG_SHIPPING_METHOD = '5E47CBB0A4659509A3DF1D4BA96E2FFB|29667'; // TDG Delivery
@@ -357,6 +359,25 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
   const rowLbl    = 'padding:5px 0;color:#888;width:55%;font-size:14px';
   const rowVal    = 'padding:5px 0;text-align:right;color:#e0e0e0;font-size:14px';
 
+  // Lug hardware heads-up: look up the vehicle's lug spec and flag anything
+  // not covered by the stocked kits (Lug Hardware Bay Card, June 2026).
+  const lugSpec = (order.vehicleYear && order.vehicleMake && order.vehicleModel)
+    ? findLug({ year: order.vehicleYear, make: order.vehicleMake, model: order.vehicleModel })
+    : null;
+  let lugRowHtml = '';
+  if (order.vehicle) {
+    if (lugSpec) {
+      const specTxt = [lugSpec.thread, lugSpec.hexMm ? lugSpec.hexMm + 'mm hex' : null, lugSpec.seat, lugSpec.type].filter(Boolean).join(' &middot; ');
+      const badge = lugSpec.kit
+        ? '<span style="color:#4ade80;font-size:11px;font-weight:700;margin-left:6px">IN STOCK &middot; ' + lugSpec.kit + '</span>'
+        : '<span style="background:#7f1d1d;color:#fecaca;font-size:11px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:6px">HEADS UP &mdash; NOT IN LUG STOCK</span>';
+      lugRowHtml = '<tr><td style="' + rowLbl + '">Lug Spec</td><td style="' + rowVal + '">' + specTxt + badge + '</td></tr>'
+        + (lugSpec.note ? '<tr><td></td><td style="padding:0 0 5px;text-align:right;color:#888;font-size:11px">' + lugSpec.note + '</td></tr>' : '');
+    } else {
+      lugRowHtml = '<tr><td style="' + rowLbl + '">Lug Spec</td><td style="' + rowVal + ';color:#888">Unknown &mdash; check at write-up</td></tr>';
+    }
+  }
+
   return `<!DOCTYPE html>
 <html>
 <body style="font-family:'Helvetica Neue',Arial,sans-serif;background:#0e0e0e;color:#e0e0e0;padding:24px;margin:0">
@@ -373,6 +394,7 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
       <tr><td style="${rowLbl}">Email</td><td style="${rowVal}">${order.customerEmail ? `<a href="mailto:${order.customerEmail}" style="color:#f5c518;text-decoration:none">${order.customerEmail}</a>` : '-'}</td></tr>
       <tr><td style="${rowLbl}">Phone</td><td style="${rowVal}">${order.customerPhone ? `<a href="tel:${phoneDigits}" style="color:#f5c518;text-decoration:none">${order.customerPhone}</a>` : '-'}</td></tr>
       <tr><td style="${rowLbl}">Vehicle</td><td style="${rowVal}">${order.vehicle || '-'}</td></tr>
+      ${lugRowHtml}
     </table>
   </div>
 
