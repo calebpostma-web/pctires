@@ -107,6 +107,9 @@ body { background:var(--black); color:var(--white); font-family:'Barlow',sans-se
 .chk-wrap { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--light); cursor:pointer; user-select:none; padding:12px 6px; }
 .chk-wrap input { accent-color:var(--yellow); width:16px; height:16px; min-width:0; flex:none; }
 .result-note { text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:26px; }
+.ex-chips { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:16px; }
+.ex-chip { font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--yellow); background:rgba(245,197,24,.08); border:1px solid rgba(245,197,24,.25); border-radius:2px; padding:7px 13px; cursor:pointer; transition:background .15s, border-color .15s; }
+.ex-chip:hover { background:rgba(245,197,24,.16); border-color:var(--yellow); }
 
 .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px; }
 .tcard { background:var(--card); border:1px solid var(--border); border-radius:2px; padding:20px; position:relative; overflow:hidden; transition:border-color .15s; display:flex; flex-direction:column; }
@@ -223,7 +226,7 @@ body { background:var(--black); color:var(--white); font-family:'Barlow',sans-se
   <div class="cat-inner">
     <div class="section-label">Farm Tire Catalogue</div>
     <h2 class="section-title">Find Your Size</h2>
-    <p class="section-sub">Type your size as it reads on the sidewall — e.g. <strong style="color:var(--light)">18.4-38</strong> or <strong style="color:var(--light)">460/85R38</strong></p>
+    <p class="section-sub">Type your size as it reads on the sidewall — any way you like. <strong style="color:var(--light)">Dots, dashes, slashes and the R don't matter</strong> — searching <strong style="color:var(--light)">184 38</strong> finds 18.4-38 just fine. Or tap an example:</p>
 
     <div class="filter-bar">
       <input type="text" id="fSearch" placeholder="Search size or keyword…" autocomplete="off">
@@ -235,6 +238,7 @@ body { background:var(--black); color:var(--white); font-family:'Barlow',sans-se
       <label class="chk-wrap"><input type="checkbox" id="fStock" checked> In stock only</label>
     </div>
     <div class="result-note" id="resultNote"></div>
+    <div class="ex-chips"><span class="ex-chip">18.4-38</span><span class="ex-chip">460/85R38</span><span class="ex-chip">11L-15</span><span class="ex-chip">12.4-24</span></div>
 
     <div class="grid" id="grid"></div>
     <div class="empty-msg" id="emptyMsg" style="display:none">No matches for that size — but we can almost always get it. <a href="tel:519-397-4686">Call 519-397-4686</a> and we'll track it down.</div>
@@ -382,17 +386,22 @@ function initBrands() {
 }
 
 function applyFilters() {
-  const q = document.getElementById('fSearch').value.trim().toUpperCase().replace(/\s+/g,'');
+  const q = document.getElementById('fSearch').value.trim().toUpperCase();
   const brand = document.getElementById('fBrand').value;
   const stockOnly = document.getElementById('fStock').checked;
   const sort = document.getElementById('fSort').value;
+
+  const qNorm = q.replace(/[^A-Z0-9]/g,'');
+  const qDigits = q.replace(/[^0-9]/g,'');
 
   FILTERED = ALL.filter(p => {
     if (brand && p.brand !== brand) return false;
     if (stockOnly && !stockInfo(p.stock).inStock) return false;
     if (q) {
-      const hay = (p.desc + p.code + p.brand).toUpperCase().replace(/\s+/g,'');
-      if (!hay.includes(q)) return false;
+      const hayNorm = (p.desc + p.code + p.brand).toUpperCase().replace(/[^A-Z0-9]/g,'');
+      const hayDigits = p.desc.replace(/[^0-9]/g,'');
+      const hit = hayNorm.includes(qNorm) || (qDigits.length >= 4 && hayDigits.includes(qDigits));
+      if (!hit) return false;
     }
     return true;
   });
@@ -446,6 +455,11 @@ function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+document.querySelectorAll('.ex-chip').forEach(ch => ch.addEventListener('click', () => {
+  document.getElementById('fSearch').value = ch.textContent;
+  applyFilters();
+  document.getElementById('fSearch').focus();
+}));
 document.getElementById('fSearch').addEventListener('input', applyFilters);
 document.getElementById('fBrand').addEventListener('change', applyFilters);
 document.getElementById('fSort').addEventListener('change', applyFilters);
