@@ -1074,12 +1074,10 @@
         <div class="q-sub" id="tvTpmsRelearn">Relearn: —</div>
       </div>
       <div class="tv-quad">
-        <div class="q-label">Vehicle</div>
-        <div class="q-stack">
-          <div class="sl" id="tvStackMake">—</div>
-          <div class="s2" id="tvStackModel">—</div>
-          <div class="s2" id="tvStackTrim"></div>
-        </div>
+        <div class="q-label">Lug Nut</div>
+        <div class="q-big small" id="tvLugMain">&mdash;</div>
+        <div class="q-unit" id="tvLugUnit"></div>
+        <div class="q-sub" id="tvLugSub"></div>
       </div>
     </div>
     <div class="tv-footer">
@@ -2290,10 +2288,13 @@ function renderTV(scan) {
   document.getElementById('tvTpmsRelearn').textContent =
     'Relearn: ' + (tp.relearn && tp.relearn !== 'unknown' ? tp.relearn.toUpperCase() : '—');
 
-  // Vehicle stack
-  document.getElementById('tvStackMake').textContent = (v.make || '').toUpperCase();
-  document.getElementById('tvStackModel').textContent = v.model || '';
-  document.getElementById('tvStackTrim').textContent = v.trim || '';
+  // Lug nut
+  const lg = scan.lug || {};
+  document.getElementById('tvLugMain').textContent = lg.hexMm ? (lg.hexMm + ' mm') : (lg.thread || '\u2014');
+  document.getElementById('tvLugUnit').textContent = lg.hexMm ? 'socket' : '';
+  document.getElementById('tvLugSub').textContent =
+    [lg.thread, lg.seat, lg.type].filter(Boolean).join(' / ')
+    + (lg.kit ? '  -  Stock: ' + lg.kit : (lg.thread ? '  -  NOT IN STOCK' : ''));
 
   updateLastSeen();
 }
@@ -2451,6 +2452,14 @@ async function loadSpecsForVehicle(vin, vehicle) {
     };
   }
 
+  // Lug hardware: published DB (rides along on getTorque) > AI fallback
+  let lug = null;
+  if (verifiedRes.ok && verifiedRes.lug) {
+    lug = { ...verifiedRes.lug, source: 'published' };
+  } else if (aiRes.ok && aiRes.lug && (aiRes.lug.thread || aiRes.lug.hexMm)) {
+    lug = { ...aiRes.lug, source: 'ai', kit: null };
+  }
+
   const tpms = aiRes.ok ? (aiRes.tpms || {}) : {};
   const pressure = aiRes.ok ? (aiRes.pressure || {}) : {};
   const notes = aiRes.ok ? (aiRes.notes || '') : '';
@@ -2464,6 +2473,7 @@ async function loadSpecsForVehicle(vin, vehicle) {
     vin,
     vehicle,
     torque,
+    lug,
     tpms,
     pressure,
     notes,
@@ -2532,6 +2542,16 @@ function renderPhoneResult(scan) {
   const t = scan.torque;
   const tpms = scan.tpms;
   const p = scan.pressure;
+  const lug = scan.lug || null;
+  const lugMain = lug && lug.hexMm ? lug.hexMm + '<span class="spec-unit">mm hex</span>'
+                : (lug && lug.thread ? '<span style="font-size:18px">' + escapeHtml(lug.thread) + '</span>' : '&mdash;');
+  const lugSub = lug ? [lug.thread, lug.seat, lug.type].filter(Boolean).join(' &middot; ') : '';
+  const lugKitLine = lug && lug.kit ? '<div class="spec-sub" style="color:#4ade80;font-weight:700">Stock: ' + escapeHtml(lug.kit) + '</div>'
+                   : (lug ? '<div class="spec-sub" style="color:#f87171;font-weight:700">NOT IN LUG STOCK</div>' : '');
+  const lugNote = lug && lug.note ? '<div class="spec-sub" style="font-size:10px">' + escapeHtml(lug.note) + '</div>' : '';
+  const lugBadge = !lug ? '<div class="spec-badge unknown">Unknown</div>'
+                 : lug.source === 'ai' ? '<div class="spec-badge ai">&#9888; AI &middot; Verify</div>'
+                 : '<div class="spec-badge published">&#128214; Published</div>';
 
   const torqueBadge =
     t.source === 'verified' ? '<div class="spec-badge verified">✓ Verified</div>' :
@@ -2614,9 +2634,12 @@ function renderPhoneResult(scan) {
           <div class="spec-sub">Relearn: ${escapeHtml(relearn)}</div>
         </div>
         <div class="spec-box">
-          <div class="spec-label">Vehicle</div>
-          <div class="spec-value muted">${escapeHtml(v.make || '—')}</div>
-          <div class="spec-sub">${escapeHtml(v.model || '')}${v.trim ? ' ' + escapeHtml(v.trim) : ''}</div>
+          <div class="spec-label">Lug Nut</div>
+          <div class="spec-value">${lugMain}</div>
+          <div class="spec-sub">${lugSub}</div>
+          ${lugKitLine}
+          ${lugNote}
+          ${lugBadge}
         </div>
         ${notesNote}
       </div>
