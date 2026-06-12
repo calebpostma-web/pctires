@@ -1,0 +1,3006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>PC Tires · Tech Bay</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:#080808; --dark:#111; --card:#161616; --raised:#1d1d1d; --border:#252525;
+    --mid:#404040; --muted:#686868; --light:#a0a0a0; --white:#f0ece0;
+    --yellow:#f5c518; --yellow-dim:rgba(245,197,24,0.12); --yellow-dark:#d4a800;
+    --green:#22c55e; --green-dim:rgba(34,197,94,0.12); --red:#ef4444; --red-dim:rgba(239,68,68,0.12);
+    --amber:#f59e0b; --amber-dim:rgba(245,158,11,0.15);
+    --blue:#3b82f6; --blue-dim:rgba(59,130,246,0.15);
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--mid); border-radius: 3px; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     LOGIN GATE
+     ═══════════════════════════════════════════════════════════════ */
+  .lock-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--black);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .lock-screen[hidden] { display: none !important; }
+  .lock-box {
+    width: 100%; max-width: 360px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 34px 28px;
+    text-align: center;
+  }
+  .lock-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px; font-weight: 900;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: var(--white); margin-bottom: 6px;
+  }
+  .lock-logo .pc { color: var(--yellow); }
+  .lock-sub {
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 28px;
+  }
+  .lock-input {
+    width: 100%; background: var(--black); border: 1px solid var(--border);
+    color: var(--white); padding: 14px 16px;
+    font-family: 'Barlow', sans-serif; font-size: 16px;
+    border-radius: 2px; outline: none; transition: border-color .15s;
+  }
+  .lock-input:focus { border-color: var(--yellow); }
+  .lock-btn {
+    width: 100%; margin-top: 14px;
+    background: var(--yellow); color: var(--black); border: none;
+    padding: 14px; font-family: 'Barlow', sans-serif; font-size: 14px;
+    font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+    border-radius: 2px; cursor: pointer; transition: background .15s;
+  }
+  .lock-btn:hover { background: var(--yellow-dark); }
+  .lock-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .lock-error {
+    margin-top: 14px; font-size: 13px; color: var(--red);
+    min-height: 18px;
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     APP CONTAINER
+     ═══════════════════════════════════════════════════════════════ */
+  .app { display: none; }
+  .app.active { display: block; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     PHONE MODE — HEADER
+     ═══════════════════════════════════════════════════════════════ */
+  .tech-header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,8,8,.96); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px; font-weight: 900;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .brand .pc { color: var(--yellow); }
+  .bay-badge {
+    background: var(--yellow); color: var(--black);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 900;
+    letter-spacing: 1.5px; padding: 4px 10px;
+    border-radius: 2px;
+  }
+  .tv-status {
+    margin-left: auto; display: flex; align-items: center; gap: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .tv-status .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--muted);
+  }
+  .tv-status.online .dot { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .tv-status.online { color: var(--green); }
+  .icon-btn {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--light); padding: 6px 10px; cursor: pointer;
+    border-radius: 2px; font-size: 14px;
+    transition: all .15s;
+  }
+  .icon-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  /* ═══════════════════════════════════════════════════════════════
+     PHONE MODE — MAIN
+     ═══════════════════════════════════════════════════════════════ */
+  .phone-main { padding: 16px; max-width: 720px; margin: 0 auto; }
+
+  .scan-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .scan-tile {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 22px 14px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: 'Barlow', sans-serif;
+    text-align: center;
+    transition: all .15s;
+  }
+  .scan-tile.primary {
+    background: var(--yellow); color: var(--black);
+    border-color: var(--yellow);
+  }
+  .scan-tile:hover { border-color: var(--yellow); }
+  .scan-tile.primary:hover { background: var(--yellow-dark); }
+  .scan-tile .icon { font-size: 28px; margin-bottom: 8px; }
+  .scan-tile .label {
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     RESULT CARD
+     ═══════════════════════════════════════════════════════════════ */
+  .result-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 2px; padding: 18px; margin-bottom: 16px;
+  }
+  .result-card.empty {
+    padding: 36px 20px; text-align: center;
+    color: var(--muted);
+    border-style: dashed;
+  }
+  .result-card.empty .empty-icon { font-size: 36px; margin-bottom: 8px; opacity: .5; }
+  .result-card.empty .empty-text { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+
+  .vehicle-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 12px; margin-bottom: 16px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .vehicle-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800;
+    line-height: 1.1;
+  }
+  .vehicle-vin {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--muted); margin-top: 3px;
+    letter-spacing: .5px; word-break: break-all;
+  }
+  .vehicle-clear {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); font-size: 11px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 10px; border-radius: 2px; cursor: pointer;
+    flex-shrink: 0; transition: all .15s;
+  }
+  .vehicle-clear:hover { color: var(--red); border-color: var(--red); }
+
+  .spec-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  @media (max-width: 420px) { .spec-grid { grid-template-columns: 1fr; } }
+
+  .spec-box {
+    background: var(--raised); border: 1px solid var(--border);
+    border-radius: 2px; padding: 14px; position: relative;
+  }
+  .spec-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .spec-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px; font-weight: 900; line-height: 1;
+    color: var(--yellow);
+  }
+  .spec-value.muted { color: var(--muted); font-size: 18px; }
+  .spec-unit {
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px; font-weight: 600;
+    color: var(--light); margin-left: 6px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .spec-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--light); margin-top: 6px;
+  }
+  .spec-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 2px;
+    margin-top: 8px;
+  }
+  .spec-badge.verified {
+    background: var(--green-dim); color: var(--green);
+    border: 1px solid rgba(34,197,94,.3);
+  }
+  .spec-badge.published {
+    background: var(--blue-dim); color: var(--blue);
+    border: 1px solid rgba(59,130,246,.4);
+  }
+  .spec-badge.ai {
+    background: var(--amber-dim); color: var(--amber);
+    border: 1px solid rgba(245,158,11,.4);
+  }
+  .spec-badge.unknown {
+    background: var(--red-dim); color: var(--red);
+    border: 1px solid rgba(239,68,68,.3);
+  }
+  .verify-btn {
+    margin-top: 10px; width: 100%;
+    background: transparent; border: 1px solid var(--yellow);
+    color: var(--yellow); padding: 9px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    border-radius: 2px; cursor: pointer;
+    transition: all .15s;
+    font-family: 'Barlow', sans-serif;
+  }
+  .verify-btn:hover { background: var(--yellow-dim); }
+
+  .pressure-row {
+    display: flex; gap: 16px; align-items: baseline;
+  }
+  .pressure-row .p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px; font-weight: 900; color: var(--yellow);
+  }
+  .pressure-row .pl {
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-right: 2px;
+  }
+
+  .full-width-note {
+    grid-column: 1 / -1;
+    background: var(--raised); border: 1px solid var(--border);
+    border-left: 3px solid var(--amber);
+    padding: 10px 12px; font-size: 13px;
+    color: var(--light); border-radius: 2px;
+  }
+  .full-width-note strong { color: var(--amber); font-weight: 700; }
+
+  /* JACK POINTS SECTION */
+  .jack-section {
+    margin-top: 12px;
+    background: var(--raised); border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    padding: 12px 14px;
+    border-radius: 2px;
+  }
+  .jack-header {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .jack-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .jack-construction {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px; font-weight: 900;
+    color: var(--yellow);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .jack-line {
+    font-size: 12.5px; color: var(--light);
+    line-height: 1.45; margin-top: 3px;
+  }
+  .jack-line strong { color: var(--white); font-weight: 700; }
+  .jack-warning {
+    margin-top: 8px; padding: 8px 10px;
+    border-radius: 2px; border-left: 3px solid var(--amber);
+    background: rgba(0,0,0,.25);
+    font-size: 12px; line-height: 1.4;
+  }
+  .jack-warning.critical { border-left-color: var(--red); background: var(--red-dim); }
+  .jack-warning.info { border-left-color: var(--blue); }
+  .jack-warning-title {
+    font-weight: 700; color: var(--amber);
+    font-size: 12.5px; margin-bottom: 2px;
+  }
+  .jack-warning.critical .jack-warning-title { color: var(--red); }
+  .jack-warning.info .jack-warning-title { color: var(--blue); }
+  .jack-warning-detail { color: var(--light); }
+
+  /* ═══════════════════════════════════════════════════════════════
+     LOADING STATE
+     ═══════════════════════════════════════════════════════════════ */
+  .loading-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 2px; padding: 24px;
+    text-align: center; margin-bottom: 16px;
+  }
+  .spinner {
+    width: 28px; height: 28px; margin: 0 auto 12px;
+    border: 3px solid var(--border);
+    border-top-color: var(--yellow);
+    border-radius: 50%; animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text {
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     NOTES
+     ═══════════════════════════════════════════════════════════════ */
+  .notes-section {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 2px; padding: 18px; margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--white); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .count {
+    background: var(--border); color: var(--light);
+    font-size: 11px; padding: 2px 7px; border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .note-input {
+    width: 100%; background: var(--black);
+    border: 1px solid var(--border); color: var(--white);
+    padding: 10px 12px; font-family: 'Barlow', sans-serif;
+    font-size: 14px; border-radius: 2px; outline: none;
+    resize: vertical; min-height: 60px;
+    transition: border-color .15s;
+  }
+  .note-input:focus { border-color: var(--yellow); }
+  .note-add-btn {
+    margin-top: 8px; background: var(--yellow); color: var(--black);
+    border: none; padding: 9px 18px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    border-radius: 2px; cursor: pointer;
+    transition: background .15s;
+  }
+  .note-add-btn:hover { background: var(--yellow-dark); }
+  .note-add-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .notes-list { margin-top: 14px; }
+  .note-item {
+    padding: 10px 12px; border-left: 3px solid var(--yellow);
+    background: var(--raised); border-radius: 2px;
+    margin-bottom: 8px;
+  }
+  .note-text { font-size: 13px; color: var(--white); line-height: 1.45; }
+  .note-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    margin-top: 4px; letter-spacing: .5px;
+  }
+  .notes-empty {
+    font-size: 12px; color: var(--muted); text-align: center; padding: 8px 0;
+    font-style: italic;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     MANUALS
+     ═══════════════════════════════════════════════════════════════ */
+  .manuals {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 2px; padding: 18px; margin-bottom: 16px;
+  }
+  .manual-tiles {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .manual-tile {
+    display: block; text-decoration: none;
+    background: var(--raised); border: 1px solid var(--border);
+    border-radius: 2px; padding: 14px 12px;
+    color: var(--white); transition: all .15s;
+    position: relative;
+  }
+  .manual-tile:hover { border-color: var(--yellow); }
+  .manual-tile .m-icon { font-size: 22px; margin-bottom: 6px; }
+  .manual-tile .m-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .manual-tile .m-model {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--muted); margin-top: 2px;
+  }
+  .manual-tile.empty { opacity: .5; }
+  .manual-tile.empty .m-status {
+    font-size: 10px; color: var(--amber); margin-top: 6px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .manual-tile.present .m-status {
+    font-size: 10px; color: var(--green); margin-top: 6px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     MODAL
+     ═══════════════════════════════════════════════════════════════ */
+  .modal {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,.85); backdrop-filter: blur(8px);
+    display: flex; align-items: flex-end; justify-content: center;
+    padding: 0;
+  }
+  .modal[hidden] { display: none; }
+  @media (min-width: 600px) { .modal { align-items: center; padding: 20px; } }
+  .modal-card {
+    width: 100%; max-width: 500px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 2px 2px 0 0; padding: 20px;
+    max-height: 90vh; overflow-y: auto;
+  }
+  @media (min-width: 600px) { .modal-card { border-radius: 2px; } }
+  .modal-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-close {
+    background: transparent; border: none; color: var(--muted);
+    font-size: 22px; cursor: pointer;
+  }
+  .modal-row {
+    display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;
+  }
+  .modal-row label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .modal-row input, .modal-row select {
+    background: var(--black); border: 1px solid var(--border);
+    color: var(--white); padding: 10px 12px;
+    font-family: 'Barlow', sans-serif; font-size: 14px;
+    border-radius: 2px; outline: none;
+  }
+  .modal-row input:focus, .modal-row select:focus { border-color: var(--yellow); }
+  .modal-btn-row {
+    display: flex; gap: 8px; margin-top: 16px;
+  }
+  .modal-btn {
+    flex: 1; padding: 12px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    border-radius: 2px; cursor: pointer; border: none;
+    transition: background .15s;
+  }
+  .modal-btn.primary { background: var(--yellow); color: var(--black); }
+  .modal-btn.primary:hover { background: var(--yellow-dark); }
+  .modal-btn.secondary {
+    background: transparent; color: var(--light);
+    border: 1px solid var(--border);
+  }
+  .modal-btn.secondary:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  /* Camera preview */
+  .cam-preview {
+    width: 100%; background: var(--black);
+    border: 2px dashed var(--border); border-radius: 2px;
+    padding: 30px 20px; text-align: center;
+    margin-bottom: 12px;
+  }
+  .cam-preview img {
+    max-width: 100%; max-height: 260px;
+    border-radius: 2px; display: block; margin: 0 auto;
+  }
+  .cam-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     TOAST
+     ═══════════════════════════════════════════════════════════════ */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%); z-index: 2000;
+    background: var(--yellow); color: var(--black);
+    padding: 12px 22px; border-radius: 2px;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    box-shadow: 0 4px 20px rgba(0,0,0,.5);
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
+  /* ═══════════════════════════════════════════════════════════════
+     TV MODE — the big daddy
+     ═══════════════════════════════════════════════════════════════ */
+  body.tv-mode { overflow: hidden; background: #000; }
+  body.tv-mode .tech-header, body.tv-mode .phone-main { display: none; }
+
+  .tv-container { display: none; }
+  body.tv-mode .tv-container { display: flex; flex-direction: column; height: 100vh; }
+
+  .tv-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5vw 2.5vw;
+    border-bottom: 1px solid var(--border);
+  }
+  .tv-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.5vw; font-weight: 900;
+    letter-spacing: .4vw; text-transform: uppercase;
+  }
+  .tv-brand .pc { color: var(--yellow); }
+  .tv-live {
+    display: flex; align-items: center; gap: .8vw;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.1vw; color: var(--green);
+    text-transform: uppercase; letter-spacing: .2vw;
+  }
+  .tv-live .dot {
+    width: 1vw; height: 1vw; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 1vw var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+  .tv-idle {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .tv-idle .idle-big {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18vw; font-weight: 900;
+    line-height: .9; color: var(--yellow);
+    letter-spacing: 1vw;
+  }
+  .tv-idle .idle-sub {
+    font-size: 2vw; color: var(--muted);
+    letter-spacing: .5vw; text-transform: uppercase;
+    margin-top: 2vw;
+  }
+
+  .tv-vehicle-banner {
+    padding: 2vw 2.5vw 1.5vw;
+    border-bottom: 1px solid var(--border);
+  }
+  .tv-vehicle-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 5.5vw; font-weight: 900;
+    line-height: 1; text-transform: uppercase;
+    letter-spacing: .2vw;
+  }
+  .tv-vehicle-vin {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.3vw; color: var(--muted);
+    margin-top: .8vw; letter-spacing: .15vw;
+  }
+
+  .tv-grid {
+    flex: 1; display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1px; background: var(--border);
+  }
+  .tv-quad {
+    background: var(--black);
+    padding: 2.5vw 3vw;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+  .tv-quad .q-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.8vw; font-weight: 700;
+    letter-spacing: .4vw; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .5vw;
+  }
+  .tv-quad .q-big {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12vw; font-weight: 900;
+    line-height: .9; color: var(--yellow);
+  }
+  .tv-quad .q-big.small { font-size: 6vw; }
+  .tv-quad .q-unit {
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.8vw; font-weight: 700;
+    color: var(--light); letter-spacing: .3vw;
+    text-transform: uppercase; margin-top: .3vw;
+  }
+  .tv-quad .q-sub {
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.6vw; color: var(--light);
+    margin-top: .8vw;
+  }
+  .tv-quad .q-badge {
+    position: absolute; top: 1.5vw; right: 1.5vw;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1vw; font-weight: 700;
+    padding: .3vw .8vw; border-radius: 2px;
+    letter-spacing: .2vw; text-transform: uppercase;
+  }
+  .tv-quad .q-badge.verified {
+    background: var(--green-dim); color: var(--green);
+    border: 1px solid var(--green);
+  }
+  .tv-quad .q-badge.published {
+    background: var(--blue-dim); color: var(--blue);
+    border: 1px solid var(--blue);
+  }
+  .tv-quad .q-badge.ai {
+    background: var(--amber-dim); color: var(--amber);
+    border: 1px solid var(--amber);
+  }
+  .tv-quad .q-badge.unknown {
+    background: var(--red-dim); color: var(--red);
+    border: 1px solid var(--red);
+  }
+  .tv-quad .q-pressure-row {
+    display: flex; gap: 3vw; align-items: baseline;
+  }
+  .tv-quad .q-pressure-row .p-side {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2vw; color: var(--muted);
+    letter-spacing: .3vw; margin-right: .3vw;
+  }
+  .tv-quad .q-pressure-row .p-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 8vw; font-weight: 900;
+    color: var(--yellow); line-height: .9;
+  }
+  .tv-quad .q-stack {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+  }
+  .tv-quad .q-stack .sl {
+    font-size: 3.2vw; color: var(--yellow); letter-spacing: .1vw;
+  }
+  .tv-quad .q-stack .s2 {
+    font-size: 2.2vw; color: var(--light); margin-top: .5vw;
+  }
+
+  .tv-footer {
+    padding: 1vw 2.5vw;
+    display: flex; justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1vw; color: var(--muted);
+    letter-spacing: .15vw;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     TIRES 101 — bay reference / wiki
+     ═══════════════════════════════════════════════════════════════ */
+  .tires101 {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 2px; padding: 18px; margin-bottom: 16px;
+  }
+  .t101-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .t101-tile {
+    text-align: left; background: var(--raised);
+    border: 1px solid var(--border); border-radius: 2px;
+    padding: 14px 12px; color: var(--white);
+    cursor: pointer; transition: all .15s;
+    font-family: 'Barlow', sans-serif;
+  }
+  .t101-tile:hover, .t101-tile:focus {
+    border-color: var(--yellow); outline: none;
+  }
+  .t101-tile .t-icon { font-size: 22px; margin-bottom: 6px; display: block; }
+  .t101-tile .t-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .t101-tile .t-blurb {
+    font-size: 11px; color: var(--muted);
+    margin-top: 4px; line-height: 1.35;
+  }
+
+  /* Topic detail (rendered inside the topic modal) */
+  .topic-body { font-size: 14px; line-height: 1.55; color: var(--white); }
+  .topic-body h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--yellow);
+    margin: 18px 0 8px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .topic-body h3:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .topic-body p { margin-bottom: 10px; color: var(--light); }
+  .topic-body strong { color: var(--white); font-weight: 700; }
+  .topic-body em { color: var(--light); font-style: italic; }
+  .topic-body ul { list-style: none; margin: 8px 0 12px; padding: 0; }
+  .topic-body li {
+    padding: 7px 11px; border-left: 2px solid var(--border);
+    background: var(--raised); border-radius: 2px;
+    margin-bottom: 5px; font-size: 13.5px; color: var(--light);
+  }
+  .topic-body li strong { color: var(--white); }
+  .topic-body ul.good li { border-left-color: var(--green); }
+  .topic-body ul.warn li { border-left-color: var(--amber); }
+  .topic-body ul.bad  li { border-left-color: var(--red); }
+  .topic-body code {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;
+    background: var(--black); border: 1px solid var(--border);
+    padding: 1px 6px; border-radius: 2px; color: var(--yellow);
+  }
+  .topic-body .callout {
+    background: var(--raised); border-left: 3px solid var(--blue);
+    padding: 10px 12px; margin: 12px 0; border-radius: 2px;
+    font-size: 13px; color: var(--light);
+  }
+  .topic-body .callout.warn { border-left-color: var(--amber); }
+  .topic-body .callout.tip  { border-left-color: var(--green); }
+  .topic-body .callout-title {
+    font-weight: 800; font-size: 11px; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+    color: var(--blue); font-family: 'Barlow Condensed', sans-serif;
+  }
+  .topic-body .callout.warn .callout-title { color: var(--amber); }
+  .topic-body .callout.tip  .callout-title { color: var(--green); }
+  .topic-body table {
+    width: 100%; border-collapse: collapse; margin: 8px 0 14px;
+    font-size: 13px;
+  }
+  .topic-body table th, .topic-body table td {
+    padding: 7px 10px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic-body table th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10.5px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .topic-body table td:first-child {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--yellow); font-weight: 700; font-size: 12.5px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ADMIN — verified torque list
+     ═══════════════════════════════════════════════════════════════ */
+  .admin-section {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 2px; padding: 18px; margin-bottom: 16px;
+  }
+  .admin-table { width: 100%; font-size: 13px; border-collapse: collapse; }
+  .admin-table th {
+    text-align: left; padding: 8px 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); border-bottom: 1px solid var(--border);
+  }
+  .admin-table td {
+    padding: 8px 10px; border-bottom: 1px solid var(--border);
+  }
+  .admin-table td.num { font-family: 'IBM Plex Mono', monospace; color: var(--yellow); font-weight: 700; }
+
+  /* Recent VINs strip (phone mode only) */
+  .recent-row { margin-bottom: 14px; }
+  .recent-row .recent-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .recent-chips {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .recent-chips::-webkit-scrollbar { height: 4px; }
+  .recent-chips::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .recent-chip {
+    flex: 0 0 auto;
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--white);
+    padding: 8px 12px; border-radius: 2px; cursor: pointer;
+    text-align: left; font-family: 'Barlow', sans-serif;
+    min-width: 120px;
+    transition: border-color .15s, color .15s;
+  }
+  .recent-chip:hover { border-color: var(--yellow); }
+  .recent-chip .rc-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700; line-height: 1.1;
+    white-space: nowrap;
+  }
+  .recent-chip .rc-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--muted); margin-top: 3px;
+    letter-spacing: .5px;
+  }
+
+  /* Type-in VIN row inside Scan VIN modal */
+  .vin-typein-row { margin-top: 14px; }
+  .vin-typein-row .vin-or {
+    text-align: center; font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--muted); letter-spacing: 2px;
+    margin: 10px 0 8px; text-transform: uppercase;
+  }
+  .vin-typein-row label {
+    display: block; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); font-weight: 700; margin-bottom: 5px;
+  }
+  .vin-typein-row .vin-input-wrap { display: flex; gap: 8px; }
+  .vin-typein-row input {
+    flex: 1; background: var(--raised); border: 1px solid var(--border);
+    color: var(--white); padding: 10px 12px; border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+    letter-spacing: 1px; text-transform: uppercase;
+    outline: none;
+  }
+  .vin-typein-row input:focus { border-color: var(--yellow); }
+  .vin-typein-row .vin-go {
+    background: var(--yellow); color: var(--black);
+    border: 1px solid var(--yellow); border-radius: 2px;
+    padding: 0 16px; font-weight: 800; cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1.5px; text-transform: uppercase; font-size: 13px;
+    white-space: nowrap;
+  }
+  .vin-typein-row .vin-go:hover { filter: brightness(0.92); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LOGIN GATE
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-logo"><span class="pc">PC</span> TIRES · TECH</div>
+    <div class="lock-sub">Service Bay Login</div>
+    <input class="lock-input" type="password" id="lockPassword" placeholder="Password" autocomplete="current-password">
+    <button class="lock-btn" id="lockBtn" onclick="lockSubmit()">Unlock →</button>
+    <div class="lock-error" id="lockError"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     APP
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="app" id="app">
+
+  <!-- Phone-mode header -->
+  <header class="tech-header">
+    <div class="brand"><span class="pc">PC</span> TECH</div>
+    <div class="bay-badge" id="bayBadge">BAY 1</div>
+    <div class="tv-status" id="tvStatus">
+      <span class="dot"></span>
+      <span class="txt">TV ready</span>
+    </div>
+    <button class="icon-btn" onclick="openTVLink()" title="Open TV view">📺</button>
+    <button class="icon-btn" onclick="logout()" title="Logout">↩</button>
+  </header>
+
+  <!-- Phone-mode main -->
+  <main class="phone-main">
+
+    <!-- Scan buttons -->
+    <section class="scan-row">
+      <button class="scan-tile primary" onclick="openCamera()">
+        <div class="icon">📷</div>
+        <div class="label">Scan VIN</div>
+      </button>
+      <button class="scan-tile" onclick="openManualEntry()">
+        <div class="icon">⌨️</div>
+        <div class="label">Manual Entry</div>
+      </button>
+    </section>
+
+    <!-- Recent VINs (phone mode, KV-backed, last 10) -->
+    <section class="recent-row" id="recentRow" hidden>
+      <div class="recent-label">Recent</div>
+      <div class="recent-chips" id="recentChips"></div>
+    </section>
+
+    <!-- Loading state -->
+    <div class="loading-card" id="loadingCard" hidden>
+      <div class="spinner"></div>
+      <div class="loading-text" id="loadingText">Decoding VIN…</div>
+    </div>
+
+    <!-- Result area -->
+    <section id="resultArea">
+      <div class="result-card empty" id="emptyResult">
+        <div class="empty-icon">🔎</div>
+        <div class="empty-text">Scan a VIN to get started</div>
+      </div>
+    </section>
+
+    <!-- Notes (shown when a vehicle is loaded) -->
+    <section class="notes-section" id="notesSection" hidden>
+      <div class="section-title">
+        Notes for this VIN
+        <span class="count" id="notesCount">0</span>
+      </div>
+      <textarea class="note-input" id="noteInput" placeholder="Customer mentioned TPMS light, last balanced 4 weeks ago, etc…"></textarea>
+      <button class="note-add-btn" id="noteAddBtn" onclick="addNote()">Save Note</button>
+      <div class="notes-list" id="notesList">
+        <div class="notes-empty">No notes yet.</div>
+      </div>
+    </section>
+
+    <!-- Tires 101 — passenger / light truck bay reference -->
+    <section class="tires101">
+      <div class="section-title">Tires 101 <span style="font-size:11px;color:var(--muted);letter-spacing:1px;font-weight:600">· passenger / light truck</span></div>
+      <div class="t101-tiles" id="t101Tiles">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
+    <!-- Commercial / Semi Tires reference — different format, position-specific tires, etc -->
+    <section class="tires101">
+      <div class="section-title">Commercial / Semi <span style="font-size:11px;color:var(--muted);letter-spacing:1px;font-weight:600">· Class 7–8 + medium-duty</span></div>
+      <div class="t101-tiles" id="commercial101Tiles">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
+    <!-- Manuals -->
+    <section class="manuals">
+      <div class="section-title">Equipment Manuals</div>
+      <div class="manual-tiles" id="manualTiles">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
+    <!-- Admin: torque database summary -->
+    <section class="admin-section" id="adminSection" hidden>
+      <div class="section-title">
+        Torque Database
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+        <div class="spec-box" style="padding:12px">
+          <div class="spec-label">Published (Halderman)</div>
+          <div class="spec-value" style="font-size:22px">785</div>
+          <div class="spec-sub" style="font-size:10px">baseline · 54 makes · 1995–2021</div>
+        </div>
+        <div class="spec-box" style="padding:12px">
+          <div class="spec-label">Verified in Bay</div>
+          <div class="spec-value" style="font-size:22px" id="verifiedCount">0</div>
+          <div class="spec-sub" style="font-size:10px">confirmed by tech</div>
+        </div>
+      </div>
+      <div class="section-title" style="font-size:13px; margin-top:4px">
+        Verified Entries
+      </div>
+      <table class="admin-table" id="verifiedTable">
+        <thead>
+          <tr><th>Vehicle</th><th>Year</th><th style="text-align:right">Torque</th><th>Confirmed</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <div style="text-align:center; padding:20px 0 40px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1px;">
+      <a href="#" onclick="toggleAdmin(event)" style="color:var(--muted); text-decoration:none;">⚙ Torque DB</a>
+      &nbsp;·&nbsp;
+      <span id="buildStamp">PC Tires Tech</span>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TV MODE
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="tv-container" id="tvContainer">
+  <div class="tv-header">
+    <div class="tv-brand"><span class="pc">PC</span> TIRES · BAY 1</div>
+    <div class="tv-live"><span class="dot"></span><span id="tvLiveText">LIVE</span></div>
+  </div>
+
+  <!-- Idle state -->
+  <div class="tv-idle" id="tvIdle">
+    <div class="idle-big">BAY 1</div>
+    <div class="idle-sub">Waiting for scan…</div>
+  </div>
+
+  <!-- Active card (hidden until scan) -->
+  <div id="tvActive" style="display:none; flex:1; flex-direction:column;">
+    <div class="tv-vehicle-banner">
+      <div class="tv-vehicle-name" id="tvVehicleName">—</div>
+      <div class="tv-vehicle-vin" id="tvVehicleVin">VIN —</div>
+    </div>
+    <div class="tv-grid">
+      <div class="tv-quad">
+        <div class="q-badge" id="tvTorqueBadge">—</div>
+        <div class="q-label">Torque</div>
+        <div class="q-big" id="tvTorque">—</div>
+        <div class="q-unit">ft-lb</div>
+        <div class="q-sub" id="tvTorqueSub"></div>
+      </div>
+      <div class="tv-quad">
+        <div class="q-label">Cold Pressure</div>
+        <div class="q-pressure-row">
+          <div><span class="p-side">F</span><span class="p-val" id="tvPsiF">—</span></div>
+          <div><span class="p-side">R</span><span class="p-val" id="tvPsiR">—</span></div>
+        </div>
+        <div class="q-unit">psi</div>
+        <div class="q-sub">Confirm on door jamb</div>
+      </div>
+      <div class="tv-quad">
+        <div class="q-label">TPMS</div>
+        <div class="q-big small" id="tvTpmsFreq">—</div>
+        <div class="q-unit">MHz</div>
+        <div class="q-sub" id="tvTpmsRelearn">Relearn: —</div>
+      </div>
+      <div class="tv-quad">
+        <div class="q-label">Vehicle</div>
+        <div class="q-stack">
+          <div class="sl" id="tvStackMake">—</div>
+          <div class="s2" id="tvStackModel">—</div>
+          <div class="s2" id="tvStackTrim"></div>
+        </div>
+      </div>
+    </div>
+    <div class="tv-footer">
+      <div id="tvLastSeen">Last scan: just now</div>
+      <div>pctires.ca/tech</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CAMERA MODAL
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="modal" id="cameraModal" hidden>
+  <div class="modal-card">
+    <div class="modal-title">
+      Scan VIN
+      <button class="modal-close" onclick="closeCamera()">×</button>
+    </div>
+    <div class="cam-preview" id="camPreview">
+      <div style="font-size:36px; opacity:.5;">📷</div>
+      <div class="cam-hint">Tap below to open camera</div>
+    </div>
+    <input type="file" id="camInput" accept="image/*" capture="environment" style="display:none" onchange="handleCamCapture(event)">
+    <div class="vin-typein-row">
+      <div class="vin-or">— or type it in —</div>
+      <label for="vinTypeIn">VIN (17 characters)</label>
+      <div class="vin-input-wrap">
+        <input type="text" id="vinTypeIn" placeholder="1FTFW1ET5DKE12345" maxlength="17" autocapitalize="characters" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();submitTypedVIN();}">
+        <button type="button" class="vin-go" onclick="submitTypedVIN()">Look Up</button>
+      </div>
+    </div>
+    <div class="modal-btn-row">
+      <button class="modal-btn secondary" onclick="closeCamera()">Cancel</button>
+      <button class="modal-btn primary" onclick="document.getElementById('camInput').click()">Take Photo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MANUAL ENTRY MODAL
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="modal" id="manualModal" hidden>
+  <div class="modal-card">
+    <div class="modal-title">
+      Manual Entry
+      <button class="modal-close" onclick="closeManualEntry()">×</button>
+    </div>
+    <div class="modal-row">
+      <label>Year</label>
+      <input type="number" id="mYear" min="1990" max="2030" placeholder="2023">
+    </div>
+    <div class="modal-row">
+      <label>Make</label>
+      <input type="text" id="mMake" placeholder="Honda">
+    </div>
+    <div class="modal-row">
+      <label>Model</label>
+      <input type="text" id="mModel" placeholder="CR-V">
+    </div>
+    <div class="modal-row">
+      <label>Trim <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+      <input type="text" id="mTrim" placeholder="EX">
+    </div>
+    <div class="modal-btn-row">
+      <button class="modal-btn secondary" onclick="closeManualEntry()">Cancel</button>
+      <button class="modal-btn primary" onclick="submitManualEntry()">Look Up</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     VERIFY TORQUE MODAL
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="modal" id="verifyModal" hidden>
+  <div class="modal-card">
+    <div class="modal-title">
+      Confirm Torque
+      <button class="modal-close" onclick="closeVerify()">×</button>
+    </div>
+    <p style="color:var(--light); font-size:13px; margin-bottom:14px;" id="verifyContext">
+      Confirm the torque value from your shop manual or factory service info.
+      Once verified, all future scans of this vehicle will show this value as <strong style="color:var(--green)">✓ Verified</strong>.
+    </p>
+    <div class="modal-row">
+      <label>Torque (ft-lb)</label>
+      <input type="number" id="vTorque" min="40" max="250" placeholder="80">
+    </div>
+    <div class="modal-row">
+      <label>Pattern <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+      <input type="text" id="vPattern" placeholder="5-lug star">
+    </div>
+    <div class="modal-row">
+      <label>Source</label>
+      <input type="text" id="vSource" placeholder="Shop manual" value="Shop manual">
+    </div>
+    <div class="modal-btn-row">
+      <button class="modal-btn secondary" onclick="closeVerify()">Cancel</button>
+      <button class="modal-btn primary" onclick="submitVerify()">Save as Verified</button>
+    </div>
+  </div>
+</div>
+
+<!-- TIRES 101 TOPIC MODAL -->
+<div class="modal" id="topicModal" hidden>
+  <div class="modal-card">
+    <div class="modal-title">
+      <span id="topicTitle">Topic</span>
+      <button class="modal-close" onclick="closeTopic()">×</button>
+    </div>
+    <div class="topic-body" id="topicBody"></div>
+    <div class="modal-btn-row">
+      <button class="modal-btn secondary" onclick="closeTopic()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   CONSTANTS & STATE
+   ═══════════════════════════════════════════════════════════════ */
+const TOKEN_KEY = 'pctech_token';
+const BAY_ID = 1;
+const TV_POLL_MS = 2000;
+
+// Parse mode from query string
+const urlParams = new URLSearchParams(window.location.search);
+const TV_MODE = urlParams.get('mode') === 'tv';
+
+// Manual library — update filenames as PDFs are added to /public/manuals/
+const MANUALS = [
+  { name: 'Tire Changer', model: 'CAEL TC-200', file: '/manuals/cael-tc-200.pdf', icon: '🔧' },
+  { name: 'Wheel Balancer', model: 'CAE-3446WB', file: '/manuals/cae-3446wb.pdf', icon: '⚖️' },
+  { name: 'TPMS Reader', model: 'Autel TS508WF', file: '/manuals/autel-ts508wf.pdf', icon: '📡' },
+  { name: 'TPMS Sensors', model: 'Autel MX-Sensor', file: '/manuals/autel-mx-sensor.pdf', icon: '🔩' },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   TIRES 101 — reference content (edit topics here)
+   Each entry: { id, icon, title, blurb, content (HTML string) }
+   ═══════════════════════════════════════════════════════════════ */
+const TIRES_101 = [
+  {
+    id: 'sidewall',
+    icon: '📖',
+    title: 'Reading the Sidewall',
+    blurb: 'Decode every marking',
+    content: `
+      <h3>The Full Code</h3>
+      <p>A standard passenger tire sidewall reads something like <code>235/65R17 104H M+S</code>. Each piece does a specific job.</p>
+      <ul>
+        <li><strong>235</strong> — section width in mm (tread edge to tread edge, inflated, unloaded)</li>
+        <li><strong>65</strong> — aspect ratio: sidewall height as a % of width (152.75 mm here)</li>
+        <li><strong>R</strong> — radial construction (nearly universal; "B" = bias, "D" = diagonal)</li>
+        <li><strong>17</strong> — wheel diameter in inches</li>
+        <li><strong>104</strong> — load index (104 = 900 kg per tire — see Load Index)</li>
+        <li><strong>H</strong> — speed rating (H = 210 km/h — see Speed Ratings)</li>
+        <li><strong>M+S</strong> — Mud + Snow marking (basic all-season; <em>not</em> a true winter rating)</li>
+      </ul>
+
+      <h3>Service Type Prefix (if present)</h3>
+      <ul>
+        <li><strong>P</strong> — Passenger (cars, light SUVs)</li>
+        <li><strong>LT</strong> — Light Truck (heavier carcass, higher load, higher pressures)</li>
+        <li><strong>ST</strong> — Special Trailer (utility trailers only — never on a powered axle)</li>
+        <li><em>No letter</em> — Euro-metric / hard-metric; treat as P-equivalent unless reinforced</li>
+      </ul>
+      <div class="callout warn">
+        <div class="callout-title">Watch for</div>
+        Customer rolls in with a 1/2-ton truck wearing P-rated tires. Common downgrade — cheaper but cuts load capacity. Verify against the door-jamb spec before approving install.
+      </div>
+
+      <h3>Other Common Markings</h3>
+      <ul>
+        <li><strong>DOT XXXX</strong> — last 4 digits are week + year of manufacture</li>
+        <li><strong>TWI</strong> — Tread Wear Indicator; points to wear bars in the grooves</li>
+        <li><strong>Max Load / Max Press</strong> — tire's own ceiling, not the vehicle's recommended pressure</li>
+        <li><strong>Outside / Inside</strong> — asymmetric tire; that face must point outward</li>
+        <li><strong>Rotation arrow</strong> — directional tire; must roll in that direction</li>
+      </ul>
+    `,
+  },
+  {
+    id: 'sizing',
+    icon: '📏',
+    title: 'Tire Sizing Math',
+    blurb: 'Width, aspect, diameter',
+    content: `
+      <h3>Decoding 235/65R17</h3>
+      <p>Each number does a specific job:</p>
+      <ul>
+        <li><strong>Width (235)</strong> — section width in millimetres, tread-edge to tread-edge, inflated and unloaded</li>
+        <li><strong>Aspect ratio (65)</strong> — sidewall height as a % of width. 235 × 0.65 = <strong>152.75 mm</strong> sidewall</li>
+        <li><strong>Construction (R)</strong> — radial; cords run 90° to direction of travel</li>
+        <li><strong>Rim diameter (17)</strong> — in inches. Hybrid imperial/metric is just how the standard evolved</li>
+      </ul>
+
+      <h3>Calculating Overall Tire Diameter</h3>
+      <p>Overall diameter = rim diameter + 2 × sidewall height.</p>
+      <ul>
+        <li>Rim: 17″ × 25.4 = <strong>431.8 mm</strong></li>
+        <li>Sidewall: 235 × 0.65 = 152.75 mm × 2 = <strong>305.5 mm</strong></li>
+        <li>Total: 431.8 + 305.5 = <strong>737.3 mm</strong> (≈ 29.0″)</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-title">Shop rule</div>
+        When changing sizes (winter swap, plus-sizing), keep overall diameter within <strong>±3% of OE</strong>. Outside that range and the speedo, ABS, traction control and stability systems all read wrong.
+      </div>
+
+      <h3>Lower Aspect = Stiffer Sidewall</h3>
+      <p>A 245/35R20 has a 35% aspect — sidewall only 85.75 mm. Sharper steering response, but rougher ride and far less protection against potholes. Performance car upgrade path; not always right for daily drivers on Chatham-Kent roads.</p>
+    `,
+  },
+  {
+    id: 'loadindex',
+    icon: '⚖️',
+    title: 'Load Index',
+    blurb: 'kg per tire, never downgrade',
+    content: `
+      <h3>What the Number Means</h3>
+      <p>The 2- or 3-digit number after the size is a coded reference to the maximum weight one tire can carry at its rated cold pressure. <strong>Per tire</strong> — not per axle, not per vehicle.</p>
+
+      <h3>Common Values</h3>
+      <table>
+        <thead><tr><th>Index</th><th>kg</th><th>lb</th><th>Typical</th></tr></thead>
+        <tbody>
+          <tr><td>88</td><td>560</td><td>1235</td><td>compact car</td></tr>
+          <tr><td>91</td><td>615</td><td>1356</td><td>midsize car</td></tr>
+          <tr><td>94</td><td>670</td><td>1477</td><td>large sedan</td></tr>
+          <tr><td>100</td><td>800</td><td>1764</td><td>small SUV</td></tr>
+          <tr><td>104</td><td>900</td><td>1984</td><td>midsize SUV</td></tr>
+          <tr><td>110</td><td>1060</td><td>2337</td><td>1/2-ton truck</td></tr>
+          <tr><td>118</td><td>1320</td><td>2910</td><td>3/4-ton truck</td></tr>
+          <tr><td>121</td><td>1450</td><td>3197</td><td>1-ton truck</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <div class="callout-title">Never downgrade</div>
+        Match or exceed OE load index. A lower index on a loaded truck = sidewall failure under heat. Even on a passenger car, downgrading voids the tire manufacturer's warranty and can cause insurance grief after a blowout claim.
+      </div>
+
+      <h3>XL / Reinforced</h3>
+      <p>"XL" or "Reinforced" means a higher load index <strong>at higher pressures</strong>. Common on heavy German sedans and EVs. Don't run an XL tire at the same psi as a standard-load tire — it won't hit its rated capacity.</p>
+    `,
+  },
+  {
+    id: 'speedrating',
+    icon: '🏁',
+    title: 'Speed Rating',
+    blurb: 'The letter after load index',
+    content: `
+      <h3>What the Letter Means</h3>
+      <p>The single letter after the load index is the maximum sustained speed the tire is rated for. It's a safety ceiling, not a target.</p>
+
+      <table>
+        <thead><tr><th>Rating</th><th>km/h</th><th>mph</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr><td>Q</td><td>160</td><td>99</td><td>winter / studded</td></tr>
+          <tr><td>S</td><td>180</td><td>112</td><td>economy passenger</td></tr>
+          <tr><td>T</td><td>190</td><td>118</td><td>family sedan</td></tr>
+          <tr><td>H</td><td>210</td><td>130</td><td>sport sedan, most SUVs</td></tr>
+          <tr><td>V</td><td>240</td><td>149</td><td>sport / performance</td></tr>
+          <tr><td>W</td><td>270</td><td>168</td><td>high-perf / sports car</td></tr>
+          <tr><td>Y</td><td>300</td><td>186</td><td>supercar</td></tr>
+          <tr><td>(Y)</td><td>300+</td><td>186+</td><td>uncapped, hypercar</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <div class="callout-title">Winter exception</div>
+        Most winter tires are rated Q (160 km/h) or T (190 km/h). Lower than OE summer ratings — this is OK and intentional. Winter compound can't survive sustained high-speed heat. Inform the customer and note it on the work order.
+      </div>
+
+      <h3>Matching Across the Set</h3>
+      <p>All four tires should share the same speed rating. If a customer is replacing only two, the new pair must match or exceed the existing pair — and go on the <strong>rear axle</strong> regardless of drivetrain (for stability under hard braking).</p>
+    `,
+  },
+  {
+    id: 'winter',
+    icon: '❄️',
+    title: 'M+S vs 3PMSF',
+    blurb: 'Real winter rating',
+    content: `
+      <h3>Two Symbols, Big Difference</h3>
+      <p>Canada has two markings that <em>sound</em> like winter ratings but mean very different things:</p>
+      <ul class="warn">
+        <li><strong>M+S</strong> (Mud + Snow) — Self-certified by the manufacturer. No traction test required. Almost every all-season carries it. <em>Not</em> a true winter rating.</li>
+      </ul>
+      <ul class="good">
+        <li><strong>3PMSF</strong> (Three-Peak Mountain Snowflake) — Industry test. Tire must hit a measured traction threshold on packed snow. <em>This</em> is the real winter rating.</li>
+      </ul>
+
+      <h3>Ontario Context</h3>
+      <p>Ontario doesn't mandate winter tires (Quebec does, Dec 1 – Mar 15; BC does on designated highways). But Ontario auto insurers offer a discount (typically 2–5%) for vehicles equipped with 3PMSF tires Dec 1 – Mar 31. M+S alone doesn't qualify with most insurers.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Customer talking point</div>
+        "Your tires have M+S on the sidewall — that's the lowest bar. For Chatham-Kent winters look for the mountain snowflake symbol. It's a real traction test, not a self-certification. Most insurers give you a small discount for running them."
+      </div>
+
+      <h3>All-Weather vs All-Season vs Winter</h3>
+      <table>
+        <thead><tr><th>Type</th><th>M+S</th><th>3PMSF</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td>All-Season</td><td>yes</td><td>no</td><td>3-season; OK in light snow</td></tr>
+          <tr><td>All-Weather</td><td>yes</td><td>yes</td><td>year-round in mild Canadian winters</td></tr>
+          <tr><td>Winter</td><td>yes</td><td>yes</td><td>dedicated cold-weather; soft compound below 7°C</td></tr>
+        </tbody>
+      </table>
+
+      <p>A dedicated winter still outperforms an all-weather below about -10°C. All-weather is a compromise for customers who don't want a second set.</p>
+    `,
+  },
+  {
+    id: 'utqg',
+    icon: '🎯',
+    title: 'UTQG Ratings',
+    blurb: 'Treadwear / Traction / Temp',
+    content: `
+      <h3>What UTQG Is</h3>
+      <p>Uniform Tire Quality Grading — three ratings printed on every passenger tire (LT tires are exempt). Designed for cross-shopping by spec rather than by brand alone.</p>
+
+      <h3>Treadwear (e.g. 500)</h3>
+      <p>A relative score. A "500" tire is theoretically expected to last twice as long as a "250" tire — but only when tested by the <em>same manufacturer</em>. No calibration between brands. Use it within a brand's catalogue, not across brands.</p>
+      <ul>
+        <li><strong>200–300</strong> — performance / summer compound</li>
+        <li><strong>400–600</strong> — standard all-season</li>
+        <li><strong>700–800+</strong> — long-life touring</li>
+      </ul>
+
+      <h3>Traction (AA / A / B / C)</h3>
+      <p>Wet braking grip on asphalt and concrete test pads. <strong>AA is best</strong>, C is the legal minimum. Most modern passenger tires hit A or AA.</p>
+
+      <h3>Temperature (A / B / C)</h3>
+      <p>Heat resistance at sustained high speed. A is best (over 185 km/h sustained), C is the minimum allowed for sale (160 km/h). Almost all modern tires hit A or B.</p>
+
+      <div class="callout">
+        <div class="callout-title">In the bay</div>
+        UTQG is most useful for ranking tires <em>within a single brand's lineup</em>. For cross-brand comparison, the manufacturer's treadwear warranty mileage is more reliable — they stand behind those numbers contractually.
+      </div>
+    `,
+  },
+  {
+    id: 'datecode',
+    icon: '📅',
+    title: 'DOT Date Code',
+    blurb: 'How old is this tire?',
+    content: `
+      <h3>Where to Find It</h3>
+      <p>Look for <code>DOT</code> on the sidewall, followed by a string of characters. The <strong>last 4 digits</strong> are the date code.</p>
+
+      <h3>Reading the Code</h3>
+      <p>Format: <strong>WWYY</strong> (week + year)</p>
+      <ul>
+        <li><code>1224</code> — week 12 of 2024 (mid-March 2024)</li>
+        <li><code>4923</code> — week 49 of 2023 (early December 2023)</li>
+        <li><code>0526</code> — week 5 of 2026 (late January 2026)</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Pre-2000 tires</div>
+        Tires made before 2000 used a 3-digit code (week + single year digit). If you see only 3 digits at the end, that tire is at least 25 years old. Replace immediately regardless of tread depth.
+      </div>
+
+      <h3>How Old Is Too Old?</h3>
+      <ul class="good">
+        <li><strong>0–5 years</strong> — normal. Tread depth determines life.</li>
+      </ul>
+      <ul>
+        <li><strong>5–6 years</strong> — inspect carefully. Look for fine sidewall cracking, dry rot in tread blocks. Usually still serviceable.</li>
+      </ul>
+      <ul class="warn">
+        <li><strong>6–10 years</strong> — recommend replacement even with tread remaining. Compound has hardened, traction degraded, sidewall weakened.</li>
+      </ul>
+      <ul class="bad">
+        <li><strong>10+ years</strong> — don't reinstall. Michelin, Continental, Bridgestone all recommend retirement at 10 years regardless of appearance.</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-title">Spare tire trap</div>
+        Customers driving 8-year-old vehicles often have a never-used spare from new sitting under the cargo floor. Looks brand new. Compound is shot. Mention it on every seasonal swap.
+      </div>
+    `,
+  },
+  {
+    id: 'tread',
+    icon: '🪙',
+    title: 'Tread Depth',
+    blurb: 'When to replace',
+    content: `
+      <h3>How Tread Is Measured</h3>
+      <p>In 32nds of an inch — the standard imperial unit even in Canada. A new passenger tire has roughly 10–11/32″, a new winter tire 11–13/32″, a new LT/all-terrain 13–18/32″.</p>
+
+      <h3>Wear Bars (TWI)</h3>
+      <p>Every passenger tire has raised rubber bars molded into the tread grooves at <strong>2/32″ (1.6 mm)</strong>. When the surrounding tread wears down level with the bars, the tire is at the legal minimum and must be replaced.</p>
+      <p>Look for small <code>TWI</code> letters near the shoulder — they point to where the bars sit.</p>
+
+      <h3>Real Replacement Thresholds</h3>
+      <table>
+        <thead><tr><th>Depth</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>2/32″</td><td>legal minimum — already dangerous on wet roads</td></tr>
+          <tr><td>4/32″</td><td>recommended replace for winter tires</td></tr>
+          <tr><td>5/32″</td><td>wet-traction drops noticeably on all-seasons</td></tr>
+          <tr><td>6/32″</td><td>replace for safety-critical use (long highway, winter)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Coin Test (No Gauge Handy)</h3>
+      <ul>
+        <li><strong>Quarter</strong> — insert with the Caribou's nose down. If you can see the top of the nose, you have less than 6/32″. Time to think about replacement.</li>
+        <li><strong>Toonie</strong> — tread reaches the silver/gold border ≈ 6/32″. Only to the bear's paws ≈ 4/32″. Down to "CANADA" text ≈ 2/32″ (replace now).</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Uneven wear</div>
+        Always check inner shoulder, centre, and outer shoulder. Differences over 2/32″ across the same tire mean alignment, pressure, or suspension issues. Flag for the customer — don't just sell new tires onto a misaligned vehicle.
+      </div>
+    `,
+  },
+  {
+    id: 'tpms',
+    icon: '📡',
+    title: 'TPMS Basics',
+    blurb: 'Sensors, relearn, lifespan',
+    content: `
+      <h3>Direct vs Indirect</h3>
+      <ul>
+        <li><strong>Direct TPMS</strong> — a pressure sensor inside each wheel transmits a reading by radio. Required on all US-sold vehicles since 2008; most Canadian-spec post-2008 also have it. <strong>What we deal with 95% of the time.</strong></li>
+        <li><strong>Indirect TPMS</strong> — no sensors. The ABS module compares wheel rotation speeds; a low tire spins slightly faster. Less accurate; resets via a button or menu after each inflation. Common on some older Hondas, Toyotas, a few Subarus.</li>
+      </ul>
+
+      <h3>Radio Frequency</h3>
+      <table>
+        <thead><tr><th>Freq</th><th>Region</th></tr></thead>
+        <tbody>
+          <tr><td>315 MHz</td><td>North America (domestic + most Japanese)</td></tr>
+          <tr><td>433 MHz</td><td>European (BMW, Mercedes, Audi, VW, Volvo)</td></tr>
+        </tbody>
+      </table>
+      <p>Programmable sensors (Autel MX-Sensor in our bay) can be set to either. Verify the vehicle's expected frequency before programming — wrong band = no signal to the ECU.</p>
+
+      <h3>Relearn Procedures</h3>
+      <ul>
+        <li><strong>Auto</strong> — drive 15–20 min above 30 km/h. ECU learns positions automatically. (Toyota, Honda, most domestic.)</li>
+        <li><strong>OBD-II</strong> — plug Autel TS508 into the OBD port, follow menu prompts. (Most Ford, Chrysler, some GM.)</li>
+        <li><strong>Manual</strong> — specific sequence with a magnet or activation tool at each wheel. (Older GM, some Asian.)</li>
+      </ul>
+
+      <h3>Sensor Life</h3>
+      <p>Lithium battery, non-replaceable. Typical life <strong>5–10 years</strong>. Expect to start replacing sensors on vehicles 7+ years old, often during winter swaps when one wakes up dead after summer storage. Quote pre-emptively.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Bundle pricing</div>
+        Offer a discount on replacing all 4 sensors at once if one fails. Wheels are already off, install labour is already on the bill. The other three are the same age and will likely follow within a year.
+      </div>
+    `,
+  },
+  {
+    id: 'rotation',
+    icon: '🔄',
+    title: 'Rotation Patterns',
+    blurb: 'Right pattern for the drivetrain',
+    content: `
+      <h3>Why Rotate?</h3>
+      <p>Front and rear tires wear differently. On FWD vehicles, fronts take steering, braking, and acceleration loads — they wear roughly <strong>twice as fast</strong> as rear. Rotation evens it out, extending overall set life by 20–30%.</p>
+
+      <h3>Recommended Interval</h3>
+      <p>Every <strong>8,000–10,000 km</strong>, or every second oil change. Sooner if uneven wear shows up.</p>
+
+      <h3>Forward Cross (FWD)</h3>
+      <p>Fronts go straight back. Rears cross over to the opposite front. Most common pattern.</p>
+
+      <h3>Rearward Cross (RWD / AWD)</h3>
+      <p>Rears go straight forward. Fronts cross over to the opposite rear.</p>
+
+      <h3>X-Pattern (any drivetrain)</h3>
+      <p>Diagonal swap — front-left ↔ rear-right, front-right ↔ rear-left. More aggressive evening-out; used less often.</p>
+
+      <h3>Directional Tires (rotation arrow on sidewall)</h3>
+      <p><strong>Front-to-rear on the same side only.</strong> Never cross sides — would run the tire backwards against its tread design.</p>
+
+      <h3>Asymmetric Tires (Outside/Inside markings)</h3>
+      <p>Treat the same as standard — Forward Cross or Rearward Cross. The asymmetric pattern is about which face points outward, not direction of travel.</p>
+
+      <h3>Staggered Setup (different sizes front vs rear)</h3>
+      <p>Side-to-side swap on the same axle only. FL ↔ FR, RL ↔ RR. Common on 911, M3, Corvette.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">When NOT to rotate</div>
+        Tread depth difference over 4/32″ between sets — rotating won't fix it, just spreads the worn pair to a new axle. Flag for replacement instead.
+      </div>
+    `,
+  },
+  {
+    id: 'plus',
+    icon: '➕',
+    title: 'Plus Sizing',
+    blurb: 'Bigger rim, same diameter',
+    content: `
+      <h3>What Plus Sizing Is</h3>
+      <p>Going to a larger rim diameter with a lower-profile tire while keeping the <strong>overall tire diameter</strong> the same. Mostly cosmetic + handling — more wheel visible, less sidewall flex.</p>
+
+      <h3>Plus 1 / Plus 2 / Plus 3</h3>
+      <ul>
+        <li><strong>Plus 1</strong> — rim up 1″, sidewall down to compensate. Most common.</li>
+        <li><strong>Plus 2</strong> — up 2″. Noticeable harshness.</li>
+        <li><strong>Plus 3</strong> — show-car territory. Comfort and pothole tolerance go out the window.</li>
+      </ul>
+
+      <h3>The Math (Keep Overall Diameter ±3%)</h3>
+      <p>Original: <code>215/65R16</code> = 16 × 25.4 + 2 × (215 × 0.65) = <strong>686.1 mm</strong></p>
+      <ul>
+        <li><strong>Plus 1:</strong> <code>225/55R17</code> = 17 × 25.4 + 2 × (225 × 0.55) = 679.3 mm (–1.0%, within tolerance ✓)</li>
+        <li><strong>Plus 2:</strong> <code>235/45R18</code> = 18 × 25.4 + 2 × (235 × 0.45) = 668.7 mm (–2.5%, close to limit)</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Why ±3% matters</div>
+        Outside that range = speedo error, ABS confusion, traction control intervening at the wrong moment, fuel economy calculations off, odometer/lease-km off. Stability control on modern vehicles is calibrated tightly to OE diameter.
+      </div>
+
+      <h3>Load + Speed Match Still Required</h3>
+      <p>A plus-sized tire must still meet or exceed the OE load index and speed rating. Lower-profile tires often carry higher load ratings at the same width — verify each candidate against the door-jamb sticker.</p>
+    `,
+  },
+  {
+    id: 'select',
+    icon: '🛒',
+    title: 'Selecting Tires',
+    blurb: 'Matching the right tire to the customer',
+    content: `
+      <h3>Start With the Use Case</h3>
+      <p>Before pricing, before brand — ask how they drive:</p>
+      <ul>
+        <li>Daily commute distance? Mostly highway, mostly city, mixed?</li>
+        <li>Carry loads, tow, haul gear?</li>
+        <li>Second set for winter, or one set year-round?</li>
+        <li>Priorities — comfort, fuel economy, noise, grip?</li>
+      </ul>
+
+      <h3>OE Specs Are the Floor, Not the Ceiling</h3>
+      <p>Match or exceed the OE values for:</p>
+      <ul>
+        <li><strong>Size</strong> — width × aspect × rim. Stick to OE for safest install. Plus-sizing only on aftermarket wheels.</li>
+        <li><strong>Load index</strong> — equal or greater. Never lower.</li>
+        <li><strong>Speed rating</strong> — equal or greater. Exception: dedicated winter tires can drop one or two ratings.</li>
+      </ul>
+
+      <h3>Category Quick Reference</h3>
+      <table>
+        <thead><tr><th>Driver</th><th>Best fit</th></tr></thead>
+        <tbody>
+          <tr><td>Commuter, mild climate</td><td>Touring all-season, 500+ treadwear</td></tr>
+          <tr><td>Highway warrior, high km</td><td>Grand touring, 600–800 treadwear, low rolling resistance</td></tr>
+          <tr><td>One set year-round</td><td>All-weather, 3PMSF rated</td></tr>
+          <tr><td>Two-set Canadian</td><td>All-season summer + dedicated winter</td></tr>
+          <tr><td>1/2-ton, light hauling</td><td>LT-rated highway tire</td></tr>
+          <tr><td>1/2-ton, tow + off-road</td><td>LT-rated all-terrain</td></tr>
+          <tr><td>Sport sedan / coupe</td><td>UHP summer + dedicated winter</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <div class="callout-title">Anchor pricing</div>
+        Quote three tiers — good / better / best — from the same brand family when possible. Most customers pick the middle. The conversation shifts from "do I buy?" to "which one?"
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">Two tires, not four</div>
+        If a customer can only afford 2, match them as closely as possible to the existing pair (same brand and model if available) and mount the new pair on the <strong>rear axle</strong> regardless of drivetrain — more stability under hard braking.
+      </div>
+    `,
+  },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   COMMERCIAL / SEMI TIRE REFERENCE
+   Different format, position-specific tires, casing programs, etc.
+   ═══════════════════════════════════════════════════════════════ */
+const COMMERCIAL_101 = [
+  {
+    id: 'c-sidewall',
+    icon: '📖',
+    title: 'Commercial Sidewall',
+    blurb: 'Old-style vs new metric',
+    content: `
+      <h3>Two Common Formats</h3>
+      <p>Commercial truck sidewalls come in two styles — both still used today, often side-by-side in the same fleet.</p>
+      <ul>
+        <li><strong>Old-style:</strong> <code>11R22.5 LRH</code> — single-number width in inches, no aspect ratio, decimal rim, Load Range letter</li>
+        <li><strong>New metric:</strong> <code>295/75R22.5 144/141L</code> — mm width, aspect ratio %, Load Index pair, speed rating</li>
+      </ul>
+      <p>Both fit the same 22.5″ wheel — they're alternative naming conventions for similar tires.</p>
+
+      <h3>Breaking Down 11R22.5 LRH</h3>
+      <ul>
+        <li><strong>11</strong> — section width in inches (≈ 280 mm)</li>
+        <li><strong>R</strong> — radial construction</li>
+        <li><strong>22.5</strong> — wheel diameter in inches</li>
+        <li><strong>LRH</strong> — Load Range H = 16-ply rated, max 120 psi cold</li>
+      </ul>
+
+      <h3>Breaking Down 295/75R22.5 144/141L</h3>
+      <ul>
+        <li><strong>295</strong> — section width in mm</li>
+        <li><strong>75</strong> — aspect ratio (sidewall = 75% of width)</li>
+        <li><strong>R / 22.5</strong> — radial, 22.5″ rim</li>
+        <li><strong>144/141</strong> — load index pair: 144 single (≈ 2800 kg) / 141 dual (≈ 2575 kg per tire when paired)</li>
+        <li><strong>L</strong> — speed rating, 120 km/h max</li>
+      </ul>
+
+      <h3>Other Markings You'll See</h3>
+      <ul>
+        <li><strong>14PR / 16PR / 18PR</strong> — legacy ply rating (equivalent to Load Range letter)</li>
+        <li><strong>STEER / DRIVE / TRAILER / ALL-POSITION</strong> — designed axle position</li>
+        <li><strong>RETREAD</strong> — re-treaded casing (drive + trailer common)</li>
+        <li><strong>DOT XXXX</strong> — last 4 digits are week + year of manufacture (same as passenger)</li>
+        <li><strong>TUBELESS</strong> — modern standard; old tube-type still rare on older trailers</li>
+      </ul>
+    `,
+  },
+  {
+    id: 'c-sizing',
+    icon: '📏',
+    title: 'Old vs New Sizing',
+    blurb: '11R22.5 ↔ 295/75R22.5',
+    content: `
+      <h3>Why Two Formats?</h3>
+      <p>The old-style code (<code>11R22.5</code>) was the original commercial standard going back to the 1970s — single-number width in inches with no aspect ratio assumed. The new metric format (<code>295/75R22.5</code>) follows the passenger sizing convention with mm width and aspect ratio %. Both still circulate.</p>
+
+      <h3>Direct Conversions</h3>
+      <table>
+        <thead><tr><th>Old-style</th><th>New metric (≈)</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr><td>11R22.5</td><td>295/75R22.5</td><td>most common drive / steer / trailer</td></tr>
+          <tr><td>11R24.5</td><td>285/75R24.5</td><td>older fleet, older trailers</td></tr>
+          <tr><td>12R22.5</td><td>315/80R22.5</td><td>wide-base, off-road, severe service</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Wide-Base / Super-Single</h3>
+      <p>Tires like <code>445/50R22.5</code> or <code>455/55R22.5</code> are wide-base singles that replace a dual pair on one hub. Saves weight (~200 lb per axle), improves fuel economy ~3-5%, but the single point of failure means a flat = roadside. Growing on long-haul tractors and trailers.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">Always confirm size + load range together</div>
+        A 11R22.5 LR-G (14-ply) and a 11R22.5 LR-H (16-ply) fit the same wheel but have very different load capacities. Fleets specify both when ordering — match exactly.
+      </div>
+    `,
+  },
+  {
+    id: 'c-loadrange',
+    icon: '🏋️',
+    title: 'Load Range Letters',
+    blurb: 'LR-G, LR-H, LR-J, LR-L',
+    content: `
+      <h3>The Letter System</h3>
+      <p>Commercial tires use a letter rating that traces back to "ply rating" — historically the number of fabric plies in construction. Modern tires don't actually have that many plies, but the letter still indicates strength and maximum cold inflation.</p>
+
+      <table>
+        <thead><tr><th>Letter</th><th>Ply rating</th><th>Max PSI</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr><td>LR-F</td><td>12</td><td>95</td><td>light commercial, older equipment</td></tr>
+          <tr><td>LR-G</td><td>14</td><td>105</td><td>medium-duty, some drive tires</td></tr>
+          <tr><td>LR-H</td><td>16</td><td>120</td><td>most Class 7–8 steer / drive / trailer</td></tr>
+          <tr><td>LR-J</td><td>18</td><td>130</td><td>heavy haul, severe service</td></tr>
+          <tr><td>LR-L</td><td>20</td><td>140</td><td>severe service, off-road logging</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <div class="callout-title">Never downgrade load range</div>
+        Match or exceed the OE/fleet spec. Putting LR-G where LR-H is required overloads the tire under load and risks blowout — and is a regulatory violation under MTO/CVSE rules. Fleets check this on every invoice.
+      </div>
+
+      <h3>Max PSI ≠ Operating PSI</h3>
+      <p>The max cold PSI on the sidewall is what the tire can safely hold. The actual <em>operating</em> pressure depends on the load on each axle — typically 105–115 psi for steer, 95–105 for drive duals, 100–115 for trailer duals. Always cross-reference against the tire manufacturer's load/inflation chart for the specific model.</p>
+    `,
+  },
+  {
+    id: 'c-positions',
+    icon: '🚛',
+    title: 'Steer / Drive / Trailer',
+    blurb: 'Position-specific tires',
+    content: `
+      <h3>Three Different Jobs</h3>
+      <p>A Class 7–8 tractor-trailer has tires in three positions, each with different forces. Each uses a different tread design.</p>
+
+      <h3>Steer Tires (Front Axle)</h3>
+      <ul>
+        <li><strong>Tread:</strong> solid 4–5 rib pattern, no aggressive lugs</li>
+        <li><strong>Job:</strong> straight-line tracking, even wear, high mileage</li>
+        <li><strong>Pull at:</strong> 4–5/32″ remaining (safety + casing value)</li>
+        <li><strong>Cost:</strong> highest per tire — premium casings built for retreading</li>
+      </ul>
+
+      <h3>Drive Tires (Powered Axles)</h3>
+      <ul>
+        <li><strong>Tread:</strong> lug or block pattern for traction</li>
+        <li><strong>Job:</strong> forward grip under acceleration, snow, mud</li>
+        <li><strong>Pull at:</strong> 4/32″ on highway, deeper for off-road/severe</li>
+        <li><strong>Wear:</strong> fastest of the three positions</li>
+      </ul>
+
+      <h3>Trailer Tires (Non-Powered Axles)</h3>
+      <ul>
+        <li><strong>Tread:</strong> rib pattern, often shallower</li>
+        <li><strong>Job:</strong> scrubbing under tight turns, low rolling resistance</li>
+        <li><strong>Pull at:</strong> 2–4/32″ — cheapest position</li>
+        <li><strong>Common use of retreads</strong> — biggest cost savings here</li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout-title">All-position tires</div>
+        Some tires are rated all-position — usable on steer, drive, or trailer. Common on Class 5–6 trucks (F-650, Hino). Premium fleets running Class 7–8 still use position-specific tires for best wear life and fuel economy.
+      </div>
+    `,
+  },
+  {
+    id: 'c-pressure',
+    icon: '💨',
+    title: 'Inflation Pressure',
+    blurb: '95–120 psi cold',
+    content: `
+      <h3>Commercial Pressures vs Passenger</h3>
+      <p>Where a passenger car runs 30–40 psi, a Class 7–8 truck runs <strong>95–120 psi cold</strong>. The higher pressure carries the load — without it, the tire flexes excessively, builds heat, and fails.</p>
+
+      <h3>Typical Operating Ranges</h3>
+      <table>
+        <thead><tr><th>Position</th><th>PSI range</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Steer</td><td>105–115</td><td>specific to axle load — check manufacturer's chart</td></tr>
+          <tr><td>Drive (dual)</td><td>95–105</td><td>both tires in dual must be within 5 psi</td></tr>
+          <tr><td>Trailer (dual)</td><td>100–115</td><td>high end for loaded trailers</td></tr>
+          <tr><td>Wide-base single</td><td>115–130</td><td>needs higher pressure than duals it replaces</td></tr>
+        </tbody>
+      </table>
+
+      <h3>The #1 Cause of Commercial Tire Failure</h3>
+      <p>Under-inflation. A tire running 20% below recommended PSI builds enough heat to separate plies and blow out — often catastrophically at highway speed. Pre-trip inspections check pressure every morning, no exceptions.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">Don't bleed hot tires</div>
+        Pressure rises as tires heat up — that's normal. Never bleed off a hot tire to "correct" the reading. <strong>Cold pressure is what matters</strong>; the hot reading just tells you the tire is working.
+      </div>
+
+      <h3>ATI Systems</h3>
+      <p>Auto Tire Inflation systems on trailers maintain pressure automatically from the truck's air supply. Standard on premium fleet trailers. Worth mentioning to a customer who's repeatedly bringing in heat-damaged tires.</p>
+    `,
+  },
+  {
+    id: 'c-tread',
+    icon: '📐',
+    title: 'Tread Wear & Pull Points',
+    blurb: 'Save the casing value',
+    content: `
+      <h3>Pull Points by Position</h3>
+      <p>Fleet operators don't run tires to the legal minimum — they pull early to preserve casing value for retreading. Standard pull points:</p>
+
+      <table>
+        <thead><tr><th>Position</th><th>Pull at</th><th>Reason</th></tr></thead>
+        <tbody>
+          <tr><td>Steer</td><td>4–5/32″</td><td>safety + casing value</td></tr>
+          <tr><td>Drive</td><td>4/32″</td><td>casing value</td></tr>
+          <tr><td>Trailer</td><td>2–4/32″</td><td>cheapest position; closest to minimum</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Run to Wear-Bar = Lose Casing Value</h3>
+      <p>A casing pulled at 4/32″ with even wear and no damage is worth <strong>$50–150</strong> as a retreadable carcass. Same tire run to 2/32″ with shoulder damage or sidewall cracks is worth nothing. Fleet ops pull EARLY to capture this value — it adds up across hundreds of tires a year.</p>
+
+      <h3>Common Wear Issues — Diagnose, Don't Just Replace</h3>
+      <ul>
+        <li><strong>One-shoulder wear:</strong> alignment off (toe or camber)</li>
+        <li><strong>Centre wear:</strong> over-inflation</li>
+        <li><strong>Both-shoulder wear:</strong> under-inflation</li>
+        <li><strong>Cupping / chopping:</strong> shock absorber failure, loose suspension, bad bearing</li>
+        <li><strong>One-spot flat wear:</strong> hard braking event or stuck brake</li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout-title">Always inspect — don't just sell new</div>
+        Uneven wear means the truck has a mechanical issue. Selling new tires onto a misaligned truck gets the customer back in a few months with the same problem. Flag the issue, recommend the alignment, document on the work order.
+      </div>
+    `,
+  },
+  {
+    id: 'c-retread',
+    icon: '♻️',
+    title: 'Casing & Retreading',
+    blurb: 'Trade-in value of worn tires',
+    content: `
+      <h3>What Retreading Is</h3>
+      <p>A retread is a used commercial casing that's had the worn tread stripped, the casing inspected, and new tread rubber bonded on. The result: a tire that costs <strong>40–60% less than new</strong> with similar performance and life.</p>
+
+      <h3>Why Fleets Love Retreads</h3>
+      <ul>
+        <li><strong>Cost:</strong> new premium drive ≈ $550; retread ≈ $250–300</li>
+        <li><strong>Reusable casings:</strong> quality casings can be retreaded 2–3 times in their life</li>
+        <li><strong>Performance:</strong> certified retreads (Bandag, Recamic, Bridgestone) run within 5% of new on most metrics</li>
+        <li><strong>Environmental:</strong> reuses ~75% of the original tire material</li>
+      </ul>
+
+      <h3>Where Retreads Go (and Don't Go)</h3>
+      <ul>
+        <li><strong>Trailer:</strong> retreads are standard — cheapest position, low risk</li>
+        <li><strong>Drive:</strong> retreads are common, especially at second-cycle</li>
+        <li><strong>Steer:</strong> Ontario permits retreads on steer but most fleets use new only — safety policy</li>
+      </ul>
+
+      <h3>How a Casing Program Works</h3>
+      <p>Fleet customer buys a new $550 drive tire. We take the worn casing as part of the deal. The worn casing is worth $50–100 to a retreader. Customer effectively buys new at $450–500 net. Win all around.</p>
+      <p>For PCTires without a casing program yet: suggest the customer keep their good casings for their own retreader instead of scrapping them — builds goodwill, and a great talking point for fleet quotes.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">What disqualifies a casing</div>
+        Sidewall cuts, bead damage, exposed steel cords, repaired punctures over 6 mm, heat-separation damage from under-inflation, or oil/chemical contamination. Inspect casings BEFORE promising trade-in value — once a customer expects $X, they expect $X.
+      </div>
+    `,
+  },
+  {
+    id: 'c-torque',
+    icon: '🔧',
+    title: 'Torque & Re-torque',
+    blurb: '450–500 ft-lb · re-torque mandatory',
+    content: `
+      <h3>Commercial Wheel Torque</h3>
+      <p>Where a passenger car uses 80–100 ft-lb, a Class 7–8 wheel needs <strong>450–500 ft-lb</strong>. These are heavy-duty fastenings holding hundreds of kg of rotating mass.</p>
+
+      <table>
+        <thead><tr><th>Mount Type</th><th>Stud</th><th>Torque</th></tr></thead>
+        <tbody>
+          <tr><td>Hub-pilot (modern)</td><td>M22 × 1.5</td><td>450–500 ft-lb</td></tr>
+          <tr><td>Stud-pilot (older Budd)</td><td>3/4″ inner / 1-1/8″ outer</td><td>450–500 inner / 250–300 outer</td></tr>
+          <tr><td>Medium-duty (F-650, NPR)</td><td>M20 × 1.5</td><td>300–350 ft-lb</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Hub-Pilot vs Stud-Pilot</h3>
+      <ul>
+        <li><strong>Hub-pilot (modern, ~90% of fleet):</strong> wheel centres on the hub, fasteners are flat-faced nuts on studs. Single torque value.</li>
+        <li><strong>Stud-pilot (older Budd):</strong> wheel centres on the studs themselves, uses ball-seat nuts. Different inner and outer torque on dual wheels. Found on older trailers and classic tractors.</li>
+      </ul>
+
+      <h3>Re-torque Rules — CRITICAL</h3>
+      <p>Every commercial wheel install MUST include a re-torque after the first <strong>50–100 km</strong> of operation. Skipping this = wheel-off risk, which is the #1 catastrophic failure mode for commercial trucks.</p>
+      <ul>
+        <li>Initial install: cross-pattern, 3 passes (50% → 80% → full)</li>
+        <li>Re-torque 50–100 km later: verify spec, retighten if loose</li>
+        <li>If retightened: check again after another 50 km</li>
+        <li><strong>Document every re-torque</strong> on the work order with odometer reading</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Wheel-offs are reportable in Ontario</div>
+        A wheel coming off a commercial vehicle at highway speed is a CVOR-reportable incident. Carriers face penalties, insurance hits, and potential operating authority review. EVERY install must include the re-torque schedule communicated to the customer. Document everything.
+      </div>
+    `,
+  },
+  {
+    id: 'c-beads',
+    icon: '⚖️',
+    title: 'Balance Beads',
+    blurb: 'Inside the tire — no weights',
+    content: `
+      <h3>Why Beads, Not Weights</h3>
+      <p>Passenger cars use stick-on or clip-on lead/zinc weights. Commercial trucks almost universally use <strong>balance beads</strong> — small ceramic or glass beads installed INSIDE the tire that dynamically position themselves under rotation to counteract imbalance.</p>
+
+      <h3>How They Work</h3>
+      <ul>
+        <li>Beads poured into the tire during mount (through the valve stem or before bead seating)</li>
+        <li>At driving speed, centrifugal force pins them to the inner liner</li>
+        <li>Beads naturally cluster opposite the heaviest point of the rotating assembly</li>
+        <li>Self-correcting: as the tire wears or load shifts, beads reposition automatically</li>
+      </ul>
+
+      <h3>Common Brands</h3>
+      <ul>
+        <li><strong>Counteract</strong> — Canadian brand, most popular in Ontario fleets</li>
+        <li><strong>Centramatic</strong> — external rotor-mounted alternative (no bead install needed)</li>
+        <li><strong>Magnum+</strong> — competitor</li>
+        <li><strong>Equal</strong> — older brand, still in service</li>
+      </ul>
+
+      <h3>Dosage</h3>
+      <table>
+        <thead><tr><th>Tire</th><th>Counteract dose</th></tr></thead>
+        <tbody>
+          <tr><td>11R22.5 / 295/75R22.5</td><td>10–12 oz (≈ 283–340 g)</td></tr>
+          <tr><td>11R24.5 / 285/75R24.5</td><td>11–12 oz</td></tr>
+          <tr><td>Wide-base 445/50R22.5</td><td>14–18 oz</td></tr>
+          <tr><td>17.5″ medium-duty</td><td>4–6 oz</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Why They Beat Wheel Weights</h3>
+      <ul>
+        <li><strong>No rebalancing ever needed</strong> — beads adjust as the tire wears</li>
+        <li><strong>Survive rotation</strong> — beads move with the tire to its new position</li>
+        <li><strong>Don't fall off</strong> — weights can detach, beads can't</li>
+        <li><strong>Cost-comparable</strong> at the shop: $15–25 per tire's worth of beads vs $20–40 in weights + labour</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-title">Selling beads as an upsell</div>
+        Pitch: "Modern commercial standard. We pour these into your tire when we mount it. Your tire stays balanced for its entire life — no return trips for rebalancing. About the same price as traditional weights but you never come back for it again."
+      </div>
+    `,
+  },
+  {
+    id: 'c-duals',
+    icon: '👯',
+    title: 'Dual Tire Matching',
+    blurb: 'Match OD within 6 mm',
+    content: `
+      <h3>The Dual Tire Rule</h3>
+      <p>Trucks have dual wheels at drive and trailer positions — two tires on the same side share one axle hub. <strong>Both tires in a dual pair must match in overall diameter within 6 mm (¼″)</strong> or the smaller tire carries no load and the larger one carries double.</p>
+
+      <h3>Why It Matters</h3>
+      <ul>
+        <li><strong>Bigger tire = overloaded:</strong> takes more than its share, runs hotter, fails early</li>
+        <li><strong>Smaller tire = freeloads:</strong> barely touches ground, but contributes no carrying capacity</li>
+        <li><strong>Inflation matters too:</strong> tires in a dual pair must be within 5 psi of each other — pressure affects effective diameter</li>
+      </ul>
+
+      <h3>How to Check</h3>
+      <p>Measure the "tape size" — a string or tape around the tire's tread circumference. Two tires in a dual pair should be within 1–2% of each other (about 6 mm on a 22.5″ tire). Don't trust the size code alone — actual OD varies between brands and depending on wear.</p>
+
+      <h3>When Mixing Is Acceptable</h3>
+      <ul>
+        <li><strong>Same brand + model + size + load range:</strong> always OK if measurements match</li>
+        <li><strong>Same size, different brand:</strong> may differ in OD — verify before installing</li>
+        <li><strong>New + retread on same dual:</strong> common and fine if OD matches</li>
+        <li><strong>Mixed size codes (11R22.5 + 295/75R22.5):</strong> the OD is similar but not identical — measure first</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Steer position — never dual, never mixed</div>
+        Steer is single-tire each end. Both must match brand, model, size, AND load range. Mixed steer tires cause uneven braking and pulling, plus regulatory non-compliance under MTO / CVSE.
+      </div>
+    `,
+  },
+  {
+    id: 'c-compliance',
+    icon: '📋',
+    title: 'Compliance & Mixing',
+    blurb: 'Ontario / MTO / CVSE rules',
+    content: `
+      <h3>Ontario Commercial Tire Regulations</h3>
+      <p>The MTO and federal CVSE rules limit how commercial vehicles can mix tire types. Customers who mix incorrectly face out-of-service violations during roadside inspections — costly, and they go on the carrier's CVOR record.</p>
+
+      <h3>Same-Axle Rules</h3>
+      <ul>
+        <li><strong>Steer axle:</strong> both tires identical brand, model, size, load range. No exceptions.</li>
+        <li><strong>Drive axle (dual on each side):</strong> two tires in a single dual pair must match size + load range + OD within 6 mm. Pairs left vs right should match tread pattern.</li>
+        <li><strong>Trailer axle:</strong> same as drive — match within each dual pair.</li>
+      </ul>
+
+      <h3>What's Allowed</h3>
+      <ul class="good">
+        <li>Different brands across different axles (steer one brand, drive another)</li>
+        <li>Mixed retread + new in the same dual pair (if OD matches)</li>
+        <li>Different tread patterns between drive and trailer axles</li>
+      </ul>
+
+      <h3>What's NOT Allowed</h3>
+      <ul class="bad">
+        <li>Mismatched brands or models on the same steer axle</li>
+        <li>Mismatched OD on the same dual pair (any axle)</li>
+        <li>Below DOT minimum tread: 4/32″ steer, 2/32″ all other → auto out-of-service</li>
+        <li>Visible cord exposure, sidewall cracks, unrepaired punctures, or improper repairs</li>
+      </ul>
+
+      <div class="callout warn">
+        <div class="callout-title">Out-of-service penalties</div>
+        A truck flagged out-of-service at roadside inspection cannot move until corrected. The carrier pays for emergency roadside service, lost revenue, AND the violation hits their CVOR record — affecting insurance premiums and operating authority renewal. Fleets are strict about tire compliance for this reason.
+      </div>
+    `,
+  },
+  {
+    id: 'c-select',
+    icon: '🎯',
+    title: 'Selecting Commercial Tires',
+    blurb: 'Match the tire to the work',
+    content: `
+      <h3>Start With Operation Type</h3>
+      <p>Commercial tires are highly specialized by use case. Match the tire to how the truck actually runs:</p>
+
+      <table>
+        <thead><tr><th>Operation</th><th>Recommended tread family</th></tr></thead>
+        <tbody>
+          <tr><td>Long-haul highway</td><td>Premium fuel-efficient, rib steer + closed-shoulder drive</td></tr>
+          <tr><td>Regional / P&amp;D</td><td>Standard rib steer + open-shoulder drive</td></tr>
+          <tr><td>Urban / city stop-go</td><td>Reinforced sidewall, scuff-resistant, slower wear</td></tr>
+          <tr><td>Vocational (dump, gravel, construction)</td><td>Aggressive on/off-road, severe service rated</td></tr>
+          <tr><td>Off-road heavy</td><td>Logger or mining specific — deep tread, cut-resistant</td></tr>
+          <tr><td>Trailer over-the-road</td><td>Low rolling resistance rib, retreadable casing</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Tier Choices Within Each Category</h3>
+      <ul>
+        <li><strong>Premium (Michelin, Bridgestone, Continental, Goodyear):</strong> $500–700 new, best fuel economy, longest life, multi-cycle casings for retreading</li>
+        <li><strong>Mid-tier (Hankook, Yokohama, Sailun, Roadx):</strong> $300–470, 80–90% of premium at substantial savings</li>
+        <li><strong>Budget (Sailmax, Westlake, Linglong):</strong> $200–300, single-cycle casings, run-and-discard</li>
+        <li><strong>Retreads:</strong> $200–350, near-new performance on quality casings; standard at drive + trailer</li>
+      </ul>
+
+      <h3>Total Cost of Ownership Math</h3>
+      <p>Fleets don't shop on sticker price — they calculate cost per kilometre:</p>
+      <p style="text-align:center; font-family:'IBM Plex Mono',monospace; padding: 10px 12px; background: var(--raised); border-radius: 2px; font-size:13px;"><strong>$/km = (tire + install + casing value lost) ÷ km of useful life</strong></p>
+      <p>A premium tire at $600 lasting 250,000 km = <strong>$0.0024/km</strong>. A budget tire at $250 lasting 90,000 km = $0.0028/km — actually MORE expensive per km despite the lower sticker. Plus the budget tire generates zero retread value.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Sales approach</div>
+        When quoting a fleet customer, always quote in <strong>cost-per-km</strong>, not just sticker price. Shows you understand their economics. "This Bridgestone works out to $0.0024 per km on average — saves you about $X per year over the budget option across your fleet."
+      </div>
+    `,
+  },
+];
+
+// Current vehicle state (phone mode)
+let currentScan = null;
+let currentRecents = [];
+
+/* ═══════════════════════════════════════════════════════════════
+   AUTH
+   ═══════════════════════════════════════════════════════════════ */
+(function initAuth() {
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (token) {
+    unlock();
+  } else {
+    setTimeout(() => document.getElementById('lockPassword')?.focus(), 100);
+    document.getElementById('lockPassword').addEventListener('keydown', e => {
+      if (e.key === 'Enter') lockSubmit();
+    });
+  }
+})();
+
+async function lockSubmit() {
+  const inp = document.getElementById('lockPassword');
+  const btn = document.getElementById('lockBtn');
+  const err = document.getElementById('lockError');
+  const pwd = inp.value.trim();
+
+  if (!pwd) { err.textContent = 'Enter a password'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  err.textContent = '';
+
+  try {
+    const r = await fetch('/tech-auth', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ password: pwd }),
+    });
+    const d = await r.json();
+
+    if (d.ok) {
+      localStorage.setItem(TOKEN_KEY, d.token);
+      unlock();
+    } else {
+      err.textContent = d.error || 'Incorrect password';
+      inp.value = '';
+      inp.focus();
+      inp.style.animation = 'none';
+      setTimeout(() => inp.style.animation = 'shake .4s', 10);
+    }
+  } catch (e) {
+    err.textContent = 'Connection error';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Unlock →';
+}
+
+function unlock() {
+  document.getElementById('lockScreen').hidden = true;
+  document.getElementById('app').classList.add('active');
+  renderManuals();
+  renderTires101Tiles();
+  renderCommercial101Tiles();
+  if (TV_MODE) enterTVMode();
+  else loadRecents();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TIRES 101 — render + open/close (passenger AND commercial sections)
+   ═══════════════════════════════════════════════════════════════ */
+function renderTiles(hostId, list) {
+  const host = document.getElementById(hostId);
+  if (!host) return;
+  host.innerHTML = list.map(t => `
+    <button class="t101-tile" type="button" onclick="openTopic('${t.id}')">
+      <span class="t-icon">${t.icon}</span>
+      <div class="t-name">${t.title}</div>
+      <div class="t-blurb">${t.blurb}</div>
+    </button>
+  `).join('');
+}
+function renderTires101Tiles()    { renderTiles('t101Tiles', TIRES_101); }
+function renderCommercial101Tiles() { renderTiles('commercial101Tiles', COMMERCIAL_101); }
+
+function openTopic(id) {
+  // Look across both reference libraries
+  const topic = TIRES_101.find(t => t.id === id) || COMMERCIAL_101.find(t => t.id === id);
+  if (!topic) return;
+  document.getElementById('topicTitle').textContent = topic.title;
+  document.getElementById('topicBody').innerHTML = topic.content;
+  const m = document.getElementById('topicModal');
+  m.hidden = false;
+  // Scroll modal content to top whenever a topic opens
+  const card = m.querySelector('.modal-card');
+  if (card) card.scrollTop = 0;
+}
+
+function closeTopic() {
+  document.getElementById('topicModal').hidden = true;
+}
+
+function logout() {
+  if (!confirm('Logout from Tech Bay?')) return;
+  localStorage.removeItem(TOKEN_KEY);
+  location.reload();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TV MODE
+   ═══════════════════════════════════════════════════════════════ */
+function enterTVMode() {
+  document.body.classList.add('tv-mode');
+  // Start polling
+  pollTVScan();
+  setInterval(pollTVScan, TV_POLL_MS);
+  // Update "last seen" counter every second
+  setInterval(updateLastSeen, 1000);
+}
+
+let lastTVScan = null;
+
+async function pollTVScan() {
+  try {
+    const r = await fetch('/tech-sync', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: 'pull' }),
+    });
+    const d = await r.json();
+    if (!d.ok) return;
+
+    if (d.scan && (!lastTVScan || d.scan.ts !== lastTVScan.ts)) {
+      lastTVScan = d.scan;
+      renderTV(d.scan);
+    } else if (!d.scan && lastTVScan) {
+      lastTVScan = null;
+      renderTVIdle();
+    }
+  } catch (e) {
+    // ignore network errors on TV, will retry next interval
+  }
+}
+
+function renderTVIdle() {
+  document.getElementById('tvIdle').style.display = 'flex';
+  document.getElementById('tvActive').style.display = 'none';
+}
+
+function renderTV(scan) {
+  document.getElementById('tvIdle').style.display = 'none';
+  document.getElementById('tvActive').style.display = 'flex';
+
+  // Vehicle banner
+  const v = scan.vehicle || {};
+  document.getElementById('tvVehicleName').textContent =
+    `${v.year || ''} ${v.make || ''} ${v.model || ''}`.trim() || 'Vehicle';
+  document.getElementById('tvVehicleVin').textContent = 'VIN ' + (scan.vin || '—');
+
+  // Torque
+  const t = scan.torque || {};
+  document.getElementById('tvTorque').textContent = t.ftlb ?? '—';
+  const tBadge = document.getElementById('tvTorqueBadge');
+  if (t.source === 'verified') {
+    tBadge.textContent = '✓ Verified'; tBadge.className = 'q-badge verified';
+  } else if (t.source === 'published') {
+    tBadge.textContent = '📖 Published'; tBadge.className = 'q-badge published';
+  } else if (t.ftlb != null) {
+    tBadge.textContent = '⚠ AI · Verify'; tBadge.className = 'q-badge ai';
+  } else {
+    tBadge.textContent = 'Unknown'; tBadge.className = 'q-badge unknown';
+  }
+  // Subtitle shows either the pattern or the reference (Halderman lookup context)
+  document.getElementById('tvTorqueSub').textContent = t.pattern || t.reference || '';
+
+  // Pressure
+  const p = scan.pressure || {};
+  document.getElementById('tvPsiF').textContent = p.frontPsi ?? '—';
+  document.getElementById('tvPsiR').textContent = p.rearPsi ?? '—';
+
+  // TPMS
+  const tp = scan.tpms || {};
+  document.getElementById('tvTpmsFreq').textContent = tp.freqMhz ?? '—';
+  document.getElementById('tvTpmsRelearn').textContent =
+    'Relearn: ' + (tp.relearn && tp.relearn !== 'unknown' ? tp.relearn.toUpperCase() : '—');
+
+  // Vehicle stack
+  document.getElementById('tvStackMake').textContent = (v.make || '').toUpperCase();
+  document.getElementById('tvStackModel').textContent = v.model || '';
+  document.getElementById('tvStackTrim').textContent = v.trim || '';
+
+  updateLastSeen();
+}
+
+function updateLastSeen() {
+  if (!lastTVScan) return;
+  const ageSec = Math.floor((Date.now() - lastTVScan.ts) / 1000);
+  let txt;
+  if (ageSec < 5) txt = 'just now';
+  else if (ageSec < 60) txt = ageSec + 's ago';
+  else if (ageSec < 3600) txt = Math.floor(ageSec / 60) + 'm ago';
+  else txt = Math.floor(ageSec / 3600) + 'h ago';
+  document.getElementById('tvLastSeen').textContent = 'Last scan: ' + txt;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CAMERA / VIN SCAN
+   ═══════════════════════════════════════════════════════════════ */
+function openCamera() {
+  document.getElementById('camPreview').innerHTML =
+    '<div style="font-size:36px; opacity:.5;">📷</div><div class="cam-hint">Tap below to open camera</div>';
+  document.getElementById('cameraModal').hidden = false;
+}
+
+function closeCamera() {
+  document.getElementById('cameraModal').hidden = true;
+  document.getElementById('camInput').value = '';
+}
+
+async function handleCamCapture(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const preview = document.getElementById('camPreview');
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+    preview.innerHTML = `<img src="${dataUrl}">`;
+
+    // Extract base64
+    const base64 = dataUrl.split(',')[1];
+    const mediaType = file.type || 'image/jpeg';
+
+    closeCamera();
+    showLoading('Reading VIN…');
+
+    try {
+      const r = await fetch('/vin-scan', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ imageData: base64, mediaType }),
+      });
+      const d = await r.json();
+
+      if (!d.vin) {
+        hideLoading();
+        toast('VIN not detected — try again or use manual entry', 'error');
+        return;
+      }
+
+      await processVIN(d.vin);
+    } catch (err) {
+      hideLoading();
+      toast('Scan failed: ' + err.message, 'error');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function processVIN(vin) {
+  showLoading('Decoding VIN…');
+
+  try {
+    // Step 1: NHTSA decode (free, public, CORS-enabled)
+    const nhtsaRes = await fetch(
+      `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/${encodeURIComponent(vin)}?format=json`
+    );
+    const nhtsa = await nhtsaRes.json();
+    const vehicle = extractVehicleFromNHTSA(nhtsa, vin);
+
+    if (!vehicle.make || !vehicle.model) {
+      hideLoading();
+      toast('VIN decode incomplete — try manual entry', 'error');
+      return;
+    }
+
+    await loadSpecsForVehicle(vin, vehicle);
+  } catch (err) {
+    hideLoading();
+    toast('Decode failed: ' + err.message, 'error');
+  }
+}
+
+function extractVehicleFromNHTSA(data, vin) {
+  const v = { vin, make: '', model: '', year: null, trim: '' };
+  if (!data.Results) return v;
+  for (const row of data.Results) {
+    if (row.Variable === 'Make' && row.Value) v.make = titleCase(row.Value);
+    if (row.Variable === 'Model' && row.Value) v.model = row.Value;
+    if (row.Variable === 'Model Year' && row.Value) v.year = Number(row.Value);
+    if (row.Variable === 'Trim' && row.Value) v.trim = row.Value;
+    if (row.Variable === 'Series' && row.Value && !v.trim) v.trim = row.Value;
+  }
+  return v;
+}
+
+function titleCase(s) {
+  return s.toLowerCase().split(' ').map(w => w[0] ? w[0].toUpperCase() + w.slice(1) : '').join(' ');
+}
+
+async function loadSpecsForVehicle(vin, vehicle) {
+  showLoading('Looking up specs…');
+
+  // Parallel: verified torque check + AI specs + jack point rules
+  const [verifiedRes, aiRes, jackRes] = await Promise.all([
+    fetch('/tech-sync', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        action: 'getTorque',
+        year: vehicle.year, make: vehicle.make, model: vehicle.model,
+      }),
+    }).then(r => r.json()).catch(() => ({ ok: false })),
+
+    fetch('/tech-specs', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(vehicle),
+    }).then(r => r.json()).catch(() => ({ ok: false })),
+
+    fetch('/tech-jackpoints', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(vehicle),
+    }).then(r => r.json()).catch(() => ({ ok: false })),
+  ]);
+
+  // Merge: verified > published > ai
+  let torque = { ftlb: null, source: 'unknown', pattern: null };
+  if (verifiedRes.ok && verifiedRes.torque) {
+    // Either 'verified' (user-confirmed) or 'published' (Halderman)
+    torque = {
+      ftlb: verifiedRes.torque.ftlb,
+      source: verifiedRes.torque.source || 'verified',
+      pattern: verifiedRes.torque.pattern,
+      reference: verifiedRes.torque.reference,
+      flags: verifiedRes.torque.flags,
+    };
+  } else if (aiRes.ok && aiRes.torque?.ftlb != null) {
+    torque = {
+      ftlb: aiRes.torque.ftlb,
+      source: 'ai',
+      pattern: aiRes.torque.pattern,
+      confidence: aiRes.torque.confidence,
+    };
+  }
+
+  const tpms = aiRes.ok ? (aiRes.tpms || {}) : {};
+  const pressure = aiRes.ok ? (aiRes.pressure || {}) : {};
+  const notes = aiRes.ok ? (aiRes.notes || '') : '';
+  const jackpoints = jackRes.ok ? {
+    construction: jackRes.construction,
+    guidance: jackRes.guidance,
+    warnings: jackRes.warnings || [],
+  } : null;
+
+  const scan = {
+    vin,
+    vehicle,
+    torque,
+    tpms,
+    pressure,
+    notes,
+    jackpoints,
+  };
+
+  currentScan = scan;
+  await pushToTV(scan);
+  renderPhoneResult(scan);
+  await loadNotes(vin);
+  pushRecent(vin, vehicle);
+  hideLoading();
+  toast('Specs loaded — TV updated', 'success');
+}
+
+async function pushToTV(scan) {
+  try {
+    await fetch('/tech-sync', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: 'push', scan }),
+    });
+    setTVStatus(true);
+  } catch (e) {
+    setTVStatus(false);
+  }
+}
+
+function setTVStatus(online) {
+  const el = document.getElementById('tvStatus');
+  if (online) {
+    el.classList.add('online');
+    el.querySelector('.txt').textContent = 'TV synced';
+  } else {
+    el.classList.remove('online');
+    el.querySelector('.txt').textContent = 'TV offline';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MANUAL ENTRY
+   ═══════════════════════════════════════════════════════════════ */
+function openManualEntry() { document.getElementById('manualModal').hidden = false; }
+function closeManualEntry() { document.getElementById('manualModal').hidden = true; }
+
+async function submitManualEntry() {
+  const year = Number(document.getElementById('mYear').value);
+  const make = document.getElementById('mMake').value.trim();
+  const model = document.getElementById('mModel').value.trim();
+  const trim = document.getElementById('mTrim').value.trim();
+
+  if (!year || !make || !model) { toast('Year, make, and model required', 'error'); return; }
+
+  closeManualEntry();
+  const vehicle = { year, make: titleCase(make), model, trim, vin: null };
+  await loadSpecsForVehicle('MANUAL-' + Date.now(), vehicle);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHONE RENDER
+   ═══════════════════════════════════════════════════════════════ */
+function renderPhoneResult(scan) {
+  document.getElementById('emptyResult')?.remove();
+
+  const v = scan.vehicle;
+  const t = scan.torque;
+  const tpms = scan.tpms;
+  const p = scan.pressure;
+
+  const torqueBadge =
+    t.source === 'verified' ? '<div class="spec-badge verified">✓ Verified</div>' :
+    t.source === 'published' ? '<div class="spec-badge published">📖 Published</div>' :
+    t.ftlb != null ? '<div class="spec-badge ai">⚠ AI — Verify</div>' :
+    '<div class="spec-badge unknown">Unknown</div>';
+
+  // Verify button shown for both 'published' and 'ai' — user promotes to 'verified'
+  // when they've confirmed against the shop manual / door jamb / OE spec sheet.
+  const torqueVerifyBtn = (t.source !== 'verified')
+    ? `<button class="verify-btn" onclick="openVerify()">Confirm & Mark Verified →</button>`
+    : '';
+
+  // Reference line shown under torque value — for published entries this shows
+  // the Halderman chart range (e.g. "Halderman 2001-2021 · Ford F-150")
+  const torqueSub =
+    t.pattern ? `<div class="spec-sub">${escapeHtml(t.pattern)}</div>` :
+    t.reference ? `<div class="spec-sub" style="font-size:10px">${escapeHtml(t.reference)}</div>` :
+    '';
+
+  const tpmsFreq = tpms.freqMhz ? `${tpms.freqMhz} <span class="spec-unit">MHz</span>` : '<span class="muted">—</span>';
+  const relearn = tpms.relearn && tpms.relearn !== 'unknown' ? tpms.relearn.toUpperCase() : '—';
+
+  const frontPsi = p.frontPsi ?? '—';
+  const rearPsi = p.rearPsi ?? '—';
+
+  const notesNote = scan.notes ? `<div class="full-width-note"><strong>Note:</strong> ${escapeHtml(scan.notes)}</div>` : '';
+
+  // Jack points section (rule-based, deterministic)
+  const jp = scan.jackpoints;
+  const constructionLabel = jp && jp.construction === 'body_on_frame' ? 'Body-on-Frame'
+                          : jp && jp.construction === 'unibody' ? 'Unibody'
+                          : 'Unknown';
+  const jackSection = jp && jp.guidance ? `
+    <div class="jack-section">
+      <div class="jack-header">
+        <span class="jack-title">🔧 Jack Points</span>
+        <span class="jack-construction">${constructionLabel}</span>
+      </div>
+      <div class="jack-line"><strong>Jack:</strong> ${escapeHtml(jp.guidance.jack || '')}</div>
+      <div class="jack-line"><strong>Stands:</strong> ${escapeHtml(jp.guidance.stands || '')}</div>
+      <div class="jack-line"><strong>Pad:</strong> ${escapeHtml(jp.guidance.pad || '')}</div>
+      ${(jp.warnings || []).map(w => `
+        <div class="jack-warning ${escapeHtml(w.level || 'warning')}">
+          <div class="jack-warning-title">${w.level === 'critical' ? '⚠ ' : w.level === 'info' ? 'ℹ ' : '! '}${escapeHtml(w.title || '')}</div>
+          <div class="jack-warning-detail">${escapeHtml(w.detail || '')}</div>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  const html = `
+    <div class="result-card">
+      <div class="vehicle-header">
+        <div>
+          <div class="vehicle-name">${escapeHtml(v.year || '')} ${escapeHtml(v.make || '')} ${escapeHtml(v.model || '')}</div>
+          <div class="vehicle-vin">${v.trim ? escapeHtml(v.trim) + ' · ' : ''}VIN ${escapeHtml(scan.vin || '—')}</div>
+        </div>
+        <button class="vehicle-clear" onclick="clearVehicle()">Clear</button>
+      </div>
+      <div class="spec-grid">
+        <div class="spec-box">
+          <div class="spec-label">Lug Torque</div>
+          <div class="spec-value">${t.ftlb != null ? t.ftlb : '—'}<span class="spec-unit">ft-lb</span></div>
+          ${torqueSub}
+          ${torqueBadge}
+          ${torqueVerifyBtn}
+        </div>
+        <div class="spec-box">
+          <div class="spec-label">Cold Pressure</div>
+          <div class="pressure-row">
+            <div><span class="pl">F</span><span class="p">${frontPsi}</span></div>
+            <div><span class="pl">R</span><span class="p">${rearPsi}</span></div>
+          </div>
+          <div class="spec-sub">psi · confirm door jamb</div>
+        </div>
+        <div class="spec-box">
+          <div class="spec-label">TPMS</div>
+          <div class="spec-value">${tpmsFreq}</div>
+          <div class="spec-sub">Relearn: ${escapeHtml(relearn)}</div>
+        </div>
+        <div class="spec-box">
+          <div class="spec-label">Vehicle</div>
+          <div class="spec-value muted">${escapeHtml(v.make || '—')}</div>
+          <div class="spec-sub">${escapeHtml(v.model || '')}${v.trim ? ' ' + escapeHtml(v.trim) : ''}</div>
+        </div>
+        ${notesNote}
+      </div>
+      ${jackSection}
+    </div>
+  `;
+
+  document.getElementById('resultArea').innerHTML = html;
+  document.getElementById('notesSection').hidden = false;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RECENT VINS (KV-backed, per bay)
+   ═══════════════════════════════════════════════════════════════ */
+async function loadRecents() {
+  if (TV_MODE) return;
+  try {
+    const r = await fetch('/tech-sync', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: 'getRecents' }),
+    });
+    const d = await r.json();
+    if (d.ok) renderRecents(d.recents || []);
+  } catch (e) {
+    // silent — recents are nice-to-have, not critical
+  }
+}
+
+function renderRecents(list) {
+  currentRecents = Array.isArray(list) ? list : [];
+  const row = document.getElementById('recentRow');
+  const host = document.getElementById('recentChips');
+  if (!row || !host) return;
+  if (!currentRecents.length) { row.hidden = true; host.innerHTML = ''; return; }
+  row.hidden = false;
+  host.innerHTML = currentRecents.map(function(r) {
+    const v = r.vehicle || {};
+    const label = ((v.year || '') + ' ' + (v.make || '') + ' ' + (v.model || '')).trim() || 'Vehicle';
+    const isManual = String(r.vin || '').startsWith('MANUAL-');
+    const sub = isManual ? 'manual' : ('VIN …' + String(r.vin || '').slice(-5));
+    const safeVin = String(r.vin || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return '<button type="button" class="recent-chip" onclick="tapRecent(\'' + safeVin + '\')">'
+         + '<div class="rc-label">' + escapeHtml(label) + '</div>'
+         + '<div class="rc-sub">' + escapeHtml(sub) + '</div>'
+         + '</button>';
+  }).join('');
+}
+
+function tapRecent(vinStr) {
+  const r = currentRecents.find(function(x) { return String(x.vin) === String(vinStr); });
+  if (!r) { toast('Recent entry missing', 'error'); return; }
+  const veh = r.vehicle || {};
+  if (vinStr.startsWith('MANUAL-')) {
+    if (!veh.make || !veh.model) { toast('Recent entry incomplete', 'error'); return; }
+    loadSpecsForVehicle(vinStr, {
+      vin: null,
+      year: veh.year,
+      make: veh.make,
+      model: veh.model,
+      trim: veh.trim || '',
+    });
+  } else {
+    processVIN(vinStr);
+  }
+}
+
+function pushRecent(vin, vehicle) {
+  if (!vin) return;
+  fetch('/tech-sync', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      action: 'addRecent',
+      entry: {
+        vin: vin,
+        vehicle: {
+          year: (vehicle && vehicle.year) || null,
+          make: (vehicle && vehicle.make) || '',
+          model: (vehicle && vehicle.model) || '',
+          trim: (vehicle && vehicle.trim) || '',
+        },
+      },
+    }),
+  }).then(function(r) { return r.json(); })
+    .then(function(d) { if (d && d.ok) renderRecents(d.recents); })
+    .catch(function() { /* ignore */ });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPE-IN VIN (fallback when camera scan fails)
+   ═══════════════════════════════════════════════════════════════ */
+function submitTypedVIN() {
+  const inp = document.getElementById('vinTypeIn');
+  if (!inp) return;
+  const vin = (inp.value || '').toUpperCase().replace(/\s+/g, '').trim();
+  if (vin.length !== 17) {
+    toast('VIN must be 17 characters (' + vin.length + ' entered)', 'error');
+    inp.focus();
+    return;
+  }
+  // VINs exclude I, O, Q
+  if (/[IOQ]/.test(vin)) {
+    toast('VINs do not contain I, O, or Q — check for misreads', 'error');
+    inp.focus();
+    return;
+  }
+  inp.value = '';
+  closeCamera();
+  processVIN(vin);
+}
+
+function clearVehicle() {
+  if (!confirm('Clear vehicle from bay?')) return;
+  currentScan = null;
+  fetch('/tech-sync', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ action: 'clear' }),
+  });
+  document.getElementById('resultArea').innerHTML =
+    '<div class="result-card empty" id="emptyResult"><div class="empty-icon">🔎</div><div class="empty-text">Scan a VIN to get started</div></div>';
+  document.getElementById('notesSection').hidden = true;
+  toast('Bay cleared', 'info');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NOTES
+   ═══════════════════════════════════════════════════════════════ */
+async function loadNotes(vin) {
+  if (!vin || vin.startsWith('MANUAL-')) {
+    document.getElementById('notesList').innerHTML = '<div class="notes-empty">Manual entry — notes disabled (no VIN).</div>';
+    document.getElementById('notesCount').textContent = '0';
+    return;
+  }
+  try {
+    const r = await fetch('/tech-sync', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: 'getNotes', vin }),
+    });
+    const d = await r.json();
+    renderNotes(d.notes || []);
+  } catch (e) {
+    renderNotes([]);
+  }
+}
+
+function renderNotes(notes) {
+  document.getElementById('notesCount').textContent = notes.length;
+  const list = document.getElementById('notesList');
+  if (!notes.length) {
+    list.innerHTML = '<div class="notes-empty">No notes yet for this vehicle.</div>';
+    return;
+  }
+  list.innerHTML = notes.map(n => `
+    <div class="note-item">
+      <div class="note-text">${escapeHtml(n.text)}</div>
+      <div class="note-meta">${formatDate(n.ts)}${n.author ? ' · ' + escapeHtml(n.author) : ''}</div>
+    </div>
+  `).join('');
+}
+
+async function addNote() {
+  const input = document.getElementById('noteInput');
+  const text = input.value.trim();
+  if (!text) return;
+  if (!currentScan?.vin || currentScan.vin.startsWith('MANUAL-')) {
+    toast('Notes require a scanned VIN', 'error'); return;
+  }
+
+  const btn = document.getElementById('noteAddBtn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  try {
+    const r = await fetch('/tech-sync', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        action: 'addNote',
+        vin: currentScan.vin,
+        text,
+        author: 'Tech',
+      }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      input.value = '';
+      renderNotes(d.notes || []);
+      toast('Note saved', 'success');
+    } else {
+      toast(d.error || 'Save failed', 'error');
+    }
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  }
+
+  btn.disabled = false; btn.textContent = 'Save Note';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VERIFY TORQUE
+   ═══════════════════════════════════════════════════════════════ */
+function openVerify() {
+  if (!currentScan) return;
+  const t = currentScan.torque || {};
+  document.getElementById('vTorque').value = t.ftlb || '';
+  document.getElementById('vPattern').value = t.pattern || '';
+
+  // Context message adapts to the current source tier
+  const ctx = document.getElementById('verifyContext');
+  if (t.source === 'published') {
+    ctx.innerHTML =
+      `Confirm <strong style="color:var(--blue)">${t.ftlb} ft-lb</strong> from the Halderman chart matches your shop manual ` +
+      `or the vehicle's door jamb placard. Once confirmed, this vehicle will show as ` +
+      `<strong style="color:var(--green)">✓ Verified</strong> for all future scans and will override the Halderman value.`;
+  } else if (t.source === 'ai') {
+    ctx.innerHTML =
+      `⚠ The AI estimate is <strong style="color:var(--amber)">${t.ftlb || '—'} ft-lb</strong>. ` +
+      `Look up the correct value in the owner's manual or shop reference, enter it below, ` +
+      `and save to mark this vehicle <strong style="color:var(--green)">✓ Verified</strong>.`;
+  } else {
+    ctx.innerHTML =
+      `Enter the torque value from your shop manual or factory service info. ` +
+      `Once saved, all future scans of this vehicle will show as ` +
+      `<strong style="color:var(--green)">✓ Verified</strong>.`;
+  }
+
+  document.getElementById('verifyModal').hidden = false;
+}
+function closeVerify() { document.getElementById('verifyModal').hidden = true; }
+
+async function submitVerify() {
+  const ftlb = Number(document.getElementById('vTorque').value);
+  const pattern = document.getElementById('vPattern').value.trim();
+  const source = document.getElementById('vSource').value.trim();
+  if (!ftlb || ftlb < 40 || ftlb > 250) { toast('Torque must be 40–250 ft-lb', 'error'); return; }
+
+  const v = currentScan.vehicle;
+  try {
+    const r = await fetch('/tech-sync', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        action: 'saveTorque',
+        year: v.year, make: v.make, model: v.model,
+        ftlb, pattern,
+        verifiedFrom: source || 'Shop manual',
+        author: 'Tech',
+      }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      // Update current scan to reflect verified status
+      currentScan.torque = { ftlb, source: 'verified', pattern };
+      renderPhoneResult(currentScan);
+      await pushToTV(currentScan);
+      closeVerify();
+      toast('Saved as verified', 'success');
+    } else {
+      toast(d.error || 'Save failed', 'error');
+    }
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MANUALS
+   ═══════════════════════════════════════════════════════════════ */
+function renderManuals() {
+  const tiles = document.getElementById('manualTiles');
+  tiles.innerHTML = MANUALS.map(m => `
+    <a class="manual-tile present" href="${m.file}" target="_blank" rel="noopener"
+       onerror="this.classList.remove('present'); this.classList.add('empty')">
+      <div class="m-icon">${m.icon}</div>
+      <div class="m-name">${escapeHtml(m.name)}</div>
+      <div class="m-model">${escapeHtml(m.model)}</div>
+      <div class="m-status">View PDF →</div>
+    </a>
+  `).join('');
+
+  // Check each manual exists — mark missing as "upload pending"
+  MANUALS.forEach((m, i) => {
+    fetch(m.file, { method: 'HEAD' }).then(r => {
+      if (!r.ok) {
+        const tile = tiles.children[i];
+        if (tile) {
+          tile.classList.remove('present'); tile.classList.add('empty');
+          tile.querySelector('.m-status').textContent = 'Upload pending';
+          tile.onclick = e => { e.preventDefault(); toast('Manual not uploaded yet — drop PDF at ' + m.file, 'info'); };
+        }
+      }
+    }).catch(() => {});
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN — verified DB list
+   ═══════════════════════════════════════════════════════════════ */
+async function toggleAdmin(event) {
+  event.preventDefault();
+  const sec = document.getElementById('adminSection');
+  if (!sec.hidden) { sec.hidden = true; return; }
+  sec.hidden = false;
+  try {
+    const r = await fetch('/tech-sync', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: 'listTorque' }),
+    });
+    const d = await r.json();
+    const entries = d.entries || [];
+    document.getElementById('verifiedCount').textContent = entries.length;
+    const tbody = document.querySelector('#verifiedTable tbody');
+    if (!entries.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:16px; font-style:italic;">No verified entries yet. Verify torque values as you confirm them in the bay.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = entries.map(e => `
+      <tr>
+        <td>${escapeHtml(titleCase(e.make))} ${escapeHtml(e.model)}</td>
+        <td>${e.year}</td>
+        <td class="num" style="text-align:right">${e.ftlb} ft-lb</td>
+        <td style="font-size:11px; color:var(--muted)">${formatDate(e.ts)}</td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    document.querySelector('#verifiedTable tbody').innerHTML = '<tr><td colspan="4" style="color:var(--red)">Load failed: ' + escapeHtml(err.message) + '</td></tr>';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UI HELPERS
+   ═══════════════════════════════════════════════════════════════ */
+function showLoading(text) {
+  document.getElementById('loadingText').textContent = text || 'Working…';
+  document.getElementById('loadingCard').hidden = false;
+}
+function hideLoading() {
+  document.getElementById('loadingCard').hidden = true;
+}
+
+let toastTimer = null;
+function toast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = type === 'error' ? 'var(--red)' : (type === 'success' ? 'var(--green)' : 'var(--yellow)');
+  el.style.color = 'var(--black)';
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function formatDate(ts) {
+  const d = new Date(ts);
+  const diff = (Date.now() - ts) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return d.toLocaleDateString('en-CA') + ' ' + d.toLocaleTimeString('en-CA', {hour:'2-digit', minute:'2-digit'});
+}
+
+function openTVLink() {
+  const url = location.origin + location.pathname + '?mode=tv';
+  if (navigator.share) {
+    navigator.share({ title: 'PC Tires · Tech TV', url }).catch(() => copyTVLink(url));
+  } else {
+    copyTVLink(url);
+  }
+}
+function copyTVLink(url) {
+  navigator.clipboard?.writeText(url).then(() => toast('TV link copied', 'success')).catch(() => {
+    prompt('TV link:', url);
+  });
+}
+</script>
+
+</body>
+</html>
