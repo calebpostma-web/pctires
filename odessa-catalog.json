@@ -1,0 +1,6790 @@
+{
+ "source": "odessacanada.com",
+ "scraped": "2026-06-12",
+ "products": [
+  {
+   "code": "74-400",
+   "desc": "4.80-8 LRC TL P811 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 46.99
+  },
+  {
+   "code": "98-802A",
+   "desc": "4.80-8 LRC TL K371 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 48.99
+  },
+  {
+   "code": "74-180",
+   "desc": "16.5X6.50-8 LRC TL P815 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 59.99
+  },
+  {
+   "code": "74-189",
+   "desc": "16.5X6.50-8 LRC TL P825T JOURNEY/WANDA",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 60.99
+  },
+  {
+   "code": "104-829",
+   "desc": "4.80-8 LRB TL SPORT TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 66.99
+  },
+  {
+   "code": "74-430",
+   "desc": "4.80-12 LRC TL P811 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 70.99
+  },
+  {
+   "code": "74-443",
+   "desc": "5.70-8 LRD TL P837 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 71.99
+  },
+  {
+   "code": "104-830",
+   "desc": "4.80-8 LRC TL SPORT TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 73.99
+  },
+  {
+   "code": "74-420",
+   "desc": "5.70-8 LRC TL P811 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "5 in stock",
+   "category": "trailer",
+   "price": 74.99
+  },
+  {
+   "code": "98-803",
+   "desc": "5.70-8 LRB TL K353 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 75.99
+  },
+  {
+   "code": "98-804",
+   "desc": "5.70-8 LRC TL K353 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 76.99
+  },
+  {
+   "code": "98-805",
+   "desc": "4.80-12 LRC TL K353 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 76.99
+  },
+  {
+   "code": "74-600",
+   "desc": "4.50-10 LRC TT H1021 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 78.99
+  },
+  {
+   "code": "74-194",
+   "desc": "ST145R12 LRD TL TR088 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 79.99
+  },
+  {
+   "code": "74-195",
+   "desc": "ST145R12 LRE TL TR088 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "2026-06-26",
+   "category": "trailer",
+   "price": 80.99
+  },
+  {
+   "code": "98-806",
+   "desc": "5.30-12 LRB TL K353 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 81.99
+  },
+  {
+   "code": "KAT 74-40004",
+   "desc": "4.80-8 LRC TL P811 JOURNEY 4/4 (103-1544301 BLANCHE-WHITE)/TR416",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 81.99
+  },
+  {
+   "code": "KAT 74-40005",
+   "desc": "4.80-8 LRC TL P811 JOURNEY 5/4.5 (103-1092301-2 BLANCHE-WHITE)/TR416",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 81.99
+  },
+  {
+   "code": "74-410",
+   "desc": "5.30-12 LRC TL P811 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 82.99
+  },
+  {
+   "code": "KAT 98-802A05",
+   "desc": "4.80-8 LRC TL K371 KENDA 5/4.5 (103-1092301-2 BLANCHE-WHITE)/TR416",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 83.99
+  },
+  {
+   "code": "KAT 98-802A04",
+   "desc": "4.80-8 LRC TL K371 KENDA 4/4 (103-1544301 BLANCHE-WHITE)/TR416",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 83.99
+  },
+  {
+   "code": "98-807",
+   "desc": "5.30-12 LRC TL K353 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 85.99
+  },
+  {
+   "code": "74-442",
+   "desc": "5.30-12 LRD TL P837 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 85.99
+  },
+  {
+   "code": "98-808",
+   "desc": "5.70-8 LRD TL K353 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 88.99
+  },
+  {
+   "code": "74-200",
+   "desc": "ST175/80R13 LRC TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 88.99
+  },
+  {
+   "code": "74-181",
+   "desc": "18.5X8.50-8 LRD TL P815 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 95.99
+  },
+  {
+   "code": "74-202",
+   "desc": "ST175/80R13 LRD TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 96.99
+  },
+  {
+   "code": "KAT 104-82904",
+   "desc": "4.80-8 LRB TL SPORT TRAIL 4/4 (103-1544301 BLANCHE-WHITE)/TR13 (JANTE/RIM)",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 96.99
+  },
+  {
+   "code": "KAT 104-82905",
+   "desc": "4.80-8 LRB TL SPORT TRAIL 5/4.5 (103-1092301-2 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 96.99
+  },
+  {
+   "code": "74-270",
+   "desc": "ST185/80D13 LRD TL H186 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "2026-06-26",
+   "category": "trailer",
+   "price": 97.99
+  },
+  {
+   "code": "74-185",
+   "desc": "20.5X8.00-10 LRC TL P815 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 104.99
+  },
+  {
+   "code": "KAT 74-42004",
+   "desc": "5.70-8 LRC TL P811 JOURNEY 4/4 (103-1544301 BLANCHE-WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "5 in stock",
+   "category": "trailer",
+   "price": 104.99
+  },
+  {
+   "code": "KAT 74-42005",
+   "desc": "5.70-8 LRC TL P811 JOURNEY 5/4.5 (103-1092301-2 BLANCHE-WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "5 in stock",
+   "category": "trailer",
+   "price": 104.99
+  },
+  {
+   "code": "KAT 98-80304",
+   "desc": "5.70-8 LRB TL K353 LOADSTAR KENDA 4/4 (103-1544301 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 105.99
+  },
+  {
+   "code": "104-817",
+   "desc": "4.80-12 LRB TL SPORT TRAIL LH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "6 in stock",
+   "category": "trailer",
+   "price": 105.99
+  },
+  {
+   "code": "98-807A",
+   "desc": "5.30-12 LRD TL K353 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 106.99
+  },
+  {
+   "code": "KAT 98-80404",
+   "desc": "5.70-8 LRC TL K353 LOADSTAR KENDA 4/4 (103-1544301 BLANCHE-WHITE)/TR600",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 106.99
+  },
+  {
+   "code": "KAT 74-44305A",
+   "desc": "5.70-8 LRD TL P837 JOURNEY 5/4.5 (103-1092301-2 BLANCHE-WHITE)/TR416",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 106.99
+  },
+  {
+   "code": "KAT 74-18905",
+   "desc": "16.5X6.50-8 LRC TL P825T JOURNEY 5/4.5 (103-1529506 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 106.99
+  },
+  {
+   "code": "74-212",
+   "desc": "ST205/75R14 LRC TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 109.99
+  },
+  {
+   "code": "104-818",
+   "desc": "4.80-12 LRC TL SPORT TRAIL LH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "10 in stock",
+   "category": "trailer",
+   "price": 111.99
+  },
+  {
+   "code": "98-848",
+   "desc": "215/60-8 (18.5X8.50-8) LRC TL K399 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 113.99
+  },
+  {
+   "code": "104-820",
+   "desc": "5.30-12 LRC TL SPORT TRAIL LH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 115.99
+  },
+  {
+   "code": "KAT 74-43004",
+   "desc": "4.80-12 LRC TL P811 JOURNEY 4/4 (103-17986 BLANCHE-WHITE)/TR416",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 115.99
+  },
+  {
+   "code": "74-204",
+   "desc": "ST185/80R13 LRC TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 116.99
+  },
+  {
+   "code": "74-216",
+   "desc": "ST205/75R15 LRC TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 117.99
+  },
+  {
+   "code": "104-803",
+   "desc": "5.70-8 LRB TL SPORT TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "trailer",
+   "price": 117.99
+  },
+  {
+   "code": "KAT 98-802A04B",
+   "desc": "4.80-8 LRC TL K371 KENDA 4/4 (103-1544301B NOIRE/BLACK)/TR416",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 118.99
+  },
+  {
+   "code": "KAT 74-19405",
+   "desc": "ST145/R12 LRD TL TR088 RADIAL JOURNEY 5/4.5 (103-17987 BLANCHE/WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 119.99
+  },
+  {
+   "code": "KAT 74-19505",
+   "desc": "ST145/R12 LRE TL TR088 RADIAL JOURNEY 5/4.5 (103-17987 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 120.99
+  },
+  {
+   "code": "104-819",
+   "desc": "5.30-12 LRB TL SPORT TRAIL LH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "trailer",
+   "price": 120.99
+  },
+  {
+   "code": "KAT 98-80504",
+   "desc": "4.80-12 LRC TL K353 LOADSTAR KENDA 4/4 (103-17986 BLANCHE-WHITE)/TR416",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 121.99
+  },
+  {
+   "code": "KAT 98-80505",
+   "desc": "4.80-12 LRC TL K353 LOADSTAR KENDA 5/4.5 (103-17987 BLANCHE/WHITE)/TR416",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 121.99
+  },
+  {
+   "code": "KAT 98-80605",
+   "desc": "5.30-12 LRB TL K353 LOADSTAR KENDA 5/4.5 (103-17987 BLANCHE/WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 121.99
+  },
+  {
+   "code": "KAT 74-41004",
+   "desc": "5.30-12 LRC TL P811 JOURNEY 4/4 (103-17986 BLANCHE-WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 122.99
+  },
+  {
+   "code": "KAT 74-41005",
+   "desc": "5.30-12 LRC TL P811 JOURNEY 5/4.5 (103-17987 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 122.99
+  },
+  {
+   "code": "74-213",
+   "desc": "ST205/75R14 LRD TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "2026-07-09",
+   "category": "trailer",
+   "price": 122.99
+  },
+  {
+   "code": "98-701",
+   "desc": "ST175/80D13 LRC TL K550 LOADSTAR KENDA #",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 123.99
+  },
+  {
+   "code": "KAT 98-80804",
+   "desc": "5.70-8 LRD TL K353 LOADSTAR KENDA 4/4 (103-1544301 BLANCHE-WHITE)/TR416",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 123.99
+  },
+  {
+   "code": "KAT 98-80805",
+   "desc": "5.70-8 LRD TL K353 LOADSTAR KENDA 5/4.5 (103-1092301-2 BLANCHE-WHITE)/TR416",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 123.99
+  },
+  {
+   "code": "KAT 98-80704",
+   "desc": "5.30-12 LRC TL K353 LOADSTAR KENDA 4/4 (103-17986 BLANCHE-WHITE)/TR600",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 125.99
+  },
+  {
+   "code": "KAT 98-80705",
+   "desc": "5.30-12 LRC TL K353 LOADSTAR KENDA 5/4.5 (103-17987 BLANCHE/WHITE)/TR600",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 125.99
+  },
+  {
+   "code": "98-875",
+   "desc": "205/65-10 (20.5X8.00-10) LRC TL K399 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 125.99
+  },
+  {
+   "code": "74-208",
+   "desc": "ST185/80R13 LRD TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "2026-07-23",
+   "category": "trailer",
+   "price": 126.99
+  },
+  {
+   "code": "74-187",
+   "desc": "20.5X8.00-10 LRE TL P815 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 126.99
+  },
+  {
+   "code": "98-725",
+   "desc": "ST175/80R13 LRC TL KARRIER KR03 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 127.99
+  },
+  {
+   "code": "KAT 74-18104",
+   "desc": "18.5X8.50-8 LRD TL P815 JOURNEY 4/4 (103-1530101 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 127.99
+  },
+  {
+   "code": "KAT 74-18105",
+   "desc": "18.5X8.50-8 LRD TL P815 JOURNEY 5/4.5 (103-1529901 BLANCHE-WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 127.99
+  },
+  {
+   "code": "KAT 74-44205",
+   "desc": "5.30-12 LRD TL P837 JOURNEY 5/4.5 (103-17987 BLANCHE/WHITE)/TR416",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 130.99
+  },
+  {
+   "code": "104-804",
+   "desc": "5.70-8 LRC TL SPORT TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2026-06-20",
+   "category": "trailer",
+   "price": 131.99
+  },
+  {
+   "code": "74-188",
+   "desc": "20.5X8.00-10 LRF TL P825T JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 132.99
+  },
+  {
+   "code": "74-222",
+   "desc": "ST215/75R14 LRC TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 134.99
+  },
+  {
+   "code": "74-220",
+   "desc": "ST205/75R15 LRD TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 135.99
+  },
+  {
+   "code": "KAT 74-20004",
+   "desc": "ST175/80R13 LRC TL WR078 RADIAL JOURNEY 4/4 (103-18077 BLANCHE-WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 137.99
+  },
+  {
+   "code": "KAT 74-20005",
+   "desc": "ST175/80R13 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-17988 BLANCHE/WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 137.99
+  },
+  {
+   "code": "103-792R",
+   "desc": "ST145R12 (ST145/70R12) LRD TL RADIAL TRAIL RH CARLSTAR #",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 140.99
+  },
+  {
+   "code": "98-731",
+   "desc": "ST175/80R13 LRD TL KARRIER KR03 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 140.99
+  },
+  {
+   "code": "98-876",
+   "desc": "205/65-10 (20.5X8.00-10) LRD TL K399 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 140.99
+  },
+  {
+   "code": "74-224",
+   "desc": "ST225/75R15 LRD TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 143.99
+  },
+  {
+   "code": "KAT 74-20204",
+   "desc": "ST175/80R13 LRD TL WR078 RADIAL JOURNEY 4/4 (103-18077 BLANCHE-WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 145.99
+  },
+  {
+   "code": "KAT 74-20205",
+   "desc": "ST175/80R13 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-17988 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 145.99
+  },
+  {
+   "code": "KAT 74-19405G",
+   "desc": "ST145/R12 LRD TL TR088 RADIAL JOURNEY 5/4.5 (103-18095 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 145.99
+  },
+  {
+   "code": "KAT 104-81704",
+   "desc": "4.80-12 LRB TL SPORT TRAIL 4/4 (103-17986 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "6 in stock",
+   "category": "trailer",
+   "price": 145.99
+  },
+  {
+   "code": "KAT 104-81705",
+   "desc": "4.80-12 LRB TL SPORT TRAIL 5/4.5 (103-17987 BLANCHE/WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 145.99
+  },
+  {
+   "code": "KAT 98-84805",
+   "desc": "215/60-8 (18.5X8.50-8) LRC TL K399 LOADSTAR KENDA 5/4.5 (103-1529901 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 145.99
+  },
+  {
+   "code": "KAT 74-19505G",
+   "desc": "ST145/R12 LRE TL TR088 RADIAL JOURNEY 5/4.5 (103-18095 GALV.)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 146.99
+  },
+  {
+   "code": "103-851R",
+   "desc": "ST175/80R13 LRC TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 146.99
+  },
+  {
+   "code": "KAT 104-80304",
+   "desc": "5.70-8 LRB TL SPORT TRAIL 4/4 (103-1544301 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "trailer",
+   "price": 147.99
+  },
+  {
+   "code": "KAT 104-80305",
+   "desc": "5.70-8 LRB TL SPORT TRAIL 5/4.5 (103-1092301-2 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "trailer",
+   "price": 147.99
+  },
+  {
+   "code": "KAT 74-41005G",
+   "desc": "5.30-12 LRC TL P811 JOURNEY 5/4.5 (103-18095 GALV.)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 148.99
+  },
+  {
+   "code": "104-808",
+   "desc": "16.5X6.50-8 LRD TL SPORT TRAIL CARLSTAR #",
+   "brand": "CARLSTAR",
+   "stock": "7 in stock",
+   "category": "trailer",
+   "price": 149.99
+  },
+  {
+   "code": "98-741",
+   "desc": "ST145R12 LRD TL KR25 KARRIER S-TRAIL KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 149.99
+  },
+  {
+   "code": "KAT 98-807A04",
+   "desc": "5.30-12 LRD TL K353 LOADSTAR KENDA 4/4 (103-17986 BLANCHE-WHITE)/TR416",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 151.99
+  },
+  {
+   "code": "KAT 98-807A05",
+   "desc": "5.30-12 LRD TL K353 LOADSTAR KENDA 5/4.5 (103-17987 BLANCHE/WHITE)/TR416",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 151.99
+  },
+  {
+   "code": "98-887",
+   "desc": "205/65-10 (20.5X8.00-10) LRE TL K399 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 153.99
+  },
+  {
+   "code": "98-712A",
+   "desc": "ST185/80D13 LRC TL K550 LOADSTAR KENDA #",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 153.99
+  },
+  {
+   "code": "KAT 104-82004",
+   "desc": "5.30-12 LRC TL SPORT TRAIL LH 4/4 (103-17986 BLANCHE-WHITE)/TR600",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 155.99
+  },
+  {
+   "code": "KAT 104-82005",
+   "desc": "5.30-12 LRC TL SPORT TRAIL LH 5/4.5 (103-17987 BLANCHE/WHITE)/TR600",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 155.99
+  },
+  {
+   "code": "KAT 74-18505",
+   "desc": "20.5X8.00-10 LRC TL P815 JOURNEY 5/4.5 (103-1524001 BLANCHE-WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 155.99
+  },
+  {
+   "code": "KAT 104-81804",
+   "desc": "4.80-12 LRC TL SPORT TRAIL 4/4 (103-17986 BLANCHE-WHITE)/TR416 #",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 156.99
+  },
+  {
+   "code": "KAT 104-81805",
+   "desc": "4.80-12 LRC TL SPORT TRAIL 5/4.5 (103-17987 BLANCHE/WHITE)/TR416",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 156.99
+  },
+  {
+   "code": "104-810",
+   "desc": "18.5X8.50-8 LRC TL SPORT TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 156.99
+  },
+  {
+   "code": "98-708",
+   "desc": "ST205/75D15 LRC TL K550 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 158.99
+  },
+  {
+   "code": "103-793",
+   "desc": "ST145R12 (ST145/70R12) LRE TL RADIAL TRAIL RH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2026-08-04",
+   "category": "trailer",
+   "price": 160.99
+  },
+  {
+   "code": "KAT 104-81904",
+   "desc": "5.30-12 LRB TL SPORT TRAIL LH 4/4 (103-17986 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "trailer",
+   "price": 160.99
+  },
+  {
+   "code": "KAT 104-81905",
+   "desc": "5.30-12 LRB TL SPORT TRAIL LH 5/4.5 (103-17987 BLANCHE/WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 160.99
+  },
+  {
+   "code": "KAT 74-20005G",
+   "desc": "ST175/80R13 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-18138 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 160.99
+  },
+  {
+   "code": "KAT 104-80404",
+   "desc": "5.70-8 LRC TL SPORT TRAIL 4/4 (103-1544301 BLANCHE-WHITE)/TR600",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 161.99
+  },
+  {
+   "code": "104-812",
+   "desc": "20.5X8.00-10 LRB TL SPORT TRAIL CARLSTAR #",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 161.99
+  },
+  {
+   "code": "98-726",
+   "desc": "ST205/75R14 LRC TL KARRIER KR03 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 162.99
+  },
+  {
+   "code": "98-704",
+   "desc": "ST205/75D14 LRC TL K550 LOADSTAR KENDA #",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 162.99
+  },
+  {
+   "code": "78-711",
+   "desc": "ST205/75R15 LRE TL ZT301 SEMI-CEINTUR\u00c9 D'ACIER/SEMI-STEEL BELTED CARGOMAX",
+   "brand": "CARGOMAX",
+   "stock": "2099-09-12",
+   "category": "trailer",
+   "price": 162.99
+  },
+  {
+   "code": "KAT 74-20404",
+   "desc": "ST185/80R13 LRC TL WR078 RADIAL JOURNEY 4/4 (103-18077 BLANCHE-WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 165.99
+  },
+  {
+   "code": "KAT 74-20405",
+   "desc": "ST185/80R13 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-17988 BLANCHE/WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 165.99
+  },
+  {
+   "code": "74-228",
+   "desc": "ST225/75R15 LRE TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 166.99
+  },
+  {
+   "code": "KAT 74-20205G",
+   "desc": "ST175/80R13 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-18138 GALV.)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 168.99
+  },
+  {
+   "code": "KAT 74-27005G",
+   "desc": "ST185/80D13 LRD TL H186 JOURNEY 5/4.5 (103-18138 GALV.)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 169.99
+  },
+  {
+   "code": "KAT 74-21205",
+   "desc": "ST205/75R14 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 170.99
+  },
+  {
+   "code": "103-840R",
+   "desc": "ST185/80R13 LRC TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 170.99
+  },
+  {
+   "code": "KAT 98-70104",
+   "desc": "ST175/80D13 LRC TL K550 KENDA 4/4 (103-18077 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 172.99
+  },
+  {
+   "code": "KAT 98-70105",
+   "desc": "ST175/80D13 LRC TL K550 KENDA 5/4.5 (103-17988 BLANCHE/WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 172.99
+  },
+  {
+   "code": "98-728",
+   "desc": "ST205/75R15 LRC TL KARRIER KR03 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 173.99
+  },
+  {
+   "code": "KAT 74-20804",
+   "desc": "ST185/80R13 LRD TL WR078 RADIAL JOURNEY 4/4 (103-18077 BLANCHE-WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 175.99
+  },
+  {
+   "code": "KAT 74-20805A",
+   "desc": "ST185/80R13 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-17988 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 175.99
+  },
+  {
+   "code": "KAT 98-72505",
+   "desc": "ST175/80R13 LRC TL KARRIER KR03 KENDA 5/4.5 (103-17988 BLANCHE/WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 176.99
+  },
+  {
+   "code": "KAT 98-87505",
+   "desc": "205/65-10 (20.5X8.00-10) LRC TL K399 LOADSTAR KENDA 5/4 (103-1524001 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 176.99
+  },
+  {
+   "code": "103-852R",
+   "desc": "ST205/75R14 LRC TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 178.99
+  },
+  {
+   "code": "KAT 103-792R01",
+   "desc": "ST145R12 (ST145/70R12) LRD TL RADIAL TRAIL 5/4.5 (103-17987 BLANCHE/WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 180.99
+  },
+  {
+   "code": "103-839R",
+   "desc": "ST185/80R13 LRD TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 182.99
+  },
+  {
+   "code": "KAT 74-18505G",
+   "desc": "20.5X8.00-10 LRC TL P815 JOURNEY 5/4.5 (103-1524004-2 GALV)/TR13",
+   "brand": "JOURNEY",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 182.99
+  },
+  {
+   "code": "KAT 74-21305",
+   "desc": "ST205/75R14 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 183.99
+  },
+  {
+   "code": "98-737",
+   "desc": "ST205/75R14 LRD TL KARRIER KR03 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 184.99
+  },
+  {
+   "code": "103-831",
+   "desc": "ST175/80R13 LRD TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2026-08-04",
+   "category": "trailer",
+   "price": 186.99
+  },
+  {
+   "code": "103-848R",
+   "desc": "ST205/75R15 LRC TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 188.99
+  },
+  {
+   "code": "KAT 74-20405A",
+   "desc": "ST185/80R13 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-18138 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 188.99
+  },
+  {
+   "code": "KAT 74-18805",
+   "desc": "20.5X8.00-10 LRF TL P825T JOURNEY 5/4.5 (103-1524001 BLANCHE-WHITE)/TR416",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 188.99
+  },
+  {
+   "code": "KAT 104-81004",
+   "desc": "18.5X8.50-8 LRC TL SPORT TRAIL 4/4 (103-1530101 BLANCHE/WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 188.99
+  },
+  {
+   "code": "KAT 104-81005",
+   "desc": "18.5X8.50-8 LRC TL SPORT TRAIL 5/4.5 (103-1529901 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 188.99
+  },
+  {
+   "code": "KAT 98-87504P",
+   "desc": "205/65-10 (20.5X8.00-10) LRC TL K399 LOADSTAR KENDA 4/4 (103-1523901 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 189.99
+  },
+  {
+   "code": "KAT 98-73105",
+   "desc": "ST175/80R13 LRD TL KARRIER KR03 KENDA 5/4.5 (103-17988 BLANCHE/WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 189.99
+  },
+  {
+   "code": "74-232",
+   "desc": "ST235/80R16 LRE TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 190.99
+  },
+  {
+   "code": "74-901",
+   "desc": "8-14.5 LRG TL H128 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 190.99
+  },
+  {
+   "code": "103-853R",
+   "desc": "ST215/75R14 LRC TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 191.99
+  },
+  {
+   "code": "KAT 98-87605",
+   "desc": "205/65-10 (20.5X8.00-10) LRD TL K399 LOADSTAR KENDA 5/4.5 (103-1524001 BLANCHE-WHITE)/TR600",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 191.99
+  },
+  {
+   "code": "KAT 104-82910A",
+   "desc": "4.80-8 LRB TL SPORT TRAIL (52-8010 BLANCHE-WHITE) /TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 192.99
+  },
+  {
+   "code": "KAT 74-21605",
+   "desc": "ST205/75R15 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-17990 BLANCHE/WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 192.99
+  },
+  {
+   "code": "KAT 74-21606",
+   "desc": "ST205/75R15 LRC TL WR078 RADIAL JOURNEY 6/5.5 (103-18153 BLANCHE-WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 192.99
+  },
+  {
+   "code": "104-822",
+   "desc": "ST175/80D13 LRC TL SPORT TRAIL LH CARLSTAR #",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 192.99
+  },
+  {
+   "code": "98-732",
+   "desc": "ST205/75R15 LRD TL KARRIER KR03 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 192.99
+  },
+  {
+   "code": "KAT 74-22205",
+   "desc": "ST215/75R14 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 195.99
+  },
+  {
+   "code": "KAT 103-85104",
+   "desc": "ST175/80R13 LRC TL RADIAL TRAIL HD 4/4 (103-18077 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 195.99
+  },
+  {
+   "code": "KAT 103-85105",
+   "desc": "ST175/80R13 LRC TL RADIAL TRAIL HD 5/4.5 (103-17988 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 195.99
+  },
+  {
+   "code": "KAT 98-70105G",
+   "desc": "ST175/80D13 LRC TL K550 KENDA 5/4.5 (103-18138 GALV.)/TR13",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 195.99
+  },
+  {
+   "code": "KAT 74-22005A",
+   "desc": "ST205/75R15 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-18277 BLANCHE/WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 196.99
+  },
+  {
+   "code": "98-705",
+   "desc": "ST205/75D14 LRD TL K550 LOADSTAR KENDA #",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 197.99
+  },
+  {
+   "code": "KAT 74-20805G",
+   "desc": "ST185/80R13 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-18138 GALV.)/TR600",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 198.99
+  },
+  {
+   "code": "KAT 74-21605B",
+   "desc": "ST205/75R15 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-81991 NOIRE-BLACK)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 199.99
+  },
+  {
+   "code": "KAT 98-72505G",
+   "desc": "ST175/80R13 LRC TL KARRIER KR03 KENDA 5/4.5 (103-18138 GALV.)/TR13",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 199.99
+  },
+  {
+   "code": "104-813",
+   "desc": "20.5X8.00-10 LRC TL SPORT TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 199.99
+  },
+  {
+   "code": "KAT 103-79303",
+   "desc": "ST145R12 (ST145/70R12) LRE TL RADIAL TRAIL 5/4.5 (103-17987 BLANCHE/WHITE)TR600",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 200.99
+  },
+  {
+   "code": "KAT 98-712A05",
+   "desc": "ST185/80D13 LRC TL K550 KENDA 5/4.5 (103-17988 BLANCHE/WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 202.99
+  },
+  {
+   "code": "KAT 98-87604",
+   "desc": "205/65-10 (20.5X8.00-10) LRD TL K399 LOADSTAR KENDA 4/4 (103-1523901 BLANCHE-WHITE)/TR600",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 204.99
+  },
+  {
+   "code": "103-847R",
+   "desc": "ST205/75R15 LRD TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 204.99
+  },
+  {
+   "code": "103-837",
+   "desc": "ST205/75R14 LRD TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 205.99
+  },
+  {
+   "code": "98-716",
+   "desc": "ST205/75D15 LRD TL K550 LOADSTAR KENDA #",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 205.99
+  },
+  {
+   "code": "KAT 74-21205G",
+   "desc": "ST205/75R14 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-17993 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 207.99
+  },
+  {
+   "code": "KAT 98-88705",
+   "desc": "205/65-10 (20.5X8.00-10) LRE TL K399 LOADSTAR KENDA 5/4.5 (103-1524001 BLANCHE-WHITE)/TR416",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 209.99
+  },
+  {
+   "code": "KAT 74-22005",
+   "desc": "ST205/75R15 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-17990 BLANCHE/WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 210.99
+  },
+  {
+   "code": "98-730",
+   "desc": "ST225/75R15 LRD TL KARRIER KR03 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 210.99
+  },
+  {
+   "code": "KAT 74-22405",
+   "desc": "ST225/75R15 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-17990 BLANCHE/WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 218.99
+  },
+  {
+   "code": "KAT 74-22406",
+   "desc": "ST225/75R15 LRD TL WR078 RADIAL JOURNEY 6/5.5 (103-18153 BLANCHE-WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 218.99
+  },
+  {
+   "code": "KAT 74-21305G",
+   "desc": "ST205/75R14 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-17993 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 220.99
+  },
+  {
+   "code": "98-710",
+   "desc": "ST225/75D15 LRD TL K550 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 221.99
+  },
+  {
+   "code": "104-832",
+   "desc": "ST185/80D13 LRC TL SPORT TRAIL LH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "trailer",
+   "price": 221.99
+  },
+  {
+   "code": "KAT 98-72605",
+   "desc": "ST205/75R14 LRC TL KARRIER KR03 KENDA 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 223.99
+  },
+  {
+   "code": "KAT 98-70405",
+   "desc": "ST205/75D14 LRC TL K550 KENDA 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 223.99
+  },
+  {
+   "code": "103-850R",
+   "desc": "ST225/75R15 LRD TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 224.99
+  },
+  {
+   "code": "74-236",
+   "desc": "ST235/85R16 LRE TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 225.99
+  },
+  {
+   "code": "KAT 74-22406W",
+   "desc": "ST225/75R15 LRD TL WR078 RADIAL JOURNEY 6/5.5 (103-81979 BLANCHE/WHITE)/TR13",
+   "brand": "JOURNEY",
+   "stock": "5 in stock",
+   "category": "trailer",
+   "price": 225.99
+  },
+  {
+   "code": "KAT 104-81204-1",
+   "desc": "20.5X8.00-10 LRB TL SPORT TRAIL 4/4 (103-1523901 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 225.99
+  },
+  {
+   "code": "KAT 103-79305G",
+   "desc": "ST145R12 (ST145/70R12) LRE TL RADIAL TRAIL 5/4.5 (103-18095 GALV.)/TR600",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 226.99
+  },
+  {
+   "code": "KAT 74-21605G",
+   "desc": "ST205/75R15 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-17994 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 227.99
+  },
+  {
+   "code": "98-986A",
+   "desc": "7-14.5LT LRD TL K370 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 228.99
+  },
+  {
+   "code": "KAT 103-83905",
+   "desc": "ST185/80R13 LRD TL RADIAL TRAIL HD 5/4.5 (103-17988 BLANCHE/WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 231.99
+  },
+  {
+   "code": "74-240",
+   "desc": "ST235/85R16 LRF TL WR078 RADIAL JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 232.99
+  },
+  {
+   "code": "KAT 74-22205A",
+   "desc": "ST215/75R14 LRC TL WR078 RADIAL JOURNEY 5/4.5 (103-17993 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 232.99
+  },
+  {
+   "code": "KAT 98-70806",
+   "desc": "ST205/75D15 LRC TL K550 KENDA 6/5.5 (103-18153 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 233.99
+  },
+  {
+   "code": "KAT 98-70805",
+   "desc": "ST205/75D15 LRC TL K550 KENDA 5/4.5 (103-17990 BLANCHE/WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 233.99
+  },
+  {
+   "code": "98-718",
+   "desc": "ST225/75D15 LRE TL K550 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "3 in stock",
+   "category": "trailer",
+   "price": 233.99
+  },
+  {
+   "code": "104-824",
+   "desc": "ST205/75D14 LRC TL SPORT TRAIL LH CARLSTAR #",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 234.99
+  },
+  {
+   "code": "98-989",
+   "desc": "8-14.5LT LRF TL K391M LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 235.99
+  },
+  {
+   "code": "KAT 98-88705G",
+   "desc": "205/65-10 (20.5X8.00-10) LRE TL K399 LOADSTAR KENDA 5/4.5 (103-1524004-2 GALV.)/TR416",
+   "brand": "KENDA",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 236.99
+  },
+  {
+   "code": "KAT 103-85205",
+   "desc": "ST205/75R14 LRC TL RADIAL TRAIL HD 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 239.99
+  },
+  {
+   "code": "KAT 104-82205",
+   "desc": "ST175/80D13 LRC TL SPORT TRAIL LH 5/4.5 (103-17988 BLANCHE/WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 241.99
+  },
+  {
+   "code": "KAT 74-22805",
+   "desc": "ST225/75R15 LRE TL WR078 RADIAL JOURNEY 5/4.5 (103-17990 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 241.99
+  },
+  {
+   "code": "KAT 74-22806A",
+   "desc": "ST225/75R15 LRE TL WR078 RADIAL JOURNEY 6/5.5 (103-18153 BLANCHE-WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 241.99
+  },
+  {
+   "code": "KAT 74-90100",
+   "desc": "8-14.5 LRG TL H128 JOURNEY 14.5X6 (103-181934 NOIRE-BLACK)/TR416",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 242.99
+  },
+  {
+   "code": "98-950",
+   "desc": "225/55-12 10PR TL K399 LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 244.99
+  },
+  {
+   "code": "98-738",
+   "desc": "ST225/75R15 LRE TL KARRIER KR03 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 244.99
+  },
+  {
+   "code": "KAT 98-73705",
+   "desc": "ST205/75R14 LRD TL KARRIER KR03 KENDA 5/4.5 (103-17989 BLANCHE-WHITE)/TR600",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 245.99
+  },
+  {
+   "code": "KAT 74-22005G",
+   "desc": "ST205/75R15 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-17994 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 245.99
+  },
+  {
+   "code": "98-990",
+   "desc": "8-14.5LT LRG TL K391M LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 246.99
+  },
+  {
+   "code": "104-815",
+   "desc": "20.5X8.00-10 LRE TL SPORT TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 246.99
+  },
+  {
+   "code": "KAT 98-72805",
+   "desc": "ST205/75R15 LRC TL KARRIER KR03 KENDA 5/4.5 (103-17990 BLANCHE/WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 248.99
+  },
+  {
+   "code": "KAT 74-22806W",
+   "desc": "ST225/75R15 LRE TL WR078 RADIAL JOURNEY 6/5.5 (103-81979 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "5 in stock",
+   "category": "trailer",
+   "price": 248.99
+  },
+  {
+   "code": "KAT 104-81305",
+   "desc": "20.5X8.00-10 LRC TL SPORT TRAIL 5/4.5 (103-1524001 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 250.99
+  },
+  {
+   "code": "104-814",
+   "desc": "20.5X8.00-10 LRD TL SPORT TRAIL CARLSTAR #",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 250.99
+  },
+  {
+   "code": "103-855R",
+   "desc": "ST225/75R15 LRE TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 250.99
+  },
+  {
+   "code": "104-826",
+   "desc": "ST205/75D15 LRC TL SPORT TRAIL LH CARLSTAR #",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 250.99
+  },
+  {
+   "code": "74-239",
+   "desc": "LT235/75R15 10PR TL WR097 RADIAL JOURNEY #",
+   "brand": "JOURNEY",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 250.99
+  },
+  {
+   "code": "KAT 103-85305",
+   "desc": "ST215/75R14 LRC TL RADIAL TRAIL HD 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 252.99
+  },
+  {
+   "code": "KAT 74-22406G",
+   "desc": "ST225/75R15 LRD TL WR078 RADIAL JOURNEY 6/5.5 (103-18154 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 253.99
+  },
+  {
+   "code": "KAT 74-22405G",
+   "desc": "ST225/75R15 LRD TL WR078 RADIAL JOURNEY 5/4.5 (103-17994 GALV.)/TR13",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 253.99
+  },
+  {
+   "code": "104-825",
+   "desc": "ST215/75D14 LRC TL SPORT TRAIL LH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "trailer",
+   "price": 256.99
+  },
+  {
+   "code": "KAT 98-70505",
+   "desc": "ST205/75D14 LRD TL K550 KENDA 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 258.99
+  },
+  {
+   "code": "78-710",
+   "desc": "ST225/75R15 LRG TL RT809 CEINTUR\u00c9 D'ACIER/STEEL BELTED CARGOMAX (CAP. 3190-S/2827-D)",
+   "brand": "CARGOMAX",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 259.99
+  },
+  {
+   "code": "104-816",
+   "desc": "20.5X8.00-10 LRF TL SPORT TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 260.99
+  },
+  {
+   "code": "KAT 98-70405G",
+   "desc": "ST205/75D14 LRC TL K550 KENDA 5/4.5 (103-17993 GALV.)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 260.99
+  },
+  {
+   "code": "KAT 98-72605G",
+   "desc": "ST205/75R14 LRC TL KARRIER KR03 KENDA 5/4.5 (103-17993 GALV.)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 260.99
+  },
+  {
+   "code": "104-828",
+   "desc": "ST225/75D15 LRD TL SPORT TRAIL LH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 263.99
+  },
+  {
+   "code": "KAT 103-84805",
+   "desc": "ST205/75R15 LRC TL RADIAL TRAIL HD 5/4.5 (103-17990 BLANCHE/WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 263.99
+  },
+  {
+   "code": "KAT 103-84806",
+   "desc": "ST205/75R15 LRC TL RADIAL TRAIL HD 6/5.5 (103-18153 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 263.99
+  },
+  {
+   "code": "104-850",
+   "desc": "700-15 (ST205/90D15) LRD TL SPORT TRAIL LH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 266.99
+  },
+  {
+   "code": "98-760",
+   "desc": "ST215/65R17 LRC TL KR17 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 267.99
+  },
+  {
+   "code": "KAT 98-70805G",
+   "desc": "ST205/75D15 LRC TL K550 KENDA 5/4.5 (103-17994 GALV.)/TR13",
+   "brand": "KENDA",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 268.99
+  },
+  {
+   "code": "98-721",
+   "desc": "700-15LT LRE TL K391M LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "1 in stock",
+   "category": "trailer",
+   "price": 268.99
+  },
+  {
+   "code": "78-720",
+   "desc": "ST235/80R16 LRH TL RT809 CEINTUR\u00c9 D'ACIER/STEEL BELTED CARGOMAX",
+   "brand": "CARGOMAX",
+   "stock": "2026-07-02",
+   "category": "trailer",
+   "price": 276.99
+  },
+  {
+   "code": "78-725",
+   "desc": "215/75R17.5 18PR 135/133L TL RT562 CEINTUR\u00c9 D'ACIER/STEEL BELTED DOT SURETRAC",
+   "brand": "AUTRES - OTHERS",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 276.99
+  },
+  {
+   "code": "KAT 74-22806G",
+   "desc": "ST225/75R15 LRE TL WR078 RADIAL JOURNEY 6/5.5 (103-18154 GALV.)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 276.99
+  },
+  {
+   "code": "KAT 103-85205G",
+   "desc": "ST205/75R14 LRC TL RADIAL TRAIL HD 5/4.5 (103-17993 GALV.)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 276.99
+  },
+  {
+   "code": "KAT 74-22805G",
+   "desc": "ST225/75R15 LRE TL WR078 RADIAL JOURNEY 5/4.5 (103-17994 GALV.)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 276.99
+  },
+  {
+   "code": "KAT 103-84705",
+   "desc": "ST205/75R15 LRD TL RADIAL TRAIL HD 5/4.5 (103-17990 BLANCHE/WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 279.99
+  },
+  {
+   "code": "KAT 74-23206",
+   "desc": "ST235/80R16 LRE TL WR078 RADIAL JOURNEY 6/5.5 (103-18326 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 282.99
+  },
+  {
+   "code": "KAT 74-23208",
+   "desc": "ST235/80R16 LRE TL WR078 RADIAL JOURNEY 8/6.5 (103-18327 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 282.99
+  },
+  {
+   "code": "KAT 98-73705G",
+   "desc": "ST205/75R14 LRD TL KARRIER KR03 KENDA 5/4.5 (103-17993 GALV.)/TR600",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 282.99
+  },
+  {
+   "code": "78-721",
+   "desc": "ST235/85R16 LRH TL RT809 CEINTUR\u00c9 D'ACIER/STEEL BELTED CARGOMAX",
+   "brand": "CARGOMAX",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 282.99
+  },
+  {
+   "code": "104-845",
+   "desc": "ST205/85D14.5 (8-14.5) LRF TL SPORT TRAIL LH CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 282.99
+  },
+  {
+   "code": "KAT 98-73005",
+   "desc": "ST225/75R15 LRD TL KARRIER KR03 KENDA 5/4.5 (103-17990 BLANCHE/WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 285.99
+  },
+  {
+   "code": "KAT 98-73006",
+   "desc": "ST225/75R15 LRD TL KARRIER KR03 KENDA 6/5.5 (103-18153 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 285.99
+  },
+  {
+   "code": "KAT 98-98910",
+   "desc": "8-14.5LT LRF TL K391M LOADSTAR KENDA 14.5X6 (103-181934 NOIRE-BLACK)/TR416",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 287.99
+  },
+  {
+   "code": "KAT 104-82405",
+   "desc": "ST205/75D14 LRC TL SPORT TRAIL LH 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 295.99
+  },
+  {
+   "code": "103-841R",
+   "desc": "ST235/80R16 LRE TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 295.99
+  },
+  {
+   "code": "KAT 98-71005",
+   "desc": "ST225/75D15 LRD TL K550 KENDA 5/4.5 (103-17990 BLANCHE/WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 296.99
+  },
+  {
+   "code": "KAT 98-71006",
+   "desc": "ST225/75D15 LRD TL K550 KENDA 6/5.5 (103-18153 BLANCHE-WHITE)/TR13",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 296.99
+  },
+  {
+   "code": "KAT 98-99010",
+   "desc": "8-14.5LT LRG TL K391M LOADSTAR KENDA 14.5X6 (103-181934 NOIRE-BLACK)/TR416",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 298.99
+  },
+  {
+   "code": "KAT 103-84806G",
+   "desc": "ST205/75R15 LRC TL RADIAL TRAIL HD 6/5.5 (103-18154 GALV.)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 298.99
+  },
+  {
+   "code": "KAT 103-85006",
+   "desc": "ST225/75R15 LRD TL RADIAL TRAIL HD 6/5.5 (103-18153 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 299.99
+  },
+  {
+   "code": "KAT 104-81505",
+   "desc": "20.5X8.00-10 LRE TL SPORT TRAIL 5/4.5 (103-1524001 BLANCHE-WHITE)/TR416",
+   "brand": "CARLSTAR",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 302.99
+  },
+  {
+   "code": "98-736",
+   "desc": "ST235/80R16 LRE TL KARRIER KR03 KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 304.99
+  },
+  {
+   "code": "78-726",
+   "desc": "235/75R17.5 18PR 143/141L TL RT562 CEINTUR\u00c9 D'ACIER/STEEL BELTED DOT SURETRAC",
+   "brand": "AUTRES - OTHERS",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 307.99
+  },
+  {
+   "code": "KAT 104-81605",
+   "desc": "20.5X8.00-10 LRF TL SPORT TRAIL 5/4.5 (103-1524001 BLANCHE-WHITE)/TR416",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 316.99
+  },
+  {
+   "code": "KAT 74-23208G",
+   "desc": "ST235/80R16 LRE TL WR078 RADIAL JOURNEY 8/6.5 (103-18341 GALV.)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 316.99
+  },
+  {
+   "code": "KAT 74-23608",
+   "desc": "ST235/85R16 LRE TL WR078 RADIAL JOURNEY 8/6.5 (103-18327 BLANCHE/WHITE)/TR600",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 317.99
+  },
+  {
+   "code": "KAT 98-73806",
+   "desc": "ST225/75R15 LRE TL KARRIER KR03 KENDA 6/5.5 (103-18153 BLANCHE-WHITE)/TR600",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 319.99
+  },
+  {
+   "code": "KAT 103-85506",
+   "desc": "ST225/75R15 LRE TL RADIAL TRAIL HD 6/5.5 (103-18153 BLANCHE-WHITE)/TR600",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 325.99
+  },
+  {
+   "code": "103-833",
+   "desc": "ST235/80R16 LRF TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 328.99
+  },
+  {
+   "code": "KAT 74-24008",
+   "desc": "ST235/85R16 LRF TL WR078 RADIAL JOURNEY 8/6.5 (103-18327 BLANCHE/WHITE) TR416",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 329.99
+  },
+  {
+   "code": "103-834",
+   "desc": "ST235/75R15 LRE TL RADIAL TRAIL A/T CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "trailer",
+   "price": 332.99
+  },
+  {
+   "code": "KAT 104-84500",
+   "desc": "ST205/85D14.5 (8-14.5) LRF TL SPORT TRAIL LH 14.5X6 (103-181934 NOIRE-BLACK)/TR416",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 334.99
+  },
+  {
+   "code": "103-854R",
+   "desc": "ST235/85R16 LRF TL RADIAL TRAIL HD CARLSTAR #",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 335.99
+  },
+  {
+   "code": "KAT 104-82806",
+   "desc": "ST225/75D15 LRD TL SPORT TRAIL LH 6/5.5 (103-18153 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 338.99
+  },
+  {
+   "code": "103-805",
+   "desc": "5.70-8 LRD TL USA TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "trailer",
+   "price": 339.99
+  },
+  {
+   "code": "98-743",
+   "desc": "ST235/75R15 LRD 117/112Q TL KR29 LOADSTAR M/T KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 343.99
+  },
+  {
+   "code": "104-860",
+   "desc": "ST225/90D16 (750-16) LRE TL SPORT TRAIL LH CARLSTAR #",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 347.99
+  },
+  {
+   "code": "104-844",
+   "desc": "ST195/75D14 LRD TL SURE-TRAIL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "1 in stock",
+   "category": "trailer",
+   "price": 349.99
+  },
+  {
+   "code": "KAT 98-73805G",
+   "desc": "ST225/75R15 LRE TL KARRIER KR03 KENDA 5/4.5 (103-17994 GALV.)/TR600",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 354.99
+  },
+  {
+   "code": "98-724",
+   "desc": "750-16LT LRF TL K391M LOADSTAR KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 356.99
+  },
+  {
+   "code": "KAT 104-83005F",
+   "desc": "4.80-8 LRC TL SPORT TRAIL 5/4.5 (103-1092301-2 BLANCHE-WHITE)/TR13/FOAMFILL (JANTE/RIM)",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 357.99
+  },
+  {
+   "code": "KAT 74-24008G",
+   "desc": "ST235/85R16 LRF TL WR078 RADIAL JOURNEY (103-18341 GALV.) 8/6.5 TR416",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 363.99
+  },
+  {
+   "code": "98-739",
+   "desc": "ST235/85R16 LRF TL KR18 KARRIER HD KENDA (CAP 3960 LBS) #",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 372.99
+  },
+  {
+   "code": "KAT 78-72008",
+   "desc": "ST235/80R16 LRH TL CARGOMAX 8/6.5 (103-18327 BLANCHE/WHITE)/ TR416",
+   "brand": "CARGOMAX",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 373.99
+  },
+  {
+   "code": "103-844R",
+   "desc": "ST235/85R16 LRE TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "7 in stock",
+   "category": "trailer",
+   "price": 377.99
+  },
+  {
+   "code": "103-843",
+   "desc": "ST235/85R16 LRG TL CSL16 ALL STEEL RADIAL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "7 in stock",
+   "category": "trailer",
+   "price": 379.99
+  },
+  {
+   "code": "KAT 78-72108A",
+   "desc": "ST235/85R16 LRH TL CARGOMAX 8/6.5 (103-18330 BLANCHE/WHITE)/ TR416",
+   "brand": "CARGOMAX",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 385.99
+  },
+  {
+   "code": "103-842",
+   "desc": "ST235/80R16 LRG TL CSL16 ALL STEEL RADIAL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "9 in stock",
+   "category": "trailer",
+   "price": 387.99
+  },
+  {
+   "code": "KAT 103-84108",
+   "desc": "ST235/80R16 LRE TL RADIAL TRAIL HD 8/6.5 (103-18327 BLANCHE/WHITE)/TR600",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 387.99
+  },
+  {
+   "code": "KAT 78-72008B",
+   "desc": "ST235/80R16 LRH TL CARGOMAX 8/6.5 (103-81990 NOIRE-BLACK)/ TR416",
+   "brand": "CARGOMAX",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 394.99
+  },
+  {
+   "code": "KAT 78-72108B",
+   "desc": "ST235/85R16 LRH TL CARGOMAX 8/6.5 (103-81990 NOIRE-BLACK)/ TR416",
+   "brand": "CARGOMAX",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 400.99
+  },
+  {
+   "code": "103-844",
+   "desc": "ST255/85R16 LRE TL RADIAL TRAIL HD CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "trailer",
+   "price": 403.99
+  },
+  {
+   "code": "KAT 104-84405",
+   "desc": "ST195/75D14 LRD TL SURE-TRAIL 5/4.5 (103-17989 BLANCHE-WHITE)/TR13",
+   "brand": "CARLSTAR",
+   "stock": "1 in stock",
+   "category": "trailer",
+   "price": 410.99
+  },
+  {
+   "code": "103-836",
+   "desc": "ST225/75R15 LRF TL CSL16 ALL STEEL RADIAL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 411.99
+  },
+  {
+   "code": "KAT 78-72108",
+   "desc": "ST235/85R16 LRH TL CARGOMAX 8/6.5 (103-18341 GALV.)/ TR416",
+   "brand": "CARGOMAX",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 413.99
+  },
+  {
+   "code": "KAT 78-72106",
+   "desc": "ST235/85R16 LRH TL CARGOMAX 6/5.5 (103-18340 GALV.)/ TR416",
+   "brand": "CARGOMAX",
+   "stock": "More than 10 in stock",
+   "category": "trailer",
+   "price": 419.99
+  },
+  {
+   "code": "103-838",
+   "desc": "ST215/75R17.5 LRJ TL LPT CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "10 in stock",
+   "category": "trailer",
+   "price": 444.99
+  },
+  {
+   "code": "103-848",
+   "desc": "ST225/90R16 LRG TL ALL STEEL RADIAL CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 475.99
+  },
+  {
+   "code": "103-835",
+   "desc": "ST235/75R17.5 LRJ TL LPT CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "trailer",
+   "price": 484.99
+  },
+  {
+   "code": "95-LA134",
+   "desc": "6.50-16LT 6PR TT SUPER TRANSPORT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 549.99
+  },
+  {
+   "code": "95-LB134",
+   "desc": "6.50-16LT 6PR TT SUPER TRAXION SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 614.99
+  },
+  {
+   "code": "95-LN27C",
+   "desc": "700-16 6PR TT NON DIRECTIONAL HIGHWAY SERV. SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 619.99
+  },
+  {
+   "code": "95-LA133",
+   "desc": "6.50-16LT 6PR TL SUPER TRANSPORT LT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 626.99
+  },
+  {
+   "code": "95-LA4A5",
+   "desc": "8.00-16.5LT 8PR TL SUPER TRANSPORT LT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 633.99
+  },
+  {
+   "code": "95-LB246",
+   "desc": "750-16LT 8PR TT SUPER TRAXION SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 672.99
+  },
+  {
+   "code": "95-LB4A5",
+   "desc": "8.00-16.5LT 8PR TL SUPER TRAXION WB SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 688.99
+  },
+  {
+   "code": "95-LB4B5",
+   "desc": "8.75-16.5 8PR TL SUPER TRAXION WB SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 727.99
+  },
+  {
+   "code": "95-LA4C5",
+   "desc": "9.50-16.5LT 8PR TL SUPER TRANSPORT LT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 743.99
+  },
+  {
+   "code": "KAT 103-15848F",
+   "desc": "5.70-8 LRD TL USA TRAIL 5/4.5 (103-1092301-2 BLANCHE-WHITE)/TR13/FOAMFILL (JANTE/RIM)",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 775.99
+  },
+  {
+   "code": "95-LA4D5",
+   "desc": "10-16.5LT 8PR TL SUPER TRANSPORT LT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 830.99
+  },
+  {
+   "code": "95-LA5J9",
+   "desc": "7.00-18LT 8PR TT SUPER TRANSPORT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "1 in stock",
+   "category": "trailer",
+   "price": 860.99
+  },
+  {
+   "code": "95-LA4C7",
+   "desc": "9.50-16.5LT 10PR TL SUPER TRANSPORT LT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "1 in stock",
+   "category": "trailer",
+   "price": 974.99
+  },
+  {
+   "code": "95-LN18E",
+   "desc": "9.00-16 8PR TT NON DIRECTIONAL M/S SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "trailer",
+   "price": 1226.99
+  },
+  {
+   "code": "95-LC3EL",
+   "desc": "12-16.5LT 12PR TL SUPER TRANSPORT WB SPECIALTY (CAP 4045LBS)",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 1386.99
+  },
+  {
+   "code": "95-MA2A2",
+   "desc": "7.50-20 10PR TT SUPER TRANSPORT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 1496.99
+  },
+  {
+   "code": "KAT 74-22806AF",
+   "desc": "ST225/75R15 LRE TL WR078 RADIAL JOURNEY 6/5.5 (103-18153 BLANCHE-WHITE)/TR13/ FOAMFILL",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "trailer",
+   "price": 1559.99
+  },
+  {
+   "code": "95-HL5MC",
+   "desc": "14.00-20 20PR TT NON DIRECTIONAL NDCC HIGHWAY SERV. SPECIALTY #",
+   "brand": "SPECIALTY",
+   "stock": "1 in stock",
+   "category": "trailer",
+   "price": 2452.99
+  },
+  {
+   "code": "84-725A",
+   "desc": "16.9-24 8PR TT R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 0.0
+  },
+  {
+   "code": "74-059",
+   "desc": "3.50-6 4PR TT H8023 F-2 3-RIB JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 26.99
+  },
+  {
+   "code": "74-060",
+   "desc": "3.50-8 4PR TT H8023 F-2 3-RIB JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 32.99
+  },
+  {
+   "code": "85-413",
+   "desc": "3.50-8 (90/100-8) 2PR IM63 TT TVS EUROGRIP #",
+   "brand": "TVS EUROGRIP",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 36.99
+  },
+  {
+   "code": "74-358",
+   "desc": "480/400-8 4PR TL BARRETTE/LUG H8022 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 52.99
+  },
+  {
+   "code": "74-880",
+   "desc": "480/400-8 6PR TL BARRETTE/LUG H8022 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 56.99
+  },
+  {
+   "code": "78-300",
+   "desc": "4.00-12 4PR TT F-2 3-RIB TREADURA (661 LBS)",
+   "brand": "TREADURA",
+   "stock": "2026-08-10",
+   "category": "farm",
+   "price": 63.99
+  },
+  {
+   "code": "73-700",
+   "desc": "5-12 6PR TL G-1 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 69.99
+  },
+  {
+   "code": "93-922A",
+   "desc": "3.50-6 4PR TL F-2 3-RIB TRANSMASTER #",
+   "brand": "AUTRES - OTHERS",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 69.99
+  },
+  {
+   "code": "103-701",
+   "desc": "13X5.00-6 2PR TL R-1 SUPERLUG CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 78.99
+  },
+  {
+   "code": "103-702",
+   "desc": "14X4.50-6 2PR TL R-1 SUPERLUG CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2026-06-20",
+   "category": "farm",
+   "price": 84.99
+  },
+  {
+   "code": "78-318",
+   "desc": "4.00-19 4PR TT F-2 3-RIB TREADURA (715 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 84.99
+  },
+  {
+   "code": "78-302A",
+   "desc": "5.00-15 4PR TT F-2 3-RIB TREADURA (715 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 85.99
+  },
+  {
+   "code": "KAT 74-88004B-G",
+   "desc": "480/400-8 6PR BARRETTE/LUG H8022 JOURNEY 4/4 (103-1544301)/TR13/ DIRECTIONNEL GAUCHE",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 96.99
+  },
+  {
+   "code": "KAT 74-88004B-D",
+   "desc": "480/400-8 6PR BARRETTE/LUG H8022 JOURNEY 4/4 (103-1544301)/TR13/ DIRECTIONNEL DROIT",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 96.99
+  },
+  {
+   "code": "73-704",
+   "desc": "6-14 6PR TL G-1 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 99.99
+  },
+  {
+   "code": "78-308",
+   "desc": "5.50-16 8PR TT F-2 3-RIB TREADURA (1050 LBS)",
+   "brand": "TREADURA",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 115.99
+  },
+  {
+   "code": "74-283",
+   "desc": "6-12 4PR TL R-1 LUG H167 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 116.99
+  },
+  {
+   "code": "78-091",
+   "desc": "6.00-16 6PR TT R-1 TRACTOR TREADURA (1091 LBS)",
+   "brand": "TREADURA",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 132.99
+  },
+  {
+   "code": "78-312A",
+   "desc": "6.50-16 8PR TT F-2 3-RIB TREADURA (1420 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 132.99
+  },
+  {
+   "code": "78-211",
+   "desc": "7.60-15 8PR TL I-1 IMPLEMENT TREADURA (2090 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 132.99
+  },
+  {
+   "code": "78-210",
+   "desc": "7.60-15 8PR TT I-1 IMPLEMENT TREADURA (2090 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 134.99
+  },
+  {
+   "code": "5-019-076",
+   "desc": "5-12 4PR 56A6 TL G-1 AG GARDEN TRACTOR PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 135.99
+  },
+  {
+   "code": "78-310",
+   "desc": "6.00-16 8PR TT F-2 3-RIB TREADURA (1140 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 136.99
+  },
+  {
+   "code": "78-217",
+   "desc": "7.60-15 10PR TT I-1 IMPLEMENT TREADURA (2425 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 143.99
+  },
+  {
+   "code": "78-304",
+   "desc": "7.5L-15 8PR TT F-2 3-RIB TREADURA (1580 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 148.99
+  },
+  {
+   "code": "73-149",
+   "desc": "9.5L-15 8PR TT I-1 IMPLEMENT ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 148.99
+  },
+  {
+   "code": "85-511",
+   "desc": "5.00-15 (130/100-15) IM45 6PR TT TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 149.99
+  },
+  {
+   "code": "103-703",
+   "desc": "4.80-8 2PR TL R-1 POWER-TRAC II LUG CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2026-06-27",
+   "category": "farm",
+   "price": 152.99
+  },
+  {
+   "code": "85-902",
+   "desc": "6.00-16 6PR TT F-2 3-RIB TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "10 in stock",
+   "category": "farm",
+   "price": 154.99
+  },
+  {
+   "code": "78-200",
+   "desc": "9.5L-14 8PR TT I-1 IMPLEMENT TREADURA (2450 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 156.99
+  },
+  {
+   "code": "78-206",
+   "desc": "11L-15 8PR TT I-1 IMPLEMENT TREADURA (2540 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 157.99
+  },
+  {
+   "code": "78-202",
+   "desc": "11L-14 8PR TT I-1 IMPLEMENT TREADURA (2470 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 158.99
+  },
+  {
+   "code": "5-019-063",
+   "desc": "5.00-15 4PR 79B TL I-3 TRACTION IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 162.99
+  },
+  {
+   "code": "73-708",
+   "desc": "7-16 6PR TL G-1 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 168.99
+  },
+  {
+   "code": "74-096",
+   "desc": "7.50-16 8PR TT R-1 WA006 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 171.99
+  },
+  {
+   "code": "85-903",
+   "desc": "6.50-16 6PR TT F-2 3-RIB TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 171.99
+  },
+  {
+   "code": "74-360",
+   "desc": "7.50-16 8PR TL F-2 3-RIB WA002 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 173.99
+  },
+  {
+   "code": "78-314",
+   "desc": "7.50-16 8PR TT F-2 3-RIB TREADURA (1710 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 173.99
+  },
+  {
+   "code": "78-208",
+   "desc": "11L-15 12PR TT I-1 IMPLEMENT TREADURA (3200 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 175.99
+  },
+  {
+   "code": "73-147",
+   "desc": "9.5L-15 8PR TL I-1 IMPLEMENT ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 177.99
+  },
+  {
+   "code": "78-306",
+   "desc": "9.5L-15 8PR TT F-2 3-RIB TREADURA (1870 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 180.99
+  },
+  {
+   "code": "78-096",
+   "desc": "7.50-16 8PR TT R-1 TRACTOR TREADURA (1740 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 181.99
+  },
+  {
+   "code": "85-605",
+   "desc": "24X8.00-14.5 (200/60-14.5) 10PR TL I-1 IM09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 185.99
+  },
+  {
+   "code": "103-705",
+   "desc": "16X6.50-8 (170/60-8) 4PR TL R-1 SUPERLUG CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 186.99
+  },
+  {
+   "code": "5-019-013",
+   "desc": "6.00-16 6PR 85A8 TL F-2 3-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 189.99
+  },
+  {
+   "code": "78-215",
+   "desc": "11L-16 8PR TL I-1 IMPLEMENT TREADURA (2680 LBS)",
+   "brand": "TREADURA",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 189.99
+  },
+  {
+   "code": "78-214",
+   "desc": "11L-16 8PR TT I-1 IMPLEMENT TREADURA (2680 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 192.99
+  },
+  {
+   "code": "73-710",
+   "desc": "8-16 6PR TL G-1 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "10 in stock",
+   "category": "farm",
+   "price": 194.99
+  },
+  {
+   "code": "78-209",
+   "desc": "11L-15 12PR TL I-1 IMPLEMENT TREADURA (3200 LBS)",
+   "brand": "TREADURA",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 201.99
+  },
+  {
+   "code": "103-286A",
+   "desc": "6.70-15SL 6PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 205.99
+  },
+  {
+   "code": "78-307",
+   "desc": "11L-15 8PR TT F-2 3-RIB TREADURA (2090 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 206.99
+  },
+  {
+   "code": "74-095",
+   "desc": "8.3-20 6PR TT R-1 WA005 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 208.99
+  },
+  {
+   "code": "74-864",
+   "desc": "12.5L-15SL 12PR TL I-1 WA001 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "2026-09-08",
+   "category": "farm",
+   "price": 209.99
+  },
+  {
+   "code": "74-350",
+   "desc": "26X12.00-12 8PR TL BARETTE/LUG P310 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 215.99
+  },
+  {
+   "code": "73-439",
+   "desc": "11L-15 8PR TL I-1 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 215.99
+  },
+  {
+   "code": "103-239",
+   "desc": "6.00-16SL 6PR TT F-2 3-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 215.99
+  },
+  {
+   "code": "103-222",
+   "desc": "4.00-15SL 4PR TT F-2 3-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2026-06-20",
+   "category": "farm",
+   "price": 220.99
+  },
+  {
+   "code": "78-316",
+   "desc": "7.50-18 8PR TT F-2 3-RIB TREADURA (1840 LBS)",
+   "brand": "TREADURA",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 220.99
+  },
+  {
+   "code": "85-516",
+   "desc": "7.50-18 IM45 8PR TT TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 221.99
+  },
+  {
+   "code": "103-223",
+   "desc": "5.00-15SL 4PR TL F-2 3-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 222.99
+  },
+  {
+   "code": "85-753",
+   "desc": "23X10.50-12 8PR TL R-1 LG18 LUG TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 223.99
+  },
+  {
+   "code": "78-212B",
+   "desc": "12.5L-15 12PR TT I-1 IMPLEMENT TREADURA (3860 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 224.99
+  },
+  {
+   "code": "98-860",
+   "desc": "6.00-12 4PR TT R-1 K365 LUG KENDA",
+   "brand": "KENDA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 228.99
+  },
+  {
+   "code": "84-004",
+   "desc": "750-16 8PR TL I-1 RIB IMPLEMENT 542 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 230.99
+  },
+  {
+   "code": "103-745",
+   "desc": "16X6.50-8 (170/60-8) 6PR TL R-1 SUPERLUG CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 240.99
+  },
+  {
+   "code": "74-860",
+   "desc": "10.0/75-15.3 12PR TL H8020 F-3 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "2026-06-22",
+   "category": "farm",
+   "price": 243.99
+  },
+  {
+   "code": "85-500",
+   "desc": "10.0/80-12 10PR TL F-3 IM18 (EURO-RIB) TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 245.99
+  },
+  {
+   "code": "103-204",
+   "desc": "11L-15SL 8PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 246.99
+  },
+  {
+   "code": "78-320",
+   "desc": "7.50-20 8PR TT F-2 3-RIB TREADURA (1940 LBS)",
+   "brand": "TREADURA",
+   "stock": "10 in stock",
+   "category": "farm",
+   "price": 247.99
+  },
+  {
+   "code": "85-517",
+   "desc": "8.00/75-15 (205/75-15) 6PR TL IM45 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "2026-09-04",
+   "category": "farm",
+   "price": 248.99
+  },
+  {
+   "code": "5-019-064",
+   "desc": "7.60-15 6PR 100B TL I-3 TRACTiON IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 248.99
+  },
+  {
+   "code": "78-088A",
+   "desc": "7.50-20 8PR TT R-1 TRACTOR TREADURA (1672 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 252.99
+  },
+  {
+   "code": "103-286",
+   "desc": "6.70-15SL 4PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 257.99
+  },
+  {
+   "code": "73-010",
+   "desc": "11.5/80-15.3 12PR TL F-3 IMP100 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 258.99
+  },
+  {
+   "code": "91-986",
+   "desc": "6-12 4PR TL R-1 TRU-POWER CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 258.99
+  },
+  {
+   "code": "85-805",
+   "desc": "12.5L-16SL (320L/70-16SL) 14PR 130B TL I-1 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 260.99
+  },
+  {
+   "code": "73-030",
+   "desc": "10.0/75-15.3 10PR TL R-1 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 261.99
+  },
+  {
+   "code": "103-226",
+   "desc": "9.5L-15SL 8PR TL I-1 FARM SPECIALIST CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 262.99
+  },
+  {
+   "code": "5-019-014",
+   "desc": "6.50-16 6PR 88A8 TL F-2 3-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 262.99
+  },
+  {
+   "code": "103-213",
+   "desc": "5.00-15SL 4PR TT I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 263.99
+  },
+  {
+   "code": "74-861",
+   "desc": "11.5/80-15.3 14PR TL H8020 F-3 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 263.99
+  },
+  {
+   "code": "5-019-033",
+   "desc": "7.60-15 8PR 106B TL I-1 PLANTER IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "2099-05-20",
+   "category": "farm",
+   "price": 266.99
+  },
+  {
+   "code": "91-020",
+   "desc": "18X8.50-10 4PR TL R-1 TRU-POWER CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 272.99
+  },
+  {
+   "code": "73-454",
+   "desc": "12.5L-15SL 12PR TL I-1 MULTI-RIB ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 274.99
+  },
+  {
+   "code": "5-019-040",
+   "desc": "7.60-15 8PR 106B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 275.99
+  },
+  {
+   "code": "103-707",
+   "desc": "20X10.00-8 4PR TL R-1 SUPERLUG CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 275.99
+  },
+  {
+   "code": "5-019-036",
+   "desc": "9.5L-14 8PR 111B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 276.99
+  },
+  {
+   "code": "73-440",
+   "desc": "11L-15FI LRF TL FI-1 HIGHWAY IMPLEMENT (DOT) ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 276.99
+  },
+  {
+   "code": "78-098",
+   "desc": "8.3-24 6PR TT R-1 TRACTOR TREADURA (1461 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 276.99
+  },
+  {
+   "code": "5-019-035",
+   "desc": "8.5L-14 6PR 102B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 281.99
+  },
+  {
+   "code": "103-285",
+   "desc": "5.90-15SL 4PR TT I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2026-07-04",
+   "category": "farm",
+   "price": 281.99
+  },
+  {
+   "code": "73-148",
+   "desc": "9.5L-15FI LRD TL FI-1 HIGHWAY IMPLEMENT (DOT) ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "2026-09-05",
+   "category": "farm",
+   "price": 283.99
+  },
+  {
+   "code": "78-322",
+   "desc": "10.00-16 10PR TT F-2 3-RIB TREADURA (2340 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 289.99
+  },
+  {
+   "code": "103-749",
+   "desc": "18X9.50-8 4PR TL R-1 SUPERLUG CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 297.99
+  },
+  {
+   "code": "103-303",
+   "desc": "6-12 6PR TL R-1 FARM SPECIALIST CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 299.99
+  },
+  {
+   "code": "73-436",
+   "desc": "11L-15 8PR TT F-2M 4-RIB ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 304.99
+  },
+  {
+   "code": "78-326",
+   "desc": "10.00-16 10PR TT F-2M 4-RIB TREADURA (2340 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 304.99
+  },
+  {
+   "code": "85-754",
+   "desc": "8-18 4PR TR18 TT R-1 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 306.99
+  },
+  {
+   "code": "78-218",
+   "desc": "12.5L-16 12PR TT I-1 IMPLEMENT TREADURA (3970 LBS)",
+   "brand": "TREADURA",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 310.99
+  },
+  {
+   "code": "95-FA5J1",
+   "desc": "5.00-15SL 4PR TL I-3 TRACTION IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 311.99
+  },
+  {
+   "code": "95-FB1Y1",
+   "desc": "7.50-14SL 4PR TL I-1 RIB IMPLEMENT (A) SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 311.99
+  },
+  {
+   "code": "78-097",
+   "desc": "9.5-20 8PR TT R-1 TRACTOR TREADURA (2105 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 314.99
+  },
+  {
+   "code": "5-019-044",
+   "desc": "27X9.50-15 8PR 102B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "2099-05-20",
+   "category": "farm",
+   "price": 316.99
+  },
+  {
+   "code": "103-228",
+   "desc": "9.5L-15SL 12PR TL  I-1 FARM SPECIALIST CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 317.99
+  },
+  {
+   "code": "73-020",
+   "desc": "12.5/80-15.3 14PR TL F-3 IMP100 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 318.99
+  },
+  {
+   "code": "78-099A",
+   "desc": "9.5-24 8PR TT R-1 TRACTOR TREADURA (2090 LBS)",
+   "brand": "TREADURA",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 327.99
+  },
+  {
+   "code": "KAT 78-20606",
+   "desc": "11L-15 8PR TT I-1 IMPLEMENT TREADURA 6/6 (59-84865A BLANC CASS\u00c9/OFF-WHITE)/99-1733",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 327.99
+  },
+  {
+   "code": "78-092",
+   "desc": "9.5-16 6PR TL R-1 TRACTOR TREADURA (1390 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 332.99
+  },
+  {
+   "code": "5-019-051",
+   "desc": "11L-16 8PR 115B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 332.99
+  },
+  {
+   "code": "95-FA5AH",
+   "desc": "5.90-15SL 4PR TL I-3 TRACTION IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 333.99
+  },
+  {
+   "code": "85-310",
+   "desc": "29X12.50-15 (320/60-15) 6PR TL I-3 HF09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 333.99
+  },
+  {
+   "code": "85-752",
+   "desc": "26X12.00-12 8PR TL R-1 LG15 LUG TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 335.99
+  },
+  {
+   "code": "103-410",
+   "desc": "18X8.50R10 4PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 335.99
+  },
+  {
+   "code": "5-019-043",
+   "desc": "9.5L-15 12PR 121B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 341.99
+  },
+  {
+   "code": "85-512",
+   "desc": "10.5/65-16 14PR TT F-3 IM18 (EURO-RIB) TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 341.99
+  },
+  {
+   "code": "KAT 78-20806",
+   "desc": "11L-15 12PR TT I-1 IMPLEMENT TREADURA 6/6 (59-84865A BLANC CASS\u00c9/OFF-WHITE)/99-1733",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 345.99
+  },
+  {
+   "code": "KAT 78-20906",
+   "desc": "11L-15 12PR TL I-1 IMPLEMENT TREADURA 6/6 (59-84865A BLANC CASS\u00c9/OFF-WHITE)/TR15",
+   "brand": "TREADURA",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 346.99
+  },
+  {
+   "code": "KAT 74-35804F",
+   "desc": "480/400-8 4PR BARRETTE/LUG H8022 JOURNEY 4/4 (103-1544301 BLANCHE-WHITE)/TR13/FOAMFILL",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 346.99
+  },
+  {
+   "code": "KAT 74-88004BF",
+   "desc": "480/400-8 6PR BARRETTE/LUG H8022 JOURNEY 4/4 (103-1544301 BLANCHE-WHITE)/TR13/FOAMFILL",
+   "brand": "JOURNEY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 350.99
+  },
+  {
+   "code": "91-019",
+   "desc": "23X8.50-12 4PR TL R-1 TRU-POWER CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 351.99
+  },
+  {
+   "code": "73-450",
+   "desc": "12.5L-15FI LRF TL FI-1 HIGHWAY IMPLEMENT (DOT) ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 358.99
+  },
+  {
+   "code": "74-890",
+   "desc": "12.5L-15FI LRF TL FI-1 WA001 HIGHWAY SERVICE (DOT) WANDA",
+   "brand": "JOURNEY",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 358.99
+  },
+  {
+   "code": "73-040",
+   "desc": "11.5/80-15.3 10PR TL R-1 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "2026-09-11",
+   "category": "farm",
+   "price": 362.99
+  },
+  {
+   "code": "5-019-046",
+   "desc": "11L-15 12PR 121B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 362.99
+  },
+  {
+   "code": "95-FA512",
+   "desc": "7.60-15SL 4PR TT I-3 TRACTION IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 362.99
+  },
+  {
+   "code": "85-750",
+   "desc": "26X12.00-12 12PR TL R-1 LG15 LUG TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 363.99
+  },
+  {
+   "code": "5-019-022",
+   "desc": "7.50-16 8PR 99A8 TL F-2M 4-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "2099-06-03",
+   "category": "farm",
+   "price": 363.99
+  },
+  {
+   "code": "95-FA3BE",
+   "desc": "6.40-15SL 4PR TL I-1 RIB IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 367.99
+  },
+  {
+   "code": "178-015-036",
+   "desc": "18X8.50-10 76A8/6PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2099-06-25",
+   "category": "farm",
+   "price": 368.99
+  },
+  {
+   "code": "103-215",
+   "desc": "9.5L-15SL 8PR TT I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 368.99
+  },
+  {
+   "code": "5-019-016",
+   "desc": "7.50-16 8PR 99A8 TL F-2 3-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 370.99
+  },
+  {
+   "code": "95-FA3L6",
+   "desc": "6.00-16SL 6PR TT I-1 RIB IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 373.99
+  },
+  {
+   "code": "84-003",
+   "desc": "12.5L-15 12PR TL I-1 RIB IMPLEMENT 542 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 374.99
+  },
+  {
+   "code": "73-175",
+   "desc": "31X13.50-15 8PR TL I-1 IMPLEMENT ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 378.99
+  },
+  {
+   "code": "103-205",
+   "desc": "7.50-16SL 6PR TT F-2 3-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 383.99
+  },
+  {
+   "code": "103-411",
+   "desc": "24X12.00R12 4PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 385.99
+  },
+  {
+   "code": "95-FA3M4",
+   "desc": "6.50-16SL 6PR TT I-1 RIB IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 385.99
+  },
+  {
+   "code": "5-019-084",
+   "desc": "8-16 6PR 91A6 TL G-1 AG GARDEN TRACTOR PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 387.99
+  },
+  {
+   "code": "74-865",
+   "desc": "11.2-24 10PR TT R-1 WA005 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 389.99
+  },
+  {
+   "code": "5-344-443",
+   "desc": "5-14 4PR TT R-1 LUG-M FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 391.99
+  },
+  {
+   "code": "85-600",
+   "desc": "10.0/75-15.3 10PR TL I-3 MT63T TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 399.99
+  },
+  {
+   "code": "95-FB3F4",
+   "desc": "25X7.50-15 6PR TL HF-1 IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 401.99
+  },
+  {
+   "code": "85-601",
+   "desc": "10.0/75-15.3 14PR TL I-3 MT63T TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 403.99
+  },
+  {
+   "code": "103-295",
+   "desc": "7-14 6PR TL R-1 TRACTOR CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 404.99
+  },
+  {
+   "code": "170-106-152",
+   "desc": "5.90-15SL 4PR TL I-3 TRACTION IMPLEMENT GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 404.99
+  },
+  {
+   "code": "5-019-020",
+   "desc": "9.5L-15 8PR 102A8 TL F-2M 4-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 407.99
+  },
+  {
+   "code": "103-412",
+   "desc": "23X8.50R12 6PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 408.99
+  },
+  {
+   "code": "KAT 73-44006",
+   "desc": "11L-15FI LRF TL FI-1 HIGHWAY IMPLEMENT ARMOUR (DOT) 6/6 (59-84865A BLANC CASS\u00c9/OFF-WHITE)",
+   "brand": "ARMOUR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 418.99
+  },
+  {
+   "code": "84-995",
+   "desc": "10.00-16 8PR TL F-2M 4-RIB 313 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 419.99
+  },
+  {
+   "code": "103-414",
+   "desc": "26X12.00R12 4PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 422.99
+  },
+  {
+   "code": "103-268",
+   "desc": "27X9.50-15 6PR TL HF-1 FARM SPECIALIST CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 423.99
+  },
+  {
+   "code": "5-344-699",
+   "desc": "6-12 4PR TT R-3 FARM SERVICE DIA FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 428.99
+  },
+  {
+   "code": "103-282",
+   "desc": "26X12.00-12 4PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 429.99
+  },
+  {
+   "code": "5-019-034",
+   "desc": "7.50-20 6PR 106B TL I-1 PLANTER IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "2099-05-20",
+   "category": "farm",
+   "price": 430.99
+  },
+  {
+   "code": "170-064-152",
+   "desc": "5.00-15SL 4PR TL I-3 TRACTION IMPLEMENT GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2099-06-02",
+   "category": "farm",
+   "price": 433.99
+  },
+  {
+   "code": "78-328",
+   "desc": "11.00-16 10PR TT F-2M 4-RIB TREADURA (2600 LBS) (VOIR/SEE 78-329)",
+   "brand": "TREADURA",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 434.99
+  },
+  {
+   "code": "84-700",
+   "desc": "8.3-24 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 435.99
+  },
+  {
+   "code": "95-FA1BW",
+   "desc": "7-16 6PR TT R-1 TRACTOR SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 443.99
+  },
+  {
+   "code": "KAT 78-212B06A",
+   "desc": "12.5L-15 12PR TT I-1 IMPLEMENT TREADURA 6/6 (58-1497 ARGENT/SILVER)/99-1756",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 443.99
+  },
+  {
+   "code": "103-230",
+   "desc": "9.5L-15FI LRF TL FI-1 HIGHWAY IMPLEMENT CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 443.99
+  },
+  {
+   "code": "91-023",
+   "desc": "23X10.50-12 4PR TL R-1 TRU-POWER CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 451.99
+  },
+  {
+   "code": "78-325A",
+   "desc": "11.00-16 12PR TL F-2 3-RIB TREADURA (3420 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 452.99
+  },
+  {
+   "code": "5-010-054",
+   "desc": "6-14 4PR TT R-3 FARM SERVICE DIA FIRESTONE/BRIDGESTONE #",
+   "brand": "FIRESTONE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 454.99
+  },
+  {
+   "code": "103-276",
+   "desc": "25X7.50-15 6PR TL HF-1 IMPLEMENT CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 455.99
+  },
+  {
+   "code": "78-330",
+   "desc": "11.00-16 12PR TT F-2M 4-RIB TREADURA (3420 LBS)",
+   "brand": "TREADURA",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 455.99
+  },
+  {
+   "code": "78-335",
+   "desc": "11.2-20 8PR TT R-1 TRACTOR TREADURA (2392 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 458.99
+  },
+  {
+   "code": "67-0004",
+   "desc": "8.3-16 6PR TL R-1 TRACTION MASTER",
+   "brand": "OTR ENGINEERED SOLUTIONS",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 459.99
+  },
+  {
+   "code": "84-701A",
+   "desc": "9.5-24 8PR TT R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 462.99
+  },
+  {
+   "code": "103-296",
+   "desc": "7-16 6PR TL R-1 FARM SPECIALIST CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 463.99
+  },
+  {
+   "code": "5-019-047",
+   "desc": "12.5L-15 12PR 127B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 464.99
+  },
+  {
+   "code": "78-329",
+   "desc": "11.00-16 12PR TL F-2M 4-RIB TREADURA (3420 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 464.99
+  },
+  {
+   "code": "95-FC157",
+   "desc": "9.00-10SL 10PR TL I-1 RIB IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 469.99
+  },
+  {
+   "code": "103-203B",
+   "desc": "12.5L-15SL 12PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 469.99
+  },
+  {
+   "code": "5-019-085",
+   "desc": "9.5-16 4PR 84A8 TL R-1 AG TRACTOR PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 472.99
+  },
+  {
+   "code": "178-015-007",
+   "desc": "23X8.50-12 88A8/6PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 476.99
+  },
+  {
+   "code": "175-440-472",
+   "desc": "7-12 6PR TL R-1 DYNA-TORQUE II GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 479.99
+  },
+  {
+   "code": "160-228-219",
+   "desc": "7.60-15SL 8PR TL I-1 FARM UTILITY GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 480.99
+  },
+  {
+   "code": "73-008",
+   "desc": "11.00-16 10PR TL F-2 3-RIB ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 480.99
+  },
+  {
+   "code": "84-700A",
+   "desc": "8.3-24 8PR TT R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-10-09",
+   "category": "farm",
+   "price": 480.99
+  },
+  {
+   "code": "81-41F378",
+   "desc": "25X7.50-15 6PR TL HF-1 FLO-TRAC RIB TITAN",
+   "brand": "TITAN",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 483.99
+  },
+  {
+   "code": "5-019-045",
+   "desc": "10.00-15 8PR 121B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 504.99
+  },
+  {
+   "code": "91-029",
+   "desc": "26X12.00-12 4PR TL R-1 TRU-POWER CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 505.99
+  },
+  {
+   "code": "85-505",
+   "desc": "15.0/55-17 14PR TL F-3 IM36 (EURO-RIB) TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 505.99
+  },
+  {
+   "code": "103-283",
+   "desc": "26X12.00-12 10PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 507.99
+  },
+  {
+   "code": "103-413",
+   "desc": "12R16.5 6PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 508.99
+  },
+  {
+   "code": "5-019-021",
+   "desc": "11L-15 8PR 106A8 TL F-2M 4-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 508.99
+  },
+  {
+   "code": "103-416",
+   "desc": "25X8.50R14 6PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2026-06-20",
+   "category": "farm",
+   "price": 510.99
+  },
+  {
+   "code": "78-101",
+   "desc": "12.4-24 8PR TT R-1 TRACTOR TREADURA (2830 LBS)",
+   "brand": "TREADURA",
+   "stock": "2026-06-27",
+   "category": "farm",
+   "price": 514.99
+  },
+  {
+   "code": "84-701",
+   "desc": "9.5-24 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 514.99
+  },
+  {
+   "code": "103-278",
+   "desc": "27X9.50-15 6PR TL HF-1 IMPLEMENT CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 516.99
+  },
+  {
+   "code": "103-275",
+   "desc": "IF280/70R15 134D TL F-3 FARM SPECIALIST IMPLEMENT CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 517.99
+  },
+  {
+   "code": "103-417",
+   "desc": "29.5X10R16.5 6PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 520.99
+  },
+  {
+   "code": "74-061",
+   "desc": "400/60-15.5 16PR TL H8033 I-3 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 520.99
+  },
+  {
+   "code": "KAT 78-212B06",
+   "desc": "12.5L-15 12PR TT I-1 IMPLEMENT TREADURA 6/6 (58-1500 ARGENT/SILVER)/99-1756",
+   "brand": "TREADURA",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 535.99
+  },
+  {
+   "code": "5-019-030",
+   "desc": "11L-15FI LRF 128J TL FI-1 HIGHWAY IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 538.99
+  },
+  {
+   "code": "78-090",
+   "desc": "14L-16.1 12PR TL F-2M 4-RIB TREADURA (4277 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 539.99
+  },
+  {
+   "code": "84-215",
+   "desc": "9.5-22 6PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 542.99
+  },
+  {
+   "code": "95-FA3AM",
+   "desc": "7.50-20SL 6PR TT I-1 RIB IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 543.99
+  },
+  {
+   "code": "78-104",
+   "desc": "11.2-28 8PR TT R-1 TRACTOR TREADURA (2640 LBS)",
+   "brand": "TREADURA",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 544.99
+  },
+  {
+   "code": "84-009",
+   "desc": "11L-15FI LRF 12PR TL STUBBLE PROOF HWY F3 319 IMPLEMENT ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-10-09",
+   "category": "farm",
+   "price": 548.99
+  },
+  {
+   "code": "5-019-023",
+   "desc": "10.00-16 8PR 110A8 TL F-2M 4-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 550.99
+  },
+  {
+   "code": "103-297",
+   "desc": "8-16 6PR TL R-1 FARM SPECIALIST CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 555.99
+  },
+  {
+   "code": "170-166-131",
+   "desc": "6.70-15SL 4PR TT I-3 SURE-GRIP TRACTION GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 560.99
+  },
+  {
+   "code": "84-215A",
+   "desc": "9.5-22 6PR TT R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 565.99
+  },
+  {
+   "code": "162-190-404",
+   "desc": "7.50-16SL 8PR TT F-2 3-RIB HD GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 566.99
+  },
+  {
+   "code": "5-019-017",
+   "desc": "10.00-16 8PR 110A8 TL F-2 3-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 569.99
+  },
+  {
+   "code": "178-015-011",
+   "desc": "27X8.50-15 102A8/8PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 570.99
+  },
+  {
+   "code": "81-48D665",
+   "desc": "7-14 6PR TL R-1 HI-TRACTION LUG TITAN",
+   "brand": "TITAN",
+   "stock": "2099-06-02",
+   "category": "farm",
+   "price": 571.99
+  },
+  {
+   "code": "103-283A",
+   "desc": "26X12.00-12 12PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 573.99
+  },
+  {
+   "code": "84-141",
+   "desc": "31X15.50-15 8PR TL HF-2 221 GRASSLANDS FLOTATION ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 580.99
+  },
+  {
+   "code": "85-602",
+   "desc": "11.5/80-15.3 10PR TL I-3 MT63T TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 582.99
+  },
+  {
+   "code": "74-355",
+   "desc": "31X15.50-15 10PR TL R-1 P3028 GARDE DE JANTE/RIM GUARD JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 583.99
+  },
+  {
+   "code": "103-279A",
+   "desc": "31X13.50-15 10PR TL HF-1 IMPLEMENT CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 590.99
+  },
+  {
+   "code": "85-130",
+   "desc": "14L-16.1SL 12PR TL I-1 I-09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "10 in stock",
+   "category": "farm",
+   "price": 590.99
+  },
+  {
+   "code": "95-FA45A",
+   "desc": "9.00-10SL 12PR TT F-2 3-RIB (B) SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 591.99
+  },
+  {
+   "code": "84-162",
+   "desc": "340/55-16 12PR TL F-3 327 FARMPRO IMPLEMENT ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 594.99
+  },
+  {
+   "code": "84-381",
+   "desc": "IF265/85R15 129D TL I-2 381 AGRIFLEX ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 595.99
+  },
+  {
+   "code": "103-289",
+   "desc": "12.5L-15FI LRF TL FI-1 HIGHWAY SERVICE (DOT) CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 604.99
+  },
+  {
+   "code": "78-102",
+   "desc": "13.6-24 8PR TT R-1 TRACTOR TREADURA (3080 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 609.99
+  },
+  {
+   "code": "178-015-009",
+   "desc": "26X12.00-12 107A8/6PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 611.99
+  },
+  {
+   "code": "78-105",
+   "desc": "12.4-28 8PR TT R-1 TRACTOR TREADURA (2970 LBS)",
+   "brand": "TREADURA",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 617.99
+  },
+  {
+   "code": "84-721A",
+   "desc": "11.2-24 8PR TL R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 625.99
+  },
+  {
+   "code": "78-115",
+   "desc": "11.2-38 8PR TT R-1 TRACTOR TREADURA (3000 LBS)",
+   "brand": "TREADURA",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 636.99
+  },
+  {
+   "code": "85-507",
+   "desc": "19.0/45-17 14PR TL F-3 IM36 (EURO-RIB) TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 638.99
+  },
+  {
+   "code": "85-132",
+   "desc": "16.5L-16.1SL 10PR TL I-1 I-09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 645.99
+  },
+  {
+   "code": "81-48D667",
+   "desc": "8-16 6PR TL R-1 HI-TRACTION LUG TITAN",
+   "brand": "TITAN",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 645.99
+  },
+  {
+   "code": "78-103",
+   "desc": "14.9-24 8PR TT R-1 TRACTOR TREADURA (3520 LBS)",
+   "brand": "TREADURA",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 648.99
+  },
+  {
+   "code": "103-217",
+   "desc": "10.00-15SL 8PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 656.99
+  },
+  {
+   "code": "73-548",
+   "desc": "280/85R24 (11.2R24) 115A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 659.99
+  },
+  {
+   "code": "84-387",
+   "desc": "VF280/70R15 136D TL I-2 381 AGRIFLEX ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 659.99
+  },
+  {
+   "code": "84-702",
+   "desc": "11.2-28 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 663.99
+  },
+  {
+   "code": "78-107",
+   "desc": "13.6-28 8PR TT R-1 TRACTOR TREADURA (3300 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 675.99
+  },
+  {
+   "code": "178-015-000",
+   "desc": "10-16.5 110A8/6PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 676.99
+  },
+  {
+   "code": "84-705A",
+   "desc": "12.4-24 8PR TT R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 681.99
+  },
+  {
+   "code": "85-412",
+   "desc": "12.0/75-18 (305/75-18) 12PR TL R-4 MT63 HD TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 685.99
+  },
+  {
+   "code": "170-191-132",
+   "desc": "7.60-15SL 10PR TL I-3 SURE-GRIP TRACTION GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2099-05-06",
+   "category": "farm",
+   "price": 688.99
+  },
+  {
+   "code": "178-015-008",
+   "desc": "25X8.50-14 92A8/6PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2099-06-02",
+   "category": "farm",
+   "price": 690.99
+  },
+  {
+   "code": "103-415",
+   "desc": "14-17.5 6PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2099-06-13",
+   "category": "farm",
+   "price": 703.99
+  },
+  {
+   "code": "84-245",
+   "desc": "280/70R20 116D TL R-1W 845 FARMPRO 70 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 712.99
+  },
+  {
+   "code": "101-169A",
+   "desc": "29X12.50-15 8PR TL HF-2 SUPER TERRA-GRIP GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 715.99
+  },
+  {
+   "code": "85-133",
+   "desc": "16.5L-16.1SL 14PR TL I-1 I-09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 721.99
+  },
+  {
+   "code": "91-032",
+   "desc": "29X12.50-15 6PR TL R-1 TRU-POWER CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 725.99
+  },
+  {
+   "code": "101-195",
+   "desc": "31X15.50-15 8PR TL HF-2 XTRA TRACTION GOODYEAR #",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 725.99
+  },
+  {
+   "code": "81-48D067",
+   "desc": "8-16 10PR TL R-1 HI-TRACTION LUG TITAN",
+   "brand": "TITAN",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 729.99
+  },
+  {
+   "code": "5-019-025",
+   "desc": "11.00-16 12PR 123A8 TL F-2M 4-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 730.99
+  },
+  {
+   "code": "5-019-031",
+   "desc": "12.5L-15FI LRF 134J TL FI-1 AG HIGHWAY IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 730.99
+  },
+  {
+   "code": "84-383",
+   "desc": "VF320/70R15 145D TL I-2 381 AGRIFLEX ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 731.99
+  },
+  {
+   "code": "85-261",
+   "desc": "400/60-22.5 18PR TL I-3 FL09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 731.99
+  },
+  {
+   "code": "5-019-018",
+   "desc": "11.00-16 8PR 114A8 TL F-2 3-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 746.99
+  },
+  {
+   "code": "73-554",
+   "desc": "320/85R24 (12.4R24) 122A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 750.99
+  },
+  {
+   "code": "103-207",
+   "desc": "12.5L-16SL 14PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 752.99
+  },
+  {
+   "code": "84-705",
+   "desc": "12.4-24 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 757.99
+  },
+  {
+   "code": "5-019-060",
+   "desc": "9.00-24 8PR 124B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 759.99
+  },
+  {
+   "code": "84-307",
+   "desc": "280/85R24 (11.2R24) 115D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 767.99
+  },
+  {
+   "code": "103-274",
+   "desc": "11L-16SL 12PR TL F-3 FARM SPECIALIST IMPLEMENT CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 778.99
+  },
+  {
+   "code": "84-711A",
+   "desc": "13.6-24 8PR TT R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 785.99
+  },
+  {
+   "code": "95-FC1HC",
+   "desc": "12.5L-16SL 14PR TT I-1 RIB IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 787.99
+  },
+  {
+   "code": "103-298",
+   "desc": "9.5-16 6PR TL R-1 FARM SPECIALIST CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 801.99
+  },
+  {
+   "code": "5-019-053",
+   "desc": "14L-16.1 14PR 138B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 805.99
+  },
+  {
+   "code": "78-108",
+   "desc": "14.9-28 8PR TT R-1 TRACTOR TREADURA (3740 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 805.99
+  },
+  {
+   "code": "81-48D663",
+   "desc": "9.5-20 6PR TL R-1 HI-TRACTION LUG TITAN",
+   "brand": "TITAN",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 821.99
+  },
+  {
+   "code": "84-703",
+   "desc": "12.4-28 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 823.99
+  },
+  {
+   "code": "95-FA5E9",
+   "desc": "12.5L-15SL 12PR TL I-3 TRACTION IMPLEMENT (W) SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 842.99
+  },
+  {
+   "code": "85-515",
+   "desc": "500/50-17 14PR TL I-3 IM72 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 850.99
+  },
+  {
+   "code": "85-506",
+   "desc": "500/50-17 14PR TL F-3 IM36 (EURO-RIB) TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 855.99
+  },
+  {
+   "code": "81-41A3X7",
+   "desc": "7.50-20SL 8PR TL I-1 DURA-LIFE PLANTER TITAN",
+   "brand": "TITAN",
+   "stock": "2099-06-02",
+   "category": "farm",
+   "price": 857.99
+  },
+  {
+   "code": "5-019-072",
+   "desc": "13.5-16.1 10PR 136B TL I-2 TURF IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 859.99
+  },
+  {
+   "code": "5-019-067",
+   "desc": "13.5-16.1 8PR 131B TL I-3 TRACTION IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 859.99
+  },
+  {
+   "code": "73-555",
+   "desc": "340/85R24 (13.6R24) 125A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 860.99
+  },
+  {
+   "code": "95-DE1M3",
+   "desc": "33X12.50-15 8PR TL MS-I TRAXION (C) SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 869.99
+  },
+  {
+   "code": "5-365-180",
+   "desc": "11.2-24 8PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 873.99
+  },
+  {
+   "code": "178-015-001",
+   "desc": "12-16.5 116A8/6PR TL R14T GOODYEAR #",
+   "brand": "GOODYEAR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 873.99
+  },
+  {
+   "code": "171-423-426",
+   "desc": "7.2-16 8PR TL R-1 POWER-TORQUE GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 878.99
+  },
+  {
+   "code": "171-430-426",
+   "desc": "8.3-16 6PR TL R-1 POWER-TORQUE GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 884.99
+  },
+  {
+   "code": "5-008-564",
+   "desc": "9.5-24 6PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 891.99
+  },
+  {
+   "code": "170-608-132",
+   "desc": "12.5L-15SL 12PR TL I-3 SURE-GRIP TRACTION GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 893.99
+  },
+  {
+   "code": "160-101-222",
+   "desc": "10.00-15FI LRD TL FI-1 HIGHWAY SERVICE (DOT) GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 897.99
+  },
+  {
+   "code": "5-015-141",
+   "desc": "VF280/70R15 140D TL I-1 DESTINATION FARM FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 903.99
+  },
+  {
+   "code": "84-706",
+   "desc": "14.9-24 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 903.99
+  },
+  {
+   "code": "95-DJ1F4",
+   "desc": "31X15.50-15 8PR TL HF-2 TRAXION SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 918.99
+  },
+  {
+   "code": "5-019-019",
+   "desc": "14L-16.1 12PR 127A8 TL F-2M 4-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 926.99
+  },
+  {
+   "code": "84-720",
+   "desc": "12.0/75-18 12PR TT 317 ALLIANCE IMPLEMENT",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 929.99
+  },
+  {
+   "code": "160-246-222",
+   "desc": "12.5L-15FI LRD TL FI-1 HIGHWAY SERVICE II (DOT) GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 934.99
+  },
+  {
+   "code": "78-109",
+   "desc": "16.9-28 8PR TT R-1 TRACTOR TREADURA (4300 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 956.99
+  },
+  {
+   "code": "84-319",
+   "desc": "320/85R24 (12.4R24) 122D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 966.99
+  },
+  {
+   "code": "78-110",
+   "desc": "16.9-30 10PR TT R-1 TRACTOR TREADURA (4940 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 967.99
+  },
+  {
+   "code": "5-372-541",
+   "desc": "12.4-24 8PR TL R-1 SUPER ALL TRACTION II 23\u00ba CRC FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 969.99
+  },
+  {
+   "code": "81-48D695",
+   "desc": "9.5-16 6PR TL R-1 HI-TRACTION LUG TITAN",
+   "brand": "TITAN",
+   "stock": "2099-06-02",
+   "category": "farm",
+   "price": 970.99
+  },
+  {
+   "code": "95-DJ1M6",
+   "desc": "31X15.50-15 12PR TL HF-2 TRAXION SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 970.99
+  },
+  {
+   "code": "91-171",
+   "desc": "31X15.50-15 8PR TL R-1 TRU-POWER CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2026-06-20",
+   "category": "farm",
+   "price": 977.99
+  },
+  {
+   "code": "5-019-068",
+   "desc": "16.5L-16.1 10PR 138B TL I-3 TRACTION IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 981.99
+  },
+  {
+   "code": "172-504-443",
+   "desc": "9.5-24 6PR TL R-1 DURA-TORQUE DT221 GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 991.99
+  },
+  {
+   "code": "73-560",
+   "desc": "380/85R24 (14.9R24) 131A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 995.99
+  },
+  {
+   "code": "84-298",
+   "desc": "13.5-16.1 10PR TL R-3/I-2 329 MULTI-PURPOSE ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 1000.99
+  },
+  {
+   "code": "5-019-061",
+   "desc": "11.25-24 12PR 138B TL I-1 AG RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "2099-06-11",
+   "category": "farm",
+   "price": 1016.99
+  },
+  {
+   "code": "84-710",
+   "desc": "13.6-28 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 1023.99
+  },
+  {
+   "code": "172-493-443",
+   "desc": "9.5-16 6PR TL R-1 DURA-TORQUE DT221 GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1027.99
+  },
+  {
+   "code": "78-110B",
+   "desc": "16.9-30 14PR TT R-1 TRACTOR TREADURA (6020 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 1055.99
+  },
+  {
+   "code": "160-540-093",
+   "desc": "11L-15SL 10PR TL LISSE/SMOOTH GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1056.99
+  },
+  {
+   "code": "84-331",
+   "desc": "340/85R24 (13.6R24) 125D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 1063.99
+  },
+  {
+   "code": "84-726",
+   "desc": "13.6-24 8PR TL R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1071.99
+  },
+  {
+   "code": "170-203-100",
+   "desc": "7.50-20SL 10PR TL F-1 DRILL RIB GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2099-06-02",
+   "category": "farm",
+   "price": 1112.99
+  },
+  {
+   "code": "91-036",
+   "desc": "320/85D16 (12.4-16) 104A8/B TL R-1 TRU-POWER",
+   "brand": "TITAN",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1125.99
+  },
+  {
+   "code": "178-015-002",
+   "desc": "14-17.5 121A8/6PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2099-06-02",
+   "category": "farm",
+   "price": 1126.99
+  },
+  {
+   "code": "84-943",
+   "desc": "360/70R20 129D TL R-1W AGRISTAR II 470 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1127.99
+  },
+  {
+   "code": "5-019-073",
+   "desc": "16.5L-16.1 10PR 138B TL I-2 TURF IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1128.99
+  },
+  {
+   "code": "84-707A",
+   "desc": "16.9-30 8PR TT R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 1134.99
+  },
+  {
+   "code": "81-422204",
+   "desc": "7.50-24SL 4PR TT I-3 TRACTION IMPLEMENT TITAN",
+   "brand": "TITAN",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1135.99
+  },
+  {
+   "code": "84-713",
+   "desc": "14.9-28 8PR TL R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 1136.99
+  },
+  {
+   "code": "5-019-054",
+   "desc": "16.5L-16.1 14PR 145B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "2099-05-20",
+   "category": "farm",
+   "price": 1140.99
+  },
+  {
+   "code": "73-556",
+   "desc": "340/85R28 (13.6R28) 127A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 1141.99
+  },
+  {
+   "code": "95-FA337",
+   "desc": "16.5L-16.1SL 10PR TL I-1 RIB IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1150.99
+  },
+  {
+   "code": "95-FA3Z9",
+   "desc": "14L-16.1SL 12PR TL I-1 RIB IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1158.99
+  },
+  {
+   "code": "78-111",
+   "desc": "18.4-30 10PR TT R-1 TRACTOR TREADURA (5520 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 1158.99
+  },
+  {
+   "code": "5-372-575",
+   "desc": "13.6-24 8PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 1163.99
+  },
+  {
+   "code": "74-866",
+   "desc": "380/85R28 (14.9R28) 133D/137A8 TL R-1W WRA001 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 1168.99
+  },
+  {
+   "code": "85-134",
+   "desc": "21.5L-16.1SL 14PR TL I-1 I-09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 1175.99
+  },
+  {
+   "code": "85-265",
+   "desc": "18.4-30 8PR TL R-1 TR45 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 1180.99
+  },
+  {
+   "code": "84-005",
+   "desc": "19L-16.1 12PR TL I-1 RIB IMPLEMENT 542 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1181.99
+  },
+  {
+   "code": "81-48D814",
+   "desc": "12.4-24 8PR TL R-1 HI-TRACTION LUG TITAN #",
+   "brand": "TITAN",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 1188.99
+  },
+  {
+   "code": "5-019-026",
+   "desc": "16.5L-16.1 8PR 124A8 TL F-2M 4-RIB FRONT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1213.99
+  },
+  {
+   "code": "84-725",
+   "desc": "16.9-24 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 1221.99
+  },
+  {
+   "code": "175-537-470",
+   "desc": "11.2-16 4PR TL R-1 DYNA-TORQUE II GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1238.99
+  },
+  {
+   "code": "84-337",
+   "desc": "340/85R28 (13.6R28) 127D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 1240.99
+  },
+  {
+   "code": "85-262",
+   "desc": "500/45-20 160A8 TL I-3 TC09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 1243.99
+  },
+  {
+   "code": "73-574",
+   "desc": "420/70R24 130D TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 1247.99
+  },
+  {
+   "code": "101-179",
+   "desc": "31X13.50-15 8PR TL HF-1 TERRA-RIB GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1256.99
+  },
+  {
+   "code": "84-965",
+   "desc": "320/85R24 142D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1257.99
+  },
+  {
+   "code": "84-718",
+   "desc": "16.9-28 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 1274.99
+  },
+  {
+   "code": "84-348",
+   "desc": "380/70R24 125D TL R-1W FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 1289.99
+  },
+  {
+   "code": "78-120",
+   "desc": "16.9-38 10PR TT R-1 TR-60 TREADURA",
+   "brand": "TREADURA",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 1291.99
+  },
+  {
+   "code": "5-019-055",
+   "desc": "19L-16.1 12PR 146B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1300.99
+  },
+  {
+   "code": "5-008-559",
+   "desc": "14.9-24 6PR TL R-1 SUPER ALL TRACTION II 23\u00ba",
+   "brand": "FIRESTONE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1310.99
+  },
+  {
+   "code": "103-209",
+   "desc": "18L-16.1SL 10PR TL F-3 MULTI-RIB CARLSTAR (EURO-RIB)",
+   "brand": "CARLSTAR",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 1312.99
+  },
+  {
+   "code": "73-562",
+   "desc": "380/85R28 (14.9R28) 133A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 1321.99
+  },
+  {
+   "code": "84-361",
+   "desc": "380/85R24 (14.9R24) 131D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 1326.99
+  },
+  {
+   "code": "178-015-003",
+   "desc": "15-19.5 129A8/6PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1327.99
+  },
+  {
+   "code": "5-365-265",
+   "desc": "13.6-28 6PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1332.99
+  },
+  {
+   "code": "85-258",
+   "desc": "550/45-22.5 16PR 159A8/147A8 TL I-3 FL09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 1333.99
+  },
+  {
+   "code": "78-112-2",
+   "desc": "18.4-34 10PR TT R-1 TRACTOR TREADURA (5520 LBS)",
+   "brand": "TREADURA",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 1347.99
+  },
+  {
+   "code": "103-419",
+   "desc": "17.5L-24 6PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1360.99
+  },
+  {
+   "code": "78-113",
+   "desc": "18.4-38 10PR TT R-1 TRACTOR TREADURA (6400 LBS)",
+   "brand": "TREADURA",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 1368.99
+  },
+  {
+   "code": "74-867",
+   "desc": "420/85R28 (16.9R28) 139A8/136B TL R-1W WRA001 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 1376.99
+  },
+  {
+   "code": "84-761",
+   "desc": "11.25-28 12PR TL I-1 351 AGR. IMPLEMENT CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1379.99
+  },
+  {
+   "code": "84-378",
+   "desc": "420/70R24 130D TL R-1W FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 1385.99
+  },
+  {
+   "code": "5-019-062",
+   "desc": "11.25-28 12PR 139B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1398.99
+  },
+  {
+   "code": "84-717A",
+   "desc": "16.9-24 8PR TL R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1412.99
+  },
+  {
+   "code": "84-712A",
+   "desc": "18.4-30 8PR TL R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 1452.99
+  },
+  {
+   "code": "5-365-078",
+   "desc": "14.9-28 6PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 1471.99
+  },
+  {
+   "code": "73-580",
+   "desc": "420/85R28 (16.9R28) 139A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 1477.99
+  },
+  {
+   "code": "84-367",
+   "desc": "380/85R28 (14.9R28) 133D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 1493.99
+  },
+  {
+   "code": "84-970",
+   "desc": "340/85R28 127D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1494.99
+  },
+  {
+   "code": "84-376",
+   "desc": "320/85R34 133D TL R-1W 846 FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 1505.99
+  },
+  {
+   "code": "5-019-056",
+   "desc": "21.5L-16.1 14PR 152B TL I-1 RIB IMPLEMENT PLUS REGENCY",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1516.99
+  },
+  {
+   "code": "84-708",
+   "desc": "18.4-34 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "7 in stock",
+   "category": "farm",
+   "price": 1522.99
+  },
+  {
+   "code": "73-581",
+   "desc": "420/85R30 (16.9R30) 140A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "9 in stock",
+   "category": "farm",
+   "price": 1533.99
+  },
+  {
+   "code": "103-259",
+   "desc": "13.6-24 6PR TL R-1 FARM SPECIALIST CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1544.99
+  },
+  {
+   "code": "84-397",
+   "desc": "420/85R28 (16.9R28) 139D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 1564.99
+  },
+  {
+   "code": "171-503-312",
+   "desc": "9.5-24 4PR TL R-3 ALL WEATHER GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1575.99
+  },
+  {
+   "code": "84-993",
+   "desc": "320/85R32 126D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1583.99
+  },
+  {
+   "code": "84-377",
+   "desc": "380/85R34 (14.9R34) 137D TL R-1W 846 FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 1589.99
+  },
+  {
+   "code": "84-714",
+   "desc": "18.4-34 8PR TL R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 1602.99
+  },
+  {
+   "code": "84-967",
+   "desc": "380/85R24 131D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1609.99
+  },
+  {
+   "code": "84-379",
+   "desc": "380/85R30 (14.9R30) 135D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 1613.99
+  },
+  {
+   "code": "5-365-469",
+   "desc": "16.9-28 6PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1614.99
+  },
+  {
+   "code": "5-304-808",
+   "desc": "11.2-36 4PR TT R-1 FIELD & ROAD FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1626.99
+  },
+  {
+   "code": "85-259",
+   "desc": "500/60-22.5 16PR 163A8/151A8 TL I-3 FL09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 1636.99
+  },
+  {
+   "code": "95-FA3AB",
+   "desc": "21.5L-16.1SL 10PR TL I-1 RIB IMPLEMENT SPECIALTY",
+   "brand": "SPECIALTY",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1636.99
+  },
+  {
+   "code": "84-152",
+   "desc": "400/55-17.5 16PR 149A8/145B TL I-3 328 FLOTATION ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "6 in stock",
+   "category": "farm",
+   "price": 1644.99
+  },
+  {
+   "code": "84-391",
+   "desc": "420/85R24 (16.9R24) 137D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 1673.99
+  },
+  {
+   "code": "178-015-019",
+   "desc": "14.9-24 124A8/8PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1676.99
+  },
+  {
+   "code": "81-470402",
+   "desc": "11.2-34 4PR TT R-1 ANTIQUE FARM TRACTOR TITAN",
+   "brand": "TITAN",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1684.99
+  },
+  {
+   "code": "81-470406",
+   "desc": "11.2-36 4PR TT R-1 ANTIQUE FARM TRACTOR TITAN",
+   "brand": "TITAN",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1694.99
+  },
+  {
+   "code": "84-384",
+   "desc": "420/70R28 133D TL R-1W FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 1712.99
+  },
+  {
+   "code": "5-008-563",
+   "desc": "16.9-30 6PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1728.99
+  },
+  {
+   "code": "178-450-001",
+   "desc": "LSW320/70R24 120D TL R-1W OPTITRAC GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 1729.99
+  },
+  {
+   "code": "5-007-470",
+   "desc": "280/85R24 (11.2R24) 115D TL R-1W PERFORMER EVO FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1742.99
+  },
+  {
+   "code": "73-585",
+   "desc": "420/85R34 (16.9R34) 142A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "2026-09-05",
+   "category": "farm",
+   "price": 1764.99
+  },
+  {
+   "code": "84-797A",
+   "desc": "16.9-38 8PR TL R-1 AGRI NOVA ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 1764.99
+  },
+  {
+   "code": "85-250",
+   "desc": "550/60-22.5 (21.5/60-22.5) 167 A8/154 A8, 16PR TL I-3 FL09",
+   "brand": "TVS EUROGRIP",
+   "stock": "2026-08-28",
+   "category": "farm",
+   "price": 1769.99
+  },
+  {
+   "code": "84-934",
+   "desc": "VF500/50R17 150D TL HF-2 389 AGRIFLEX ALLIANCE #",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1770.99
+  },
+  {
+   "code": "84-403",
+   "desc": "420/85R30 (16.9R30) 140D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 1798.99
+  },
+  {
+   "code": "178-015-005",
+   "desc": "17.5L-24 132A8/6PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1805.99
+  },
+  {
+   "code": "5-008-508",
+   "desc": "14.9-24 6PR TL R-3 ALL NON-SKID TRACTOR FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1816.99
+  },
+  {
+   "code": "85-257",
+   "desc": "560/60R22.5 165D TL I-3 FL909 TIGERTRAC TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 1816.99
+  },
+  {
+   "code": "5-007-471",
+   "desc": "320/85R24 122D TL R-1W PERFORMER EVO FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1819.99
+  },
+  {
+   "code": "78-114B",
+   "desc": "20.8-38 10PR TT R-1 TRACTOR TREADURA (6950 LBS)",
+   "brand": "TREADURA",
+   "stock": "2026-08-10",
+   "category": "farm",
+   "price": 1827.99
+  },
+  {
+   "code": "103-418",
+   "desc": "43X16.00-20 6PR TL VERSA-TURF CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1848.99
+  },
+  {
+   "code": "84-972",
+   "desc": "420/85R28 139D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 1865.99
+  },
+  {
+   "code": "84-274",
+   "desc": "500/55-20 12PR TL F-3 327 FARMPRO IMPLEMENT ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 1875.99
+  },
+  {
+   "code": "5-007-472",
+   "desc": "340/85R24 125D TL R-1W PERFORMER EVO FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1879.99
+  },
+  {
+   "code": "84-125",
+   "desc": "550/45-22.5 16PR 156B TL I-3 328 FLOTATION ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1884.99
+  },
+  {
+   "code": "73-200",
+   "desc": "23.1-26 14PR TT C-2 ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 1936.99
+  },
+  {
+   "code": "73-586",
+   "desc": "460/85R30 (18.4R30) 145A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "2026-08-21",
+   "category": "farm",
+   "price": 1943.99
+  },
+  {
+   "code": "5-372-524",
+   "desc": "15.5-38 8PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1944.99
+  },
+  {
+   "code": "85-240",
+   "desc": "600/50-22.5 16PR TL I-3 FL09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 1950.99
+  },
+  {
+   "code": "84-709",
+   "desc": "18.4-38 8PR TT R-1 324 FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 1955.99
+  },
+  {
+   "code": "5-372-626",
+   "desc": "18.4-30 8PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 1961.99
+  },
+  {
+   "code": "84-409",
+   "desc": "420/85R34 (16.9R34) 142D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 1988.99
+  },
+  {
+   "code": "84-126",
+   "desc": "550/45-22.5 16PR 151E TL I-3 328 FLOTATION HS ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 1997.99
+  },
+  {
+   "code": "84-797",
+   "desc": "16.9-38 8PR TL R-1 324 FARMPRO ALLIANCE #",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 1999.99
+  },
+  {
+   "code": "84-218A",
+   "desc": "18.4-26 12PR TL R-3/I-2 329 MULTI-PURPOSE ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 2082.99
+  },
+  {
+   "code": "5-357-987",
+   "desc": "12.4-24 12PR TL R-1 TRACTION FIELD & ROAD FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2084.99
+  },
+  {
+   "code": "84-256",
+   "desc": "500/45-20 16PR 160A8/164A6 TL I-3 331 FLOTATION HD ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2094.99
+  },
+  {
+   "code": "103-212A",
+   "desc": "21.5L-16.1SL 10PR TL I-1 MULTI-RIB CARLSTAR",
+   "brand": "CARLSTAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 2098.99
+  },
+  {
+   "code": "74-868",
+   "desc": "460/85R38 (18.4R38) 149D/153A8 TL R-1W WRA001 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 2099.99
+  },
+  {
+   "code": "84-975",
+   "desc": "460/85R30 145D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 2122.99
+  },
+  {
+   "code": "84-427",
+   "desc": "460/85R34 (18.4R34) 147D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 2150.99
+  },
+  {
+   "code": "84-263",
+   "desc": "500/45R20 12PR 157A8 TL I-2 381 FLOTMASTER RADIAL ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2150.99
+  },
+  {
+   "code": "84-139",
+   "desc": "500/60-22.5 16PR 159B TL I-3 328 FLOTATION ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2158.99
+  },
+  {
+   "code": "85-243",
+   "desc": "700/40-22.5 16PR TL I-3 FL09 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2160.99
+  },
+  {
+   "code": "5-003-167",
+   "desc": "380/85R24 131D TL R-1W PERFORMER EVO FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2161.99
+  },
+  {
+   "code": "5-372-592",
+   "desc": "18.4-34 8PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 2162.99
+  },
+  {
+   "code": "84-188",
+   "desc": "550/45R22.5 151E TL I-3 380 FLOTATION RADIAL (HAUTE VITESSE/HIGH SPEED) ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 2170.99
+  },
+  {
+   "code": "5-003-152",
+   "desc": "380/85R28 (14.9R28) 133D TL R-1W PERFORMER EVO FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2183.99
+  },
+  {
+   "code": "84-415",
+   "desc": "420/85R38 (16.9R38) 144D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 2192.99
+  },
+  {
+   "code": "84-928",
+   "desc": "560/45R22.5 152D TL I-3 885 FLOTATION RADIAL (HAUTE VITESSE/HIGH SPEED) ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2200.99
+  },
+  {
+   "code": "73-582",
+   "desc": "460/85R38 (18.4R38) 149A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "8 in stock",
+   "category": "farm",
+   "price": 2210.99
+  },
+  {
+   "code": "178-015-015",
+   "desc": "320/85R24 122D TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2214.99
+  },
+  {
+   "code": "84-444",
+   "desc": "480/70R30 141D TL R-1W FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 2221.99
+  },
+  {
+   "code": "84-421",
+   "desc": "460/85R30 (18.4R30) 145D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 2226.99
+  },
+  {
+   "code": "73-583",
+   "desc": "460/85R34 (18.4R34) 144B/147A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "2026-09-05",
+   "category": "farm",
+   "price": 2235.99
+  },
+  {
+   "code": "81-475624",
+   "desc": "13.6-28 6PR TT R-3 TORC-TRAC II TITAN",
+   "brand": "TITAN",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 2251.99
+  },
+  {
+   "code": "84-433",
+   "desc": "460/85R38 (18.4R38) 149D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "More than 10 in stock",
+   "category": "farm",
+   "price": 2262.99
+  },
+  {
+   "code": "172-740-443",
+   "desc": "16.9-30 6PR TL R-1 DURA-TORQUE DT221 GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 2279.99
+  },
+  {
+   "code": "5-007-121",
+   "desc": "380/85R30 (14.9R30) 135D TL R-1W PERFORMER EVO FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 2284.99
+  },
+  {
+   "code": "178-015-004",
+   "desc": "16.9-24 136A8/6PR TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2295.99
+  },
+  {
+   "code": "85-270",
+   "desc": "380/90R46 165D/168A8 TL R-1 RC900 TIGERTRAC TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "2026-08-28",
+   "category": "farm",
+   "price": 2298.99
+  },
+  {
+   "code": "5-372-507",
+   "desc": "18.4-38 8PR TL R-1 SUPER ALL TRACTION II 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 2304.99
+  },
+  {
+   "code": "178-448-404",
+   "desc": "340/85R24 130D TL R-1W OPTITRAC GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2309.99
+  },
+  {
+   "code": "84-931",
+   "desc": "420/85R34 147D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 2345.99
+  },
+  {
+   "code": "81-466352",
+   "desc": "16.5L-16.1SL 10PR TL F-2M TRU-TRAC MULTI-RIB",
+   "brand": "TITAN",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2350.99
+  },
+  {
+   "code": "84-129",
+   "desc": "600/50-22.5 16PR 161B TL I-3 328 FLOTATION ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 2356.99
+  },
+  {
+   "code": "81-4AV890",
+   "desc": "18.4-16.1 8PR 118A8 TL R-1 AGRAVANTAGE TITAN",
+   "brand": "TITAN",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2383.99
+  },
+  {
+   "code": "5-358-630",
+   "desc": "12.4-42 10PR TL R-1 TRACTION FIELD & ROAD FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2388.99
+  },
+  {
+   "code": "85-241",
+   "desc": "650/55-26.5 169D/180A8 TL I-3 FL900 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 2399.99
+  },
+  {
+   "code": "85-414",
+   "desc": "28L-26 173A8 16PR TL R-3 TM18 TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 2443.99
+  },
+  {
+   "code": "84-243",
+   "desc": "480/70R28 151D TL R-1W 845 FARMPRO 70 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2456.99
+  },
+  {
+   "code": "170-445-116",
+   "desc": "440/55R18 159A8/B TL F-3 FS24 (EURO-RIB) GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2456.99
+  },
+  {
+   "code": "84-266",
+   "desc": "480/70R34 143D TL R-1W 845 FARMPRO 70 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 2462.99
+  },
+  {
+   "code": "84-468",
+   "desc": "480/80R46 (18.4R46) 158A8/B TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 2471.99
+  },
+  {
+   "code": "73-584D",
+   "desc": "520/85R38 (20.8R38) 155A8 TL R-1W  L\u00c9G\u00c8REMENT ENDOMMAG\u00c9/SLIGHTLY DAMAGED TUBE INCL. ARMOUR #",
+   "brand": "ARMOUR",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 2489.99
+  },
+  {
+   "code": "84-456",
+   "desc": "480/70R38 145D TL R-1W FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 2499.99
+  },
+  {
+   "code": "84-765",
+   "desc": "VF320/85R38 155D TL R-1W 354 AGRIFLEX+ CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 2509.99
+  },
+  {
+   "code": "171-673-312",
+   "desc": "14.9-24 6PR TL R-3 ALL WEATHER GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 2519.99
+  },
+  {
+   "code": "84-999",
+   "desc": "460/85R34 157D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 2526.99
+  },
+  {
+   "code": "5-343-560",
+   "desc": "18.4-34 8PR TT R-1 SUPER ALL TRACTION 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2539.99
+  },
+  {
+   "code": "5-007-122",
+   "desc": "420/85R30 (16.9R30) 140D TL R-1W PERFORMER EVO FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2579.99
+  },
+  {
+   "code": "74-869",
+   "desc": "520/85R38 (20.8R38) 155A8/152B TL R-1W WRA001 JOURNEY",
+   "brand": "JOURNEY",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 2596.99
+  },
+  {
+   "code": "84-463",
+   "desc": "480/80R42 (18.4R42) 151D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 2630.99
+  },
+  {
+   "code": "81-485845",
+   "desc": "16.9-24 8PR TL R-3 TORC-TRAC TITAN",
+   "brand": "TITAN",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2649.99
+  },
+  {
+   "code": "84-481",
+   "desc": "520/85R38 (20.8R38) 155D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 2775.99
+  },
+  {
+   "code": "84-955",
+   "desc": "480/70R34 155D TL R-1W AGRISTAR II 470 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 2785.99
+  },
+  {
+   "code": "5-011-877",
+   "desc": "16.9-24 10PR TL R-3 ALL NON-SKID TRACTOR FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2829.99
+  },
+  {
+   "code": "81-4AV156",
+   "desc": "18.4-26 12PR 142A8 TL R-1 AGRAVANTAGE TITAN",
+   "brand": "TITAN",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2847.99
+  },
+  {
+   "code": "84-469",
+   "desc": "480/80R46 (18.4R46) 158D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 2848.99
+  },
+  {
+   "code": "84-992",
+   "desc": "460/85R38 167D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 2886.99
+  },
+  {
+   "code": "84-308",
+   "desc": "700/40-22.5 173A8/177A6 TL I-3 331 FLOTATION HD ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 2888.99
+  },
+  {
+   "code": "73-584",
+   "desc": "520/85R38 (20.8R38) 155A8 TL R-1W ARMOUR",
+   "brand": "ARMOUR",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 2899.99
+  },
+  {
+   "code": "85-267",
+   "desc": "520/85R42 157D/160A8 TL R-1W AR800 TIGERTRAC TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 2901.99
+  },
+  {
+   "code": "84-246",
+   "desc": "520/70R38 150D TL R-1W 845 FARMPRO 70 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 2936.99
+  },
+  {
+   "code": "84-374",
+   "desc": "380/90R46 (14.9R46) 165A8/B TL R-1W FARMPRO ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 2967.99
+  },
+  {
+   "code": "84-997",
+   "desc": "480/80R42 169D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 2988.99
+  },
+  {
+   "code": "84-929",
+   "desc": "VF560/60R22.5 166D TL HF-2 389 AGRIFLEX ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3009.99
+  },
+  {
+   "code": "85-263",
+   "desc": "710/50R26.5 170D TL I-3 FL909 TIGERTRAC TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3074.99
+  },
+  {
+   "code": "171-766-312",
+   "desc": "18.4-16.1 8PR TL R-3 ALL WEATHER GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 3141.99
+  },
+  {
+   "code": "170-740-093",
+   "desc": "16.9-30 6PR TL LISSE/SMOOTH GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 3246.99
+  },
+  {
+   "code": "84-507",
+   "desc": "600/70R30 152D TL R-1W FARMPRO RADIAL 70 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3246.99
+  },
+  {
+   "code": "5-343-579",
+   "desc": "20.8-34 8PR TT R-1 SUPER ALL TRACTION 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3248.99
+  },
+  {
+   "code": "175-739-472",
+   "desc": "16.9-28 10PR TL R-1 DYNA-TORQUE II GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3285.99
+  },
+  {
+   "code": "84-487",
+   "desc": "520/85R42 (20.8R42) 157D TL R-1W FARMPRO II ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 3337.99
+  },
+  {
+   "code": "84-794",
+   "desc": "VF320/90R54 168D TL R-1W 354 AGRIFLEX CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 3353.99
+  },
+  {
+   "code": "5-003-158",
+   "desc": "460/85R38 (18.4R38) 149D TL R-1W PERFORMER EVO FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 3388.99
+  },
+  {
+   "code": "84-772",
+   "desc": "VF380/85R34 149D TL R-1W 354 AGRIFLEX+ CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 3403.99
+  },
+  {
+   "code": "84-143",
+   "desc": "28L-26 16PR TL R-3 330 MULTI-PURPOSE (RENFORC\u00c9/REINFORCED) ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3421.99
+  },
+  {
+   "code": "84-777",
+   "desc": "VF380/90R46 173D TL R-1W 354 AGRIFLEX CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 3492.99
+  },
+  {
+   "code": "160-666-222",
+   "desc": "16.5L-16.1FI LRE TL FI-1 HIGHWAY SERVICE (DOT) GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3504.99
+  },
+  {
+   "code": "84-802",
+   "desc": "VF380/90R46 175D TL R-1 363 AGRIFLEX+ XT CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 3541.99
+  },
+  {
+   "code": "84-801",
+   "desc": "VF380/90R46 175D TL R-1W 354 AGRIFLEX CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 3542.99
+  },
+  {
+   "code": "5-345-377",
+   "desc": "23.1-26 8PR TL R-3 ALL NON-SKID TRACTOR FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3574.99
+  },
+  {
+   "code": "84-255",
+   "desc": "700/40-22.5 18PR 173A8/177A6 TL I-3 331 FLOTATION HD ALLIANCE #",
+   "brand": "ALLIANCE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 3634.99
+  },
+  {
+   "code": "178-016-762",
+   "desc": "320/85R38 (12.4R38) 143A8/B TL R-1W DT800 SUPER TRACTION RADIAL GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3717.99
+  },
+  {
+   "code": "84-771",
+   "desc": "VF420/90R30 153D TL R-1W 354 AGRIFLEX+ CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "2026-06-25",
+   "category": "farm",
+   "price": 3725.99
+  },
+  {
+   "code": "84-994",
+   "desc": "520/85R42 169D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 3760.99
+  },
+  {
+   "code": "84-809",
+   "desc": "VF320/105R46 175D TL R-1W 354 AGRIFLEX CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3770.99
+  },
+  {
+   "code": "84-989",
+   "desc": "520/85R46 158D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "2026-08-07",
+   "category": "farm",
+   "price": 3837.99
+  },
+  {
+   "code": "5-012-233",
+   "desc": "380/85R34 142D TL R-1W MAXI TRACTION FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3840.99
+  },
+  {
+   "code": "84-791",
+   "desc": "VF380/90R46 173D TL R-1 363 AGRIFLEX+ CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3843.99
+  },
+  {
+   "code": "84-998",
+   "desc": "520/85R38 169D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "2099-08-16",
+   "category": "farm",
+   "price": 3851.99
+  },
+  {
+   "code": "5-015-895",
+   "desc": "420/85R26 143D TL MAXI TRACTION FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3852.99
+  },
+  {
+   "code": "84-779",
+   "desc": "VF320/90R50 166D TL R-1W 354 AGRIFLEX CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "3 in stock",
+   "category": "farm",
+   "price": 3960.99
+  },
+  {
+   "code": "84-560",
+   "desc": "800/45R26.5 178D TL 590 AGRI-TRANSPORT CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3980.99
+  },
+  {
+   "code": "5-362-341",
+   "desc": "480/80R38 (18.4R38) 149B TL R-1 ALL-TRACTION 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 3999.99
+  },
+  {
+   "code": "85-242",
+   "desc": "750/65R26 173A8/170B TL R-1W HS1000 TIGERTRAC TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4006.99
+  },
+  {
+   "code": "84-248",
+   "desc": "580/70R38 155D TL R-1W 845 FARMPRO 70 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4074.99
+  },
+  {
+   "code": "84-264",
+   "desc": "48X31.00-20 12PR 150A8/148B TL I-3 328 XP FLOTATION ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4111.99
+  },
+  {
+   "code": "178-448-406",
+   "desc": "380/80R38 142D TL R-1W OPTITRAC GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4169.99
+  },
+  {
+   "code": "170-502-406",
+   "desc": "380/80R38 142D TL R-1 OPTITORQUE GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4169.99
+  },
+  {
+   "code": "84-767",
+   "desc": "VF380/90R50 175D TL R-1W 354 AGRIFLEX CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4210.99
+  },
+  {
+   "code": "84-261",
+   "desc": "48X31.00-20 12PR TL I-3 328 FLOTATION ALLIANCE #",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 4271.99
+  },
+  {
+   "code": "178-015-018",
+   "desc": "460/85R30 145D TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4360.99
+  },
+  {
+   "code": "178-015-022",
+   "desc": "LSW420/75R34 142D TL R14T GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4486.99
+  },
+  {
+   "code": "5-352-829",
+   "desc": "420/80R46 151B TL R-1 ALL-TRACTION 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4588.99
+  },
+  {
+   "code": "81-48A586",
+   "desc": "23.1-26 16PR TL R-3 TORC-TRAC II TITAN",
+   "brand": "TITAN",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4622.99
+  },
+  {
+   "code": "5-006-319",
+   "desc": "380/80R38 142D TL R-1W MAXI TRACTION FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4628.99
+  },
+  {
+   "code": "178-094-770",
+   "desc": "IF320/80R42 150D TL R-1W DT800 SUPER TRACTION RADIAL GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4704.99
+  },
+  {
+   "code": "5-006-324",
+   "desc": "420/85R34 (16.9R34) 147D TL R-1W MAXI TRACTION FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4777.99
+  },
+  {
+   "code": "178-872-061",
+   "desc": "480/85R34 149A8/B TL R-1 VERSATORQUE RADIAL GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4837.99
+  },
+  {
+   "code": "84-716",
+   "desc": "VF320/105R54 172D TL R-1W 354 AGRIFLEX+ CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE #   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 4931.99
+  },
+  {
+   "code": "85-950",
+   "desc": "VF800/65R32 184D TL R1-W HS3000 TIGERTRAC TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 4967.99
+  },
+  {
+   "code": "84-799",
+   "desc": "VF380/90R54 178D TL R-1W 354 AGRIFLEX+ CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 4994.99
+  },
+  {
+   "code": "84-996",
+   "desc": "710/70R38 178D TL R-1W AGRISTAR II 470 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 5009.99
+  },
+  {
+   "code": "84-764",
+   "desc": "VF380/105R50 179D TL R-1W 354 AGRIFLEX CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 5043.99
+  },
+  {
+   "code": "84-179",
+   "desc": "750/45R22.5 166E TL I-3 380 FLOTATION RADIAL (HAUTE VITESSE/HIGH SPEED) ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 5094.99
+  },
+  {
+   "code": "5-344-079",
+   "desc": "24.5-32 12PR TL R-1 SUPER ALL TRACTION 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 5262.99
+  },
+  {
+   "code": "5-006-326",
+   "desc": "VF420/85R34 159D TL R-1W MAXI TRACTION FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 5284.99
+  },
+  {
+   "code": "5-013-719",
+   "desc": "VF380/80R38 167D TL R-1W ALL TRACTION RC FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 5381.99
+  },
+  {
+   "code": "84-531",
+   "desc": "710/70R42 173D TL R-1W 845 FARMPRO 70 ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 5424.99
+  },
+  {
+   "code": "84-961",
+   "desc": "710/70R42 173D TL R-1W AGRISTAR II 470 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 5525.99
+  },
+  {
+   "code": "178-450-005",
+   "desc": "480/70R34 155D TL R-1W OPTITRAC GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 5606.99
+  },
+  {
+   "code": "84-776",
+   "desc": "VF480/80R42 162D TL R-1W 354 AGRIFLEX+ CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 5683.99
+  },
+  {
+   "code": "5-009-320",
+   "desc": "520/85R42 157B TL R-1W RADIAL DT 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 5931.99
+  },
+  {
+   "code": "85-951",
+   "desc": "VF800/70R38 190D/190A8 TL R1-W HS3000 TIGERTRAC TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 6006.99
+  },
+  {
+   "code": "5-362-069",
+   "desc": "380/90R54 152B TL R-1W RADIAL 9000 (TRACTOR) FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 6019.99
+  },
+  {
+   "code": "85-952",
+   "desc": "VF900/60R32 191D/191A8 TL R1-W HS3000 TIGERTRAC TVS EUROGRIP",
+   "brand": "TVS EUROGRIP",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 6080.99
+  },
+  {
+   "code": "178-451-001",
+   "desc": "540/65R34 152D TL R-1W OPTITRAC GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 6156.99
+  },
+  {
+   "code": "5-007-006",
+   "desc": "600/65R34 151D/148E TL MAXI TRACTION 65 FIRESTONE #",
+   "brand": "FIRESTONE",
+   "stock": "1 in stock",
+   "category": "farm",
+   "price": 6271.99
+  },
+  {
+   "code": "5-009-318",
+   "desc": "VF520/85R42 177B TL R-1W RADIAL DT 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 6672.99
+  },
+  {
+   "code": "84-784",
+   "desc": "IF380/105R54 180D TL R-1W 354 AGRIFLEX CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE #   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 6893.99
+  },
+  {
+   "code": "178-149-036",
+   "desc": "IF380/90R54 171D TL R-1 ULTRA-SPRAYER IF GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "4 in stock",
+   "category": "farm",
+   "price": 6917.99
+  },
+  {
+   "code": "84-985",
+   "desc": "650/85R38 173D TL R-1W AGRISTAR II 485 ALLIANCE   $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 6934.99
+  },
+  {
+   "code": "84-265",
+   "desc": "850/50-30.5 16PR 187A8 TL I-3 328 XP FLOTATION ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "5 in stock",
+   "category": "farm",
+   "price": 6994.99
+  },
+  {
+   "code": "84-733",
+   "desc": "VF710/70R38CFO 181D TL R-1W 372 AGRIFLEX CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE   $ $ $ $",
+   "brand": "ALLIANCE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 7158.99
+  },
+  {
+   "code": "304-594-299",
+   "desc": "48X31.00R20 150A8/B TL HF-3 SUPER TERRA-GRIP XT RADIAL GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 8100.99
+  },
+  {
+   "code": "5-007-123",
+   "desc": "VF580/85R42CFO 183B TL R-1W RADIAL DT 23\u00ba FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 8174.99
+  },
+  {
+   "code": "178-430-448",
+   "desc": "480/80R50 159D TL R-1W OPTITRAC GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 8183.99
+  },
+  {
+   "code": "178-149-024",
+   "desc": "VF320/90R50 169D TL R-1 ULTRA-SPRAYER GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 8234.99
+  },
+  {
+   "code": "84-820",
+   "desc": "1000/50R25 172A8/166D TL R-1W 375 AGRISTAR CEINTUR\u00c9 D'ACIER/STEEL BELTED ALLIANCE",
+   "brand": "ALLIANCE",
+   "stock": "2 in stock",
+   "category": "farm",
+   "price": 10222.99
+  },
+  {
+   "code": "178-451-006",
+   "desc": "620/70R46 167D TL R-1W OPTITRAC GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 10793.99
+  },
+  {
+   "code": "178-451-005",
+   "desc": "620/70R46 177D TL R-1W OPTITRAC GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 11577.99
+  },
+  {
+   "code": "178-451-007",
+   "desc": "IF900/60R32CFO 188A8 TL R-1W OPTITRAC GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 12367.99
+  },
+  {
+   "code": "170-502-404",
+   "desc": "VF1000/50R25CFO 190D TL R-1 OPTITORQUE GOODYEAR",
+   "brand": "GOODYEAR",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 16424.99
+  },
+  {
+   "code": "5-019-004",
+   "desc": "IF1050/50R32CFO 191B TL R-1 RADIAL DESTINATION CART FIRESTONE",
+   "brand": "FIRESTONE",
+   "stock": "Contact us",
+   "category": "farm",
+   "price": 18705.99
+  }
+ ]
+}
