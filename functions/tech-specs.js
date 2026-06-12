@@ -53,6 +53,10 @@ Return ONLY this JSON object, nothing else:
   "tpms_relearn": "<OBD | auto | stationary | unknown>",
   "cold_pressure_front_psi": <number or null>,
   "cold_pressure_rear_psi": <number or null>,
+  "lug_thread": "<e.g. 'M12x1.5' or '1/2-20' or null>",
+  "lug_hex_mm": <17 | 19 | 21 | 22 | null>,
+  "lug_seat": "<conical | ball | mag | flat | unknown>",
+  "lug_type": "<nut | bolt | unknown>",
   "notes": "<short caveat or empty string>"
 }
 
@@ -61,6 +65,7 @@ Rules:
 - North American passenger vehicles (2005+) are almost always 315 MHz TPMS. European and some luxury/performance vehicles are 433 MHz.
 - Cold pressure: the door jamb sticker is the final authority. Return typical OEM spec if widely known, else null.
 - For relearn: OBD = requires scan tool, auto = drives 15-20min, stationary = manual procedure.
+- Lug hardware: thread like 'M12x1.5', 'M14x1.5', '1/2-20', '9/16-18'. Seat: conical (most Asian/domestic), ball (VW/Audi/Mercedes/Porsche, Honda OEM alloys), mag = flat-washer/shank style (Toyota trucks, many Toyota OEM alloys). Type: bolt for most German vehicles, nut otherwise. If not certain, return null/unknown. Never guess thread size.
 - "notes" should flag known quirks (e.g. "Some trims use 18in wheels with different pressure", "Dual pattern 6x135, 6x139.7").
 - JSON only. No markdown fences, no prose before or after.`;
 
@@ -124,6 +129,12 @@ Rules:
       pressure: {
         frontPsi: parsed.cold_pressure_front_psi || null,
         rearPsi: parsed.cold_pressure_rear_psi || null,
+      },
+      lug: {
+        thread: parsed.lug_thread || null,
+        hexMm: parsed.lug_hex_mm || null,
+        seat: parsed.lug_seat && parsed.lug_seat !== 'unknown' ? parsed.lug_seat : null,
+        type: parsed.lug_type && parsed.lug_type !== 'unknown' ? parsed.lug_type : null,
       },
       notes: parsed.notes || '',
     });
