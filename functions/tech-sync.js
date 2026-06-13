@@ -10,6 +10,7 @@ import { findOverlay } from './tech-torque-overlay-2022-2026.js';
 import { findCorrection } from './tech-torque-corrections.js';
 import { classifyVehicle } from './tech-vehicle-type.js';
 import { findLug } from './tech-lugnut-db.js';
+import { findRelearn } from './tech-relearn-db.js';
 
 
 //
@@ -170,14 +171,15 @@ export async function onRequestPost(context) {
         //      catchall tier ordering for truck-platform SUVs)
         //   5. Null (client falls back to AI via /tech-specs)
 
-        // Lug hardware spec rides along on every getTorque response
+        // Lug hardware spec + TPMS relearn steps ride along on every getTorque response
         const lug = findLug({ year: body.year, make: body.make, model: body.model });
+        const relearn = findRelearn({ year: body.year, make: body.make, model: body.model });
 
         const key = normTorqueKey(body);
         const raw = await env.TECH_KV.get(key);
         if (raw) {
           const entry = JSON.parse(raw);
-          return json({ ok: true, torque: { ...entry, source: 'verified' }, lug });
+          return json({ ok: true, torque: { ...entry, source: 'verified' }, lug, relearn });
         }
 
         // Classify once up front. Used by Halderman to reorder catchall tiers.
@@ -198,6 +200,7 @@ export async function onRequestPost(context) {
               vehicleType,
             },
             lug,
+            relearn,
           });
         }
 
@@ -215,6 +218,7 @@ export async function onRequestPost(context) {
               vehicleType,
             },
             lug,
+            relearn,
           });
         }
 
@@ -235,10 +239,11 @@ export async function onRequestPost(context) {
               vehicleType,
             },
             lug,
+            relearn,
           });
         }
 
-        return json({ ok: true, torque: null, lug });
+        return json({ ok: true, torque: null, lug, relearn });
       }
 
       case 'saveTorque': {
@@ -282,11 +287,4 @@ export async function onRequestPost(context) {
       default:
         return json({ ok: false, error: `Unknown action: ${action}` }, 400);
     }
-  } catch (err) {
-    return json({ ok: false, error: err.message }, 500);
-  }
-}
-
-export async function onRequestOptions() {
-  return new Response(null, { status: 204, headers: CORS });
-}
+  } catch (er
