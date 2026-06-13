@@ -116,6 +116,8 @@ body { background:var(--black); color:var(--white); font-family:'Barlow',sans-se
 .tcard::after { content:''; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--yellow); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
 .tcard:hover { border-color:var(--mid); }
 .tcard:hover::after { transform:scaleX(1); }
+.tcard .timg { height:110px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; background:var(--raised); border-radius:2px; overflow:hidden; }
+.tcard .timg img { max-height:100px; max-width:90%; object-fit:contain; }
 .tcard .size { font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:600; color:var(--yellow); margin-bottom:4px; }
 .tcard .desc { font-size:13px; color:var(--light); margin-bottom:10px; min-height:38px; }
 .tcard .brand { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
@@ -226,7 +228,7 @@ body { background:var(--black); color:var(--white); font-family:'Barlow',sans-se
   <div class="cat-inner">
     <div class="section-label">Trailer Tire Catalogue</div>
     <h2 class="section-title">Find Your Size</h2>
-    <p class="section-sub">Type your size as it reads on the sidewall — any way you like. <strong style="color:var(--light)">Dots, dashes, slashes and the R don't matter</strong> — searching <strong style="color:var(--light)">184 38</strong> finds 18.4-38 just fine. Or tap an example:</p>
+    <p class="section-sub">Type your size as it reads on the sidewall — any way you like. <strong style="color:var(--light)">Dots, dashes, slashes and the R don't matter</strong> — searching <strong style="color:var(--light)">184 38</strong> finds 18.4-38 just fine. Or tap a popular size:</p>
 
     <div class="filter-bar">
       <input type="text" id="fSearch" placeholder="Search size or keyword…" autocomplete="off">
@@ -238,7 +240,7 @@ body { background:var(--black); color:var(--white); font-family:'Barlow',sans-se
       <label class="chk-wrap"><input type="checkbox" id="fStock" checked> In stock only</label>
     </div>
     <div class="result-note" id="resultNote"></div>
-    <div class="ex-chips"><span class="ex-chip">ST205/75R15</span><span class="ex-chip">ST225/75R15</span><span class="ex-chip">4.80-8</span><span class="ex-chip">16.5X6.50-8</span></div>
+    <div class="ex-chips"><span class="ex-chip">ST225/75R15</span><span class="ex-chip">ST205/75R15</span><span class="ex-chip">ST205/75R14</span><span class="ex-chip">ST175/80R13</span><span class="ex-chip">ST235/80R16</span><span class="ex-chip">ST235/85R16</span><span class="ex-chip">4.80-8</span><span class="ex-chip">4.80-12</span><span class="ex-chip">5.30-12</span><span class="ex-chip">5.70-8</span></div>
 
     <div class="grid" id="grid"></div>
     <div class="empty-msg" id="emptyMsg" style="display:none">No matches for that size — but we can almost always get it. <a href="tel:519-397-4686">Call 519-397-4686</a> and we'll track it down.</div>
@@ -435,6 +437,7 @@ function card(p) {
   const el = document.createElement('div');
   el.className = 'tcard';
   el.innerHTML =
+    (p.img ? '<div class="timg"><img loading="lazy" src="/odessa-img/' + esc(p.img) + '" alt="' + esc(sizeOf(p.desc)) + ' ' + esc(p.brand) + ' tire tread" onerror="this.parentElement.style.display=\'none\'"></div>' : '') +
     '<div class="size">' + esc(sizeOf(p.desc)) + '</div>' +
     '<div class="desc">' + esc(p.desc) + '</div>' +
     '<div class="brand">' + esc(p.brand) + '</div>' +
