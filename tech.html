@@ -345,6 +345,49 @@
   .jack-warning.info .jack-warning-title { color: var(--blue); }
   .jack-warning-detail { color: var(--light); }
 
+  /* ── TPMS RELEARN STEPS PANEL ── */
+  .relearn-section {
+    margin-top: 12px;
+    background: var(--raised); border: 1px solid var(--border);
+    border-left: 3px solid var(--yellow);
+    border-radius: 2px;
+  }
+  .relearn-summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    flex-wrap: wrap; padding: 12px 14px;
+  }
+  .relearn-summary::-webkit-details-marker { display: none; }
+  .relearn-summary::after {
+    content: '▸'; color: var(--muted); font-size: 14px; margin-left: auto;
+    transition: transform .15s;
+  }
+  details[open] .relearn-summary::after { transform: rotate(90deg); }
+  .relearn-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase; color: var(--yellow);
+  }
+  .relearn-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .relearn-chip {
+    font-size: 10.5px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 2px;
+    background: rgba(245,197,24,.12); color: var(--yellow); border: 1px solid rgba(245,197,24,.3);
+  }
+  .relearn-chip.tool-yes { background: var(--red-dim); color: var(--red); border-color: rgba(239,68,68,.4); }
+  .relearn-chip.tool-no { background: rgba(34,197,94,.12); color: #4ade80; border-color: rgba(34,197,94,.3); }
+  .relearn-body { padding: 0 14px 14px; }
+  .relearn-seq { font-size: 12.5px; color: var(--light); margin-bottom: 8px; }
+  .relearn-seq strong { color: var(--yellow); font-family: 'IBM Plex Mono', monospace; }
+  .relearn-steps { margin: 0 0 0 18px; padding: 0; }
+  .relearn-steps li { font-size: 13px; color: var(--light); line-height: 1.5; margin-bottom: 6px; }
+  .relearn-note {
+    margin-top: 8px; padding: 8px 10px; border-radius: 2px;
+    border-left: 3px solid var(--amber); background: rgba(0,0,0,.25);
+    font-size: 12px; line-height: 1.45; color: var(--light);
+  }
+  .relearn-src { margin-top: 8px; font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+
   /* ═══════════════════════════════════════════════════════════════
      LOADING STATE
      ═══════════════════════════════════════════════════════════════ */
@@ -2461,6 +2504,16 @@ async function loadSpecsForVehicle(vin, vehicle) {
   }
 
   const tpms = aiRes.ok ? (aiRes.tpms || {}) : {};
+  // TPMS relearn steps: published DB (rides along on getTorque) overrides the AI type word
+  if (verifiedRes.ok && verifiedRes.relearn) {
+    const rl = verifiedRes.relearn;
+    tpms.steps = rl.steps || null;
+    tpms.stepsTool = !!rl.tool;
+    tpms.stepsSeq = rl.seq || null;
+    tpms.stepsNote = rl.note || null;
+    tpms.stepsSrc = rl.src || null;
+    if (rl.type) tpms.relearn = rl.type;
+  }
   const pressure = aiRes.ok ? (aiRes.pressure || {}) : {};
   const notes = aiRes.ok ? (aiRes.notes || '') : '';
   const jackpoints = jackRes.ok ? {
@@ -2603,6 +2656,30 @@ function renderPhoneResult(scan) {
     </div>
   ` : '';
 
+  // TPMS relearn steps panel (expandable) — shown when the DB has a procedure
+  const rlTypeLabel = {
+    stationary: 'Stationary', obd: 'OBD Tool', auto: 'Drive to Relearn', menu: 'Menu Reset',
+  };
+  const relearnSection = (tpms.steps && tpms.steps.length) ? `
+    <details class="relearn-section">
+      <summary class="relearn-summary">
+        <span class="relearn-title">📡 TPMS Relearn Steps</span>
+        <span class="relearn-chips">
+          <span class="relearn-chip">${escapeHtml(rlTypeLabel[tpms.relearn] || (tpms.relearn || '').toUpperCase())}</span>
+          <span class="relearn-chip ${tpms.stepsTool ? 'tool-yes' : 'tool-no'}">${tpms.stepsTool ? 'Tool Required' : 'No Tool'}</span>
+        </span>
+      </summary>
+      <div class="relearn-body">
+        ${tpms.stepsSeq ? `<div class="relearn-seq">Sensor order: <strong>${escapeHtml(tpms.stepsSeq)}</strong></div>` : ''}
+        <ol class="relearn-steps">
+          ${tpms.steps.map(st => `<li>${escapeHtml(st)}</li>`).join('')}
+        </ol>
+        ${tpms.stepsNote ? `<div class="relearn-note">⚠ ${escapeHtml(tpms.stepsNote)}</div>` : ''}
+        ${tpms.stepsSrc ? `<div class="relearn-src">Source: ${escapeHtml(tpms.stepsSrc)} · always confirm against the in-bay tool for this exact VIN</div>` : ''}
+      </div>
+    </details>
+  ` : '';
+
   const html = `
     <div class="result-card">
       <div class="vehicle-header">
@@ -2643,6 +2720,7 @@ function renderPhoneResult(scan) {
         </div>
         ${notesNote}
       </div>
+      ${relearnSection}
       ${jackSection}
     </div>
   `;
