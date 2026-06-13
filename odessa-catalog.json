@@ -8,7 +8,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 46.99
+   "price": 46.99,
+   "img": "rem_p811.jpg"
   },
   {
    "code": "98-802A",
@@ -16,7 +17,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 48.99
+   "price": 48.99,
+   "img": "rem_k353-k371-loadstar.jpg"
   },
   {
    "code": "74-180",
@@ -24,7 +26,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 59.99
+   "price": 59.99,
+   "img": "rem_p815.jpg"
   },
   {
    "code": "74-189",
@@ -32,7 +35,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 60.99
+   "price": 60.99,
+   "img": "rem_p825t.jpg"
   },
   {
    "code": "104-829",
@@ -40,7 +44,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 66.99
+   "price": 66.99,
+   "img": "rem_sport-trail-small.jpg"
   },
   {
    "code": "74-430",
@@ -48,7 +53,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 70.99
+   "price": 70.99,
+   "img": "rem_p811.jpg"
   },
   {
    "code": "74-443",
@@ -56,7 +62,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 71.99
+   "price": 71.99,
+   "img": "rem_p837.jpg"
   },
   {
    "code": "104-830",
@@ -64,7 +71,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 73.99
+   "price": 73.99,
+   "img": "rem_sport-trail-small.jpg"
   },
   {
    "code": "74-420",
@@ -72,7 +80,8 @@
    "brand": "JOURNEY",
    "stock": "5 in stock",
    "category": "trailer",
-   "price": 74.99
+   "price": 74.99,
+   "img": "rem_p811.jpg"
   },
   {
    "code": "98-803",
@@ -80,7 +89,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 75.99
+   "price": 75.99,
+   "img": "rem_k353-k371-loadstar.jpg"
   },
   {
    "code": "98-804",
@@ -88,7 +98,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 76.99
+   "price": 76.99,
+   "img": "rem_k353-k371-loadstar.jpg"
   },
   {
    "code": "98-805",
@@ -96,7 +107,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 76.99
+   "price": 76.99,
+   "img": "rem_k353-k371-loadstar.jpg"
   },
   {
    "code": "74-600",
@@ -104,7 +116,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 78.99
+   "price": 78.99,
+   "img": "rem_h1021.jpg"
   },
   {
    "code": "74-194",
@@ -112,7 +125,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 79.99
+   "price": 79.99,
+   "img": "rem_tr088.jpg"
   },
   {
    "code": "74-195",
@@ -120,7 +134,8 @@
    "brand": "JOURNEY",
    "stock": "2026-06-26",
    "category": "trailer",
-   "price": 80.99
+   "price": 80.99,
+   "img": "rem_tr088.jpg"
   },
   {
    "code": "98-806",
@@ -128,7 +143,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 81.99
+   "price": 81.99,
+   "img": "rem_k353-k371-loadstar.jpg"
   },
   {
    "code": "KAT 74-40004",
@@ -136,7 +152,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 81.99
+   "price": 81.99,
+   "img": "rem_jour-p811-4-tr-blanc.jpg"
   },
   {
    "code": "KAT 74-40005",
@@ -144,7 +161,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 81.99
+   "price": 81.99,
+   "img": "rem_jour-p811-5-tr-blanc.jpg"
   },
   {
    "code": "74-410",
@@ -152,7 +170,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 82.99
+   "price": 82.99,
+   "img": "rem_p811.jpg"
   },
   {
    "code": "KAT 98-802A05",
@@ -160,7 +179,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 83.99
+   "price": 83.99,
+   "img": "rem_ken-k371-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 98-802A04",
@@ -168,7 +188,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 83.99
+   "price": 83.99,
+   "img": "rem_ken-k371-4-tr-blanc.jpg"
   },
   {
    "code": "98-807",
@@ -176,7 +197,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 85.99
+   "price": 85.99,
+   "img": "rem_k353-k371-loadstar.jpg"
   },
   {
    "code": "74-442",
@@ -184,7 +206,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 85.99
+   "price": 85.99,
+   "img": "rem_p837.jpg"
   },
   {
    "code": "98-808",
@@ -192,7 +215,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 88.99
+   "price": 88.99,
+   "img": "rem_k353-k371-loadstar.jpg"
   },
   {
    "code": "74-200",
@@ -200,7 +224,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 88.99
+   "price": 88.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "74-181",
@@ -208,7 +233,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 95.99
+   "price": 95.99,
+   "img": "rem_p815.jpg"
   },
   {
    "code": "74-202",
@@ -216,7 +242,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 96.99
+   "price": 96.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "KAT 104-82904",
@@ -224,7 +251,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 96.99
+   "price": 96.99,
+   "img": ""
   },
   {
    "code": "KAT 104-82905",
@@ -232,7 +260,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 96.99
+   "price": 96.99,
+   "img": ""
   },
   {
    "code": "74-270",
@@ -240,7 +269,8 @@
    "brand": "JOURNEY",
    "stock": "2026-06-26",
    "category": "trailer",
-   "price": 97.99
+   "price": 97.99,
+   "img": "rem_h186.png"
   },
   {
    "code": "74-185",
@@ -248,7 +278,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 104.99
+   "price": 104.99,
+   "img": "rem_p815.jpg"
   },
   {
    "code": "KAT 74-42004",
@@ -256,7 +287,8 @@
    "brand": "JOURNEY",
    "stock": "5 in stock",
    "category": "trailer",
-   "price": 104.99
+   "price": 104.99,
+   "img": "rem_jour-p811-4-tr-blanc.jpg"
   },
   {
    "code": "KAT 74-42005",
@@ -264,7 +296,8 @@
    "brand": "JOURNEY",
    "stock": "5 in stock",
    "category": "trailer",
-   "price": 104.99
+   "price": 104.99,
+   "img": "rem_jour-p811-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 98-80304",
@@ -272,7 +305,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 105.99
+   "price": 105.99,
+   "img": "rem_ken-k353-4-tr-blanc.jpg"
   },
   {
    "code": "104-817",
@@ -280,7 +314,8 @@
    "brand": "CARLSTAR",
    "stock": "6 in stock",
    "category": "trailer",
-   "price": 105.99
+   "price": 105.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "98-807A",
@@ -288,7 +323,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 106.99
+   "price": 106.99,
+   "img": "rem_k353-k371-loadstar.jpg"
   },
   {
    "code": "KAT 98-80404",
@@ -296,7 +332,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 106.99
+   "price": 106.99,
+   "img": "rem_ken-k353-4-tr-blanc.jpg"
   },
   {
    "code": "KAT 74-44305A",
@@ -304,7 +341,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 106.99
+   "price": 106.99,
+   "img": "rem_jour-p837-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 74-18905",
@@ -312,7 +350,8 @@
    "brand": "JOURNEY",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 106.99
+   "price": 106.99,
+   "img": "rem_journey-p825t-5-tr-blanc.jpg"
   },
   {
    "code": "74-212",
@@ -320,7 +359,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 109.99
+   "price": 109.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "104-818",
@@ -328,7 +368,8 @@
    "brand": "CARLSTAR",
    "stock": "10 in stock",
    "category": "trailer",
-   "price": 111.99
+   "price": 111.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "98-848",
@@ -336,7 +377,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 113.99
+   "price": 113.99,
+   "img": "rem_k399-loadstar.jpg"
   },
   {
    "code": "104-820",
@@ -344,7 +386,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 115.99
+   "price": 115.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "KAT 74-43004",
@@ -352,7 +395,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 115.99
+   "price": 115.99,
+   "img": ""
   },
   {
    "code": "74-204",
@@ -360,7 +404,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 116.99
+   "price": 116.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "74-216",
@@ -368,7 +413,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 117.99
+   "price": 117.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "104-803",
@@ -376,7 +422,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "trailer",
-   "price": 117.99
+   "price": 117.99,
+   "img": "rem_sport-trail-small.jpg"
   },
   {
    "code": "KAT 98-802A04B",
@@ -384,7 +431,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 118.99
+   "price": 118.99,
+   "img": "rem_ken-k371-4-tr-noir.jpg"
   },
   {
    "code": "KAT 74-19405",
@@ -392,7 +440,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 119.99
+   "price": 119.99,
+   "img": "rem_jour-tr088-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-19505",
@@ -400,7 +449,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 120.99
+   "price": 120.99,
+   "img": "rem_jour-tr088-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "104-819",
@@ -408,7 +458,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "trailer",
-   "price": 120.99
+   "price": 120.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "KAT 98-80504",
@@ -416,7 +467,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 121.99
+   "price": 121.99,
+   "img": "rem_ken-k353-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-80505",
@@ -424,7 +476,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 121.99
+   "price": 121.99,
+   "img": "rem_ken-k353-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-80605",
@@ -432,7 +485,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 121.99
+   "price": 121.99,
+   "img": "rem_ken-k353-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-41004",
@@ -440,7 +494,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 122.99
+   "price": 122.99,
+   "img": "rem_jour-p811-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-41005",
@@ -448,7 +503,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 122.99
+   "price": 122.99,
+   "img": "rem_jour-p811-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "74-213",
@@ -456,7 +512,8 @@
    "brand": "JOURNEY",
    "stock": "2026-07-09",
    "category": "trailer",
-   "price": 122.99
+   "price": 122.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "98-701",
@@ -464,7 +521,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 123.99
+   "price": 123.99,
+   "img": "rem_k550-loadstar.jpg"
   },
   {
    "code": "KAT 98-80804",
@@ -472,7 +530,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 123.99
+   "price": 123.99,
+   "img": "rem_ken-k353-4-tr-blanc.jpg"
   },
   {
    "code": "KAT 98-80805",
@@ -480,7 +539,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 123.99
+   "price": 123.99,
+   "img": "rem_ken-k353-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 98-80704",
@@ -488,7 +548,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 125.99
+   "price": 125.99,
+   "img": "rem_ken-k353-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-80705",
@@ -496,7 +557,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 125.99
+   "price": 125.99,
+   "img": "rem_ken-k353-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "98-875",
@@ -504,7 +566,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 125.99
+   "price": 125.99,
+   "img": "rem_k399-loadstar.jpg"
   },
   {
    "code": "74-208",
@@ -512,7 +575,8 @@
    "brand": "JOURNEY",
    "stock": "2026-07-23",
    "category": "trailer",
-   "price": 126.99
+   "price": 126.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "74-187",
@@ -520,7 +584,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 126.99
+   "price": 126.99,
+   "img": "rem_p815.jpg"
   },
   {
    "code": "98-725",
@@ -528,7 +593,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 127.99
+   "price": 127.99,
+   "img": "rem_kr03-karrier.jpg"
   },
   {
    "code": "KAT 74-18104",
@@ -536,7 +602,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 127.99
+   "price": 127.99,
+   "img": "rem_jour-p815-4-tr-blanc.jpg"
   },
   {
    "code": "KAT 74-18105",
@@ -544,7 +611,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 127.99
+   "price": 127.99,
+   "img": "rem_jour-p815-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 74-44205",
@@ -552,7 +620,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 130.99
+   "price": 130.99,
+   "img": "rem_jour-p837-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "104-804",
@@ -560,7 +629,8 @@
    "brand": "CARLSTAR",
    "stock": "2026-06-20",
    "category": "trailer",
-   "price": 131.99
+   "price": 131.99,
+   "img": "rem_sport-trail-small.jpg"
   },
   {
    "code": "74-188",
@@ -568,7 +638,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 132.99
+   "price": 132.99,
+   "img": "rem_p825t.jpg"
   },
   {
    "code": "74-222",
@@ -576,7 +647,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 134.99
+   "price": 134.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "74-220",
@@ -584,7 +656,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 135.99
+   "price": 135.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "KAT 74-20004",
@@ -592,7 +665,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 137.99
+   "price": 137.99,
+   "img": "rem_jour-wr078-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-20005",
@@ -600,7 +674,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 137.99
+   "price": 137.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "103-792R",
@@ -608,7 +683,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 140.99
+   "price": 140.99,
+   "img": "rem_103-792r_793.jpg"
   },
   {
    "code": "98-731",
@@ -616,7 +692,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 140.99
+   "price": 140.99,
+   "img": "rem_kr03-karrier.jpg"
   },
   {
    "code": "98-876",
@@ -624,7 +701,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 140.99
+   "price": 140.99,
+   "img": "rem_k399-loadstar.jpg"
   },
   {
    "code": "74-224",
@@ -632,7 +710,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 143.99
+   "price": 143.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "KAT 74-20204",
@@ -640,7 +719,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 145.99
+   "price": 145.99,
+   "img": "rem_jour-wr078-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-20205",
@@ -648,7 +728,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 145.99
+   "price": 145.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-19405G",
@@ -656,7 +737,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 145.99
+   "price": 145.99,
+   "img": "rem_jour-tr088-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 104-81704",
@@ -664,7 +746,8 @@
    "brand": "CARLSTAR",
    "stock": "6 in stock",
    "category": "trailer",
-   "price": 145.99
+   "price": 145.99,
+   "img": "rem_spo-trail-wide-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 104-81705",
@@ -672,7 +755,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 145.99
+   "price": 145.99,
+   "img": "rem_spo-trail-wide-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-84805",
@@ -680,7 +764,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 145.99
+   "price": 145.99,
+   "img": "rem_ken-k399-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 74-19505G",
@@ -688,7 +773,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 146.99
+   "price": 146.99,
+   "img": "rem_jour-tr088-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "103-851R",
@@ -696,7 +782,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 146.99
+   "price": 146.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 104-80304",
@@ -704,7 +791,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "trailer",
-   "price": 147.99
+   "price": 147.99,
+   "img": ""
   },
   {
    "code": "KAT 104-80305",
@@ -712,7 +800,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "trailer",
-   "price": 147.99
+   "price": 147.99,
+   "img": ""
   },
   {
    "code": "KAT 74-41005G",
@@ -720,7 +809,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 148.99
+   "price": 148.99,
+   "img": "rem_jour-p811-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "104-808",
@@ -728,7 +818,8 @@
    "brand": "CARLSTAR",
    "stock": "7 in stock",
    "category": "trailer",
-   "price": 149.99
+   "price": 149.99,
+   "img": "rem_sport-trail-petit.jpg"
   },
   {
    "code": "98-741",
@@ -736,7 +827,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 149.99
+   "price": 149.99,
+   "img": "rem_kr25-karrier-s-trail.jpg"
   },
   {
    "code": "KAT 98-807A04",
@@ -744,7 +836,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 151.99
+   "price": 151.99,
+   "img": "rem_ken-k353-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-807A05",
@@ -752,7 +845,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 151.99
+   "price": 151.99,
+   "img": "rem_ken-k353-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "98-887",
@@ -760,7 +854,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 153.99
+   "price": 153.99,
+   "img": "rem_k399-loadstar.jpg"
   },
   {
    "code": "98-712A",
@@ -768,7 +863,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 153.99
+   "price": 153.99,
+   "img": "rem_k550-loadstar.jpg"
   },
   {
    "code": "KAT 104-82004",
@@ -776,7 +872,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 155.99
+   "price": 155.99,
+   "img": "rem_spo-trail-wide-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 104-82005",
@@ -784,7 +881,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 155.99
+   "price": 155.99,
+   "img": "rem_spo-trail-wide-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-18505",
@@ -792,7 +890,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 155.99
+   "price": 155.99,
+   "img": "rem_jour-p815-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 104-81804",
@@ -800,7 +899,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 156.99
+   "price": 156.99,
+   "img": "rem_spo-trail-wide-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 104-81805",
@@ -808,7 +908,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 156.99
+   "price": 156.99,
+   "img": "rem_spo-trail-wide-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "104-810",
@@ -816,7 +917,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 156.99
+   "price": 156.99,
+   "img": "rem_sport-trail-petit.jpg"
   },
   {
    "code": "98-708",
@@ -824,7 +926,8 @@
    "brand": "KENDA",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 158.99
+   "price": 158.99,
+   "img": "rem_k550-loadstar.jpg"
   },
   {
    "code": "103-793",
@@ -832,7 +935,8 @@
    "brand": "CARLSTAR",
    "stock": "2026-08-04",
    "category": "trailer",
-   "price": 160.99
+   "price": 160.99,
+   "img": "rem_103-792r_793.jpg"
   },
   {
    "code": "KAT 104-81904",
@@ -840,7 +944,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "trailer",
-   "price": 160.99
+   "price": 160.99,
+   "img": "rem_spo-trail-wide-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 104-81905",
@@ -848,7 +953,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 160.99
+   "price": 160.99,
+   "img": "rem_spo-trail-wide-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-20005G",
@@ -856,7 +962,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 160.99
+   "price": 160.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 104-80404",
@@ -864,7 +971,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 161.99
+   "price": 161.99,
+   "img": ""
   },
   {
    "code": "104-812",
@@ -872,7 +980,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 161.99
+   "price": 161.99,
+   "img": "rem_sport-trail-petit.jpg"
   },
   {
    "code": "98-726",
@@ -880,7 +989,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 162.99
+   "price": 162.99,
+   "img": "rem_kr03-karrier.jpg"
   },
   {
    "code": "98-704",
@@ -888,7 +998,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 162.99
+   "price": 162.99,
+   "img": "rem_k550-loadstar.jpg"
   },
   {
    "code": "78-711",
@@ -896,7 +1007,8 @@
    "brand": "CARGOMAX",
    "stock": "2099-09-12",
    "category": "trailer",
-   "price": 162.99
+   "price": 162.99,
+   "img": "rem_zt301.jpg"
   },
   {
    "code": "KAT 74-20404",
@@ -904,7 +1016,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 165.99
+   "price": 165.99,
+   "img": "rem_jour-wr078-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-20405",
@@ -912,7 +1025,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 165.99
+   "price": 165.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "74-228",
@@ -920,7 +1034,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 166.99
+   "price": 166.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "KAT 74-20205G",
@@ -928,7 +1043,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 168.99
+   "price": 168.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 74-27005G",
@@ -936,7 +1052,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 169.99
+   "price": 169.99,
+   "img": "rem_jour-h186-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 74-21205",
@@ -944,7 +1061,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 170.99
+   "price": 170.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "103-840R",
@@ -952,7 +1070,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 170.99
+   "price": 170.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 98-70104",
@@ -960,7 +1079,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 172.99
+   "price": 172.99,
+   "img": "rem_ken-k550-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-70105",
@@ -968,7 +1088,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 172.99
+   "price": 172.99,
+   "img": "rem_ken-k550-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "98-728",
@@ -976,7 +1097,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 173.99
+   "price": 173.99,
+   "img": "rem_kr03-karrier.jpg"
   },
   {
    "code": "KAT 74-20804",
@@ -984,7 +1106,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 175.99
+   "price": 175.99,
+   "img": "rem_jour-wr078-4-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-20805A",
@@ -992,7 +1115,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 175.99
+   "price": 175.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-72505",
@@ -1000,7 +1124,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 176.99
+   "price": 176.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-87505",
@@ -1008,7 +1133,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 176.99
+   "price": 176.99,
+   "img": "rem_ken-k399-5-tr-blanc.jpg"
   },
   {
    "code": "103-852R",
@@ -1016,7 +1142,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 178.99
+   "price": 178.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 103-792R01",
@@ -1024,7 +1151,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 180.99
+   "price": 180.99,
+   "img": "rem_rad-trail-rh-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "103-839R",
@@ -1032,7 +1160,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 182.99
+   "price": 182.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 74-18505G",
@@ -1040,7 +1169,8 @@
    "brand": "JOURNEY",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 182.99
+   "price": 182.99,
+   "img": "rem_jour-p815-5-tr-galv.jpg"
   },
   {
    "code": "KAT 74-21305",
@@ -1048,7 +1178,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 183.99
+   "price": 183.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "98-737",
@@ -1056,7 +1187,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 184.99
+   "price": 184.99,
+   "img": "rem_kr03-karrier.jpg"
   },
   {
    "code": "103-831",
@@ -1064,7 +1196,8 @@
    "brand": "CARLSTAR",
    "stock": "2026-08-04",
    "category": "trailer",
-   "price": 186.99
+   "price": 186.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "103-848R",
@@ -1072,7 +1205,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 188.99
+   "price": 188.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 74-20405A",
@@ -1080,7 +1214,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 188.99
+   "price": 188.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 74-18805",
@@ -1088,7 +1223,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 188.99
+   "price": 188.99,
+   "img": "rem_journey-p825t-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 104-81004",
@@ -1096,7 +1232,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 188.99
+   "price": 188.99,
+   "img": "rem_spo-trail-wide-4-tr-blanc.jpg"
   },
   {
    "code": "KAT 104-81005",
@@ -1104,7 +1241,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 188.99
+   "price": 188.99,
+   "img": "rem_spo-trail-wide-5tr-blanc.jpg"
   },
   {
    "code": "KAT 98-87504P",
@@ -1112,7 +1250,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 189.99
+   "price": 189.99,
+   "img": "rem_ken-k399-4-tr-blanc.jpg"
   },
   {
    "code": "KAT 98-73105",
@@ -1120,7 +1259,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 189.99
+   "price": 189.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "74-232",
@@ -1128,7 +1268,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 190.99
+   "price": 190.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "74-901",
@@ -1136,7 +1277,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 190.99
+   "price": 190.99,
+   "img": "rem_h128.jpg"
   },
   {
    "code": "103-853R",
@@ -1144,7 +1286,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 191.99
+   "price": 191.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 98-87605",
@@ -1152,7 +1295,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 191.99
+   "price": 191.99,
+   "img": "rem_ken-k399-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 104-82910A",
@@ -1160,7 +1304,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 192.99
+   "price": 192.99,
+   "img": "rem_spo-trail-narrow-52-8010.jpg"
   },
   {
    "code": "KAT 74-21605",
@@ -1168,7 +1313,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 192.99
+   "price": 192.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-21606",
@@ -1176,7 +1322,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 192.99
+   "price": 192.99,
+   "img": "rem_jour-wr078-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "104-822",
@@ -1184,7 +1331,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 192.99
+   "price": 192.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "98-732",
@@ -1192,7 +1340,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 192.99
+   "price": 192.99,
+   "img": "rem_kr03-karrier.jpg"
   },
   {
    "code": "KAT 74-22205",
@@ -1200,7 +1349,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 195.99
+   "price": 195.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 103-85104",
@@ -1208,7 +1358,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 195.99
+   "price": 195.99,
+   "img": "rem_rad-trail-hd-4-tr-8-ray-blanc1.jpg"
   },
   {
    "code": "KAT 103-85105",
@@ -1216,7 +1367,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 195.99
+   "price": 195.99,
+   "img": ""
   },
   {
    "code": "KAT 98-70105G",
@@ -1224,7 +1376,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 195.99
+   "price": 195.99,
+   "img": "rem_ken-k550-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 74-22005A",
@@ -1232,7 +1385,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 196.99
+   "price": 196.99,
+   "img": "rem_jour-wr078-5-tr-mod-blanc.jpg"
   },
   {
    "code": "98-705",
@@ -1240,7 +1394,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 197.99
+   "price": 197.99,
+   "img": "rem_k550-loadstar.jpg"
   },
   {
    "code": "KAT 74-20805G",
@@ -1248,7 +1403,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 198.99
+   "price": 198.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 74-21605B",
@@ -1256,7 +1412,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 199.99
+   "price": 199.99,
+   "img": "rem_jour-wr078-5-tr-mod-noir.jpg"
   },
   {
    "code": "KAT 98-72505G",
@@ -1264,7 +1421,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 199.99
+   "price": 199.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "104-813",
@@ -1272,7 +1430,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 199.99
+   "price": 199.99,
+   "img": "rem_sport-trail-petit.jpg"
   },
   {
    "code": "KAT 103-79303",
@@ -1280,7 +1439,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 200.99
+   "price": 200.99,
+   "img": "rem_rad-trail-rh-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-712A05",
@@ -1288,7 +1448,8 @@
    "brand": "KENDA",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 202.99
+   "price": 202.99,
+   "img": "rem_ken-k550-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-87604",
@@ -1296,7 +1457,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 204.99
+   "price": 204.99,
+   "img": "rem_ken-k399-4-tr-blanc.jpg"
   },
   {
    "code": "103-847R",
@@ -1304,7 +1466,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 204.99
+   "price": 204.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "103-837",
@@ -1312,7 +1475,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 205.99
+   "price": 205.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "98-716",
@@ -1320,7 +1484,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 205.99
+   "price": 205.99,
+   "img": "rem_k550-loadstar.jpg"
   },
   {
    "code": "KAT 74-21205G",
@@ -1328,7 +1493,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 207.99
+   "price": 207.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 98-88705",
@@ -1336,7 +1502,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 209.99
+   "price": 209.99,
+   "img": "rem_ken-k399-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 74-22005",
@@ -1344,7 +1511,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 210.99
+   "price": 210.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "98-730",
@@ -1352,7 +1520,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 210.99
+   "price": 210.99,
+   "img": "rem_kr03-karrier.jpg"
   },
   {
    "code": "KAT 74-22405",
@@ -1360,7 +1529,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 218.99
+   "price": 218.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-22406",
@@ -1368,7 +1538,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 218.99
+   "price": 218.99,
+   "img": "rem_jour-wr078-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-21305G",
@@ -1376,7 +1547,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 220.99
+   "price": 220.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "98-710",
@@ -1384,7 +1556,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 221.99
+   "price": 221.99,
+   "img": "rem_k550-loadstar.jpg"
   },
   {
    "code": "104-832",
@@ -1392,7 +1565,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "trailer",
-   "price": 221.99
+   "price": 221.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "KAT 98-72605",
@@ -1400,7 +1574,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 223.99
+   "price": 223.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-70405",
@@ -1408,7 +1583,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 223.99
+   "price": 223.99,
+   "img": "rem_ken-k550-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "103-850R",
@@ -1416,7 +1592,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 224.99
+   "price": 224.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "74-236",
@@ -1424,7 +1601,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 225.99
+   "price": 225.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "KAT 74-22406W",
@@ -1432,7 +1610,8 @@
    "brand": "JOURNEY",
    "stock": "5 in stock",
    "category": "trailer",
-   "price": 225.99
+   "price": 225.99,
+   "img": "rem_jour-wr078-6-tr-mod-blanc.jpg"
   },
   {
    "code": "KAT 104-81204-1",
@@ -1440,7 +1619,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 225.99
+   "price": 225.99,
+   "img": "rem_spo-trail-wide-4-tr-blanc.jpg"
   },
   {
    "code": "KAT 103-79305G",
@@ -1448,7 +1628,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 226.99
+   "price": 226.99,
+   "img": "rem_carl-radial-trail-rh-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 74-21605G",
@@ -1456,7 +1637,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 227.99
+   "price": 227.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "98-986A",
@@ -1464,7 +1646,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 228.99
+   "price": 228.99,
+   "img": "rem_k370-loadstar.jpg"
   },
   {
    "code": "KAT 103-83905",
@@ -1472,7 +1655,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 231.99
+   "price": 231.99,
+   "img": "rem_rad-trail-hd-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "74-240",
@@ -1480,7 +1664,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 232.99
+   "price": 232.99,
+   "img": "rem_wr078.jpg"
   },
   {
    "code": "KAT 74-22205A",
@@ -1488,7 +1673,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 232.99
+   "price": 232.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 98-70806",
@@ -1496,7 +1682,8 @@
    "brand": "KENDA",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 233.99
+   "price": 233.99,
+   "img": "rem_ken-k550-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-70805",
@@ -1504,7 +1691,8 @@
    "brand": "KENDA",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 233.99
+   "price": 233.99,
+   "img": "rem_ken-k550-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "98-718",
@@ -1512,7 +1700,8 @@
    "brand": "KENDA",
    "stock": "3 in stock",
    "category": "trailer",
-   "price": 233.99
+   "price": 233.99,
+   "img": "rem_k550-loadstar.jpg"
   },
   {
    "code": "104-824",
@@ -1520,7 +1709,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 234.99
+   "price": 234.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "98-989",
@@ -1528,7 +1718,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 235.99
+   "price": 235.99,
+   "img": "rem_k391m-loadstar.jpg"
   },
   {
    "code": "KAT 98-88705G",
@@ -1536,7 +1727,8 @@
    "brand": "KENDA",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 236.99
+   "price": 236.99,
+   "img": "rem_ken-k399-5-tr-galv.jpg"
   },
   {
    "code": "KAT 103-85205",
@@ -1544,7 +1736,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 239.99
+   "price": 239.99,
+   "img": "rem_rad-trail-hd-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 104-82205",
@@ -1552,7 +1745,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 241.99
+   "price": 241.99,
+   "img": "rem_spo-trail-wide-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-22805",
@@ -1560,7 +1754,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 241.99
+   "price": 241.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-22806A",
@@ -1568,7 +1763,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 241.99
+   "price": 241.99,
+   "img": "rem_jour-wr078-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-90100",
@@ -1576,7 +1772,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 242.99
+   "price": 242.99,
+   "img": "rem_h128.jpg"
   },
   {
    "code": "98-950",
@@ -1584,7 +1781,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 244.99
+   "price": 244.99,
+   "img": "rem_k399-loadstar.jpg"
   },
   {
    "code": "98-738",
@@ -1592,7 +1790,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 244.99
+   "price": 244.99,
+   "img": "rem_kr03-karrier.jpg"
   },
   {
    "code": "KAT 98-73705",
@@ -1600,7 +1799,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 245.99
+   "price": 245.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-22005G",
@@ -1608,7 +1808,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 245.99
+   "price": 245.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "98-990",
@@ -1616,7 +1817,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 246.99
+   "price": 246.99,
+   "img": "rem_k391m-loadstar.jpg"
   },
   {
    "code": "104-815",
@@ -1624,7 +1826,8 @@
    "brand": "CARLSTAR",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 246.99
+   "price": 246.99,
+   "img": "rem_sport-trail-petit.jpg"
   },
   {
    "code": "KAT 98-72805",
@@ -1632,7 +1835,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 248.99
+   "price": 248.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-22806W",
@@ -1640,7 +1844,8 @@
    "brand": "JOURNEY",
    "stock": "5 in stock",
    "category": "trailer",
-   "price": 248.99
+   "price": 248.99,
+   "img": "rem_jour-wr078-6-tr-mod-blanc.jpg"
   },
   {
    "code": "KAT 104-81305",
@@ -1648,7 +1853,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 250.99
+   "price": 250.99,
+   "img": "rem_spo-trail-wide-5tr-blanc.jpg"
   },
   {
    "code": "104-814",
@@ -1656,7 +1862,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 250.99
+   "price": 250.99,
+   "img": "rem_sport-trail-petit.jpg"
   },
   {
    "code": "103-855R",
@@ -1664,7 +1871,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 250.99
+   "price": 250.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "104-826",
@@ -1672,7 +1880,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 250.99
+   "price": 250.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "74-239",
@@ -1680,7 +1889,8 @@
    "brand": "JOURNEY",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 250.99
+   "price": 250.99,
+   "img": "rem_wr097.png"
   },
   {
    "code": "KAT 103-85305",
@@ -1688,7 +1898,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 252.99
+   "price": 252.99,
+   "img": "rem_rad-trail-hd-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-22406G",
@@ -1696,7 +1907,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 253.99
+   "price": 253.99,
+   "img": "rem_jour-wr078-6-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 74-22405G",
@@ -1704,7 +1916,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 253.99
+   "price": 253.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "104-825",
@@ -1712,7 +1925,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "trailer",
-   "price": 256.99
+   "price": 256.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "KAT 98-70505",
@@ -1720,7 +1934,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 258.99
+   "price": 258.99,
+   "img": "rem_ken-k550-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "78-710",
@@ -1728,7 +1943,8 @@
    "brand": "CARGOMAX",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 259.99
+   "price": 259.99,
+   "img": "rem_cargomax.jpg"
   },
   {
    "code": "104-816",
@@ -1736,7 +1952,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 260.99
+   "price": 260.99,
+   "img": "rem_sport-trail-petit.jpg"
   },
   {
    "code": "KAT 98-70405G",
@@ -1744,7 +1961,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 260.99
+   "price": 260.99,
+   "img": "rem_ken-k550-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 98-72605G",
@@ -1752,7 +1970,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 260.99
+   "price": 260.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "104-828",
@@ -1760,7 +1979,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 263.99
+   "price": 263.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "KAT 103-84805",
@@ -1768,7 +1988,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 263.99
+   "price": 263.99,
+   "img": "rem_rad-trail-hd-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 103-84806",
@@ -1776,7 +1997,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 263.99
+   "price": 263.99,
+   "img": "rem_rad-trail-hd-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "104-850",
@@ -1784,7 +2006,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 266.99
+   "price": 266.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "98-760",
@@ -1792,7 +2015,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 267.99
+   "price": 267.99,
+   "img": "rem_kr17.jpg"
   },
   {
    "code": "KAT 98-70805G",
@@ -1800,7 +2024,8 @@
    "brand": "KENDA",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 268.99
+   "price": 268.99,
+   "img": "rem_ken-k550-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "98-721",
@@ -1808,7 +2033,8 @@
    "brand": "KENDA",
    "stock": "1 in stock",
    "category": "trailer",
-   "price": 268.99
+   "price": 268.99,
+   "img": "rem_k391m-loadstar.jpg"
   },
   {
    "code": "78-720",
@@ -1816,7 +2042,8 @@
    "brand": "CARGOMAX",
    "stock": "2026-07-02",
    "category": "trailer",
-   "price": 276.99
+   "price": 276.99,
+   "img": "rem_cargomax.jpg"
   },
   {
    "code": "78-725",
@@ -1824,7 +2051,8 @@
    "brand": "AUTRES - OTHERS",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 276.99
+   "price": 276.99,
+   "img": "rem_suretrac.jpg"
   },
   {
    "code": "KAT 74-22806G",
@@ -1832,7 +2060,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 276.99
+   "price": 276.99,
+   "img": "rem_jour-wr078-6-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 103-85205G",
@@ -1840,7 +2069,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 276.99
+   "price": 276.99,
+   "img": "rem_rad-trail-hd-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 74-22805G",
@@ -1848,7 +2078,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 276.99
+   "price": 276.99,
+   "img": "rem_jour-wr078-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 103-84705",
@@ -1856,7 +2087,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 279.99
+   "price": 279.99,
+   "img": "rem_rad-trail-hd-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-23206",
@@ -1864,7 +2096,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 282.99
+   "price": 282.99,
+   "img": "rem_jour-wr078-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 74-23208",
@@ -1872,7 +2105,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 282.99
+   "price": 282.99,
+   "img": "rem_jour-wr078-8-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-73705G",
@@ -1880,7 +2114,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 282.99
+   "price": 282.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "78-721",
@@ -1888,7 +2123,8 @@
    "brand": "CARGOMAX",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 282.99
+   "price": 282.99,
+   "img": "rem_cargomax.jpg"
   },
   {
    "code": "104-845",
@@ -1896,7 +2132,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 282.99
+   "price": 282.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "KAT 98-73005",
@@ -1904,7 +2141,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 285.99
+   "price": 285.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-73006",
@@ -1912,7 +2150,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 285.99
+   "price": 285.99,
+   "img": "rem_ken-kr03-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-98910",
@@ -1920,7 +2159,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 287.99
+   "price": 287.99,
+   "img": "rem_ken-k391m-sans-c-ur-noir.jpg"
   },
   {
    "code": "KAT 104-82405",
@@ -1928,7 +2168,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 295.99
+   "price": 295.99,
+   "img": "rem_spo-trail-wide-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "103-841R",
@@ -1936,7 +2177,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 295.99
+   "price": 295.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 98-71005",
@@ -1944,7 +2186,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 296.99
+   "price": 296.99,
+   "img": "rem_ken-k550-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-71006",
@@ -1952,7 +2195,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 296.99
+   "price": 296.99,
+   "img": "rem_ken-k550-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-99010",
@@ -1960,7 +2204,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 298.99
+   "price": 298.99,
+   "img": "rem_ken-k391m-sans-c-ur-noir.jpg"
   },
   {
    "code": "KAT 103-84806G",
@@ -1968,7 +2213,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 298.99
+   "price": 298.99,
+   "img": "rem_rad-trail-hd-6-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 103-85006",
@@ -1976,7 +2222,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 299.99
+   "price": 299.99,
+   "img": "rem_rad-trail-hd-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 104-81505",
@@ -1984,7 +2231,8 @@
    "brand": "CARLSTAR",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 302.99
+   "price": 302.99,
+   "img": "rem_spo-trail-wide-5tr-blanc.jpg"
   },
   {
    "code": "98-736",
@@ -1992,7 +2240,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 304.99
+   "price": 304.99,
+   "img": "rem_kr03-karrier.jpg"
   },
   {
    "code": "78-726",
@@ -2000,7 +2249,8 @@
    "brand": "AUTRES - OTHERS",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 307.99
+   "price": 307.99,
+   "img": "rem_suretrac.jpg"
   },
   {
    "code": "KAT 104-81605",
@@ -2008,7 +2258,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 316.99
+   "price": 316.99,
+   "img": "rem_spo-trail-wide-5tr-blanc.jpg"
   },
   {
    "code": "KAT 74-23208G",
@@ -2016,7 +2267,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 316.99
+   "price": 316.99,
+   "img": "rem_jour-wr078-8-tr-8-ray-galv.jpg"
   },
   {
    "code": "KAT 74-23608",
@@ -2024,7 +2276,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 317.99
+   "price": 317.99,
+   "img": "rem_jour-wr078-8-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 98-73806",
@@ -2032,7 +2285,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 319.99
+   "price": 319.99,
+   "img": "rem_ken-kr03-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 103-85506",
@@ -2040,7 +2294,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 325.99
+   "price": 325.99,
+   "img": "rem_rad-trail-hd-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "103-833",
@@ -2048,7 +2303,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 328.99
+   "price": 328.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 74-24008",
@@ -2056,7 +2312,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 329.99
+   "price": 329.99,
+   "img": "rem_jour-wr078-8-tr-8-ray-blanc.jpg"
   },
   {
    "code": "103-834",
@@ -2064,7 +2321,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "trailer",
-   "price": 332.99
+   "price": 332.99,
+   "img": "rem_radial-trail-at.jpg"
   },
   {
    "code": "KAT 104-84500",
@@ -2072,7 +2330,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 334.99
+   "price": 334.99,
+   "img": "rem_spo-trail-lh-sans-c-ur-noir.jpg"
   },
   {
    "code": "103-854R",
@@ -2080,7 +2339,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 335.99
+   "price": 335.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 104-82806",
@@ -2088,7 +2348,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 338.99
+   "price": 338.99,
+   "img": "rem_spo-trail-lh-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "103-805",
@@ -2096,7 +2357,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "trailer",
-   "price": 339.99
+   "price": 339.99,
+   "img": "rem_usa-trail_c.jpg"
   },
   {
    "code": "98-743",
@@ -2104,7 +2366,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 343.99
+   "price": 343.99,
+   "img": "rem_kr29.jpg"
   },
   {
    "code": "104-860",
@@ -2112,7 +2375,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 347.99
+   "price": 347.99,
+   "img": "rem_sport-trail-lh.jpg"
   },
   {
    "code": "104-844",
@@ -2120,7 +2384,8 @@
    "brand": "CARLSTAR",
    "stock": "1 in stock",
    "category": "trailer",
-   "price": 349.99
+   "price": 349.99,
+   "img": "rem_sure-trail.jpg"
   },
   {
    "code": "KAT 98-73805G",
@@ -2128,7 +2393,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 354.99
+   "price": 354.99,
+   "img": "rem_ken-kr03-5-tr-8-ray-galv.jpg"
   },
   {
    "code": "98-724",
@@ -2136,7 +2402,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 356.99
+   "price": 356.99,
+   "img": "rem_k391m-loadstar.jpg"
   },
   {
    "code": "KAT 104-83005F",
@@ -2144,7 +2411,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 357.99
+   "price": 357.99,
+   "img": "rem_spo-trail-narrow-5-tr-blanc.jpg"
   },
   {
    "code": "KAT 74-24008G",
@@ -2152,7 +2420,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 363.99
+   "price": 363.99,
+   "img": "rem_jour-wr078-8-tr-8-ray-galv.jpg"
   },
   {
    "code": "98-739",
@@ -2160,7 +2429,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 372.99
+   "price": 372.99,
+   "img": "rem_kr18-karrier-hd.jpg"
   },
   {
    "code": "KAT 78-72008",
@@ -2168,7 +2438,8 @@
    "brand": "CARGOMAX",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 373.99
+   "price": 373.99,
+   "img": "rem_cargomax-8-trous-8-ray-blanc.jpg"
   },
   {
    "code": "103-844R",
@@ -2176,7 +2447,8 @@
    "brand": "CARLSTAR",
    "stock": "7 in stock",
    "category": "trailer",
-   "price": 377.99
+   "price": 377.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "103-843",
@@ -2184,7 +2456,8 @@
    "brand": "CARLSTAR",
    "stock": "7 in stock",
    "category": "trailer",
-   "price": 379.99
+   "price": 379.99,
+   "img": "rem_csl16.jpg"
   },
   {
    "code": "KAT 78-72108A",
@@ -2192,7 +2465,8 @@
    "brand": "CARGOMAX",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 385.99
+   "price": 385.99,
+   "img": "rem_cargomax-8-trous-mod-blanc.jpg"
   },
   {
    "code": "103-842",
@@ -2200,7 +2474,8 @@
    "brand": "CARLSTAR",
    "stock": "9 in stock",
    "category": "trailer",
-   "price": 387.99
+   "price": 387.99,
+   "img": "rem_csl16.jpg"
   },
   {
    "code": "KAT 103-84108",
@@ -2208,7 +2483,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 387.99
+   "price": 387.99,
+   "img": "rem_rad-trail-hd-8-tr-8-ray-blanc.jpg"
   },
   {
    "code": "KAT 78-72008B",
@@ -2216,7 +2492,8 @@
    "brand": "CARGOMAX",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 394.99
+   "price": 394.99,
+   "img": "rem_cargomax-8-trous-mod-noir.jpg"
   },
   {
    "code": "KAT 78-72108B",
@@ -2224,7 +2501,8 @@
    "brand": "CARGOMAX",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 400.99
+   "price": 400.99,
+   "img": "rem_cargomax-8-trous-mod-noir.jpg"
   },
   {
    "code": "103-844",
@@ -2232,7 +2510,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "trailer",
-   "price": 403.99
+   "price": 403.99,
+   "img": "rem_radial-trail-hd.jpg"
   },
   {
    "code": "KAT 104-84405",
@@ -2240,7 +2519,8 @@
    "brand": "CARLSTAR",
    "stock": "1 in stock",
    "category": "trailer",
-   "price": 410.99
+   "price": 410.99,
+   "img": "rem_sure-trail-5-tr-8-ray-blanc.jpg"
   },
   {
    "code": "103-836",
@@ -2248,7 +2528,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 411.99
+   "price": 411.99,
+   "img": "rem_csl16.jpg"
   },
   {
    "code": "KAT 78-72108",
@@ -2256,7 +2537,8 @@
    "brand": "CARGOMAX",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 413.99
+   "price": 413.99,
+   "img": "rem_cargomax-8-trous-8-ray-galv.jpg"
   },
   {
    "code": "KAT 78-72106",
@@ -2264,7 +2546,8 @@
    "brand": "CARGOMAX",
    "stock": "More than 10 in stock",
    "category": "trailer",
-   "price": 419.99
+   "price": 419.99,
+   "img": "rem_cargomax-6-trous-8-ray-galv1.jpg"
   },
   {
    "code": "103-838",
@@ -2272,7 +2555,8 @@
    "brand": "CARLSTAR",
    "stock": "10 in stock",
    "category": "trailer",
-   "price": 444.99
+   "price": 444.99,
+   "img": "rem_lpt-carlstar.jpg"
   },
   {
    "code": "103-848",
@@ -2280,7 +2564,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 475.99
+   "price": 475.99,
+   "img": "rem_csl16.jpg"
   },
   {
    "code": "103-835",
@@ -2288,7 +2573,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "trailer",
-   "price": 484.99
+   "price": 484.99,
+   "img": "rem_lpt-carlstar.jpg"
   },
   {
    "code": "95-LA134",
@@ -2296,7 +2582,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 549.99
+   "price": 549.99,
+   "img": "rem_super-transport-lt_d_e.jpg"
   },
   {
    "code": "95-LB134",
@@ -2304,7 +2591,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 614.99
+   "price": 614.99,
+   "img": "rem_super-traxion-lt_c.jpg"
   },
   {
    "code": "95-LN27C",
@@ -2312,7 +2600,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 619.99
+   "price": 619.99,
+   "img": "rem_non-directional.jpg"
   },
   {
    "code": "95-LA133",
@@ -2320,7 +2609,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 626.99
+   "price": 626.99,
+   "img": "rem_super-transport-lt_d_e.jpg"
   },
   {
    "code": "95-LA4A5",
@@ -2328,7 +2618,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 633.99
+   "price": 633.99,
+   "img": "rem_super-transport-lt_wb_a.jpg"
   },
   {
    "code": "95-LB246",
@@ -2336,7 +2627,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 672.99
+   "price": 672.99,
+   "img": "rem_super-traxion-lt_wb_a.jpg"
   },
   {
    "code": "95-LB4A5",
@@ -2344,7 +2636,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 688.99
+   "price": 688.99,
+   "img": "rem_super-traxion-lt_wb_a.jpg"
   },
   {
    "code": "95-LB4B5",
@@ -2352,7 +2645,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 727.99
+   "price": 727.99,
+   "img": "rem_super-traxion-lt_wb_a.jpg"
   },
   {
    "code": "95-LA4C5",
@@ -2360,7 +2654,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 743.99
+   "price": 743.99,
+   "img": "rem_super-transport-lt_wb_a.jpg"
   },
   {
    "code": "KAT 103-15848F",
@@ -2368,7 +2663,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 775.99
+   "price": 775.99,
+   "img": "rem_usa-trail_5t.jpg"
   },
   {
    "code": "95-LA4D5",
@@ -2376,7 +2672,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 830.99
+   "price": 830.99,
+   "img": "rem_super-transport-lt_wb_a.jpg"
   },
   {
    "code": "95-LA5J9",
@@ -2384,7 +2681,8 @@
    "brand": "SPECIALTY",
    "stock": "1 in stock",
    "category": "trailer",
-   "price": 860.99
+   "price": 860.99,
+   "img": "rem_super-transport-wb_tl_c.jpg"
   },
   {
    "code": "95-LA4C7",
@@ -2392,7 +2690,8 @@
    "brand": "SPECIALTY",
    "stock": "1 in stock",
    "category": "trailer",
-   "price": 974.99
+   "price": 974.99,
+   "img": "rem_super-transport-lt_wb_a.jpg"
   },
   {
    "code": "95-LN18E",
@@ -2400,7 +2699,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "trailer",
-   "price": 1226.99
+   "price": 1226.99,
+   "img": "rem_non-directional.jpg"
   },
   {
    "code": "95-LC3EL",
@@ -2408,7 +2708,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 1386.99
+   "price": 1386.99,
+   "img": "rem_super-transport-wb_tl_d.jpg"
   },
   {
    "code": "95-MA2A2",
@@ -2416,7 +2717,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 1496.99
+   "price": 1496.99,
+   "img": "rem_super-transport-lt_d_e.jpg"
   },
   {
    "code": "KAT 74-22806AF",
@@ -2424,7 +2726,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "trailer",
-   "price": 1559.99
+   "price": 1559.99,
+   "img": "rem_jour-wr078-6-tr-8-ray-blanc.jpg"
   },
   {
    "code": "95-HL5MC",
@@ -2432,7 +2735,8 @@
    "brand": "SPECIALTY",
    "stock": "1 in stock",
    "category": "trailer",
-   "price": 2452.99
+   "price": 2452.99,
+   "img": "rem_non-directional.jpg"
   },
   {
    "code": "84-725A",
@@ -2440,7 +2744,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 0.0
+   "price": 0.0,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "74-059",
@@ -2448,7 +2753,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 26.99
+   "price": 26.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "74-060",
@@ -2456,7 +2762,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 32.99
+   "price": 32.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "85-413",
@@ -2464,7 +2771,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 36.99
+   "price": 36.99,
+   "img": "agr_im63.png"
   },
   {
    "code": "74-358",
@@ -2472,7 +2780,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 52.99
+   "price": 52.99,
+   "img": "agr_h8022.jpg"
   },
   {
    "code": "74-880",
@@ -2480,7 +2789,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 56.99
+   "price": 56.99,
+   "img": "agr_h8022.jpg"
   },
   {
    "code": "78-300",
@@ -2488,7 +2798,8 @@
    "brand": "TREADURA",
    "stock": "2026-08-10",
    "category": "farm",
-   "price": 63.99
+   "price": 63.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "73-700",
@@ -2496,7 +2807,8 @@
    "brand": "ARMOUR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 69.99
+   "price": 69.99,
+   "img": "agr_g-1.jpg"
   },
   {
    "code": "93-922A",
@@ -2504,7 +2816,8 @@
    "brand": "AUTRES - OTHERS",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 69.99
+   "price": 69.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "103-701",
@@ -2512,7 +2825,8 @@
    "brand": "CARLSTAR",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 78.99
+   "price": 78.99,
+   "img": "agr_super-lug.jpg"
   },
   {
    "code": "103-702",
@@ -2520,7 +2834,8 @@
    "brand": "CARLSTAR",
    "stock": "2026-06-20",
    "category": "farm",
-   "price": 84.99
+   "price": 84.99,
+   "img": "agr_super-lug.jpg"
   },
   {
    "code": "78-318",
@@ -2528,7 +2843,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 84.99
+   "price": 84.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "78-302A",
@@ -2536,7 +2852,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 85.99
+   "price": 85.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "KAT 74-88004B-G",
@@ -2544,7 +2861,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 96.99
+   "price": 96.99,
+   "img": "ag_jour-h8022-jante-4-trous-blanc.jpg"
   },
   {
    "code": "KAT 74-88004B-D",
@@ -2552,7 +2870,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 96.99
+   "price": 96.99,
+   "img": "ag_jour-h8022-jante-4-trous-blanc.jpg"
   },
   {
    "code": "73-704",
@@ -2560,7 +2879,8 @@
    "brand": "ARMOUR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 99.99
+   "price": 99.99,
+   "img": "agr_g-1.jpg"
   },
   {
    "code": "78-308",
@@ -2568,7 +2888,8 @@
    "brand": "TREADURA",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 115.99
+   "price": 115.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "74-283",
@@ -2576,7 +2897,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 116.99
+   "price": 116.99,
+   "img": "agr_h167.jpg"
   },
   {
    "code": "78-091",
@@ -2584,7 +2906,8 @@
    "brand": "TREADURA",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 132.99
+   "price": 132.99,
+   "img": "agr_farm-specialist_r-1.jpg"
   },
   {
    "code": "78-312A",
@@ -2592,7 +2915,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 132.99
+   "price": 132.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "78-211",
@@ -2600,7 +2924,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 132.99
+   "price": 132.99,
+   "img": "agr_i-1-narrow.jpg"
   },
   {
    "code": "78-210",
@@ -2608,7 +2933,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 134.99
+   "price": 134.99,
+   "img": "agr_i-1-narrow.jpg"
   },
   {
    "code": "5-019-076",
@@ -2616,7 +2942,8 @@
    "brand": "FIRESTONE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 135.99
+   "price": 135.99,
+   "img": "agr_firestone-regency-g-1.jpg"
   },
   {
    "code": "78-310",
@@ -2624,7 +2951,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 136.99
+   "price": 136.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "78-217",
@@ -2632,7 +2960,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 143.99
+   "price": 143.99,
+   "img": "agr_i-1-narrow.jpg"
   },
   {
    "code": "78-304",
@@ -2640,7 +2969,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 148.99
+   "price": 148.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "73-149",
@@ -2648,7 +2978,8 @@
    "brand": "ARMOUR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 148.99
+   "price": 148.99,
+   "img": "agr_i-1_armour.jpg"
   },
   {
    "code": "85-511",
@@ -2656,7 +2987,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 149.99
+   "price": 149.99,
+   "img": "agr_im45.jpg"
   },
   {
    "code": "103-703",
@@ -2664,7 +2996,8 @@
    "brand": "CARLSTAR",
    "stock": "2026-06-27",
    "category": "farm",
-   "price": 152.99
+   "price": 152.99,
+   "img": "agr_power-trac.jpg"
   },
   {
    "code": "85-902",
@@ -2672,7 +3005,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "10 in stock",
    "category": "farm",
-   "price": 154.99
+   "price": 154.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "78-200",
@@ -2680,7 +3014,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 156.99
+   "price": 156.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "78-206",
@@ -2688,7 +3023,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 157.99
+   "price": 157.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "78-202",
@@ -2696,7 +3032,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 158.99
+   "price": 158.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "5-019-063",
@@ -2704,7 +3041,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 162.99
+   "price": 162.99,
+   "img": "agr_regency-traction-implement-plus.png"
   },
   {
    "code": "73-708",
@@ -2712,7 +3050,8 @@
    "brand": "ARMOUR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 168.99
+   "price": 168.99,
+   "img": "agr_g-1.jpg"
   },
   {
    "code": "74-096",
@@ -2720,7 +3059,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 171.99
+   "price": 171.99,
+   "img": "agr_wa006.jpg"
   },
   {
    "code": "85-903",
@@ -2728,7 +3068,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 171.99
+   "price": 171.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "74-360",
@@ -2736,7 +3077,8 @@
    "brand": "JOURNEY",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 173.99
+   "price": 173.99,
+   "img": "agr_wa002.png"
   },
   {
    "code": "78-314",
@@ -2744,7 +3086,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 173.99
+   "price": 173.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "78-208",
@@ -2752,7 +3095,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 175.99
+   "price": 175.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "73-147",
@@ -2760,7 +3104,8 @@
    "brand": "ARMOUR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 177.99
+   "price": 177.99,
+   "img": "agr_i-1_armour.jpg"
   },
   {
    "code": "78-306",
@@ -2768,7 +3113,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 180.99
+   "price": 180.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "78-096",
@@ -2776,7 +3122,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 181.99
+   "price": 181.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "85-605",
@@ -2784,7 +3131,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 185.99
+   "price": 185.99,
+   "img": "agr_im09_i-1.jpg"
   },
   {
    "code": "103-705",
@@ -2792,7 +3140,8 @@
    "brand": "CARLSTAR",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 186.99
+   "price": 186.99,
+   "img": "agr_super-lug.jpg"
   },
   {
    "code": "5-019-013",
@@ -2800,7 +3149,8 @@
    "brand": "FIRESTONE",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 189.99
+   "price": 189.99,
+   "img": "agr_regency_3-rib_f-2_front_plus.png"
   },
   {
    "code": "78-215",
@@ -2808,7 +3158,8 @@
    "brand": "TREADURA",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 189.99
+   "price": 189.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "78-214",
@@ -2816,7 +3167,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 192.99
+   "price": 192.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "73-710",
@@ -2824,7 +3176,8 @@
    "brand": "ARMOUR",
    "stock": "10 in stock",
    "category": "farm",
-   "price": 194.99
+   "price": 194.99,
+   "img": "agr_g-1.jpg"
   },
   {
    "code": "78-209",
@@ -2832,7 +3185,8 @@
    "brand": "TREADURA",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 201.99
+   "price": 201.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "103-286A",
@@ -2840,7 +3194,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 205.99
+   "price": 205.99,
+   "img": "agr_farm-specialist_i-1_n.jpg"
   },
   {
    "code": "78-307",
@@ -2848,7 +3203,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 206.99
+   "price": 206.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "74-095",
@@ -2856,7 +3212,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 208.99
+   "price": 208.99,
+   "img": "agr_wa005.jpg"
   },
   {
    "code": "74-864",
@@ -2864,7 +3221,8 @@
    "brand": "JOURNEY",
    "stock": "2026-09-08",
    "category": "farm",
-   "price": 209.99
+   "price": 209.99,
+   "img": "agr_wa001.jpg"
   },
   {
    "code": "74-350",
@@ -2872,7 +3230,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 215.99
+   "price": 215.99,
+   "img": "agr_p310.jpg"
   },
   {
    "code": "73-439",
@@ -2880,7 +3239,8 @@
    "brand": "ARMOUR",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 215.99
+   "price": 215.99,
+   "img": "agr_i-1_armour.jpg"
   },
   {
    "code": "103-239",
@@ -2888,7 +3248,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 215.99
+   "price": 215.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "103-222",
@@ -2896,7 +3257,8 @@
    "brand": "CARLSTAR",
    "stock": "2026-06-20",
    "category": "farm",
-   "price": 220.99
+   "price": 220.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "78-316",
@@ -2904,7 +3266,8 @@
    "brand": "TREADURA",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 220.99
+   "price": 220.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "85-516",
@@ -2912,7 +3275,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 221.99
+   "price": 221.99,
+   "img": "agr_im45.jpg"
   },
   {
    "code": "103-223",
@@ -2920,7 +3284,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 222.99
+   "price": 222.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "85-753",
@@ -2928,7 +3293,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 223.99
+   "price": 223.99,
+   "img": "agr_lg18.png"
   },
   {
    "code": "78-212B",
@@ -2936,7 +3302,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 224.99
+   "price": 224.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "98-860",
@@ -2944,7 +3311,8 @@
    "brand": "KENDA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 228.99
+   "price": 228.99,
+   "img": "agr_k365-lug.jpg"
   },
   {
    "code": "84-004",
@@ -2952,7 +3320,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 230.99
+   "price": 230.99,
+   "img": "agr_i-1-narrow.jpg"
   },
   {
    "code": "103-745",
@@ -2960,7 +3329,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 240.99
+   "price": 240.99,
+   "img": "agr_super-lug.jpg"
   },
   {
    "code": "74-860",
@@ -2968,7 +3338,8 @@
    "brand": "JOURNEY",
    "stock": "2026-06-22",
    "category": "farm",
-   "price": 243.99
+   "price": 243.99,
+   "img": "agr_multi-rib_f-3-i-1.jpg"
   },
   {
    "code": "85-500",
@@ -2976,7 +3347,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 245.99
+   "price": 245.99,
+   "img": "agr_multi-rib_f-3-i-1.jpg"
   },
   {
    "code": "103-204",
@@ -2984,7 +3356,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 246.99
+   "price": 246.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "78-320",
@@ -2992,7 +3365,8 @@
    "brand": "TREADURA",
    "stock": "10 in stock",
    "category": "farm",
-   "price": 247.99
+   "price": 247.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "85-517",
@@ -3000,7 +3374,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2026-09-04",
    "category": "farm",
-   "price": 248.99
+   "price": 248.99,
+   "img": "agr_im45.jpg"
   },
   {
    "code": "5-019-064",
@@ -3008,7 +3383,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 248.99
+   "price": 248.99,
+   "img": "agr_regency-traction-implement-plus.png"
   },
   {
    "code": "78-088A",
@@ -3016,7 +3392,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 252.99
+   "price": 252.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "103-286",
@@ -3024,7 +3401,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 257.99
+   "price": 257.99,
+   "img": "agr_farm-specialist_i-1_n.jpg"
   },
   {
    "code": "73-010",
@@ -3032,7 +3410,8 @@
    "brand": "ARMOUR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 258.99
+   "price": 258.99,
+   "img": "agr_multi-rib_f-3-i-1.jpg"
   },
   {
    "code": "91-986",
@@ -3040,7 +3419,8 @@
    "brand": "CARLSTAR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 258.99
+   "price": 258.99,
+   "img": "agr_tru-power.jpg"
   },
   {
    "code": "85-805",
@@ -3048,7 +3428,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 260.99
+   "price": 260.99,
+   "img": "agr_farm-specialist_i-1_w.jpg"
   },
   {
    "code": "73-030",
@@ -3056,7 +3437,8 @@
    "brand": "ARMOUR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 261.99
+   "price": 261.99,
+   "img": "agr_armour-r-1.jpg"
   },
   {
    "code": "103-226",
@@ -3064,7 +3446,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 262.99
+   "price": 262.99,
+   "img": "agr_farm-specialist_i-1_n.jpg"
   },
   {
    "code": "5-019-014",
@@ -3072,7 +3455,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 262.99
+   "price": 262.99,
+   "img": "agr_regency_3-rib_f-2_front_plus.png"
   },
   {
    "code": "103-213",
@@ -3080,7 +3464,8 @@
    "brand": "CARLSTAR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 263.99
+   "price": 263.99,
+   "img": "agr_farm-specialist_i-1_n.jpg"
   },
   {
    "code": "74-861",
@@ -3088,7 +3473,8 @@
    "brand": "JOURNEY",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 263.99
+   "price": 263.99,
+   "img": "agr_multi-rib_f-3-i-1.jpg"
   },
   {
    "code": "5-019-033",
@@ -3096,7 +3482,8 @@
    "brand": "FIRESTONE",
    "stock": "2099-05-20",
    "category": "farm",
-   "price": 266.99
+   "price": 266.99,
+   "img": "agr_regency-planter-implement-plus.png"
   },
   {
    "code": "91-020",
@@ -3104,7 +3491,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 272.99
+   "price": 272.99,
+   "img": "agr_tru-power_carlisle.jpg"
   },
   {
    "code": "73-454",
@@ -3112,7 +3500,8 @@
    "brand": "ARMOUR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 274.99
+   "price": 274.99,
+   "img": "agr_i-1_armour.jpg"
   },
   {
    "code": "5-019-040",
@@ -3120,7 +3509,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 275.99
+   "price": 275.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "103-707",
@@ -3128,7 +3518,8 @@
    "brand": "CARLSTAR",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 275.99
+   "price": 275.99,
+   "img": "agr_super-lug.jpg"
   },
   {
    "code": "5-019-036",
@@ -3136,7 +3527,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 276.99
+   "price": 276.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "73-440",
@@ -3144,7 +3536,8 @@
    "brand": "ARMOUR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 276.99
+   "price": 276.99,
+   "img": "agr_highway-service_fi-1.jpg"
   },
   {
    "code": "78-098",
@@ -3152,7 +3545,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 276.99
+   "price": 276.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "5-019-035",
@@ -3160,7 +3554,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 281.99
+   "price": 281.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "103-285",
@@ -3168,7 +3563,8 @@
    "brand": "CARLSTAR",
    "stock": "2026-07-04",
    "category": "farm",
-   "price": 281.99
+   "price": 281.99,
+   "img": "agr_farm-specialist_i-1_n.jpg"
   },
   {
    "code": "73-148",
@@ -3176,7 +3572,8 @@
    "brand": "ARMOUR",
    "stock": "2026-09-05",
    "category": "farm",
-   "price": 283.99
+   "price": 283.99,
+   "img": "agr_highway-service_fi-1.jpg"
   },
   {
    "code": "78-322",
@@ -3184,7 +3581,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 289.99
+   "price": 289.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "103-749",
@@ -3192,7 +3590,8 @@
    "brand": "CARLSTAR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 297.99
+   "price": 297.99,
+   "img": "agr_super-lug.jpg"
   },
   {
    "code": "103-303",
@@ -3200,7 +3599,8 @@
    "brand": "CARLSTAR",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 299.99
+   "price": 299.99,
+   "img": "agr_farm-specialist_r-1.jpg"
   },
   {
    "code": "73-436",
@@ -3208,7 +3608,8 @@
    "brand": "ARMOUR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 304.99
+   "price": 304.99,
+   "img": "agr_f-2m_4-rib_armour.jpg"
   },
   {
    "code": "78-326",
@@ -3216,7 +3617,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 304.99
+   "price": 304.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "85-754",
@@ -3224,7 +3626,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 306.99
+   "price": 306.99,
+   "img": "agr_tr18.png"
   },
   {
    "code": "78-218",
@@ -3232,7 +3635,8 @@
    "brand": "TREADURA",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 310.99
+   "price": 310.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "95-FA5J1",
@@ -3240,7 +3644,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 311.99
+   "price": 311.99,
+   "img": "agr_traction-implement_i-3.jpg"
   },
   {
    "code": "95-FB1Y1",
@@ -3248,7 +3653,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 311.99
+   "price": 311.99,
+   "img": "agr_sta-rib-implement_i-1_a.jpg"
   },
   {
    "code": "78-097",
@@ -3256,7 +3662,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 314.99
+   "price": 314.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "5-019-044",
@@ -3264,7 +3671,8 @@
    "brand": "FIRESTONE",
    "stock": "2099-05-20",
    "category": "farm",
-   "price": 316.99
+   "price": 316.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "103-228",
@@ -3272,7 +3680,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 317.99
+   "price": 317.99,
+   "img": "agr_farm-specialist_i-1_n.jpg"
   },
   {
    "code": "73-020",
@@ -3280,7 +3689,8 @@
    "brand": "ARMOUR",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 318.99
+   "price": 318.99,
+   "img": "agr_multi-rib_f-3-i-1.jpg"
   },
   {
    "code": "78-099A",
@@ -3288,7 +3698,8 @@
    "brand": "TREADURA",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 327.99
+   "price": 327.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "KAT 78-20606",
@@ -3296,7 +3707,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 327.99
+   "price": 327.99,
+   "img": "ag_treadura-imp-59-84865a.jpg"
   },
   {
    "code": "78-092",
@@ -3304,7 +3716,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 332.99
+   "price": 332.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "5-019-051",
@@ -3312,7 +3725,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 332.99
+   "price": 332.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "95-FA5AH",
@@ -3320,7 +3734,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 333.99
+   "price": 333.99,
+   "img": "agr_traction-implement_i-3.jpg"
   },
   {
    "code": "85-310",
@@ -3328,7 +3743,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 333.99
+   "price": 333.99,
+   "img": "agr_hf09.jpg"
   },
   {
    "code": "85-752",
@@ -3336,7 +3752,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 335.99
+   "price": 335.99,
+   "img": "agr_lg15.jpg"
   },
   {
    "code": "103-410",
@@ -3344,7 +3761,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 335.99
+   "price": 335.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "5-019-043",
@@ -3352,7 +3770,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 341.99
+   "price": 341.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "85-512",
@@ -3360,7 +3779,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 341.99
+   "price": 341.99,
+   "img": "agr_multi-rib_f-3-i-1.jpg"
   },
   {
    "code": "KAT 78-20806",
@@ -3368,7 +3788,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 345.99
+   "price": 345.99,
+   "img": "ag_treadura-imp-59-84865a.jpg"
   },
   {
    "code": "KAT 78-20906",
@@ -3376,7 +3797,8 @@
    "brand": "TREADURA",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 346.99
+   "price": 346.99,
+   "img": "ag_treadura-imp-59-84865a.jpg"
   },
   {
    "code": "KAT 74-35804F",
@@ -3384,7 +3806,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 346.99
+   "price": 346.99,
+   "img": "ag_jour-h8022-jante-4-trous-blanc.jpg"
   },
   {
    "code": "KAT 74-88004BF",
@@ -3392,7 +3815,8 @@
    "brand": "JOURNEY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 350.99
+   "price": 350.99,
+   "img": "ag_jour-h8022-jante-4-trous-blanc.jpg"
   },
   {
    "code": "91-019",
@@ -3400,7 +3824,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 351.99
+   "price": 351.99,
+   "img": "agr_tru-power-ii_titan.jpg"
   },
   {
    "code": "73-450",
@@ -3408,7 +3833,8 @@
    "brand": "ARMOUR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 358.99
+   "price": 358.99,
+   "img": "agr_highway-service_fi-1.jpg"
   },
   {
    "code": "74-890",
@@ -3416,7 +3842,8 @@
    "brand": "JOURNEY",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 358.99
+   "price": 358.99,
+   "img": "agr_wa001.jpg"
   },
   {
    "code": "73-040",
@@ -3424,7 +3851,8 @@
    "brand": "ARMOUR",
    "stock": "2026-09-11",
    "category": "farm",
-   "price": 362.99
+   "price": 362.99,
+   "img": "agr_armour-r-1.jpg"
   },
   {
    "code": "5-019-046",
@@ -3432,7 +3860,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 362.99
+   "price": 362.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "95-FA512",
@@ -3440,7 +3869,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 362.99
+   "price": 362.99,
+   "img": "agr_traction-implement_i-3.jpg"
   },
   {
    "code": "85-750",
@@ -3448,7 +3878,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 363.99
+   "price": 363.99,
+   "img": "agr_lg15.jpg"
   },
   {
    "code": "5-019-022",
@@ -3456,7 +3887,8 @@
    "brand": "FIRESTONE",
    "stock": "2099-06-03",
    "category": "farm",
-   "price": 363.99
+   "price": 363.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "95-FA3BE",
@@ -3464,7 +3896,8 @@
    "brand": "SPECIALTY",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 367.99
+   "price": 367.99,
+   "img": "agr_hi-flotation_i-1.jpg"
   },
   {
    "code": "178-015-036",
@@ -3472,7 +3905,8 @@
    "brand": "GOODYEAR",
    "stock": "2099-06-25",
    "category": "farm",
-   "price": 368.99
+   "price": 368.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "103-215",
@@ -3480,7 +3914,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 368.99
+   "price": 368.99,
+   "img": "agr_farm-specialist_i-1_w.jpg"
   },
   {
    "code": "5-019-016",
@@ -3488,7 +3923,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 370.99
+   "price": 370.99,
+   "img": "agr_regency_3-rib_f-2_front_plus.png"
   },
   {
    "code": "95-FA3L6",
@@ -3496,7 +3932,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 373.99
+   "price": 373.99,
+   "img": "agr_hi-flotation_i-1.jpg"
   },
   {
    "code": "84-003",
@@ -3504,7 +3941,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 374.99
+   "price": 374.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "73-175",
@@ -3512,7 +3950,8 @@
    "brand": "ARMOUR",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 378.99
+   "price": 378.99,
+   "img": "agr_i-1_armour.jpg"
   },
   {
    "code": "103-205",
@@ -3520,7 +3959,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 383.99
+   "price": 383.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "103-411",
@@ -3528,7 +3968,8 @@
    "brand": "CARLSTAR",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 385.99
+   "price": 385.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "95-FA3M4",
@@ -3536,7 +3977,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 385.99
+   "price": 385.99,
+   "img": "agr_hi-flotation_i-1.jpg"
   },
   {
    "code": "5-019-084",
@@ -3544,7 +3986,8 @@
    "brand": "FIRESTONE",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 387.99
+   "price": 387.99,
+   "img": "agr_firestone-regency-g-1.jpg"
   },
   {
    "code": "74-865",
@@ -3552,7 +3995,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 389.99
+   "price": 389.99,
+   "img": "agr_wa005.jpg"
   },
   {
    "code": "5-344-443",
@@ -3560,7 +4004,8 @@
    "brand": "FIRESTONE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 391.99
+   "price": 391.99,
+   "img": "agr_farm-service-lug-m_r-1.jpg"
   },
   {
    "code": "85-600",
@@ -3568,7 +4013,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 399.99
+   "price": 399.99,
+   "img": "agr_mt63t_i-3.jpg"
   },
   {
    "code": "95-FB3F4",
@@ -3576,7 +4022,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 401.99
+   "price": 401.99,
+   "img": "agr_american-farmer_hf-1.jpg"
   },
   {
    "code": "85-601",
@@ -3584,7 +4031,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 403.99
+   "price": 403.99,
+   "img": "agr_mt63t_i-3.jpg"
   },
   {
    "code": "103-295",
@@ -3592,7 +4040,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 404.99
+   "price": 404.99,
+   "img": "agr_farm-specialist_r-1.jpg"
   },
   {
    "code": "170-106-152",
@@ -3600,7 +4049,8 @@
    "brand": "GOODYEAR",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 404.99
+   "price": 404.99,
+   "img": "agr_traction-implement-gy_i-3.jpg"
   },
   {
    "code": "5-019-020",
@@ -3608,7 +4058,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 407.99
+   "price": 407.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "103-412",
@@ -3616,7 +4067,8 @@
    "brand": "CARLSTAR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 408.99
+   "price": 408.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "KAT 73-44006",
@@ -3624,7 +4076,8 @@
    "brand": "ARMOUR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 418.99
+   "price": 418.99,
+   "img": "ag_armour-highway-imp-59-84865a.jpg"
   },
   {
    "code": "84-995",
@@ -3632,7 +4085,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 419.99
+   "price": 419.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "103-414",
@@ -3640,7 +4094,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 422.99
+   "price": 422.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "103-268",
@@ -3648,7 +4103,8 @@
    "brand": "CARLSTAR",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 423.99
+   "price": 423.99,
+   "img": "agr_farm-specialist_hf-1.jpg"
   },
   {
    "code": "5-344-699",
@@ -3656,7 +4112,8 @@
    "brand": "FIRESTONE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 428.99
+   "price": 428.99,
+   "img": "agr_farm-service_r-3.jpg"
   },
   {
    "code": "103-282",
@@ -3664,7 +4121,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 429.99
+   "price": 429.99,
+   "img": "agr_farm-specialist_i-1_w.jpg"
   },
   {
    "code": "5-019-034",
@@ -3672,7 +4130,8 @@
    "brand": "FIRESTONE",
    "stock": "2099-05-20",
    "category": "farm",
-   "price": 430.99
+   "price": 430.99,
+   "img": "agr_regency-planter-implement-plus.png"
   },
   {
    "code": "170-064-152",
@@ -3680,7 +4139,8 @@
    "brand": "GOODYEAR",
    "stock": "2099-06-02",
    "category": "farm",
-   "price": 433.99
+   "price": 433.99,
+   "img": "agr_traction-implement-gy_i-3.jpg"
   },
   {
    "code": "78-328",
@@ -3688,7 +4148,8 @@
    "brand": "TREADURA",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 434.99
+   "price": 434.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "84-700",
@@ -3696,7 +4157,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 435.99
+   "price": 435.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "95-FA1BW",
@@ -3704,7 +4166,8 @@
    "brand": "SPECIALTY",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 443.99
+   "price": 443.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "KAT 78-212B06A",
@@ -3712,7 +4175,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 443.99
+   "price": 443.99,
+   "img": "ag_treadura-imp-58-1497.jpg"
   },
   {
    "code": "103-230",
@@ -3720,7 +4184,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 443.99
+   "price": 443.99,
+   "img": "agr_highway-service_fi-1.jpg"
   },
   {
    "code": "91-023",
@@ -3728,7 +4193,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 451.99
+   "price": 451.99,
+   "img": "agr_tru-power-ii_titan.jpg"
   },
   {
    "code": "78-325A",
@@ -3736,7 +4202,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 452.99
+   "price": 452.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "5-010-054",
@@ -3744,7 +4211,8 @@
    "brand": "FIRESTONE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 454.99
+   "price": 454.99,
+   "img": "agr_farm-service_r-3.jpg"
   },
   {
    "code": "103-276",
@@ -3752,7 +4220,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 455.99
+   "price": 455.99,
+   "img": "agr_farm-specialist_hf-1.jpg"
   },
   {
    "code": "78-330",
@@ -3760,7 +4229,8 @@
    "brand": "TREADURA",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 455.99
+   "price": 455.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "78-335",
@@ -3768,7 +4238,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 458.99
+   "price": 458.99,
+   "img": "agr_78-335.jpg"
   },
   {
    "code": "67-0004",
@@ -3776,7 +4247,8 @@
    "brand": "OTR ENGINEERED SOLUTIONS",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 459.99
+   "price": 459.99,
+   "img": "agr_t-master.png"
   },
   {
    "code": "84-701A",
@@ -3784,7 +4256,8 @@
    "brand": "ALLIANCE",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 462.99
+   "price": 462.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "103-296",
@@ -3792,7 +4265,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 463.99
+   "price": 463.99,
+   "img": "agr_farm-specialist_r-1.jpg"
   },
   {
    "code": "5-019-047",
@@ -3800,7 +4274,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 464.99
+   "price": 464.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "78-329",
@@ -3808,7 +4283,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 464.99
+   "price": 464.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "95-FC157",
@@ -3816,7 +4292,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 469.99
+   "price": 469.99,
+   "img": "agr_hi-flotation_i-1.jpg"
   },
   {
    "code": "103-203B",
@@ -3824,7 +4301,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 469.99
+   "price": 469.99,
+   "img": "agr_farm-specialist_i-1_w.jpg"
   },
   {
    "code": "5-019-085",
@@ -3832,7 +4310,8 @@
    "brand": "FIRESTONE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 472.99
+   "price": 472.99,
+   "img": "ag_regency-farm-tractor-plus.jpg"
   },
   {
    "code": "178-015-007",
@@ -3840,7 +4319,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 476.99
+   "price": 476.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "175-440-472",
@@ -3848,7 +4328,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 479.99
+   "price": 479.99,
+   "img": "agr_dyna-torque-ii_r-1.jpg"
   },
   {
    "code": "160-228-219",
@@ -3856,7 +4337,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 480.99
+   "price": 480.99,
+   "img": "agr_farm-utility_i-1.jpg"
   },
   {
    "code": "73-008",
@@ -3864,7 +4346,8 @@
    "brand": "ARMOUR",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 480.99
+   "price": 480.99,
+   "img": "agr_3-rib_f-2_armour.jpg"
   },
   {
    "code": "84-700A",
@@ -3872,7 +4355,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-10-09",
    "category": "farm",
-   "price": 480.99
+   "price": 480.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "81-41F378",
@@ -3880,7 +4364,8 @@
    "brand": "TITAN",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 483.99
+   "price": 483.99,
+   "img": "agr_flo-trac-rib_hf-1.jpg"
   },
   {
    "code": "5-019-045",
@@ -3888,7 +4373,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 504.99
+   "price": 504.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "91-029",
@@ -3896,7 +4382,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 505.99
+   "price": 505.99,
+   "img": "agr_tru-power-ii_titan.jpg"
   },
   {
    "code": "85-505",
@@ -3904,7 +4391,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 505.99
+   "price": 505.99,
+   "img": "agr_im36.jpg"
   },
   {
    "code": "103-283",
@@ -3912,7 +4400,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 507.99
+   "price": 507.99,
+   "img": "agr_farm-specialist_i-1_w.jpg"
   },
   {
    "code": "103-413",
@@ -3920,7 +4409,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 508.99
+   "price": 508.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "5-019-021",
@@ -3928,7 +4418,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 508.99
+   "price": 508.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "103-416",
@@ -3936,7 +4427,8 @@
    "brand": "CARLSTAR",
    "stock": "2026-06-20",
    "category": "farm",
-   "price": 510.99
+   "price": 510.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "78-101",
@@ -3944,7 +4436,8 @@
    "brand": "TREADURA",
    "stock": "2026-06-27",
    "category": "farm",
-   "price": 514.99
+   "price": 514.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "84-701",
@@ -3952,7 +4445,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 514.99
+   "price": 514.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "103-278",
@@ -3960,7 +4454,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 516.99
+   "price": 516.99,
+   "img": "agr_farm-specialist_hf-1.jpg"
   },
   {
    "code": "103-275",
@@ -3968,7 +4463,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 517.99
+   "price": 517.99,
+   "img": "agr_farm-specialist_f-3.jpg"
   },
   {
    "code": "103-417",
@@ -3976,7 +4472,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 520.99
+   "price": 520.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "74-061",
@@ -3984,7 +4481,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 520.99
+   "price": 520.99,
+   "img": "agr_h8033.jpg"
   },
   {
    "code": "KAT 78-212B06",
@@ -3992,7 +4490,8 @@
    "brand": "TREADURA",
    "stock": "Contact us",
    "category": "farm",
-   "price": 535.99
+   "price": 535.99,
+   "img": "ag_treadura-imp-58-1500.jpg"
   },
   {
    "code": "5-019-030",
@@ -4000,7 +4499,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 538.99
+   "price": 538.99,
+   "img": "agr_highway-service_fi-1.jpg"
   },
   {
    "code": "78-090",
@@ -4008,7 +4508,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 539.99
+   "price": 539.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "84-215",
@@ -4016,7 +4517,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 542.99
+   "price": 542.99,
+   "img": "agr_324-alliance_r-1.jpg"
   },
   {
    "code": "95-FA3AM",
@@ -4024,7 +4526,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 543.99
+   "price": 543.99,
+   "img": "agr_hi-flotation_i-1.jpg"
   },
   {
    "code": "78-104",
@@ -4032,7 +4535,8 @@
    "brand": "TREADURA",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 544.99
+   "price": 544.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "84-009",
@@ -4040,7 +4544,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-10-09",
    "category": "farm",
-   "price": 548.99
+   "price": 548.99,
+   "img": "agr_319.jpg"
   },
   {
    "code": "5-019-023",
@@ -4048,7 +4553,8 @@
    "brand": "FIRESTONE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 550.99
+   "price": 550.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "103-297",
@@ -4056,7 +4562,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 555.99
+   "price": 555.99,
+   "img": "agr_farm-specialist_r-1.jpg"
   },
   {
    "code": "170-166-131",
@@ -4064,7 +4571,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 560.99
+   "price": 560.99,
+   "img": "agr_sure-grip-traction_i-3-r-1.jpg"
   },
   {
    "code": "84-215A",
@@ -4072,7 +4580,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 565.99
+   "price": 565.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "162-190-404",
@@ -4080,7 +4589,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 566.99
+   "price": 566.99,
+   "img": "agr_3-rib-hd_tru-trac_f-2.jpg"
   },
   {
    "code": "5-019-017",
@@ -4088,7 +4598,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 569.99
+   "price": 569.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "178-015-011",
@@ -4096,7 +4607,8 @@
    "brand": "GOODYEAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 570.99
+   "price": 570.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "81-48D665",
@@ -4104,7 +4616,8 @@
    "brand": "TITAN",
    "stock": "2099-06-02",
    "category": "farm",
-   "price": 571.99
+   "price": 571.99,
+   "img": "agr_hi-traction-lug_r-1.jpg"
   },
   {
    "code": "103-283A",
@@ -4112,7 +4625,8 @@
    "brand": "CARLSTAR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 573.99
+   "price": 573.99,
+   "img": "agr_farm-specialist_i-1_w.jpg"
   },
   {
    "code": "84-141",
@@ -4120,7 +4634,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 580.99
+   "price": 580.99,
+   "img": "agr_221-alliance.jpg"
   },
   {
    "code": "85-602",
@@ -4128,7 +4643,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 582.99
+   "price": 582.99,
+   "img": "agr_mt63t_i-3.jpg"
   },
   {
    "code": "74-355",
@@ -4136,7 +4652,8 @@
    "brand": "JOURNEY",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 583.99
+   "price": 583.99,
+   "img": "agr_p3028.jpg"
   },
   {
    "code": "103-279A",
@@ -4144,7 +4661,8 @@
    "brand": "CARLSTAR",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 590.99
+   "price": 590.99,
+   "img": "agr_new-hf-1-carlisle.jpg"
   },
   {
    "code": "85-130",
@@ -4152,7 +4670,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "10 in stock",
    "category": "farm",
-   "price": 590.99
+   "price": 590.99,
+   "img": "agr_i-09.png"
   },
   {
    "code": "95-FA45A",
@@ -4160,7 +4679,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 591.99
+   "price": 591.99,
+   "img": "agr_sta-farm-3-rib_f-2_b.jpg"
   },
   {
    "code": "84-162",
@@ -4168,7 +4688,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 594.99
+   "price": 594.99,
+   "img": "agr_327-alliance.jpg"
   },
   {
    "code": "84-381",
@@ -4176,7 +4697,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 595.99
+   "price": 595.99,
+   "img": "agr_381-flotation.jpg"
   },
   {
    "code": "103-289",
@@ -4184,7 +4706,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 604.99
+   "price": 604.99,
+   "img": "agr_highway-service_fi-1.jpg"
   },
   {
    "code": "78-102",
@@ -4192,7 +4715,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 609.99
+   "price": 609.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "178-015-009",
@@ -4200,7 +4724,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 611.99
+   "price": 611.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "78-105",
@@ -4208,7 +4733,8 @@
    "brand": "TREADURA",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 617.99
+   "price": 617.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "84-721A",
@@ -4216,7 +4742,8 @@
    "brand": "ALLIANCE",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 625.99
+   "price": 625.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "78-115",
@@ -4224,7 +4751,8 @@
    "brand": "TREADURA",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 636.99
+   "price": 636.99,
+   "img": "agr_78-115.jpg"
   },
   {
    "code": "85-507",
@@ -4232,7 +4760,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 638.99
+   "price": 638.99,
+   "img": "agr_im36.jpg"
   },
   {
    "code": "85-132",
@@ -4240,7 +4769,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 645.99
+   "price": 645.99,
+   "img": "agr_i-09.png"
   },
   {
    "code": "81-48D667",
@@ -4248,7 +4778,8 @@
    "brand": "TITAN",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 645.99
+   "price": 645.99,
+   "img": "agr_hi-traction-lug_r-1.jpg"
   },
   {
    "code": "78-103",
@@ -4256,7 +4787,8 @@
    "brand": "TREADURA",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 648.99
+   "price": 648.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "103-217",
@@ -4264,7 +4796,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 656.99
+   "price": 656.99,
+   "img": "agr_farm-specialist_i-1_w.jpg"
   },
   {
    "code": "73-548",
@@ -4272,7 +4805,8 @@
    "brand": "ARMOUR",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 659.99
+   "price": 659.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "84-387",
@@ -4280,7 +4814,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 659.99
+   "price": 659.99,
+   "img": "agr_381-flotation.jpg"
   },
   {
    "code": "84-702",
@@ -4288,7 +4823,8 @@
    "brand": "ALLIANCE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 663.99
+   "price": 663.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "78-107",
@@ -4296,7 +4832,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 675.99
+   "price": 675.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "178-015-000",
@@ -4304,7 +4841,8 @@
    "brand": "GOODYEAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 676.99
+   "price": 676.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "84-705A",
@@ -4312,7 +4850,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 681.99
+   "price": 681.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "85-412",
@@ -4320,7 +4859,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 685.99
+   "price": 685.99,
+   "img": "agr_mt63.png"
   },
   {
    "code": "170-191-132",
@@ -4328,7 +4868,8 @@
    "brand": "GOODYEAR",
    "stock": "2099-05-06",
    "category": "farm",
-   "price": 688.99
+   "price": 688.99,
+   "img": "agr_sure-grip-traction_i-3-r-1.jpg"
   },
   {
    "code": "178-015-008",
@@ -4336,7 +4877,8 @@
    "brand": "GOODYEAR",
    "stock": "2099-06-02",
    "category": "farm",
-   "price": 690.99
+   "price": 690.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "103-415",
@@ -4344,7 +4886,8 @@
    "brand": "CARLSTAR",
    "stock": "2099-06-13",
    "category": "farm",
-   "price": 703.99
+   "price": 703.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "84-245",
@@ -4352,7 +4895,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 712.99
+   "price": 712.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "101-169A",
@@ -4360,7 +4904,8 @@
    "brand": "GOODYEAR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 715.99
+   "price": 715.99,
+   "img": "agr_super-terra-grip_hf-2.jpg"
   },
   {
    "code": "85-133",
@@ -4368,7 +4913,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 721.99
+   "price": 721.99,
+   "img": "agr_i-09.png"
   },
   {
    "code": "91-032",
@@ -4376,7 +4922,8 @@
    "brand": "CARLSTAR",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 725.99
+   "price": 725.99,
+   "img": "agr_tru-power-ii_titan.jpg"
   },
   {
    "code": "101-195",
@@ -4384,7 +4931,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 725.99
+   "price": 725.99,
+   "img": "agr_xtra-trac_hf-2.jpg"
   },
   {
    "code": "81-48D067",
@@ -4392,7 +4940,8 @@
    "brand": "TITAN",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 729.99
+   "price": 729.99,
+   "img": "agr_hi-traction-lug_r-1.jpg"
   },
   {
    "code": "5-019-025",
@@ -4400,7 +4949,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 730.99
+   "price": 730.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "5-019-031",
@@ -4408,7 +4958,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 730.99
+   "price": 730.99,
+   "img": "agr_highway-service_fi-1.jpg"
   },
   {
    "code": "84-383",
@@ -4416,7 +4967,8 @@
    "brand": "ALLIANCE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 731.99
+   "price": 731.99,
+   "img": "agr_381-flotation.jpg"
   },
   {
    "code": "85-261",
@@ -4424,7 +4976,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 731.99
+   "price": 731.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "5-019-018",
@@ -4432,7 +4985,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 746.99
+   "price": 746.99,
+   "img": "agr_3-rib_f-2.jpg"
   },
   {
    "code": "73-554",
@@ -4440,7 +4994,8 @@
    "brand": "ARMOUR",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 750.99
+   "price": 750.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "103-207",
@@ -4448,7 +5003,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 752.99
+   "price": 752.99,
+   "img": "agr_farm-specialist_i-1_w.jpg"
   },
   {
    "code": "84-705",
@@ -4456,7 +5012,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 757.99
+   "price": 757.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "5-019-060",
@@ -4464,7 +5021,8 @@
    "brand": "FIRESTONE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 759.99
+   "price": 759.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "84-307",
@@ -4472,7 +5030,8 @@
    "brand": "ALLIANCE",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 767.99
+   "price": 767.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "103-274",
@@ -4480,7 +5039,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 778.99
+   "price": 778.99,
+   "img": "agr_farm-specialist_f-3.jpg"
   },
   {
    "code": "84-711A",
@@ -4488,7 +5048,8 @@
    "brand": "ALLIANCE",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 785.99
+   "price": 785.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "95-FC1HC",
@@ -4496,7 +5057,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 787.99
+   "price": 787.99,
+   "img": "agr_farm-tire_type-l_i-1.jpg"
   },
   {
    "code": "103-298",
@@ -4504,7 +5066,8 @@
    "brand": "CARLSTAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 801.99
+   "price": 801.99,
+   "img": "agr_farm-specialist_r-1.jpg"
   },
   {
    "code": "5-019-053",
@@ -4512,7 +5075,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 805.99
+   "price": 805.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "78-108",
@@ -4520,7 +5084,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 805.99
+   "price": 805.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "81-48D663",
@@ -4528,7 +5093,8 @@
    "brand": "TITAN",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 821.99
+   "price": 821.99,
+   "img": "agr_hi-traction-lug_r-1.jpg"
   },
   {
    "code": "84-703",
@@ -4536,7 +5102,8 @@
    "brand": "ALLIANCE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 823.99
+   "price": 823.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "95-FA5E9",
@@ -4544,7 +5111,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 842.99
+   "price": 842.99,
+   "img": "agr_i-3-wide.jpg"
   },
   {
    "code": "85-515",
@@ -4552,7 +5120,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 850.99
+   "price": 850.99,
+   "img": "agr_im72.jpg"
   },
   {
    "code": "85-506",
@@ -4560,7 +5129,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 855.99
+   "price": 855.99,
+   "img": "agr_im36.jpg"
   },
   {
    "code": "81-41A3X7",
@@ -4568,7 +5138,8 @@
    "brand": "TITAN",
    "stock": "2099-06-02",
    "category": "farm",
-   "price": 857.99
+   "price": 857.99,
+   "img": "agr_dura-life-planter.jpg"
   },
   {
    "code": "5-019-072",
@@ -4576,7 +5147,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 859.99
+   "price": 859.99,
+   "img": "ag_regency-turf-implement.jpg"
   },
   {
    "code": "5-019-067",
@@ -4584,7 +5156,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 859.99
+   "price": 859.99,
+   "img": "agr_regency-traction-implement-plus.png"
   },
   {
    "code": "73-555",
@@ -4592,7 +5165,8 @@
    "brand": "ARMOUR",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 860.99
+   "price": 860.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "95-DE1M3",
@@ -4600,7 +5174,8 @@
    "brand": "SPECIALTY",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 869.99
+   "price": 869.99,
+   "img": "agr_sta-traxion_c.jpg"
   },
   {
    "code": "5-365-180",
@@ -4608,7 +5183,8 @@
    "brand": "FIRESTONE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 873.99
+   "price": 873.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "178-015-001",
@@ -4616,7 +5192,8 @@
    "brand": "GOODYEAR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 873.99
+   "price": 873.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "171-423-426",
@@ -4624,7 +5201,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 878.99
+   "price": 878.99,
+   "img": "agr_power-torque_r-1.jpg"
   },
   {
    "code": "171-430-426",
@@ -4632,7 +5210,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 884.99
+   "price": 884.99,
+   "img": "agr_power-torque_r-1.jpg"
   },
   {
    "code": "5-008-564",
@@ -4640,7 +5219,8 @@
    "brand": "FIRESTONE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 891.99
+   "price": 891.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "170-608-132",
@@ -4648,7 +5228,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 893.99
+   "price": 893.99,
+   "img": "agr_sure-grip-traction_i-3-r-1.jpg"
   },
   {
    "code": "160-101-222",
@@ -4656,7 +5237,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 897.99
+   "price": 897.99,
+   "img": "agr_highway-service_fi-1_gy.jpg"
   },
   {
    "code": "5-015-141",
@@ -4664,7 +5246,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 903.99
+   "price": 903.99,
+   "img": "agr_destination-farm.jpg"
   },
   {
    "code": "84-706",
@@ -4672,7 +5255,8 @@
    "brand": "ALLIANCE",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 903.99
+   "price": 903.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "95-DJ1F4",
@@ -4680,7 +5264,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 918.99
+   "price": 918.99,
+   "img": "agr_sta-traxion.jpg"
   },
   {
    "code": "5-019-019",
@@ -4688,7 +5273,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 926.99
+   "price": 926.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "84-720",
@@ -4696,7 +5282,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 929.99
+   "price": 929.99,
+   "img": "agr_317-alliance.jpg"
   },
   {
    "code": "160-246-222",
@@ -4704,7 +5291,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 934.99
+   "price": 934.99,
+   "img": "agr_highway-service_fi-1_gy.jpg"
   },
   {
    "code": "78-109",
@@ -4712,7 +5300,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 956.99
+   "price": 956.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "84-319",
@@ -4720,7 +5309,8 @@
    "brand": "ALLIANCE",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 966.99
+   "price": 966.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "78-110",
@@ -4728,7 +5318,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 967.99
+   "price": 967.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "5-372-541",
@@ -4736,7 +5327,8 @@
    "brand": "FIRESTONE",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 969.99
+   "price": 969.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "81-48D695",
@@ -4744,7 +5336,8 @@
    "brand": "TITAN",
    "stock": "2099-06-02",
    "category": "farm",
-   "price": 970.99
+   "price": 970.99,
+   "img": "agr_hi-traction-lug_r-1.jpg"
   },
   {
    "code": "95-DJ1M6",
@@ -4752,7 +5345,8 @@
    "brand": "SPECIALTY",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 970.99
+   "price": 970.99,
+   "img": "agr_sta-traxion.jpg"
   },
   {
    "code": "91-171",
@@ -4760,7 +5354,8 @@
    "brand": "CARLSTAR",
    "stock": "2026-06-20",
    "category": "farm",
-   "price": 977.99
+   "price": 977.99,
+   "img": "agr_tru-power-ii_titan.jpg"
   },
   {
    "code": "5-019-068",
@@ -4768,7 +5363,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 981.99
+   "price": 981.99,
+   "img": "agr_regency-traction-implement-plus.png"
   },
   {
    "code": "172-504-443",
@@ -4776,7 +5372,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 991.99
+   "price": 991.99,
+   "img": "agr_dura-torque_r-1.jpg"
   },
   {
    "code": "73-560",
@@ -4784,7 +5381,8 @@
    "brand": "ARMOUR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 995.99
+   "price": 995.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "84-298",
@@ -4792,7 +5390,8 @@
    "brand": "ALLIANCE",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 1000.99
+   "price": 1000.99,
+   "img": "agr_329-alliance_r-3.jpg"
   },
   {
    "code": "5-019-061",
@@ -4800,7 +5399,8 @@
    "brand": "FIRESTONE",
    "stock": "2099-06-11",
    "category": "farm",
-   "price": 1016.99
+   "price": 1016.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "84-710",
@@ -4808,7 +5408,8 @@
    "brand": "ALLIANCE",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 1023.99
+   "price": 1023.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "172-493-443",
@@ -4816,7 +5417,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1027.99
+   "price": 1027.99,
+   "img": "agr_dura-torque_r-1.jpg"
   },
   {
    "code": "78-110B",
@@ -4824,7 +5426,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 1055.99
+   "price": 1055.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "160-540-093",
@@ -4832,7 +5435,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1056.99
+   "price": 1056.99,
+   "img": "agr_smooth-implement.jpg"
   },
   {
    "code": "84-331",
@@ -4840,7 +5444,8 @@
    "brand": "ALLIANCE",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 1063.99
+   "price": 1063.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "84-726",
@@ -4848,7 +5453,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1071.99
+   "price": 1071.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "170-203-100",
@@ -4856,7 +5462,8 @@
    "brand": "GOODYEAR",
    "stock": "2099-06-02",
    "category": "farm",
-   "price": 1112.99
+   "price": 1112.99,
+   "img": "agr_drill-rib_f-1.jpg"
   },
   {
    "code": "91-036",
@@ -4864,7 +5471,8 @@
    "brand": "TITAN",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1125.99
+   "price": 1125.99,
+   "img": "agr_tru-power_91-036.jpg"
   },
   {
    "code": "178-015-002",
@@ -4872,7 +5480,8 @@
    "brand": "GOODYEAR",
    "stock": "2099-06-02",
    "category": "farm",
-   "price": 1126.99
+   "price": 1126.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "84-943",
@@ -4880,7 +5489,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1127.99
+   "price": 1127.99,
+   "img": "agr_agristar-ii-470.jpg"
   },
   {
    "code": "5-019-073",
@@ -4888,7 +5498,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1128.99
+   "price": 1128.99,
+   "img": "ag_regency-turf-implement.jpg"
   },
   {
    "code": "84-707A",
@@ -4896,7 +5507,8 @@
    "brand": "ALLIANCE",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 1134.99
+   "price": 1134.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "81-422204",
@@ -4904,7 +5516,8 @@
    "brand": "TITAN",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1135.99
+   "price": 1135.99,
+   "img": "agr_traction-implement_i-3.jpg"
   },
   {
    "code": "84-713",
@@ -4912,7 +5525,8 @@
    "brand": "ALLIANCE",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 1136.99
+   "price": 1136.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "5-019-054",
@@ -4920,7 +5534,8 @@
    "brand": "FIRESTONE",
    "stock": "2099-05-20",
    "category": "farm",
-   "price": 1140.99
+   "price": 1140.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "73-556",
@@ -4928,7 +5543,8 @@
    "brand": "ARMOUR",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 1141.99
+   "price": 1141.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "95-FA337",
@@ -4936,7 +5552,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1150.99
+   "price": 1150.99,
+   "img": "agr_farm-tire_i-1.jpg"
   },
   {
    "code": "95-FA3Z9",
@@ -4944,7 +5561,8 @@
    "brand": "SPECIALTY",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1158.99
+   "price": 1158.99,
+   "img": "agr_farm-tire_i-1.jpg"
   },
   {
    "code": "78-111",
@@ -4952,7 +5570,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 1158.99
+   "price": 1158.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "5-372-575",
@@ -4960,7 +5579,8 @@
    "brand": "FIRESTONE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 1163.99
+   "price": 1163.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "74-866",
@@ -4968,7 +5588,8 @@
    "brand": "JOURNEY",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 1168.99
+   "price": 1168.99,
+   "img": "ag_journey-wra001.jpg"
   },
   {
    "code": "85-134",
@@ -4976,7 +5597,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 1175.99
+   "price": 1175.99,
+   "img": "agr_i-09.png"
   },
   {
    "code": "85-265",
@@ -4984,7 +5606,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 1180.99
+   "price": 1180.99,
+   "img": "agr_tr45.png"
   },
   {
    "code": "84-005",
@@ -4992,7 +5615,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1181.99
+   "price": 1181.99,
+   "img": "agr_i-1.jpg"
   },
   {
    "code": "81-48D814",
@@ -5000,7 +5624,8 @@
    "brand": "TITAN",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 1188.99
+   "price": 1188.99,
+   "img": "agr_hi-traction-lug_r-1.jpg"
   },
   {
    "code": "5-019-026",
@@ -5008,7 +5633,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1213.99
+   "price": 1213.99,
+   "img": "agr_4-rib_f-2m.jpg"
   },
   {
    "code": "84-725",
@@ -5016,7 +5642,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 1221.99
+   "price": 1221.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "175-537-470",
@@ -5024,7 +5651,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1238.99
+   "price": 1238.99,
+   "img": "agr_dyna-torque-ii_r-1.jpg"
   },
   {
    "code": "84-337",
@@ -5032,7 +5660,8 @@
    "brand": "ALLIANCE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 1240.99
+   "price": 1240.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "85-262",
@@ -5040,7 +5669,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 1243.99
+   "price": 1243.99,
+   "img": "agr_tc09.jpg"
   },
   {
    "code": "73-574",
@@ -5048,7 +5678,8 @@
    "brand": "ARMOUR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 1247.99
+   "price": 1247.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "101-179",
@@ -5056,7 +5687,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1256.99
+   "price": 1256.99,
+   "img": "agr_hf-1.jpg"
   },
   {
    "code": "84-965",
@@ -5064,7 +5696,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1257.99
+   "price": 1257.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-718",
@@ -5072,7 +5705,8 @@
    "brand": "ALLIANCE",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 1274.99
+   "price": 1274.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "84-348",
@@ -5080,7 +5714,8 @@
    "brand": "ALLIANCE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 1289.99
+   "price": 1289.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "78-120",
@@ -5088,7 +5723,8 @@
    "brand": "TREADURA",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 1291.99
+   "price": 1291.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "5-019-055",
@@ -5096,7 +5732,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1300.99
+   "price": 1300.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "5-008-559",
@@ -5104,7 +5741,8 @@
    "brand": "FIRESTONE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1310.99
+   "price": 1310.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "103-209",
@@ -5112,7 +5750,8 @@
    "brand": "CARLSTAR",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 1312.99
+   "price": 1312.99,
+   "img": "agr_euro-rib_i-1.jpg"
   },
   {
    "code": "73-562",
@@ -5120,7 +5759,8 @@
    "brand": "ARMOUR",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 1321.99
+   "price": 1321.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "84-361",
@@ -5128,7 +5768,8 @@
    "brand": "ALLIANCE",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 1326.99
+   "price": 1326.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "178-015-003",
@@ -5136,7 +5777,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1327.99
+   "price": 1327.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "5-365-265",
@@ -5144,7 +5786,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1332.99
+   "price": 1332.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "85-258",
@@ -5152,7 +5795,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 1333.99
+   "price": 1333.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "78-112-2",
@@ -5160,7 +5804,8 @@
    "brand": "TREADURA",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 1347.99
+   "price": 1347.99,
+   "img": "agr_78-112-2.jpg"
   },
   {
    "code": "103-419",
@@ -5168,7 +5813,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1360.99
+   "price": 1360.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "78-113",
@@ -5176,7 +5822,8 @@
    "brand": "TREADURA",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 1368.99
+   "price": 1368.99,
+   "img": "agr_r-1.jpg"
   },
   {
    "code": "74-867",
@@ -5184,7 +5831,8 @@
    "brand": "JOURNEY",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 1376.99
+   "price": 1376.99,
+   "img": "ag_journey-wra001.jpg"
   },
   {
    "code": "84-761",
@@ -5192,7 +5840,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1379.99
+   "price": 1379.99,
+   "img": "agr_351-implement.jpg"
   },
   {
    "code": "84-378",
@@ -5200,7 +5849,8 @@
    "brand": "ALLIANCE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 1385.99
+   "price": 1385.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "5-019-062",
@@ -5208,7 +5858,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1398.99
+   "price": 1398.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "84-717A",
@@ -5216,7 +5867,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1412.99
+   "price": 1412.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "84-712A",
@@ -5224,7 +5876,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 1452.99
+   "price": 1452.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "5-365-078",
@@ -5232,7 +5885,8 @@
    "brand": "FIRESTONE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 1471.99
+   "price": 1471.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "73-580",
@@ -5240,7 +5894,8 @@
    "brand": "ARMOUR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 1477.99
+   "price": 1477.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "84-367",
@@ -5248,7 +5903,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 1493.99
+   "price": 1493.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "84-970",
@@ -5256,7 +5912,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1494.99
+   "price": 1494.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-376",
@@ -5264,7 +5921,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 1505.99
+   "price": 1505.99,
+   "img": "agr_846-alliance.jpg"
   },
   {
    "code": "5-019-056",
@@ -5272,7 +5930,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1516.99
+   "price": 1516.99,
+   "img": "agr_regency_rib_implement_plus.png"
   },
   {
    "code": "84-708",
@@ -5280,7 +5939,8 @@
    "brand": "ALLIANCE",
    "stock": "7 in stock",
    "category": "farm",
-   "price": 1522.99
+   "price": 1522.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "73-581",
@@ -5288,7 +5948,8 @@
    "brand": "ARMOUR",
    "stock": "9 in stock",
    "category": "farm",
-   "price": 1533.99
+   "price": 1533.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "103-259",
@@ -5296,7 +5957,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1544.99
+   "price": 1544.99,
+   "img": "agr_farm-specialist_r-1.jpg"
   },
   {
    "code": "84-397",
@@ -5304,7 +5966,8 @@
    "brand": "ALLIANCE",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 1564.99
+   "price": 1564.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "171-503-312",
@@ -5312,7 +5975,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1575.99
+   "price": 1575.99,
+   "img": "agr_all-weather-tractor_r-3.jpg"
   },
   {
    "code": "84-993",
@@ -5320,7 +5984,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1583.99
+   "price": 1583.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-377",
@@ -5328,7 +5993,8 @@
    "brand": "ALLIANCE",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 1589.99
+   "price": 1589.99,
+   "img": "agr_846-alliance.jpg"
   },
   {
    "code": "84-714",
@@ -5336,7 +6002,8 @@
    "brand": "ALLIANCE",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 1602.99
+   "price": 1602.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "84-967",
@@ -5344,7 +6011,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1609.99
+   "price": 1609.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-379",
@@ -5352,7 +6020,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 1613.99
+   "price": 1613.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "5-365-469",
@@ -5360,7 +6029,8 @@
    "brand": "FIRESTONE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1614.99
+   "price": 1614.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "5-304-808",
@@ -5368,7 +6038,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1626.99
+   "price": 1626.99,
+   "img": "agr_field-road_r-1.jpg"
   },
   {
    "code": "85-259",
@@ -5376,7 +6047,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 1636.99
+   "price": 1636.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "95-FA3AB",
@@ -5384,7 +6056,8 @@
    "brand": "SPECIALTY",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1636.99
+   "price": 1636.99,
+   "img": "agr_farm-tire_i-1.jpg"
   },
   {
    "code": "84-152",
@@ -5392,7 +6065,8 @@
    "brand": "ALLIANCE",
    "stock": "6 in stock",
    "category": "farm",
-   "price": 1644.99
+   "price": 1644.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "84-391",
@@ -5400,7 +6074,8 @@
    "brand": "ALLIANCE",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 1673.99
+   "price": 1673.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "178-015-019",
@@ -5408,7 +6083,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1676.99
+   "price": 1676.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "81-470402",
@@ -5416,7 +6092,8 @@
    "brand": "TITAN",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1684.99
+   "price": 1684.99,
+   "img": "agr_antique-farm-tractor_r-1.jpg"
   },
   {
    "code": "81-470406",
@@ -5424,7 +6101,8 @@
    "brand": "TITAN",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1694.99
+   "price": 1694.99,
+   "img": "agr_antique-farm-tractor_r-1.jpg"
   },
   {
    "code": "84-384",
@@ -5432,7 +6110,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 1712.99
+   "price": 1712.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "5-008-563",
@@ -5440,7 +6119,8 @@
    "brand": "FIRESTONE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1728.99
+   "price": 1728.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "178-450-001",
@@ -5448,7 +6128,8 @@
    "brand": "GOODYEAR",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 1729.99
+   "price": 1729.99,
+   "img": "agr_optitrac-r1w.jpg"
   },
   {
    "code": "5-007-470",
@@ -5456,7 +6137,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1742.99
+   "price": 1742.99,
+   "img": "agr_performer-evo.jpg"
   },
   {
    "code": "73-585",
@@ -5464,7 +6146,8 @@
    "brand": "ARMOUR",
    "stock": "2026-09-05",
    "category": "farm",
-   "price": 1764.99
+   "price": 1764.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "84-797A",
@@ -5472,7 +6155,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 1764.99
+   "price": 1764.99,
+   "img": "agr_agri-nova.jpg"
   },
   {
    "code": "85-250",
@@ -5480,7 +6164,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2026-08-28",
    "category": "farm",
-   "price": 1769.99
+   "price": 1769.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "84-934",
@@ -5488,7 +6173,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1770.99
+   "price": 1770.99,
+   "img": "agr_389-alliance.jpg"
   },
   {
    "code": "84-403",
@@ -5496,7 +6182,8 @@
    "brand": "ALLIANCE",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 1798.99
+   "price": 1798.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "178-015-005",
@@ -5504,7 +6191,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1805.99
+   "price": 1805.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "5-008-508",
@@ -5512,7 +6200,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1816.99
+   "price": 1816.99,
+   "img": "agr_all-non-skid-tractor_r-3.jpg"
   },
   {
    "code": "85-257",
@@ -5520,7 +6209,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 1816.99
+   "price": 1816.99,
+   "img": "agr_fl909.png"
   },
   {
    "code": "5-007-471",
@@ -5528,7 +6218,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1819.99
+   "price": 1819.99,
+   "img": "agr_performer-evo.jpg"
   },
   {
    "code": "78-114B",
@@ -5536,7 +6227,8 @@
    "brand": "TREADURA",
    "stock": "2026-08-10",
    "category": "farm",
-   "price": 1827.99
+   "price": 1827.99,
+   "img": "agr_78-114b.jpg"
   },
   {
    "code": "103-418",
@@ -5544,7 +6236,8 @@
    "brand": "CARLSTAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1848.99
+   "price": 1848.99,
+   "img": "pne_versa-turf.jpg"
   },
   {
    "code": "84-972",
@@ -5552,7 +6245,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 1865.99
+   "price": 1865.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-274",
@@ -5560,7 +6254,8 @@
    "brand": "ALLIANCE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 1875.99
+   "price": 1875.99,
+   "img": "agr_327-alliance.jpg"
   },
   {
    "code": "5-007-472",
@@ -5568,7 +6263,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1879.99
+   "price": 1879.99,
+   "img": "agr_performer-evo.jpg"
   },
   {
    "code": "84-125",
@@ -5576,7 +6272,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1884.99
+   "price": 1884.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "73-200",
@@ -5584,7 +6281,8 @@
    "brand": "ARMOUR",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 1936.99
+   "price": 1936.99,
+   "img": "agr_c-2.jpg"
   },
   {
    "code": "73-586",
@@ -5592,7 +6290,8 @@
    "brand": "ARMOUR",
    "stock": "2026-08-21",
    "category": "farm",
-   "price": 1943.99
+   "price": 1943.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "5-372-524",
@@ -5600,7 +6299,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1944.99
+   "price": 1944.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "85-240",
@@ -5608,7 +6308,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 1950.99
+   "price": 1950.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "84-709",
@@ -5616,7 +6317,8 @@
    "brand": "ALLIANCE",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 1955.99
+   "price": 1955.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "5-372-626",
@@ -5624,7 +6326,8 @@
    "brand": "FIRESTONE",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 1961.99
+   "price": 1961.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "84-409",
@@ -5632,7 +6335,8 @@
    "brand": "ALLIANCE",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 1988.99
+   "price": 1988.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "84-126",
@@ -5640,7 +6344,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 1997.99
+   "price": 1997.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "84-797",
@@ -5648,7 +6353,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 1999.99
+   "price": 1999.99,
+   "img": "agr_farm-pro-324-r-1.jpg"
   },
   {
    "code": "84-218A",
@@ -5656,7 +6362,8 @@
    "brand": "ALLIANCE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 2082.99
+   "price": 2082.99,
+   "img": "agr_329-alliance_r-3.jpg"
   },
   {
    "code": "5-357-987",
@@ -5664,7 +6371,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2084.99
+   "price": 2084.99,
+   "img": "agr_traction-field-road_r-1.jpg"
   },
   {
    "code": "84-256",
@@ -5672,7 +6380,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2094.99
+   "price": 2094.99,
+   "img": "agr_flotation_i-3-hf-3.jpg"
   },
   {
    "code": "103-212A",
@@ -5680,7 +6389,8 @@
    "brand": "CARLSTAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 2098.99
+   "price": 2098.99,
+   "img": "ag_carl-multi-rib.jpg"
   },
   {
    "code": "74-868",
@@ -5688,7 +6398,8 @@
    "brand": "JOURNEY",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 2099.99
+   "price": 2099.99,
+   "img": "ag_journey-wra001.jpg"
   },
   {
    "code": "84-975",
@@ -5696,7 +6407,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 2122.99
+   "price": 2122.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-427",
@@ -5704,7 +6416,8 @@
    "brand": "ALLIANCE",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 2150.99
+   "price": 2150.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-263",
@@ -5712,7 +6425,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2150.99
+   "price": 2150.99,
+   "img": "agr_381-flotation.jpg"
   },
   {
    "code": "84-139",
@@ -5720,7 +6434,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2158.99
+   "price": 2158.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "85-243",
@@ -5728,7 +6443,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2160.99
+   "price": 2160.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "5-003-167",
@@ -5736,7 +6452,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2161.99
+   "price": 2161.99,
+   "img": "agr_performer-evo.jpg"
   },
   {
    "code": "5-372-592",
@@ -5744,7 +6461,8 @@
    "brand": "FIRESTONE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 2162.99
+   "price": 2162.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "84-188",
@@ -5752,7 +6470,8 @@
    "brand": "ALLIANCE",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 2170.99
+   "price": 2170.99,
+   "img": "agr_380-alliance.jpg"
   },
   {
    "code": "5-003-152",
@@ -5760,7 +6479,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2183.99
+   "price": 2183.99,
+   "img": "agr_performer-evo.jpg"
   },
   {
    "code": "84-415",
@@ -5768,7 +6488,8 @@
    "brand": "ALLIANCE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 2192.99
+   "price": 2192.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "84-928",
@@ -5776,7 +6497,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2200.99
+   "price": 2200.99,
+   "img": "agr_885-alliance.jpg"
   },
   {
    "code": "73-582",
@@ -5784,7 +6506,8 @@
    "brand": "ARMOUR",
    "stock": "8 in stock",
    "category": "farm",
-   "price": 2210.99
+   "price": 2210.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "178-015-015",
@@ -5792,7 +6515,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2214.99
+   "price": 2214.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "84-444",
@@ -5800,7 +6524,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 2221.99
+   "price": 2221.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-421",
@@ -5808,7 +6533,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 2226.99
+   "price": 2226.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "73-583",
@@ -5816,7 +6542,8 @@
    "brand": "ARMOUR",
    "stock": "2026-09-05",
    "category": "farm",
-   "price": 2235.99
+   "price": 2235.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "81-475624",
@@ -5824,7 +6551,8 @@
    "brand": "TITAN",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 2251.99
+   "price": 2251.99,
+   "img": "agr_torc-trac-ii_r-3.jpg"
   },
   {
    "code": "84-433",
@@ -5832,7 +6560,8 @@
    "brand": "ALLIANCE",
    "stock": "More than 10 in stock",
    "category": "farm",
-   "price": 2262.99
+   "price": 2262.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "172-740-443",
@@ -5840,7 +6569,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 2279.99
+   "price": 2279.99,
+   "img": "agr_dura-torque_r-1.jpg"
   },
   {
    "code": "5-007-121",
@@ -5848,7 +6578,8 @@
    "brand": "FIRESTONE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 2284.99
+   "price": 2284.99,
+   "img": "agr_performer-evo.jpg"
   },
   {
    "code": "178-015-004",
@@ -5856,7 +6587,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2295.99
+   "price": 2295.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "85-270",
@@ -5864,7 +6596,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2026-08-28",
    "category": "farm",
-   "price": 2298.99
+   "price": 2298.99,
+   "img": "agr_rc900.png"
   },
   {
    "code": "5-372-507",
@@ -5872,7 +6605,8 @@
    "brand": "FIRESTONE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 2304.99
+   "price": 2304.99,
+   "img": "agr_super-all-traction-ii-23_r-1.jpg"
   },
   {
    "code": "178-448-404",
@@ -5880,7 +6614,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2309.99
+   "price": 2309.99,
+   "img": "agr_optitrac-r1w.jpg"
   },
   {
    "code": "84-931",
@@ -5888,7 +6623,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 2345.99
+   "price": 2345.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "81-466352",
@@ -5896,7 +6632,8 @@
    "brand": "TITAN",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2350.99
+   "price": 2350.99,
+   "img": "agr_tru-trac-multi_f-2m.jpg"
   },
   {
    "code": "84-129",
@@ -5904,7 +6641,8 @@
    "brand": "ALLIANCE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 2356.99
+   "price": 2356.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "81-4AV890",
@@ -5912,7 +6650,8 @@
    "brand": "TITAN",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2383.99
+   "price": 2383.99,
+   "img": "agr__agravantage.jpg"
   },
   {
    "code": "5-358-630",
@@ -5920,7 +6659,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2388.99
+   "price": 2388.99,
+   "img": "agr_traction-field-road_r-1.jpg"
   },
   {
    "code": "85-241",
@@ -5928,7 +6668,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 2399.99
+   "price": 2399.99,
+   "img": "agr_fl900.png"
   },
   {
    "code": "85-414",
@@ -5936,7 +6677,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 2443.99
+   "price": 2443.99,
+   "img": "agr_tm18.png"
   },
   {
    "code": "84-243",
@@ -5944,7 +6686,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2456.99
+   "price": 2456.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "170-445-116",
@@ -5952,7 +6695,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2456.99
+   "price": 2456.99,
+   "img": "agr_fs24_i-1.jpg"
   },
   {
    "code": "84-266",
@@ -5960,7 +6704,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 2462.99
+   "price": 2462.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-468",
@@ -5968,7 +6713,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 2471.99
+   "price": 2471.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "73-584D",
@@ -5976,7 +6722,8 @@
    "brand": "ARMOUR",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 2489.99
+   "price": 2489.99,
+   "img": "agr_73-584d.jpg"
   },
   {
    "code": "84-456",
@@ -5984,7 +6731,8 @@
    "brand": "ALLIANCE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 2499.99
+   "price": 2499.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-765",
@@ -5992,7 +6740,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 2509.99
+   "price": 2509.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "171-673-312",
@@ -6000,7 +6749,8 @@
    "brand": "GOODYEAR",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 2519.99
+   "price": 2519.99,
+   "img": "agr_all-weather-tractor_r-3.jpg"
   },
   {
    "code": "84-999",
@@ -6008,7 +6758,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 2526.99
+   "price": 2526.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "5-343-560",
@@ -6016,7 +6767,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2539.99
+   "price": 2539.99,
+   "img": "agr_super-all-traction-23_r-1.jpg"
   },
   {
    "code": "5-007-122",
@@ -6024,7 +6776,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2579.99
+   "price": 2579.99,
+   "img": "agr_performer-evo.jpg"
   },
   {
    "code": "74-869",
@@ -6032,7 +6785,8 @@
    "brand": "JOURNEY",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 2596.99
+   "price": 2596.99,
+   "img": "ag_journey-wra001.jpg"
   },
   {
    "code": "84-463",
@@ -6040,7 +6794,8 @@
    "brand": "ALLIANCE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 2630.99
+   "price": 2630.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "81-485845",
@@ -6048,7 +6803,8 @@
    "brand": "TITAN",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2649.99
+   "price": 2649.99,
+   "img": "agr_torc-trac_r-3.jpg"
   },
   {
    "code": "84-481",
@@ -6056,7 +6812,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 2775.99
+   "price": 2775.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-955",
@@ -6064,7 +6821,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 2785.99
+   "price": 2785.99,
+   "img": "agr_agristar-ii-470.jpg"
   },
   {
    "code": "5-011-877",
@@ -6072,7 +6830,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2829.99
+   "price": 2829.99,
+   "img": "agr_all-non-skid-tractor_r-3.jpg"
   },
   {
    "code": "81-4AV156",
@@ -6080,7 +6839,8 @@
    "brand": "TITAN",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2847.99
+   "price": 2847.99,
+   "img": "agr__agravantage.jpg"
   },
   {
    "code": "84-469",
@@ -6088,7 +6848,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 2848.99
+   "price": 2848.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-992",
@@ -6096,7 +6857,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 2886.99
+   "price": 2886.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-308",
@@ -6104,7 +6866,8 @@
    "brand": "ALLIANCE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 2888.99
+   "price": 2888.99,
+   "img": "agr_flotation_i-3-hf-3.jpg"
   },
   {
    "code": "73-584",
@@ -6112,7 +6875,8 @@
    "brand": "ARMOUR",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 2899.99
+   "price": 2899.99,
+   "img": "agr_armour-r-1w.jpg"
   },
   {
    "code": "85-267",
@@ -6120,7 +6884,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 2901.99
+   "price": 2901.99,
+   "img": "agr_ar800.png"
   },
   {
    "code": "84-246",
@@ -6128,7 +6893,8 @@
    "brand": "ALLIANCE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 2936.99
+   "price": 2936.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-374",
@@ -6136,7 +6902,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 2967.99
+   "price": 2967.99,
+   "img": "agr_farm-pro-85-r-1w.jpg"
   },
   {
    "code": "84-997",
@@ -6144,7 +6911,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 2988.99
+   "price": 2988.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-929",
@@ -6152,7 +6920,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3009.99
+   "price": 3009.99,
+   "img": "agr_389-alliance.jpg"
   },
   {
    "code": "85-263",
@@ -6160,7 +6929,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3074.99
+   "price": 3074.99,
+   "img": "agr_fl909.png"
   },
   {
    "code": "171-766-312",
@@ -6168,7 +6938,8 @@
    "brand": "GOODYEAR",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 3141.99
+   "price": 3141.99,
+   "img": "agr_all-weather-tractor_r-3.jpg"
   },
   {
    "code": "170-740-093",
@@ -6176,7 +6947,8 @@
    "brand": "GOODYEAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 3246.99
+   "price": 3246.99,
+   "img": "agr_smooth-implement.jpg"
   },
   {
    "code": "84-507",
@@ -6184,7 +6956,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3246.99
+   "price": 3246.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "5-343-579",
@@ -6192,7 +6965,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3248.99
+   "price": 3248.99,
+   "img": "agr_super-all-traction-23_r-1.jpg"
   },
   {
    "code": "175-739-472",
@@ -6200,7 +6974,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3285.99
+   "price": 3285.99,
+   "img": "agr_dyna-torque-ii_r-1.jpg"
   },
   {
    "code": "84-487",
@@ -6208,7 +6983,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 3337.99
+   "price": 3337.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-794",
@@ -6216,7 +6992,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 3353.99
+   "price": 3353.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "5-003-158",
@@ -6224,7 +7001,8 @@
    "brand": "FIRESTONE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 3388.99
+   "price": 3388.99,
+   "img": "agr_performer-evo.jpg"
   },
   {
    "code": "84-772",
@@ -6232,7 +7010,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 3403.99
+   "price": 3403.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "84-143",
@@ -6240,7 +7019,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3421.99
+   "price": 3421.99,
+   "img": "agr_330-alliance-r-3.jpg"
   },
   {
    "code": "84-777",
@@ -6248,7 +7028,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 3492.99
+   "price": 3492.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "160-666-222",
@@ -6256,7 +7037,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3504.99
+   "price": 3504.99,
+   "img": "agr_highway-service_fi-1_gy.jpg"
   },
   {
    "code": "84-802",
@@ -6264,7 +7046,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 3541.99
+   "price": 3541.99,
+   "img": "agr_363-agriflex-v3.jpg"
   },
   {
    "code": "84-801",
@@ -6272,7 +7055,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 3542.99
+   "price": 3542.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "5-345-377",
@@ -6280,7 +7064,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3574.99
+   "price": 3574.99,
+   "img": "agr_all-non-skid-tractor_r-3.jpg"
   },
   {
    "code": "84-255",
@@ -6288,7 +7073,8 @@
    "brand": "ALLIANCE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 3634.99
+   "price": 3634.99,
+   "img": "agr_flotation_i-3-hf-3.jpg"
   },
   {
    "code": "178-016-762",
@@ -6296,7 +7082,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3717.99
+   "price": 3717.99,
+   "img": "agr_dt800-optitrac_r-1w.jpg"
   },
   {
    "code": "84-771",
@@ -6304,7 +7091,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-06-25",
    "category": "farm",
-   "price": 3725.99
+   "price": 3725.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "84-994",
@@ -6312,7 +7100,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 3760.99
+   "price": 3760.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-809",
@@ -6320,7 +7109,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3770.99
+   "price": 3770.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "84-989",
@@ -6328,7 +7118,8 @@
    "brand": "ALLIANCE",
    "stock": "2026-08-07",
    "category": "farm",
-   "price": 3837.99
+   "price": 3837.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "5-012-233",
@@ -6336,7 +7127,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3840.99
+   "price": 3840.99,
+   "img": "agr_maxi-traction_65.jpg"
   },
   {
    "code": "84-791",
@@ -6344,7 +7136,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3843.99
+   "price": 3843.99,
+   "img": "agr_363-agriflex-v3.jpg"
   },
   {
    "code": "84-998",
@@ -6352,7 +7145,8 @@
    "brand": "ALLIANCE",
    "stock": "2099-08-16",
    "category": "farm",
-   "price": 3851.99
+   "price": 3851.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "5-015-895",
@@ -6360,7 +7154,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3852.99
+   "price": 3852.99,
+   "img": "agr_maxi-traction_65.jpg"
   },
   {
    "code": "84-779",
@@ -6368,7 +7163,8 @@
    "brand": "ALLIANCE",
    "stock": "3 in stock",
    "category": "farm",
-   "price": 3960.99
+   "price": 3960.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "84-560",
@@ -6376,7 +7172,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3980.99
+   "price": 3980.99,
+   "img": "agr_590-alliance.jpg"
   },
   {
    "code": "5-362-341",
@@ -6384,7 +7181,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 3999.99
+   "price": 3999.99,
+   "img": "agr_radial-23_r-1.jpg"
   },
   {
    "code": "85-242",
@@ -6392,7 +7190,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4006.99
+   "price": 4006.99,
+   "img": "agr_hs1000.png"
   },
   {
    "code": "84-248",
@@ -6400,7 +7199,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4074.99
+   "price": 4074.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-264",
@@ -6408,7 +7208,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4111.99
+   "price": 4111.99,
+   "img": "agr_328_xp.png"
   },
   {
    "code": "178-448-406",
@@ -6416,7 +7217,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4169.99
+   "price": 4169.99,
+   "img": "agr_optitrac-r1w.jpg"
   },
   {
    "code": "170-502-406",
@@ -6424,7 +7226,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4169.99
+   "price": 4169.99,
+   "img": "agr_optitorque.jpg"
   },
   {
    "code": "84-767",
@@ -6432,7 +7235,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4210.99
+   "price": 4210.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "84-261",
@@ -6440,7 +7244,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 4271.99
+   "price": 4271.99,
+   "img": "agr_flotation-implement_hf-2-i-3.jpg"
   },
   {
    "code": "178-015-018",
@@ -6448,7 +7253,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4360.99
+   "price": 4360.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "178-015-022",
@@ -6456,7 +7262,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4486.99
+   "price": 4486.99,
+   "img": "agr_goodyear-r14.jpg"
   },
   {
    "code": "5-352-829",
@@ -6464,7 +7271,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4588.99
+   "price": 4588.99,
+   "img": "agr_radial-23_r-1.jpg"
   },
   {
    "code": "81-48A586",
@@ -6472,7 +7280,8 @@
    "brand": "TITAN",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4622.99
+   "price": 4622.99,
+   "img": "agr_torc-trac-ii_r-3.jpg"
   },
   {
    "code": "5-006-319",
@@ -6480,7 +7289,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4628.99
+   "price": 4628.99,
+   "img": "agr_maxi-traction_65.jpg"
   },
   {
    "code": "178-094-770",
@@ -6488,7 +7298,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4704.99
+   "price": 4704.99,
+   "img": "agr_dt800-optitrac_r-1w.jpg"
   },
   {
    "code": "5-006-324",
@@ -6496,7 +7307,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4777.99
+   "price": 4777.99,
+   "img": "agr_maxi-traction_65.jpg"
   },
   {
    "code": "178-872-061",
@@ -6504,7 +7316,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4837.99
+   "price": 4837.99,
+   "img": "agr_versa-torque_r-1.jpg"
   },
   {
    "code": "84-716",
@@ -6512,7 +7325,8 @@
    "brand": "ALLIANCE",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 4931.99
+   "price": 4931.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "85-950",
@@ -6520,7 +7334,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 4967.99
+   "price": 4967.99,
+   "img": "agr_hs3000.jpg"
   },
   {
    "code": "84-799",
@@ -6528,7 +7343,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 4994.99
+   "price": 4994.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "84-996",
@@ -6536,7 +7352,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 5009.99
+   "price": 5009.99,
+   "img": "agr_agristar-ii-470.jpg"
   },
   {
    "code": "84-764",
@@ -6544,7 +7361,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 5043.99
+   "price": 5043.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "84-179",
@@ -6552,7 +7370,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 5094.99
+   "price": 5094.99,
+   "img": "agr_380-alliance.jpg"
   },
   {
    "code": "5-344-079",
@@ -6560,7 +7379,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 5262.99
+   "price": 5262.99,
+   "img": "agr_super-all-traction-23_r-1.jpg"
   },
   {
    "code": "5-006-326",
@@ -6568,7 +7388,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 5284.99
+   "price": 5284.99,
+   "img": "agr_maxi-traction_65.jpg"
   },
   {
    "code": "5-013-719",
@@ -6576,7 +7397,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 5381.99
+   "price": 5381.99,
+   "img": "agr_firestone-all-traction-rc.jpg"
   },
   {
    "code": "84-531",
@@ -6584,7 +7406,8 @@
    "brand": "ALLIANCE",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 5424.99
+   "price": 5424.99,
+   "img": "agr_farm-pro-70-r-1w.jpg"
   },
   {
    "code": "84-961",
@@ -6592,7 +7415,8 @@
    "brand": "ALLIANCE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 5525.99
+   "price": 5525.99,
+   "img": "agr_agristar-ii-470.jpg"
   },
   {
    "code": "178-450-005",
@@ -6600,7 +7424,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 5606.99
+   "price": 5606.99,
+   "img": "agr_optitrac-r1w.jpg"
   },
   {
    "code": "84-776",
@@ -6608,7 +7433,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 5683.99
+   "price": 5683.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "5-009-320",
@@ -6616,7 +7442,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 5931.99
+   "price": 5931.99,
+   "img": "agr_radial-deep-tread-23_r-1w.jpg"
   },
   {
    "code": "85-951",
@@ -6624,7 +7451,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 6006.99
+   "price": 6006.99,
+   "img": "agr_hs3000.jpg"
   },
   {
    "code": "5-362-069",
@@ -6632,7 +7460,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 6019.99
+   "price": 6019.99,
+   "img": "agr_radial-9000_r-1w.jpg"
   },
   {
    "code": "85-952",
@@ -6640,7 +7469,8 @@
    "brand": "TVS EUROGRIP",
    "stock": "Contact us",
    "category": "farm",
-   "price": 6080.99
+   "price": 6080.99,
+   "img": "agr_hs3000.jpg"
   },
   {
    "code": "178-451-001",
@@ -6648,7 +7478,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 6156.99
+   "price": 6156.99,
+   "img": "agr_optitrac.jpg"
   },
   {
    "code": "5-007-006",
@@ -6656,7 +7487,8 @@
    "brand": "FIRESTONE",
    "stock": "1 in stock",
    "category": "farm",
-   "price": 6271.99
+   "price": 6271.99,
+   "img": "agr_maxi-traction_65.jpg"
   },
   {
    "code": "5-009-318",
@@ -6664,7 +7496,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 6672.99
+   "price": 6672.99,
+   "img": "agr_radial-deep-tread-23_r-1w.jpg"
   },
   {
    "code": "84-784",
@@ -6672,7 +7505,8 @@
    "brand": "ALLIANCE",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 6893.99
+   "price": 6893.99,
+   "img": "agr_354-agriflex.jpg"
   },
   {
    "code": "178-149-036",
@@ -6680,7 +7514,8 @@
    "brand": "GOODYEAR",
    "stock": "4 in stock",
    "category": "farm",
-   "price": 6917.99
+   "price": 6917.99,
+   "img": "agr_ultra-sprayer_r-1.jpg"
   },
   {
    "code": "84-985",
@@ -6688,7 +7523,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 6934.99
+   "price": 6934.99,
+   "img": "agr_agristar-ii-485.jpg"
   },
   {
    "code": "84-265",
@@ -6696,7 +7532,8 @@
    "brand": "ALLIANCE",
    "stock": "5 in stock",
    "category": "farm",
-   "price": 6994.99
+   "price": 6994.99,
+   "img": "agr_328_xp.png"
   },
   {
    "code": "84-733",
@@ -6704,7 +7541,8 @@
    "brand": "ALLIANCE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 7158.99
+   "price": 7158.99,
+   "img": "agr_372-agriflex.jpg"
   },
   {
    "code": "304-594-299",
@@ -6712,7 +7550,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 8100.99
+   "price": 8100.99,
+   "img": "agr_super-terra-grip-xt_hf-3.jpg"
   },
   {
    "code": "5-007-123",
@@ -6720,7 +7559,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 8174.99
+   "price": 8174.99,
+   "img": "agr_radial-deep-tread-23_r-1w.jpg"
   },
   {
    "code": "178-430-448",
@@ -6728,7 +7568,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 8183.99
+   "price": 8183.99,
+   "img": "agr_dt812-18-24-30-optitrac_r-1w.jpg"
   },
   {
    "code": "178-149-024",
@@ -6736,7 +7577,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 8234.99
+   "price": 8234.99,
+   "img": "agr_ultra-sprayer_r-1.jpg"
   },
   {
    "code": "84-820",
@@ -6744,7 +7586,8 @@
    "brand": "ALLIANCE",
    "stock": "2 in stock",
    "category": "farm",
-   "price": 10222.99
+   "price": 10222.99,
+   "img": "agr_375-agri-star_r-1w.jpg"
   },
   {
    "code": "178-451-006",
@@ -6752,7 +7595,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 10793.99
+   "price": 10793.99,
+   "img": "agr_optitrac-r1w.jpg"
   },
   {
    "code": "178-451-005",
@@ -6760,7 +7604,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 11577.99
+   "price": 11577.99,
+   "img": "agr_optitrac-r1w.jpg"
   },
   {
    "code": "178-451-007",
@@ -6768,7 +7613,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 12367.99
+   "price": 12367.99,
+   "img": "agr_optitrac-r1w.jpg"
   },
   {
    "code": "170-502-404",
@@ -6776,7 +7622,8 @@
    "brand": "GOODYEAR",
    "stock": "Contact us",
    "category": "farm",
-   "price": 16424.99
+   "price": 16424.99,
+   "img": "agr_optitorque.jpg"
   },
   {
    "code": "5-019-004",
@@ -6784,7 +7631,8 @@
    "brand": "FIRESTONE",
    "stock": "Contact us",
    "category": "farm",
-   "price": 18705.99
+   "price": 18705.99,
+   "img": "agr_destination-cart.jpg"
   }
  ]
 }
