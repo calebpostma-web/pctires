@@ -369,6 +369,41 @@ function stockInfo(s) {
 
 function sizeOf(desc) { return desc.split(' ')[0]; }
 
+// --- Tread-pattern image: one reference image per tread, not per SKU ---
+var TREAD_IMG = {
+  'R-1':'agr_324-alliance_r-1.jpg','R-1W':'agr_375-agri-star_r-1w.jpg',
+  'R-2':'agr_324-alliance_r-1.jpg','R-3':'agr_329-alliance_r-3.jpg',
+  'F-1':'agr_drill-rib_f-1.jpg','F-2':'agr_3-rib-hd_tru-trac_f-2.jpg',
+  'F-3':'agr_farm-specialist_f-3.jpg','I-1':'agr_euro-rib_i-1.jpg',
+  'I-3':'agr_mt63t_i-3.jpg','HF-1':'agr_american-farmer_hf-1.jpg',
+  'HF-2':'agr_super-terra-grip_hf-2.jpg','TURF':'ag_regency-turf-implement.jpg',
+  'FLOT':'agr_381-flotation.jpg'
+};
+function treadOf(desc) {
+  var u = (desc || '').toUpperCase();
+  if (/\bR-?1W\b/.test(u)) return 'R-1W';
+  if (/\bR-?4\b/.test(u))  return 'R-4';
+  if (/\bR-?3\b/.test(u))  return 'R-3';
+  if (/\bR-?2\b/.test(u))  return 'R-2';
+  if (/\bR-?1\b/.test(u))  return 'R-1';
+  if (/\bHF-?2\b/.test(u)) return 'HF-2';
+  if (/\bHF-?1\b/.test(u)) return 'HF-1';
+  if (/\bF-?3\b/.test(u))  return 'F-3';
+  if (/\bF-?2\b/.test(u))  return 'F-2';
+  if (/\bF-?1\b/.test(u))  return 'F-1';
+  if (/\bI-?3\b/.test(u))  return 'I-3';
+  if (/\bI-?1\b/.test(u))  return 'I-1';
+  if (/TURF/.test(u))      return 'TURF';
+  if (/FLOT/.test(u))      return 'FLOT';
+  return '';
+}
+function treadImg(p) {
+  var t = treadOf(p.desc);
+  if (TREAD_IMG[t]) return '/odessa-img/' + TREAD_IMG[t];
+  if (p.img) return '/odessa-img/' + p.img;
+  return '';
+}
+
 function fmtPrice(p) {
   if (!p || p <= 0) return null;
   return p.toLocaleString('en-CA', { minimumFractionDigits:2, maximumFractionDigits:2 });
@@ -437,7 +472,7 @@ function card(p) {
   const el = document.createElement('div');
   el.className = 'tcard';
   el.innerHTML =
-    (p.img ? '<div class="timg"><img loading="lazy" src="/odessa-img/' + esc(p.img) + '" alt="' + esc(sizeOf(p.desc)) + ' ' + esc(p.brand) + ' tire tread" onerror="this.parentElement.style.display=\'none\'"></div>' : '') +
+    (treadImg(p) ? '<div class="timg"><img loading="lazy" src="' + treadImg(p) + '" alt="' + esc(sizeOf(p.desc)) + ' ' + esc(p.brand) + ' tire tread" onerror="this.parentElement.style.display=\'none\'"></div>' : '') +
     '<div class="size">' + esc(sizeOf(p.desc)) + '</div>' +
     '<div class="desc">' + esc(p.desc) + '</div>' +
     '<div class="brand">' + esc(p.brand) + '</div>' +
