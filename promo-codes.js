@@ -31,7 +31,6 @@ const PROMO_CODES = {
   'EZRA2026':    { type: 'percent', value: 10, label: '10% Off — Ezra' },
 
   // ── Promo / marketing codes ──
-  'WELCOME10':    { type: 'percent', value: 10, label: '10% Off — Welcome Offer', expires: '2026-12-31' },
 
   // ── Examples (uncomment or copy to add more) ──
   // 'SUMMER15':     { type: 'percent',      value: 15, label: '15% Off Summer Sale',  expires: '2026-09-01' },
