@@ -1289,12 +1289,12 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 <script>
 (function(){
   try{
-    if(sessionStorage.getItem('pcPromoBarDismissed')!=='1'){
+    if(false){ /* promo bar retired: discount baked into pricing */
       document.body.classList.add('with-promo-bar');
     } else {
       var b=document.getElementById('promoBar'); if(b) b.style.display='none';
     }
-  }catch(e){ document.body.classList.add('with-promo-bar'); }
+  }catch(e){ }
 })();
 function copyPromoCode(btn){
   var code=btn.getAttribute('data-code');
@@ -2596,8 +2596,9 @@ const WHEEL_WIDTHS    = [5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,12.0
 // ─────────────────────────────────────────────────
 //  PRICING ENGINE
 // ─────────────────────────────────────────────────
+function markupMult(cost){ var f = 0.35 - 0.001*((+cost||0)-75); if(f>0.35)f=0.35; if(f<0.18)f=0.18; return 1+f; }
 function retailPrice(item) {
-  let price = item.price * TDG.MARKUP;
+  let price = item.price * markupMult(item.price);
   const _floor = (item.price + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT);
   if (_floor > price) price = _floor;
   if (item.map && item.map > price) price = item.map;
@@ -2606,7 +2607,7 @@ function retailPrice(item) {
 function discountEligible(item) {
   // "Lowest end" exclusion: if the $20 margin floor set this item's price
   // (cost x 1.35 would land below the floor), the 10% never applies.
-  return (item.price * TDG.MARKUP) >= ((item.price + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT));
+  return (item.price * markupMult(item.price)) >= ((item.price + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT));
 }
 function memberPrice(item) {
   if (!discountEligible(item)) return retailPrice(item);
@@ -3198,7 +3199,7 @@ function wheelRetailPrice(w) {
   if (!w) return 0;
   const cost = w.price || 0;
   if (!cost) return 0;
-  return Math.max(cost * TDG.MARKUP, (cost + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT), w.map || 0);
+  return Math.max(cost * markupMult(cost), (cost + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT), w.map || 0);
 }
 
 function populateWheelRefineDropdowns() {
