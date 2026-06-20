@@ -4544,6 +4544,24 @@ function calculatePromoDiscount(promo, sub, inst, cartItems) {
       return { sub: Math.min(def.value * tireQty, sub), inst: 0 };
     }
     case 'free_install': return { sub: 0, inst: inst };
+    case 'net_target': {
+      // Auto-prices each tire so you net def.value AFTER Stripe and the $5 OTS fee.
+      // Stripe charges 2.9% on the HST-inclusive charge, so R = 0.029 * 1.13.
+      // markup = (target + OTS + R*cost) / (1 - R); price = cost + markup.
+      // OTS eco fee applies to tires only. orig.price is your raw TDG cost.
+      const R = 0.029 * 1.13;
+      let savings = 0;
+      for (const c of cartItems) {
+        const pool = c.itemType === 'wheel' ? allWheels : allTires;
+        const orig = pool.find(t => t.itemNumber === c.itemNumber);
+        if (!orig) continue;
+        const ots = c.itemType === 'wheel' ? 0 : 5;
+        const markup = (def.value + ots + R * orig.price) / (1 - R);
+        const newPrice = Math.round((orig.price + markup) * 100) / 100;
+        if (c.price > newPrice) savings += (c.price - newPrice) * c.qty;
+      }
+      return { sub: Math.min(savings, sub), inst: 0 };
+    }
     case 'markup': {
       let savings = 0;
       for (const c of cartItems) {
