@@ -22,6 +22,11 @@
 
 const PROMO_CODES = {
 
+  // -- Al's Lawn Care partner pricing --
+  // type 'net_target' = auto-prices each tire so you NET value$ after Stripe (2.9%+HST)
+  // and the $5 OTS eco fee. Holds at any tire cost. Change value to retune your take-home.
+  'ALSLAWNCARE': { type: 'net_target', value: 10, label: "Al's Lawn Care - Partner Pricing" },
+
   // ── Partner codes (25% markup from cost instead of 35%) ──
   'MULTI2026':    { type: 'markup', value: 1.25, label: 'Multi Construction — Partner Pricing' },
   'WINDMILL2026': { type: 'markup', value: 1.25, label: 'Windmill Cabinets — Partner Pricing' },
