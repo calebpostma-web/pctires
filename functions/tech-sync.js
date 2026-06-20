@@ -287,4 +287,11 @@ export async function onRequestPost(context) {
       default:
         return json({ ok: false, error: `Unknown action: ${action}` }, 400);
     }
-  } catch (er
+  } catch (err) {
+    return json({ ok: false, error: err.message }, 500);
+  }
+}
+
+export async function onRequestOptions() {
+  return new Response(null, { status: 204, headers: CORS });
+}
