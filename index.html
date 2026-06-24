@@ -2500,6 +2500,7 @@ const TDG = {
   MARKUP:          1.35,
   MEMBER_DISCOUNT: 0.10,
   MIN_MARGIN:      20,   // minimum dollars kept per tire/wheel, survives member discount
+  TEST_NET_TARGET: 25,   // TEST Jun2026: cap each consumer TIRE at cost+$25 net after Stripe+$5 recycle; never raises; set null to revert
   SEASON_MAP:   { 1:'summer', 2:'allseason', 3:'allweather', 4:'winter' },
   SEASON_LABEL: { 1:'Summer', 2:'All-Season', 3:'All-Weather', 4:'Winter' },
 };
@@ -2602,6 +2603,12 @@ function retailPrice(item) {
   const _floor = (item.price + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT);
   if (_floor > price) price = _floor;
   if (item.map && item.map > price) price = item.map;
+  // TEST Jun2026: cap consumer tires at cost + $25 net (after Stripe + $5 recycle). Never raises; excludes wheels + commercial. null = off.
+  if (TDG.TEST_NET_TARGET != null && !item.boltPattern && !isCommercialTire(item)) {
+    var _R = 0.029 * 1.13, _ots = 5;
+    var _n = item.price + (TDG.TEST_NET_TARGET + _ots + _R * item.price) / (1 - _R);
+    if (_n < price) price = Math.max(_n, item.map || 0);
+  }
   return Math.round(price * 100) / 100;
 }
 function discountEligible(item) {
@@ -2610,6 +2617,7 @@ function discountEligible(item) {
   return (item.price * markupMult(item.price)) >= ((item.price + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT));
 }
 function memberPrice(item) {
+  if (TDG.TEST_NET_TARGET != null) return retailPrice(item);
   if (!discountEligible(item)) return retailPrice(item);
   return Math.round(retailPrice(item) * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100;
 }
@@ -2624,7 +2632,7 @@ function displayedPrice(item) {
 }
 function priceBadgeHTML(item) {
   if (isOwner() && !window._customerViewMode) return '<div class="owner-price-badge">&#9889; Cost Price</div>';
-  if (currentMember && !isOwner()) { if (item && !discountEligible(item)) return ''; return '<div class="member-price-badge">★ Member Price</div>'; }
+  if (currentMember && !isOwner()) { if (TDG.TEST_NET_TARGET != null || (item && !discountEligible(item))) return ''; return '<div class="member-price-badge">★ Member Price</div>'; }
   return '';
 }
 
@@ -4438,7 +4446,7 @@ function repriceCartLine(c) {
   }
   if (isOwner()) return;
   if (typeof c.retailEach !== 'number') return;
-  const memberOk = currentMember && c.qty >= 4 && c.discEligible === true;
+  const memberOk = TDG.TEST_NET_TARGET == null && currentMember && c.qty >= 4 && c.discEligible === true;
   c.price = memberOk
     ? Math.round(c.retailEach * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100
     : c.retailEach;
