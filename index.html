@@ -2497,6 +2497,8 @@ const TDG = {
   API_KEY:   'rst715Wr18hFpHpbi346TGuMLBBQDZZbF5lHZQSi27hfpLGey3TH3YRHYWWPJRyi7rkx',
   STRIPE_PK: 'pk_live_51T86uxRufNpmOxQPt6KAjj4Yb8UOOpJqJAQ2KIae2d9adLFF9Ty8hS4T38GHaGHCOfsFVzBEHWKVGCl2Jq99N5Np00oylz5jPV',
   INSTALL_PRICE:   25,
+  INSTALL_LARGE:   30,   // per-tire install for big rims (>= INSTALL_LARGE_MIN_DIA inches)
+  INSTALL_LARGE_MIN_DIA: 20,   // rim diameter at/above which INSTALL_LARGE applies
   MARKUP:          1.35,
   MEMBER_DISCOUNT: 0.10,
   MIN_MARGIN:      20,   // minimum dollars kept per tire/wheel, survives member discount
@@ -4277,6 +4279,15 @@ function tireSizeRimDia(size) {
   return m ? parseInt(m[1]) : null;
 }
 
+// Per-tire install price by rim diameter. Wheels are never installed (return 0).
+// Base = TDG.INSTALL_PRICE; rims >= TDG.INSTALL_LARGE_MIN_DIA charge TDG.INSTALL_LARGE.
+function installPriceEach(item){
+  if(!item || item.itemType === 'wheel') return 0;
+  var dia = (typeof tireSizeRimDia === 'function') ? tireSizeRimDia(item.size) : null;
+  if(dia && TDG.INSTALL_LARGE_MIN_DIA && dia >= TDG.INSTALL_LARGE_MIN_DIA) return TDG.INSTALL_LARGE;
+  return TDG.INSTALL_PRICE;
+}
+
 function addToCart(itemNumber, itemType) {
   const pool = itemType === 'wheel' ? allWheels : allTires;
   const item = pool.find(t => t.itemNumber === itemNumber);
@@ -4414,7 +4425,7 @@ function renderCart() {
         ${commercial
           ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">🚛 <strong style="color:var(--light)">Commercial size</strong> — sell-only, no in-shop install. We'll source &amp; ship or arrange pickup.</div>`
           : (item.itemType !== 'wheel'
-              ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${TDG.INSTALL_PRICE}/tire</b></span></label>`
+              ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${installPriceEach(item)}/tire</b></span></label>`
               : '')}
         ${rebateNote}${memberNote}
       </div>
@@ -4424,7 +4435,7 @@ function renderCart() {
           <span class="qn">${item.qty}</span>
           <button class="qb" onclick="chgQty('${item.itemNumber}',+1)">+</button>
         </div>
-        <div class="ci-price">$${((item.price + (item.install && item.itemType !== 'wheel' ? TDG.INSTALL_PRICE : 0)) * item.qty).toFixed(2)}</div>
+        <div class="ci-price">$${((item.price + (item.install ? installPriceEach(item) : 0)) * item.qty).toFixed(2)}</div>
         ${cart.length > 1 ? `<button class="ci-pick" onclick="pickOnlyThis('${item.itemNumber}')">Pick this set &rarr;</button>` : ''}
         <button class="ci-remove" onclick="removeFromCart('${item.itemNumber}')">Remove</button>
       </div>
@@ -4466,7 +4477,7 @@ function getTotals() {
     return { sub: preTax, inst: 0, ship: 0, tax: tax, total: ft, discount: 0, override: true };
   }
   repriceCart();
-  const baseInst = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
+  const baseInst = cart.reduce((s, c) => s + (c.install ? installPriceEach(c) * c.qty : 0), 0);
   let sub;
   if (tdgQuote) { sub = tdgQuote.subtotal; }
   else { sub = cart.reduce((s, c) => s + c.price * c.qty, 0); }
@@ -4808,7 +4819,7 @@ async function buildPaymentSummary() {
     `;
     return;
   }
-  const instTotal = cart.reduce((s, c) => s + (c.install && c.itemType !== 'wheel' ? TDG.INSTALL_PRICE * c.qty : 0), 0);
+  const instTotal = cart.reduce((s, c) => s + (c.install ? installPriceEach(c) * c.qty : 0), 0);
   const addonAmt = getAddonTotal();
   const addonLines = ADDONS.filter(a => selectedAddons.has(a.id))
     .map(a => `<div class="ptrow"><span>${a.name}</span><span>${a.price === 0 ? '<span style="color:var(--green)">FREE</span>' : '$' + a.price.toFixed(2)}</span></div>`)
