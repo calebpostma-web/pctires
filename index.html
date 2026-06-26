@@ -512,6 +512,15 @@ h1 .y{color:var(--yellow)}h1 .b{display:block}
 .cart-item{display:flex;gap:13px;padding:15px 0;border-bottom:1px solid var(--border)}
 .cart-item:last-child{border-bottom:none}
 .ci-icon{width:58px;height:58px;background:var(--raised);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.ci-icon.has-img{cursor:pointer;padding:3px;position:relative;overflow:hidden}
+.ci-icon.has-img img{width:100%;height:100%;object-fit:contain;display:block}
+.ci-icon .ci-zoom{position:absolute;right:1px;bottom:1px;font-size:9px;line-height:1;background:rgba(0,0,0,.62);color:var(--yellow);padding:2px;border-radius:2px;pointer-events:none}
+#cartImgOverlay{z-index:1200}
+.cart-img-box{background:var(--card);border:1px solid var(--border);border-radius:3px;width:420px;max-width:90vw;padding:18px;position:relative}
+.cart-img-box .close-x{position:absolute;right:12px;top:8px}
+.cart-img-stage{background:var(--raised);border:1px solid var(--border);border-radius:2px;min-height:240px;display:flex;align-items:center;justify-content:center;padding:16px}
+.cart-img-stage img{max-width:100%;max-height:58vh;object-fit:contain}
+.cart-img-cap{text-align:center;margin-top:12px;font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;font-size:17px}
 .ci-info{flex:1;min-width:0}
 .ci-brand{font-size:9px;color:var(--yellow);font-weight:700;letter-spacing:2px;text-transform:uppercase}
 .ci-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;text-transform:uppercase;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -2176,6 +2185,15 @@ function getRebateForBrand(brand) {
 .qlocked .qb,.qlocked .ci-remove,.qlocked .ci-pick,.qlocked .inst-toggle{display:none !important;}
 .qlocked .qty-row{opacity:.65;}
 </style>
+<!-- CART IMAGE LIGHTBOX -->
+<div class="overlay center" id="cartImgOverlay" onclick="bgClose(event,'cartImgOverlay')">
+  <div class="cart-img-box">
+    <button class="close-x" onclick="closeCartImage()">&times;</button>
+    <div class="cart-img-stage"><img id="cartImgFull" src="" alt=""></div>
+    <div class="cart-img-cap" id="cartImgCap"></div>
+  </div>
+</div>
+
 <!-- SHARE QUOTE MODAL (owner only) -->
 <div class="overlay" id="shareQuoteOverlay" onclick="bgClose(event,'shareQuoteOverlay')">
   <div class="cart-drawer" style="margin:auto;max-width:520px;width:92%;height:auto;max-height:90vh;border:1px solid var(--border);border-radius:2px">
@@ -4416,7 +4434,7 @@ function renderCart() {
     }
     return `
     <div class="cart-item">
-      <div class="ci-icon">${icon}</div>
+      ${cartIconHtml(item, icon)}
       <div class="ci-info">
         <div class="ci-brand">${item.brand}</div>
         <div class="ci-name">${item.name}</div>
@@ -6462,6 +6480,45 @@ function openTireDetail(itemNumber) {
 function closeTireDetail() {
   document.getElementById('tireDetailOverlay').classList.remove('show');
   document.body.style.overflow = '';
+}
+
+// --- Cart product image: thumbnail in cart + click-to-enlarge lightbox ---
+function cartIconHtml(item, icon){
+  if(item && item.imageUrl){
+    var alt = ((item.brand||'')+' '+(item.name||'')).replace(/"/g,'').replace(/</g,'');
+    var num = String(item.itemNumber).replace(/'/g,'');
+    return '<div class="ci-icon has-img" onclick="openCartImage(\'' + num + '\')" title="View larger">'
+      + '<img src="' + item.imageUrl + '" alt="' + alt + '" onerror="cartImgFallback(this)">'
+      + '<span class="ci-emoji" style="display:none">' + icon + '</span>'
+      + '<span class="ci-zoom">&#128269;</span></div>';
+  }
+  return '<div class="ci-icon">' + icon + '</div>';
+}
+function cartImgFallback(img){
+  img.style.display='none';
+  var p=img.parentNode; if(!p) return;
+  p.classList.remove('has-img'); p.removeAttribute('onclick'); p.removeAttribute('title');
+  var e=p.querySelector('.ci-emoji'); if(e) e.style.display='flex';
+}
+function openCartImage(itemNumber){
+  var item=(cart||[]).find(function(c){return c.itemNumber===itemNumber;});
+  if(!item || !item.imageUrl) return;
+  var img=document.getElementById('cartImgFull');
+  var cap=document.getElementById('cartImgCap');
+  var title=((item.brand||'')+' '+(item.name||'')).trim();
+  var size=item.size || (item.diameter ? (item.diameter+'\" - '+(item.boltPattern||'')) : '');
+  if(cap){ cap.innerHTML='<div>'+escapeHtml(title)+'</div>'+(size?'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted);font-weight:400;margin-top:4px">'+escapeHtml(size)+'</div>':''); }
+  if(img){
+    img.style.display='';
+    img.onerror=function(){ this.style.display='none'; if(cap) cap.innerHTML += '<div style="font-size:12px;color:var(--muted);font-weight:400;text-transform:none;margin-top:8px">Image preview unavailable</div>'; };
+    img.alt=title;
+    img.src=item.imageUrl;
+  }
+  var ov=document.getElementById('cartImgOverlay'); if(ov) ov.classList.add('show');
+}
+function closeCartImage(){
+  var ov=document.getElementById('cartImgOverlay'); if(ov) ov.classList.remove('show');
+  var img=document.getElementById('cartImgFull'); if(img){ img.src=''; img.style.display=''; img.onerror=null; }
 }
 
 function showToast(title, sub) {
