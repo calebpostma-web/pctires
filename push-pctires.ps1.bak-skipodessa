@@ -1,0 +1,209 @@
+# =============================================
+#  push-pctires.ps1
+#  Pushes local changes up to github.com/calebpostma-web/pctires (main branch)
+#  Counterpart to sync-pctires.ps1 (which pulls down).
+#
+#  - Compares every local file against the GitHub copy (byte-for-byte)
+#  - Uploads only what changed, creates files that don't exist on GitHub
+#  - Requires a GitHub Personal Access Token (PAT) with 'repo' scope
+#
+#  Token resolution order:
+#    1. $env:PCTIRES_GH_TOKEN environment variable
+#    2. A file named .pctires-token in this folder (one line, just the token)
+#    3. Interactive prompt (offers to save to .pctires-token)
+#
+#  Run anytime after making local edits to push them to GitHub.
+# =============================================
+
+param(
+    [string]$Message = ""
+)
+
+$repo   = "calebpostma-web/pctires"
+$branch = "main"
+$dest   = "C:\Users\Caleb\Documents\Claude\Projects\PCtires"
+$tokenFile = Join-Path $dest ".pctires-token"
+
+# Files we never want to push (local-only or sensitive)
+$skipPaths = @(
+    "push-pctires.ps1",
+    "sync-pctires.ps1",
+    ".pctires-token",
+    ".git"
+)
+
+# --- Compute the git blob SHA-1 for local bytes -----------------------------
+# Git blob SHA = sha1("blob " + length + "\0" + content)
+# We need this for files > 1 MB because GitHub's Contents API doesn't return
+# the base64 `content` field for files larger than 1 MB — only the sha.
+function Get-GitBlobSha {
+    param([byte[]]$bytes)
+    $header = [Text.Encoding]::ASCII.GetBytes("blob $($bytes.Length)`0")
+    $combined = New-Object byte[] ($header.Length + $bytes.Length)
+    [Array]::Copy($header, 0, $combined, 0, $header.Length)
+    [Array]::Copy($bytes, 0, $combined, $header.Length, $bytes.Length)
+    $sha1 = [Security.Cryptography.SHA1]::Create()
+    $hash = $sha1.ComputeHash($combined)
+    return (($hash | ForEach-Object { $_.ToString("x2") }) -join "")
+}
+
+# --- Resolve token --------------------------------------------------------
+function Get-Token {
+    if ($env:PCTIRES_GH_TOKEN) {
+        Write-Host "Using token from `$env:PCTIRES_GH_TOKEN" -ForegroundColor DarkGray
+        return $env:PCTIRES_GH_TOKEN
+    }
+    if (Test-Path $tokenFile) {
+        $t = (Get-Content $tokenFile -Raw).Trim()
+        if ($t) {
+            Write-Host "Using token from .pctires-token" -ForegroundColor DarkGray
+            return $t
+        }
+    }
+    Write-Host ""
+    Write-Host "No GitHub token found." -ForegroundColor Yellow
+    Write-Host "Create one at: https://github.com/settings/tokens (classic, 'repo' scope)" -ForegroundColor Yellow
+    $secure = Read-Host "Paste your GitHub Personal Access Token" -AsSecureString
+    $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+    $tok  = [Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
+    [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+    if (-not $tok) {
+        Write-Host "No token entered. Aborting." -ForegroundColor Red
+        exit 1
+    }
+    $save = Read-Host "Save token to .pctires-token so you don't get asked again? (y/N)"
+    if ($save -match '^[yY]') {
+        Set-Content -Path $tokenFile -Value $tok -NoNewline
+        # Best-effort: hide the file
+        try { (Get-Item $tokenFile).Attributes = 'Hidden' } catch {}
+        Write-Host "Saved. Make sure .pctires-token is in .gitignore." -ForegroundColor DarkGray
+    }
+    return $tok
+}
+
+$token = Get-Token
+
+$headers = @{
+    "User-Agent"    = "PCTires-Push"
+    "Authorization" = "token $token"
+    "Accept"        = "application/vnd.github+json"
+}
+
+# --- Verify token works ---------------------------------------------------
+Write-Host ""
+Write-Host "Checking token..." -ForegroundColor Cyan
+try {
+    $userInfo = Invoke-RestMethod -Uri "https://api.github.com/user" -Headers $headers
+    Write-Host "Authenticated as: $($userInfo.login)" -ForegroundColor Green
+} catch {
+    Write-Host "Token rejected by GitHub: $($_.Exception.Message)" -ForegroundColor Red
+    Read-Host "Press Enter to close"
+    exit 1
+}
+
+# --- Commit message -------------------------------------------------------
+if (-not $Message) {
+    $defaultMsg = "Local sync from Cowork " + (Get-Date -Format "yyyy-MM-dd HH:mm")
+    Write-Host ""
+    $entered = Read-Host "Commit message (Enter for default: $defaultMsg)"
+    $Message = if ($entered) { $entered } else { $defaultMsg }
+}
+
+# --- Walk local files -----------------------------------------------------
+Write-Host ""
+Write-Host "Scanning local files in $dest..." -ForegroundColor Cyan
+
+$localFiles = Get-ChildItem -Path $dest -Recurse -File | Where-Object {
+    $rel = $_.FullName.Substring($dest.Length).TrimStart('\').Replace('\','/')
+    $skip = $false
+    foreach ($p in $skipPaths) {
+        if ($rel -eq $p -or $rel.StartsWith($p + "/")) { $skip = $true; break }
+    }
+    -not $skip
+}
+
+$total = $localFiles.Count
+Write-Host "Found $total local files to check." -ForegroundColor Cyan
+Write-Host ""
+
+$pushed   = @()
+$skipped  = @()
+$failures = @()
+$count = 0
+
+foreach ($lf in $localFiles) {
+    $count++
+    $relPath = $lf.FullName.Substring($dest.Length).TrimStart('\').Replace('\','/')
+    $apiUrl = "https://api.github.com/repos/$repo/contents/$($relPath)?ref=$branch"
+
+    # Read local bytes
+    $localBytes = [IO.File]::ReadAllBytes($lf.FullName)
+    $localB64   = [Convert]::ToBase64String($localBytes)
+    $localSha   = Get-GitBlobSha $localBytes
+
+    # Fetch current state on GitHub (if exists)
+    $remoteSha = $null
+    try {
+        $r = Invoke-RestMethod -Uri $apiUrl -Headers $headers -ErrorAction Stop
+        $remoteSha = $r.sha
+    } catch {
+        if ($_.Exception.Response.StatusCode.value__ -ne 404) {
+            $failures += "$relPath (fetch failed: $($_.Exception.Message))"
+            Write-Host "[$count/$total] FETCH FAIL: $relPath" -ForegroundColor Red
+            continue
+        }
+        # 404 = file doesn't exist on GitHub yet, will be created
+    }
+
+    # Compare by git blob SHA — works for files of any size.
+    # The Contents API returns content base64 only for files <=1 MB, so we can't
+    # rely on base64 comparison for large files like PDFs.
+    if ($remoteSha -and $remoteSha -eq $localSha) {
+        Write-Host "[$count/$total] = $relPath" -ForegroundColor DarkGray
+        $skipped += $relPath
+        continue
+    }
+
+    # Build PUT body
+    $body = @{
+        message = $Message
+        content = $localB64
+        branch  = $branch
+    }
+    if ($remoteSha) { $body.sha = $remoteSha }
+
+    try {
+        $jsonBody = $body | ConvertTo-Json -Depth 3 -Compress
+        Invoke-RestMethod -Uri $apiUrl -Method Put -Headers $headers -Body $jsonBody -ContentType "application/json" -ErrorAction Stop | Out-Null
+        $action = if ($remoteSha) { "updated" } else { "created" }
+        Write-Host "[$count/$total] $action $relPath" -ForegroundColor Green
+        $pushed += $relPath
+    } catch {
+        $failures += "$relPath (push failed: $($_.Exception.Message))"
+        Write-Host "[$count/$total] PUSH FAIL: $relPath" -ForegroundColor Red
+        Write-Host "           $($_.Exception.Message)" -ForegroundColor DarkRed
+    }
+}
+
+# --- Summary --------------------------------------------------------------
+Write-Host ""
+Write-Host "---------------------------------------------" -ForegroundColor Cyan
+Write-Host "Push complete." -ForegroundColor Cyan
+Write-Host "  Pushed   : $($pushed.Count)" -ForegroundColor Green
+Write-Host "  Unchanged: $($skipped.Count)" -ForegroundColor DarkGray
+Write-Host "  Failed   : $($failures.Count)" -ForegroundColor $(if ($failures.Count -gt 0) { "Yellow" } else { "DarkGray" })
+
+if ($pushed.Count -gt 0) {
+    Write-Host ""
+    Write-Host "Files pushed (commit: '$Message'):" -ForegroundColor Green
+    $pushed | ForEach-Object { Write-Host "  + $_" -ForegroundColor Green }
+}
+
+if ($failures.Count -gt 0) {
+    Write-Host ""
+    Write-Host "Failures:" -ForegroundColor Yellow
+    $failures | ForEach-Object { Write-Host "  ! $_" -ForegroundColor Yellow }
+}
+
+Write-Host ""
+Read-Host "Press Enter to close"
