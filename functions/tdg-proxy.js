@@ -4,18 +4,12 @@
  */
 
 const TDG_API_BASE = 'https://www.tdgaccess.ca/api';
-const TDG_API_KEY  = 'rst715Wr18hFpHpbi346TGuMLBBQDZZbF5lHZQSi27hfpLGey3TH3YRHYWWPJRyi7rkx';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
-};
-
-const HEADERS = {
-  'Content-Type': 'application/json',
-  'Authorization': `ApiKey ${TDG_API_KEY}`,
 };
 
 const ACTION_MAP = {
@@ -35,14 +29,22 @@ const ACTION_MAP = {
 const GET_ACTIONS = new Set(['shippingAddresses','shippingMethods','paymentMethods','pickupLocations']);
 
 export async function onRequest(context) {
-  const { request } = context;
+  const { request, env } = context;
 
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: CORS });
   }
 
+  const TDG_API_KEY = env.TDG_API_KEY;
+  if (!TDG_API_KEY) {
+    return new Response(JSON.stringify({ error: 'Server configuration error: TDG_API_KEY is not set' }), { status: 500, headers: CORS });
+  }
+  const HEADERS = {
+    'Content-Type': 'application/json',
+    'Authorization': `ApiKey ${TDG_API_KEY}`,
+  };
+
   try {
-    // Read POST body { path, payload }
     let body = {};
     try { body = await request.json(); } catch(e) {}
 
@@ -62,7 +64,6 @@ export async function onRequest(context) {
     });
 
     const text = await res.text();
-    // Pass non-2xx through with debug header so client can log the actual TDG error
     const respHeaders = { ...CORS };
     if (!res.ok) respHeaders['X-TDG-Status'] = String(res.status);
     return new Response(text, { status: res.status, headers: respHeaders });
