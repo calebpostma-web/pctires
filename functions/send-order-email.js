@@ -8,7 +8,7 @@
  *   3. Sends an internal order notification to PC Tires
  *
  * Environment variables required (set in Cloudflare Dashboard):
- *   RESEND_API_KEY  — re_LwrkevNg_...
+ *   RESEND_API_KEY  — (stored as a Cloudflare secret)...
  *   STRIPE_SECRET   — sk_live_... (for future payment verification)
  *
  * Hardcoded TDG constants (unlikely to change):
@@ -19,7 +19,7 @@
 import { findLug } from './tech-lugnut-db.js';
 
 const TDG_API_BASE       = 'https://www.tdgaccess.ca/api';
-const TDG_API_KEY        = 'rst715Wr18hFpHpbi346TGuMLBBQDZZbF5lHZQSi27hfpLGey3TH3YRHYWWPJRyi7rkx';
+// TDG_API_KEY is provided from Cloudflare env (passed in as a parameter)
 const TDG_SHIPPING_METHOD = '5E47CBB0A4659509A3DF1D4BA96E2FFB|29667'; // TDG Delivery
 const TDG_PAYMENT_METHOD  = '1A0DFD32C9C2AF74B0B3A8F872BF8244|METHOD_22640'; // Amex *2004
 
@@ -118,17 +118,17 @@ function md5(string) {
 }
 
 // ─── TDG order hash ─────────────────────────────────────────────────────────
-function computeOrderHash(products) {
+function computeOrderHash(products, tdgApiKey) {
   // 1. Get unique product IDs, sort numerically smallest → largest
   const ids = [...new Set(products.map(p => p.id))].sort((a, b) => a - b);
   // 2. Prepend API key, join with pipes
-  const input = TDG_API_KEY + '|' + ids.join('|');
+  const input = tdgApiKey + '|' + ids.join('|');
   // 3. MD5 hash, lowercase
   return md5(input);
 }
 
 // ─── TDG order placement ────────────────────────────────────────────────────
-async function placeTDGOrder(order) {
+async function placeTDGOrder(order, tdgApiKey) {
   const products = (order.tires || [])
     .filter(t => t.tdgId && typeof t.tdgId === 'number')
     .map(t => ({ id: t.tdgId, quantity: t.qty || 1 }));
@@ -137,7 +137,7 @@ async function placeTDGOrder(order) {
     return { skipped: true, reason: 'No TDG product IDs in order — mock/fallback items only' };
   }
 
-  const orderHash = computeOrderHash(products);
+  const orderHash = computeOrderHash(products, tdgApiKey);
 
   const payload = {
     orderHash,
@@ -155,7 +155,7 @@ async function placeTDGOrder(order) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `ApiKey ${TDG_API_KEY}`,
+      'Authorization': `ApiKey ${tdgApiKey}`,
     },
     body: JSON.stringify(payload),
   });
@@ -490,7 +490,7 @@ export async function onRequest(context) {
     return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400, headers: CORS });
   }
 
-  const RESEND_API_KEY = env.RESEND_API_KEY || 're_LwrkevNg_H9uD76w3LhTQa2sJwxNXFE6n';
+  const RESEND_API_KEY = env.RESEND_API_KEY;
 
   // ── Dedup check: if we've already processed this paymentIntentId (or orderNumber
   // as fallback) within the last 10 minutes, return the previous result instead of
@@ -511,7 +511,7 @@ export async function onRequest(context) {
   // 1. Place TDG order
   let tdgOrder = null, tdgError = null;
   try {
-    tdgOrder = await placeTDGOrder(order);
+    tdgOrder = await placeTDGOrder(order, env.TDG_API_KEY);
     if (tdgOrder.error) { tdgError = tdgOrder; tdgOrder = null; }
   } catch (e) {
     tdgError = { message: e.message };
