@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Used &amp; Budget Tires — Chatham-Kent | PC Tires</title>
+<meta name="description" content="Used tires and budget new tires in Chatham-Kent. New from $89. Sizes, brands and prices updated live. Call 519-397-4686 to grab a set before it's gone.">
+<link rel="canonical" href="https://pctires.ca/used-tires.html">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;900&family=Barlow+Condensed:wght@700;800;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- Google tag (gtag.js) — PC Tires Ads -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18156336783"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18156336783');
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest && e.target.closest('a[href^="tel:"]');
+    if (a && typeof gtag === 'function') {
+      gtag('event', 'conversion', { 'send_to': 'AW-18156336783/SbSRCNu5nbEcEI_tztFD' });
+    }
+  }, true);
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black:#070707; --dark:#0f0f0f; --card:#161616; --raised:#1d1d1d;
+  --border:#242424; --mid:#2d2d2d; --muted:#888; --light:#bbb;
+  --white:#f4f4f4; --yellow:#f5c518; --yellow2:#e8b800; --orange:#f07318;
+  --green:#22c55e; --red:#ef4444;
+}
+html { scroll-behavior: smooth; }
+body { background:var(--black); color:var(--white); font-family:'Barlow',sans-serif; line-height:1.6; overflow-x:hidden; }
+
+.site-nav { padding:14px 24px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background:rgba(7,7,7,.85); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+.logo { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:900; letter-spacing:3px; text-transform:uppercase; color:var(--white); text-decoration:none; }
+.logo .pc { color:var(--yellow); }
+.nav-phone { font-family:'IBM Plex Mono',monospace; font-size:14px; text-decoration:none; background:var(--yellow); color:var(--black); padding:9px 16px; border-radius:2px; font-weight:700; }
+
+.hero { min-height:48vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden; padding:54px 24px; }
+.hero::after { content:''; position:absolute; top:-200px; right:-200px; width:700px; height:700px; background:radial-gradient(circle, rgba(245,197,24,.12) 0%, transparent 65%); pointer-events:none; }
+.hero-inner { max-width:960px; margin:0 auto; width:100%; position:relative; z-index:1; }
+.season-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(245,197,24,.12); border:1px solid rgba(245,197,24,.3); border-radius:30px; padding:6px 14px; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--yellow); margin-bottom:22px; }
+.season-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--yellow); box-shadow:0 0 0 4px rgba(245,197,24,.2); animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 4px rgba(245,197,24,.2)} 50%{box-shadow:0 0 0 8px rgba(245,197,24,0)} }
+.hero-headline { font-family:'Barlow Condensed',sans-serif; font-weight:900; line-height:.92; letter-spacing:-1px; margin-bottom:20px; }
+.hero-headline .line1 { display:block; font-size:clamp(36px,7vw,68px); color:var(--white); }
+.hero-headline .line2 { display:block; font-size:clamp(54px,12vw,120px); color:var(--yellow); margin:-4px 0; text-shadow:0 0 60px rgba(245,197,24,.3); }
+.hero-sub { font-size:clamp(16px,2vw,19px); color:var(--light); margin-bottom:26px; max-width:640px; }
+.hero-sub strong { color:var(--white); }
+.hero-ctas { display:flex; gap:14px; flex-wrap:wrap; }
+.btn-primary { background:var(--yellow); color:var(--black); padding:16px 32px; border-radius:2px; font-weight:800; font-size:15px; letter-spacing:1.5px; text-transform:uppercase; text-decoration:none; border:none; cursor:pointer; transition:transform .15s, background .15s; display:inline-block; }
+.btn-primary:hover { background:var(--yellow2); transform:translateY(-1px); }
+.btn-ghost { background:transparent; color:var(--white); padding:16px 32px; border-radius:2px; font-weight:700; font-size:15px; letter-spacing:1.5px; text-transform:uppercase; text-decoration:none; border:1px solid var(--mid); transition:border-color .15s, color .15s; display:inline-block; cursor:pointer; }
+.btn-ghost:hover { border-color:var(--yellow); color:var(--yellow); }
+
+.cat-section { padding:54px 24px; background:var(--black); }
+.cat-inner { max-width:1180px; margin:0 auto; }
+.section-label { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--yellow); margin-bottom:12px; text-align:center; }
+.section-title { font-family:'Barlow Condensed',sans-serif; font-size:clamp(32px,6vw,52px); font-weight:900; line-height:1.05; margin-bottom:14px; color:var(--white); text-align:center; letter-spacing:-.5px; }
+.section-sub { color:var(--muted); font-size:15px; text-align:center; margin-bottom:26px; }
+
+.filter-bar { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:14px; }
+.filter-bar input, .filter-bar select { background:var(--raised); color:var(--white); border:1px solid var(--border); border-radius:2px; padding:12px 14px; font-family:'Barlow',sans-serif; font-size:15px; transition:border-color .15s; }
+.filter-bar input { min-width:240px; flex:1; max-width:380px; }
+.filter-bar input:focus, .filter-bar select:focus { outline:0; border-color:var(--yellow); }
+.chips { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:18px; }
+.chip { font-family:'Barlow',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--light); background:var(--raised); border:1px solid var(--border); border-radius:2px; padding:9px 16px; cursor:pointer; transition:all .15s; }
+.chip:hover { border-color:var(--mid); }
+.chip.active { background:var(--yellow); color:var(--black); border-color:var(--yellow); }
+.result-note { text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:22px; }
+
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:14px; }
+.tcard { background:var(--card); border:1px solid var(--border); border-radius:2px; padding:20px; position:relative; overflow:hidden; transition:border-color .15s; display:flex; flex-direction:column; }
+.tcard::after { content:''; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--yellow); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
+.tcard:hover { border-color:var(--mid); }
+.tcard:hover::after { transform:scaleX(1); }
+.tcard .toprow { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px; }
+.tcard .size { font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; color:var(--yellow); }
+.tag { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:4px 8px; border-radius:2px; white-space:nowrap; }
+.tag.used { background:rgba(240,115,24,.12); color:var(--orange); border:1px solid rgba(240,115,24,.3); }
+.tag.new { background:rgba(34,197,94,.12); color:var(--green); border:1px solid rgba(34,197,94,.3); }
+.tcard .brand { font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--light); margin-bottom:4px; }
+.tcard .meta { font-size:13px; color:var(--muted); margin-bottom:12px; min-height:20px; }
+.tcard .price { font-family:'Barlow Condensed',sans-serif; font-size:32px; font-weight:900; color:var(--white); line-height:1; margin-bottom:2px; }
+.tcard .price .ea { font-size:14px; color:var(--muted); font-weight:500; font-family:'Barlow',sans-serif; }
+.tcard .qtytag { font-size:11px; color:var(--muted); margin-bottom:14px; font-family:'IBM Plex Mono',monospace; }
+.tcard .actions { display:flex; gap:8px; margin-top:auto; }
+.tcard .actions a, .tcard .actions button { flex:1; text-align:center; padding:11px 8px; border-radius:2px; font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; text-decoration:none; cursor:pointer; font-family:'Barlow',sans-serif; transition:all .15s; }
+.act-call { background:var(--yellow); color:var(--black); border:none; }
+.act-call:hover { background:var(--yellow2); }
+.act-quote { background:transparent; color:var(--light); border:1px solid var(--mid); }
+.act-quote:hover { border-color:var(--yellow); color:var(--yellow); }
+.empty-msg { text-align:center; color:var(--muted); padding:50px 0 30px; font-size:15px; }
+.empty-msg a { color:var(--yellow); }
+
+/* MODALS */
+.modal-back { position:fixed; inset:0; background:rgba(0,0,0,.78); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-back.show { display:flex; }
+.modal { background:var(--card); border:1px solid var(--border); border-top:3px solid var(--yellow); border-radius:3px; max-width:480px; width:100%; padding:28px; max-height:92vh; overflow-y:auto; }
+.modal.wide { max-width:620px; }
+.modal h3 { font-family:'Barlow Condensed',sans-serif; font-size:26px; font-weight:900; margin-bottom:4px; }
+.modal .m-product { font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--yellow); margin-bottom:18px; }
+.fg { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.fg label { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
+.fg input, .fg select, .fg textarea { background:var(--raised); color:var(--white); border:1px solid var(--border); border-radius:2px; padding:12px 14px; font-family:'Barlow',sans-serif; font-size:15px; transition:border-color .15s; }
+.fg input:focus, .fg select:focus, .fg textarea:focus { outline:0; border-color:var(--yellow); }
+.fg textarea { min-height:60px; resize:vertical; }
+.frow { display:flex; gap:12px; } .frow .fg { flex:1; }
+.form-error { display:none; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.35); color:var(--red); border-radius:2px; padding:10px 14px; font-size:13px; margin-bottom:14px; }
+.form-error.show { display:block; }
+.modal-btns { display:flex; gap:10px; margin-top:6px; }
+.modal-btns .btn-primary { flex:1; }
+.modal-btns .btn-ghost { padding:16px 20px; }
+.quote-success { display:none; text-align:center; padding:10px 0; }
+.quote-success.show { display:block; }
+.quote-success .big { font-size:40px; margin-bottom:10px; }
+
+/* ADMIN list */
+.adm-list { margin-top:8px; border-top:1px solid var(--border); }
+.adm-row { display:flex; align-items:center; gap:10px; padding:12px 0; border-bottom:1px solid var(--border); font-size:14px; }
+.adm-row .ainfo { flex:1; min-width:0; }
+.adm-row .asize { font-family:'IBM Plex Mono',monospace; color:var(--yellow); font-weight:600; }
+.adm-row .asub { font-size:12px; color:var(--muted); }
+.adm-row.sold { opacity:.5; }
+.adm-row .abtns { display:flex; gap:6px; flex-wrap:wrap; }
+.adm-row .abtns button { background:var(--raised); color:var(--light); border:1px solid var(--mid); border-radius:2px; padding:6px 10px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; cursor:pointer; }
+.adm-row .abtns button:hover { border-color:var(--yellow); color:var(--yellow); }
+.adm-row .abtns button.del:hover { border-color:var(--red); color:var(--red); }
+.adm-note { font-size:12px; color:var(--muted); margin:6px 0 16px; }
+
+.footer { padding:40px 24px; border-top:1px solid var(--border); background:var(--black); }
+.footer-inner { max-width:960px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; align-items:center; }
+.footer .fhours { font-size:13px; color:var(--muted); }
+.footer a { color:var(--yellow); text-decoration:none; }
+.footer .flinks { display:flex; gap:18px; font-size:13px; flex-wrap:wrap; }
+.footer .flinks a { color:var(--light); }
+.owner-link { color:var(--mid) !important; font-size:11px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="logo" href="/"><span class="pc">PC</span> TIRES</a>
+  <a class="nav-phone" href="tel:519-397-4686">519-397-4686</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="season-badge"><span class="dot"></span> Used &amp; Budget · While They Last</div>
+    <h1 class="hero-headline">
+      <span class="line1">Used &amp; Budget Tires</span>
+      <span class="line2">From $89</span>
+    </h1>
+    <p class="hero-sub"><strong>Quality used tires and budget new sets</strong> — real sizes, real prices, updated as stock moves. What you see is what's on the rack today. <strong>See your size? Call and we'll hold it.</strong></p>
+    <div class="hero-ctas">
+      <a class="btn-primary" href="tel:519-397-4686">Call 519-397-4686</a>
+      <a class="btn-ghost" href="#list">See What's In ↓</a>
+    </div>
+  </div>
+</section>
+
+<section class="cat-section" id="list">
+  <div class="cat-inner">
+    <div class="section-label">In Stock Now</div>
+    <h2 class="section-title">What's On The Rack</h2>
+    <p class="section-sub">Used and budget-new tires we have right now. Prices are per tire. Stock moves fast — call to grab a set before it's gone.</p>
+
+    <div class="filter-bar">
+      <input type="text" id="fSearch" placeholder="Search size or brand…" autocomplete="off">
+      <select id="fSort">
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="newest">Newest First</option>
+      </select>
+    </div>
+    <div class="chips" id="typeChips">
+      <span class="chip active" data-type="all">All</span>
+      <span class="chip" data-type="used">Used</span>
+      <span class="chip" data-type="new">Budget New</span>
+    </div>
+    <div class="result-note" id="resultNote"></div>
+
+    <div class="grid" id="grid"></div>
+    <div class="empty-msg" id="emptyMsg" style="display:none">Nothing matching that right now — but stock changes weekly. <a href="tel:519-397-4686">Call 519-397-4686</a> and tell us your size; we'll keep an eye out.</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <a class="logo" href="/"><span class="pc">PC</span> TIRES</a>
+      <div class="fhours">7144 Grande River Line, Pain Court, ON · <a href="tel:519-397-4686">519-397-4686</a></div>
+      <div class="fhours">Mon–Fri 8–5:30 · Sat 8–4 · Sun closed</div>
+    </div>
+    <div class="flinks">
+      <a href="/">Car &amp; Truck Tires</a>
+      <a href="/farm-tires.html">Farm Tires</a>
+      <a href="/trailer-tires.html">Trailer Tires</a>
+      <a class="owner-link" id="ownerLink">·</a>
+    </div>
+  </div>
+</footer>
+
+<!-- QUOTE MODAL -->
+<div class="modal-back" id="quoteModal">
+  <div class="modal">
+    <div id="quoteForm">
+      <h3>Hold This Tire</h3>
+      <div class="m-product" id="mProduct"></div>
+      <div class="form-error" id="qError"></div>
+      <div class="fg"><label>Name</label><input type="text" id="qName" placeholder="Your name"></div>
+      <div class="fg"><label>Phone</label><input type="tel" id="qPhone" placeholder="519-555-0123"></div>
+      <div class="fg"><label>Notes (optional)</label><textarea id="qNotes" placeholder="e.g. need all 4, when can you pick up…"></textarea></div>
+      <div class="modal-btns">
+        <button class="btn-primary" id="qSubmit" onclick="submitQuote()">Send Request</button>
+        <button class="btn-ghost" onclick="closeQuote()">Cancel</button>
+      </div>
+    </div>
+    <div class="quote-success" id="quoteSuccess">
+      <div class="big">✓</div>
+      <h3>Got It</h3>
+      <p style="color:var(--light);font-size:14px;margin:10px 0 20px">We'll call you back to confirm and hold it — usually same business day.</p>
+      <button class="btn-primary" onclick="closeQuote()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL (owner only) -->
+<div class="modal-back" id="adminModal">
+  <div class="modal wide">
+    <!-- LOGIN -->
+    <div id="admLogin">
+      <h3>Owner Login</h3>
+      <div class="m-product">Add or edit used &amp; budget tires</div>
+      <div class="form-error" id="admErr"></div>
+      <div class="fg"><label>Password</label><input type="password" id="admPw" placeholder="Owner password"></div>
+      <div class="modal-btns">
+        <button class="btn-primary" onclick="admUnlock()">Unlock</button>
+        <button class="btn-ghost" onclick="closeAdmin()">Cancel</button>
+      </div>
+    </div>
+    <!-- PANEL -->
+    <div id="admPanel" style="display:none">
+      <h3 id="admFormTitle">Add a Tire</h3>
+      <div class="adm-note">Saves to the live site instantly — no push needed.</div>
+      <div class="form-error" id="admFormErr"></div>
+      <div class="frow">
+        <div class="fg"><label>Type</label><select id="aType"><option value="used">Used</option><option value="new">Budget New</option></select></div>
+        <div class="fg"><label>Size</label><input type="text" id="aSize" placeholder="e.g. 225/65R17"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Brand</label><input type="text" id="aBrand" placeholder="e.g. Michelin / Antares"></div>
+        <div class="fg"><label>Cost / tire ($)</label><input type="number" id="aPrice" placeholder="89" inputmode="decimal"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Qty available</label><input type="number" id="aQty" placeholder="1" inputmode="numeric"></div>
+        <div class="fg"><label>Tread left (used, optional)</label><input type="text" id="aTread" placeholder="e.g. 8/32"></div>
+      </div>
+      <div class="fg"><label>Notes (optional)</label><input type="text" id="aNotes" placeholder="e.g. matched pair, all-season, like new"></div>
+      <div class="modal-btns">
+        <button class="btn-primary" id="aSaveBtn" onclick="admSave()">Add Tire</button>
+        <button class="btn-ghost" onclick="admResetForm()">Clear</button>
+      </div>
+      <div style="margin-top:22px">
+        <div class="section-label" style="text-align:left">Current Inventory</div>
+        <div class="adm-list" id="admList"></div>
+      </div>
+      <div class="modal-btns" style="margin-top:18px">
+        <button class="btn-ghost" style="flex:1" onclick="closeAdmin()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ───────── CONFIG / STATE ─────────
+var API = '/used-tires';
+var ALL = [];          // public list (available)
+var ADMIN_ALL = [];    // owner list (incl sold)
+var TYPE = 'all';
+var PW = '';           // owner password held in memory for this session
+var editId = null;
+var quoteProduct = null;
+
+// ───────── PUBLIC LIST ─────────
+function loadPublic() {
+  fetch(API)
+    .then(function(r){ return r.json(); })
+    .then(function(d){ ALL = (d && d.tires) ? d.tires : []; applyFilters(); })
+    .catch(function(){ ALL = []; applyFilters(); });
+}
+
+function applyFilters() {
+  var q = document.getElementById('fSearch').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+  var sort = document.getElementById('fSort').value;
+  var list = ALL.filter(function(t){
+    if (TYPE !== 'all' && t.type !== TYPE) return false;
+    if (q) {
+      var hay = ((t.size||'') + (t.brand||'') + (t.notes||'')).toUpperCase().replace(/[^A-Z0-9]/g,'');
+      if (hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+  list.sort(function(a,b){
+    if (sort === 'newest') return (b.addedAt||0) - (a.addedAt||0);
+    var pa = a.price > 0 ? a.price : 9e9, pb = b.price > 0 ? b.price : 9e9;
+    return sort === 'price-desc' ? pb - pa : pa - pb;
+  });
+  renderGrid(list);
+}
+
+function renderGrid(list) {
+  var grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  list.forEach(function(t){ grid.appendChild(card(t)); });
+  document.getElementById('resultNote').textContent = list.length ? ('Showing ' + list.length + (list.length === 1 ? ' tire' : ' tires')) : '';
+  document.getElementById('emptyMsg').style.display = list.length ? 'none' : 'block';
+}
+
+function card(t) {
+  var price = fmtPrice(t.price);
+  var el = document.createElement('div');
+  el.className = 'tcard';
+  var meta = [];
+  if (t.brand && t.model) meta.push(esc(t.model));
+  if (t.tread) meta.push('Tread ' + esc(t.tread));
+  if (t.season) meta.push(esc(t.season));
+  if (t.notes) meta.push(esc(t.notes));
+  el.innerHTML =
+    '<div class="toprow"><span class="size">' + esc(t.size || '—') + '</span>' +
+      '<span class="tag ' + (t.type === 'new' ? 'new' : 'used') + '">' + (t.type === 'new' ? 'Budget New' : 'Used') + '</span></div>' +
+    '<div class="brand">' + esc(t.brand || 'Tire') + '</div>' +
+    '<div class="meta">' + (meta.length ? meta.join(' · ') : '&nbsp;') + '</div>' +
+    (price ? '<div class="price">$' + price + ' <span class="ea">/ tire</span></div>'
+           : '<div class="price" style="font-size:20px">Call for Price</div>') +
+    '<div class="qtytag">' + (t.qty > 1 ? (t.qty + ' available') : '&nbsp;') + '</div>' +
+    '<div class="actions">' +
+      '<a class="act-call" href="tel:519-397-4686">Call to Order</a>' +
+      '<button class="act-quote">Hold It</button>' +
+    '</div>';
+  el.querySelector('.act-quote').addEventListener('click', function(){ openQuote(t); });
+  return el;
+}
+
+function fmtPrice(p) {
+  if (!p || p <= 0) return null;
+  return p.toLocaleString('en-CA', { minimumFractionDigits: (p % 1 === 0 ? 0 : 2), maximumFractionDigits: 2 });
+}
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+}
+
+// chips + filter events
+document.getElementById('typeChips').addEventListener('click', function(e){
+  var chip = e.target.closest('.chip'); if (!chip) return;
+  document.querySelectorAll('#typeChips .chip').forEach(function(c){ c.classList.remove('active'); });
+  chip.classList.add('active');
+  TYPE = chip.getAttribute('data-type');
+  applyFilters();
+});
+document.getElementById('fSearch').addEventListener('input', applyFilters);
+document.getElementById('fSort').addEventListener('change', applyFilters);
+
+// ───────── QUOTE / HOLD ─────────
+function openQuote(t) {
+  quoteProduct = t;
+  var label = (t.size || '') + ' ' + (t.brand || '') + (t.price > 0 ? ' — $' + fmtPrice(t.price) + '/tire' : '');
+  document.getElementById('mProduct').textContent = label;
+  document.getElementById('quoteForm').style.display = 'block';
+  document.getElementById('quoteSuccess').classList.remove('show');
+  document.getElementById('qError').classList.remove('show');
+  document.getElementById('quoteModal').classList.add('show');
+}
+function closeQuote() { document.getElementById('quoteModal').classList.remove('show'); }
+document.getElementById('quoteModal').addEventListener('click', function(e){ if (e.target === e.currentTarget) closeQuote(); });
+
+async function submitQuote() {
+  var name = document.getElementById('qName').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+  var notes = document.getElementById('qNotes').value.trim();
+  var err = document.getElementById('qError');
+  err.classList.remove('show');
+  if (!name) { err.textContent = 'Please enter your name.'; err.classList.add('show'); return; }
+  if (!phone) { err.textContent = 'Please enter a phone number so we can call you back.'; err.classList.add('show'); return; }
+  var btn = document.getElementById('qSubmit');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+  var t = quoteProduct || {};
+  var price = t.price > 0 ? '$' + fmtPrice(t.price) + '/tire' : 'call for price';
+  var payload = {
+    service: 'Used/Budget Tire Hold Request',
+    customerName: name, customerPhone: phone, customerEmail: '', vehicle: '',
+    notes: 'TIRE: ' + (t.size || '?') + ' ' + (t.brand || '') + ' [' + (t.type || 'used') + ']' +
+           ' | PRICE: ' + price + ' | QTY AVAIL: ' + (t.qty || '?') +
+           (t.tread ? ' | TREAD: ' + t.tread : '') + (notes ? ' | NOTES: ' + notes : ''),
+    preferredDate: 'Hold request — call back', preferredTime: '', duration: 0, price: price,
+  };
+  try {
+    await fetch('/send-service-request', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+  } catch (e) {}
+  btn.textContent = 'Send Request'; btn.disabled = false;
+  document.getElementById('quoteForm').style.display = 'none';
+  document.getElementById('quoteSuccess').classList.add('show');
+}
+
+// ───────── OWNER ADMIN ─────────
+document.getElementById('ownerLink').addEventListener('click', function(){
+  document.getElementById('admErr').classList.remove('show');
+  document.getElementById('admFormErr').classList.remove('show');
+  var saved = sessionStorage.getItem('pcUsedPw');
+  if (saved) { PW = saved; openAdminPanel(); }
+  else { document.getElementById('admLogin').style.display = 'block'; document.getElementById('admPanel').style.display = 'none'; }
+  document.getElementById('adminModal').classList.add('show');
+});
+function closeAdmin() { document.getElementById('adminModal').classList.remove('show'); }
+
+async function api(action, extra) {
+  var body = Object.assign({ action: action, password: PW }, extra || {});
+  var r = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  return r.json();
+}
+
+async function admUnlock() {
+  var pw = document.getElementById('admPw').value;
+  var err = document.getElementById('admErr');
+  err.classList.remove('show');
+  if (!pw) { err.textContent = 'Enter the password.'; err.classList.add('show'); return; }
+  PW = pw;
+  var res = await api('verify');
+  if (res && res.ok) {
+    sessionStorage.setItem('pcUsedPw', PW);
+    openAdminPanel();
+  } else {
+    PW = '';
+    err.textContent = (res && res.error) ? res.error : 'Incorrect password.';
+    err.classList.add('show');
+  }
+}
+
+async function openAdminPanel() {
+  document.getElementById('admLogin').style.display = 'none';
+  document.getElementById('admPanel').style.display = 'block';
+  admResetForm();
+  await admRefreshList();
+}
+
+async function admRefreshList() {
+  var res = await api('list');
+  if (res && res.ok) { ADMIN_ALL = res.tires || []; renderAdminList(); }
+  else if (res && res.error) { showAdmFormErr(res.error); }
+}
+
+function renderAdminList() {
+  var wrap = document.getElementById('admList');
+  wrap.innerHTML = '';
+  if (!ADMIN_ALL.length) { wrap.innerHTML = '<div class="adm-note" style="padding:14px 0">No tires yet. Add your first one above.</div>'; return; }
+  ADMIN_ALL.forEach(function(t){
+    var row = document.createElement('div');
+    row.className = 'adm-row' + (t.status === 'sold' ? ' sold' : '');
+    var sub = [t.type === 'new' ? 'Budget New' : 'Used', t.brand || ''];
+    if (t.qty > 1) sub.push(t.qty + ' avail');
+    if (t.tread) sub.push('tread ' + t.tread);
+    if (t.status === 'sold') sub.push('SOLD');
+    row.innerHTML =
+      '<div class="ainfo"><span class="asize">' + esc(t.size || '—') + '</span> ' +
+        (t.price > 0 ? '$' + fmtPrice(t.price) : 'call') +
+        '<div class="asub">' + esc(sub.filter(Boolean).join(' · ')) + '</div></div>';
+    var btns = document.createElement('div');
+    btns.className = 'abtns';
+    btns.appendChild(mkBtn('Edit', function(){ admEdit(t.id); }));
+    if (t.status === 'sold') btns.appendChild(mkBtn('Relist', function(){ admAction('relist', t.id); }));
+    else btns.appendChild(mkBtn('Sold', function(){ admAction('sold', t.id); }));
+    var del = mkBtn('Delete', function(){ if (confirm('Delete this tire for good?')) admAction('delete', t.id); });
+    del.className = 'del';
+    btns.appendChild(del);
+    row.appendChild(btns);
+    wrap.appendChild(row);
+  });
+}
+function mkBtn(label, fn) { var b = document.createElement('button'); b.textContent = label; b.addEventListener('click', fn); return b; }
+
+function admValForm() {
+  var price = parseFloat(document.getElementById('aPrice').value);
+  return {
+    type: document.getElementById('aType').value,
+    size: document.getElementById('aSize').value.trim(),
+    brand: document.getElementById('aBrand').value.trim(),
+    price: isFinite(price) ? price : null,
+    qty: parseInt(document.getElementById('aQty').value, 10) || 1,
+    tread: document.getElementById('aTread').value.trim(),
+    notes: document.getElementById('aNotes').value.trim(),
+  };
+}
+
+async function admSave() {
+  var err = document.getElementById('admFormErr');
+  err.classList.remove('show');
+  var t = admValForm();
+  if (!t.size) { showAdmFormErr('Size is required.'); return; }
+  if (!t.brand) { showAdmFormErr('Brand is required.'); return; }
+  var btn = document.getElementById('aSaveBtn');
+  var orig = btn.textContent; btn.textContent = 'Saving…'; btn.disabled = true;
+  var res = editId ? await api('update', { id: editId, tire: t }) : await api('add', { tire: t });
+  btn.textContent = orig; btn.disabled = false;
+  if (res && res.ok) {
+    ADMIN_ALL = res.tires || [];
+    renderAdminList();
+    admResetForm();
+    loadPublic();
+  } else {
+    showAdmFormErr((res && res.error) ? res.error : 'Save failed.');
+  }
+}
+
+function admEdit(id) {
+  var t = ADMIN_ALL.filter(function(x){ return x.id === id; })[0];
+  if (!t) return;
+  editId = id;
+  document.getElementById('aType').value = t.type === 'new' ? 'new' : 'used';
+  document.getElementById('aSize').value = t.size || '';
+  document.getElementById('aBrand').value = t.brand || '';
+  document.getElementById('aPrice').value = (t.price != null ? t.price : '');
+  document.getElementById('aQty').value = t.qty || 1;
+  document.getElementById('aTread').value = t.tread || '';
+  document.getElementById('aNotes').value = t.notes || '';
+  document.getElementById('admFormTitle').textContent = 'Edit Tire';
+  document.getElementById('aSaveBtn').textContent = 'Save Changes';
+  document.getElementById('adminModal').scrollTop = 0;
+}
+
+function admResetForm() {
+  editId = null;
+  ['aSize','aBrand','aPrice','aQty','aTread','aNotes'].forEach(function(id){ document.getElementById(id).value = ''; });
+  document.getElementById('aType').value = 'used';
+  document.getElementById('admFormTitle').textContent = 'Add a Tire';
+  document.getElementById('aSaveBtn').textContent = 'Add Tire';
+}
+
+async function admAction(action, id) {
+  var res = await api(action, { id: id });
+  if (res && res.ok) { ADMIN_ALL = res.tires || []; renderAdminList(); loadPublic(); }
+  else { showAdmFormErr((res && res.error) ? res.error : 'Action failed.'); }
+}
+
+function showAdmFormErr(msg) {
+  var err = document.getElementById('admFormErr');
+  err.textContent = msg; err.classList.add('show');
+}
+
+document.getElementById('adminModal').addEventListener('click', function(e){ if (e.target === e.currentTarget) closeAdmin(); });
+
+// ───────── INIT ─────────
+loadPublic();
+</script>
+
+</body>
+</html>
