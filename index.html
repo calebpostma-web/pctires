@@ -5001,6 +5001,21 @@ async function processPayment() {
     window._pendingOrderId = null;
 
   } catch(e) {
+    // Failed-checkout alert: fire-and-forget, can never affect the customer flow.
+    try {
+      var _ca = {
+        error: String((e && e.message) || e).slice(0, 500),
+        stage: 'payment',
+        name: (((document.getElementById('fName') || {}).value || '') + ' ' + ((document.getElementById('lName') || {}).value || '')).trim(),
+        email: (document.getElementById('email') || {}).value || '',
+        phone: (document.getElementById('phone') || {}).value || '',
+        orderId: window._pendingOrderId || '',
+        total: (typeof payableGrandTotal === 'function') ? payableGrandTotal().toFixed(2) : '',
+        cart: (typeof cart !== 'undefined' && cart && cart.map) ? cart.map(function (i) { return (i.qty || 1) + 'x ' + (i.brand || '') + ' ' + (i.name || '') + ' ' + (i.size || ''); }).join('; ') : '',
+        userAgent: navigator.userAgent
+      };
+      fetch('/checkout-alert', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(_ca) }).catch(function () {});
+    } catch (_beaconErr) {}
     if (errEl) { errEl.textContent = e.message; errEl.style.display = 'block'; }
     else alert('Payment failed: ' + e.message);
     btn.textContent = 'Pay Securely';
