@@ -45,13 +45,19 @@ export async function onRequest(context) {
       currency: 'cad',
       'automatic_payment_methods[enabled]': 'true',
       description: description || `PC Tires order ${orderNumber}`,
-      receipt_email: customerEmail || '',
     });
 
     // Stripe idempotency: if the same orderNumber hits this endpoint again within 24h,
     // Stripe returns the EXISTING PaymentIntent instead of creating a new one. This is
     // the backstop against double-charging even if the frontend retries or double-posts.
     // Requires the frontend to send a stable orderNumber across retries.
+    // Stripe rejects the ENTIRE PaymentIntent if receipt_email is malformed
+    // (a customer typo like "name@gmail" killed checkout and nothing ever
+    // reached Stripe). Attach receipt_email only when it looks valid.
+    const cleanEmail = (customerEmail || '').trim();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(cleanEmail)) {
+      body.set('receipt_email', cleanEmail);
+    }
     const stripeHeaders = {
       'Authorization': `Bearer ${stripeSecret}`,
       'Content-Type': 'application/x-www-form-urlencoded',
