@@ -4734,7 +4734,7 @@ function updSteps() {
 }
 
 async function nextStep() {
-  if (step === 1 && !document.getElementById('email').value) { alert('Please enter your email address.'); return; }
+  if (step === 1) { var _em = (document.getElementById('email').value || '').trim(); document.getElementById('email').value = _em; if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(_em)) { alert('Please enter a valid email address (like name@example.com).'); return; } }
   if (step === 2) {
     if (!selectedService) { alert('Please select a service type, or click Skip to arrange later.'); return; }
     if (!selDate || !selTime) { alert('Please select a date and time, or click Skip to arrange later.'); return; }
