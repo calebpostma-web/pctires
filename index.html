@@ -5016,8 +5016,15 @@ async function processPayment() {
       };
       fetch('/checkout-alert', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(_ca) }).catch(function () {});
     } catch (_beaconErr) {}
-    if (errEl) { errEl.textContent = e.message; errEl.style.display = 'block'; }
-    else alert('Payment failed: ' + e.message);
+    var _blockedMsg = 'It looks like your device or browser is blocking our payment connection (usually an ad blocker, VPN, or privacy setting). Call us at 519-397-4686 and we will take your order by phone or e-transfer.';
+    var _isBlocked = /issues? connecting|payment form not ready/i.test(String(e.message || ''));
+    if (errEl) {
+      if (_isBlocked) { errEl.innerHTML = _blockedMsg.replace('519-397-4686', '<a href="tel:5193974686" style="color:inherit;font-weight:700;text-decoration:underline">519-397-4686</a>'); }
+      else { errEl.textContent = e.message; }
+      errEl.style.display = 'block';
+    } else {
+      alert('Payment failed: ' + (_isBlocked ? _blockedMsg : e.message));
+    }
     btn.textContent = 'Pay Securely';
     btn.disabled = false;
   } finally {
