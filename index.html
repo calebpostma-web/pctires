@@ -4447,7 +4447,7 @@ function renderCart() {
           <span class="qn">${item.qty}</span>
           <button class="qb" onclick="chgQty('${item.itemNumber}',+1)">+</button>
         </div>
-        <div class="ci-price">$${((item.price + (item.install ? installPriceEach(item) : 0)) * item.qty).toFixed(2)}</div>
+        <div class="ci-price">$${(item.price * item.qty).toFixed(2)}</div>
         ${cart.length > 1 ? `<button class="ci-pick" onclick="pickOnlyThis('${item.itemNumber}')">Pick this set &rarr;</button>` : ''}
         <button class="ci-remove" onclick="removeFromCart('${item.itemNumber}')">Remove</button>
       </div>
