@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Returns &amp; Warranty | PC Tires</title>
+<meta name="description" content="PC Tires return policy, warranty coverage, and refund process. 30-day returns on unmounted tires. Manufacturer warranty details.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://pctires.ca/returns.html">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --black:#0a0a0a; --dark:#121212; --card:#161616; --raised:#1d1d1d;
+  --border:#252525; --mid:#2d2d2d; --muted:#888;
+  --light:#cfcfcf; --white:#f4f4f4;
+  --yellow:#f5c518; --yellow-dim:rgba(245,197,24,0.1); --yellow-dark:#dba900;
+  --green:#16a34a; --red:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:16px;line-height:1.7;min-height:100vh}
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;background:var(--dark);border-bottom:1px solid var(--border)}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:2px;color:var(--white);text-decoration:none}
+.logo .pc{color:var(--yellow)}
+.back-link{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.back-link:hover{color:var(--yellow)}
+.wrap{max-width:820px;margin:0 auto;padding:60px 24px 80px}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(32px,5vw,48px);font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.subtitle{color:var(--muted);font-size:14px;margin-bottom:48px;font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase}
+h2{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:40px 0 14px;color:var(--yellow)}
+h3{font-size:16px;font-weight:700;margin:20px 0 8px;color:var(--white)}
+p{margin-bottom:14px;color:var(--light)}
+ul{margin:0 0 14px 22px;color:var(--light)}
+li{margin-bottom:6px}
+a{color:var(--yellow);text-decoration:none}
+a:hover{text-decoration:underline}
+.callout{background:var(--card);border-left:3px solid var(--yellow);padding:18px 22px;margin:24px 0;font-size:14px;color:var(--light)}
+.callout.warn{border-color:var(--red)}
+.callout.ok{border-color:var(--green)}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--border)}
+th{background:var(--card);font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-size:12px}
+.footer{background:var(--dark);border-top:1px solid var(--border);padding:24px 32px;text-align:center;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/"><span class="pc">PC</span> TIRES</a>
+  <a class="back-link" href="/">← Back to Home</a>
+</nav>
+
+<div class="wrap">
+<h1>Returns &amp; Warranty</h1>
+<div class="subtitle">Last updated: May 30, 2026</div>
+
+<p>We want you to be fully satisfied with your purchase. This page explains how returns, exchanges, and warranty claims work at PC Tires.</p>
+
+<div class="callout ok">
+<strong>Quick summary:</strong> Unmounted tires and wheels can be returned within 30 days. Manufacturer warranty applies to defects. Installation workmanship is covered by our shop. Read on for details.
+</div>
+
+<h2>1. 30-Day Return Window</h2>
+<p>You may return unmounted, uninstalled tires and wheels within <strong>30 days of delivery</strong> for a refund or exchange, provided:</p>
+<ul>
+  <li>Tires/wheels are in <strong>original, resaleable condition</strong> — no scuffs, mounting marks, road wear, or shipping damage caused after receipt</li>
+  <li>Original packaging is intact (where applicable)</li>
+  <li>You have proof of purchase (order number or receipt)</li>
+</ul>
+
+<h3>How to start a return</h3>
+<ol style="margin:0 0 14px 22px;color:var(--light)">
+  <li>Email <a href="mailto:postmacontracting@gmail.com">postmacontracting@gmail.com</a> or call <a href="tel:5193974686">519-397-4686</a> with your order number and reason for return</li>
+  <li>We'll confirm the return and provide return instructions within 1 business day</li>
+  <li>Ship the items back (you pay return shipping unless the return is due to our error or a defect)</li>
+  <li>Once received and inspected, refund is processed to your original payment method within 5–7 business days</li>
+</ol>
+
+<h2>2. Restocking Fee</h2>
+<p>A <strong>15% restocking fee</strong> may apply to returned tires and wheels, as charged to us by our supplier. This is waived if:</p>
+<ul>
+  <li>The wrong item was shipped (our error)</li>
+  <li>The product is defective</li>
+  <li>The product was damaged in shipping</li>
+</ul>
+
+<h2>3. Items That Cannot Be Returned</h2>
+<ul>
+  <li><strong>Mounted tires</strong> — once a tire has been installed on a wheel, it cannot be returned</li>
+  <li><strong>Tires that have been driven on</strong> — even briefly</li>
+  <li><strong>Custom-ordered or special-order items</strong> — clearly marked at time of purchase</li>
+  <li><strong>Installation labour</strong> — services already performed are non-refundable</li>
+  <li><strong>Used tires sold as-is</strong></li>
+</ul>
+
+<h2>4. Manufacturer Warranty</h2>
+<p>All new tires and wheels are covered by their <strong>original manufacturer's warranty</strong>. Coverage varies by brand and typically includes:</p>
+
+<table>
+<thead><tr><th>Coverage</th><th>Typical Term</th></tr></thead>
+<tbody>
+<tr><td>Manufacturing defects (workmanship &amp; materials)</td><td>4–6 years from purchase</td></tr>
+<tr><td>Tread life (mileage warranty)</td><td>varies — 50,000–100,000 km depending on brand</td></tr>
+<tr><td>Road hazard coverage</td><td>varies — some brands include limited protection</td></tr>
+</tbody>
+</table>
+
+<p>For warranty claims, contact us first — we'll guide you through the manufacturer's process. You'll typically need:</p>
+<ul>
+  <li>Original proof of purchase</li>
+  <li>The tire(s) in question for inspection</li>
+  <li>Vehicle service records showing proper maintenance (rotations, alignments)</li>
+</ul>
+
+<h2>5. Installation &amp; Workmanship Warranty</h2>
+<p>PC Tires guarantees its installation workmanship. If you experience an issue related to how we mounted, balanced, or installed your tires or wheels — including improper torque, balance issues, or TPMS sensor damage caused by our installation — return to our Chatham-Kent shop within <strong>30 days</strong> and we'll correct it at no charge.</p>
+
+<div class="callout warn">
+<strong>Important:</strong> The workmanship warranty does not cover damage caused by potholes, curb strikes, road hazards, under-inflation, misalignment from worn suspension components, or normal wear.
+</div>
+
+<h2>6. Defective on Arrival</h2>
+<p>If your tire or wheel arrives damaged or defective, contact us within <strong>72 hours of delivery</strong>. Take photos of the packaging and the product before unboxing further if possible. We'll arrange a replacement or full refund at no cost to you, including return shipping.</p>
+
+<h2>7. Refund Method &amp; Timing</h2>
+<ul>
+  <li>Refunds are issued to your original payment method (credit card via Stripe)</li>
+  <li>Processing time: 5–7 business days after we receive and inspect the returned item</li>
+  <li>Original shipping charges are non-refundable unless the return is due to our error</li>
+  <li>Installation appointment fees (if booked but not used) are refunded in full when cancelled at least 24 hours in advance</li>
+</ul>
+
+<h2>8. Cancellations</h2>
+<p>Orders can be cancelled for a full refund <strong>before they ship</strong>. Once an order has been dispatched from our supplier, it must follow the standard return process above.</p>
+
+<h2>9. Your Rights Under Ontario Law</h2>
+<p>This policy is in addition to your rights under the <strong>Ontario Consumer Protection Act, 2002</strong>, which provides protections including remedies for unfair business practices and false representations. Nothing in this return policy limits those statutory rights.</p>
+
+<h2>10. Contact Us</h2>
+<p>Questions about returns, warranty claims, or refunds?</p>
+<p>
+<strong>PC Tires</strong><br>
+7144 Grande River Line<br>
+Pain Court, ON N0P 1Z0<br>
+Email: <a href="mailto:postmacontracting@gmail.com">postmacontracting@gmail.com</a><br>
+Phone: <a href="tel:5193974686">519-397-4686</a><br>
+Hours: Mon–Sat 8:00–6:00
+</p>
+
+</div>
+
+<div class="footer">
+  © 2026 PC Tires (Postma Contracting Inc.). All rights reserved. · <a href="/" style="color:var(--muted)">Home</a> · <a href="/privacy.html" style="color:var(--muted)">Privacy Policy</a>
+</div>
+
+</body>
+</html>
