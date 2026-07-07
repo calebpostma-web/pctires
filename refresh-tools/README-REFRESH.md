@@ -11,8 +11,8 @@ Caleb only runs the final push.
 - `generate.py` — builds all 16 model pages from `tdg-data.txt` (per-model copy is embedded in the script)
 - `build-feed.py` — builds `product-feed.txt` from `feed-src.txt`, validated against `tdg-data.txt` (price match + GTIN check digits)
 - `build-local-feed.py` — builds `local-inventory-feed.txt` from `product-feed.txt`; store code argument: `11770934583290184135`
-- `tdg-data.txt` — page dataset: `#Brand|model-key|Season|Service` headers + `size|load|speed|qty|retail` rows (LAST REFRESH: 2026-07-06)
-- `feed-src.txt` — feed dataset: `model-key|size|load|speed|qty|retail|gtin|mpn|image-path` rows (LAST REFRESH: 2026-07-06)
+- `tdg-data.txt` — page dataset: `#Brand|model-key|Season|Service` headers + `size|load|speed|qty|retail` rows (LAST REFRESH: 2026-07-07)
+- `feed-src.txt` — feed dataset: `model-key|size|load|speed|qty|retail|gtin|mpn|image-path` rows (LAST REFRESH: 2026-07-07)
 
 ## Refresh procedure (Claude does steps 1-6, Caleb does step 7)
 
