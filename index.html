@@ -4701,7 +4701,18 @@ function closeCart() { document.getElementById('cartOverlay').classList.remove('
 // ─────────────────────────────────────────────────
 //  CHECKOUT
 // ─────────────────────────────────────────────────
-function openCheckout() { closeCart(); step = 1; selectedAddons = new Set(); _calAutoPickPending = true; updSteps(); document.getElementById('checkoutOverlay').classList.add('show'); }
+function openCheckout() {
+  closeCart(); step = 1; selectedAddons = new Set(); _calAutoPickPending = true;
+  // Fast-lane: pre-fill name/phone the customer already gave Caleb on the phone.
+  if (window._quoteFastLane) {
+    const nameParts = (window._quoteCustomerName || '').trim().split(/\s+/).filter(Boolean);
+    document.getElementById('fName').value = nameParts.shift() || '';
+    document.getElementById('lName').value = nameParts.join(' ');
+    document.getElementById('phone').value = window._quoteCustomerPhone || '';
+  }
+  updSteps();
+  document.getElementById('checkoutOverlay').classList.add('show');
+}
 function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('show'); }
 
 const mTitles = ['', 'Contact Info', 'Book Installation', 'Add-ons', 'Payment', 'Order Confirmed!'];
@@ -4734,7 +4745,11 @@ function updSteps() {
 }
 
 async function nextStep() {
-  if (step === 1) { var _em = (document.getElementById('email').value || '').trim(); document.getElementById('email').value = _em; if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(_em)) { alert('Please enter a valid email address (like name@example.com).'); return; } }
+  if (step === 1) {
+    var _em = (document.getElementById('email').value || '').trim(); document.getElementById('email').value = _em;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(_em)) { alert('Please enter a valid email address (like name@example.com).'); return; }
+    if (window._quoteFastLane) { step = 4; updSteps(); return; }
+  }
   if (step === 2) {
     if (!selectedService) { alert('Please select a service type, or click Skip to arrange later.'); return; }
     if (!selDate || !selTime) { alert('Please select a date and time, or click Skip to arrange later.'); return; }
@@ -4742,7 +4757,10 @@ async function nextStep() {
   if (step === 4) { await processPayment(); return; }
   step++; updSteps();
 }
-function prevStep() { if (step > 1) { step--; updSteps(); } }
+function prevStep() {
+  if (window._quoteFastLane && step === 4) { step = 1; updSteps(); return; }
+  if (step > 1) { step--; updSteps(); }
+}
 function skipInstall() { step = 3; updSteps(); }
 
 // ── ADD-ONS ──────────────────────────────────────
@@ -5137,7 +5155,7 @@ async function finishOrder() {
   const _firstName  = ((document.getElementById('fName')?.value) || name.split(' ')[0] || '').trim();
   const _brandsList = [...new Set((orderPayload.tires || []).map(t => t.brand).filter(Boolean))].join(',');
 
-  cart = []; tdgQuote = null; selectedAddons = new Set(); appliedPromo = null; window._quoteFinalTotal = null; window._quoteLocked = false; try { document.body.classList.remove('qlocked'); } catch(e) {} updBadge();
+  cart = []; tdgQuote = null; selectedAddons = new Set(); appliedPromo = null; window._quoteFinalTotal = null; window._quoteLocked = false; window._quoteFastLane = false; window._quoteCustomerName = ''; window._quoteCustomerPhone = ''; window._activeQuoteCode = null; try { document.body.classList.remove('qlocked'); } catch(e) {} updBadge();
   if (btn) btn.classList.remove('ld');
 
   // Show rebate reminders on confirm screen (kept as a graceful fallback
@@ -7120,6 +7138,12 @@ async function checkForQuoteInUrl() {
       window._quoteLocked = false;
       try { document.body.classList.remove('qlocked'); } catch(e) {}
     }
+    // Fast-lane checkout: the customer already gave Caleb their name/phone and
+    // tire/install choice by phone when the quote was built -- skip re-asking
+    // for it and skip the Schedule/Add-ons steps entirely.
+    window._quoteCustomerName = quote.customerName || '';
+    window._quoteCustomerPhone = quote.customerPhone || '';
+    window._quoteFastLane = true;
     saveCartToStorage();
     updBadge();
     renderCart();
@@ -7148,14 +7172,23 @@ function showQuoteBanner(quote) {
   const isComparison = cart.length > 1;
   let reviewMsg = isComparison
     ? 'Caleb sent you <strong>' + cart.length + ' sets</strong> to compare. Tap <strong>&ldquo;Pick this set&rdquo;</strong> on the one you want, or remove items individually. Call 519-397-4686 to discuss.'
-    : 'Review your cart and remove any items you don&rsquo;t want before checking out. Call 519-397-4686 if anything needs to change.';
-  if (typeof quote.finalTotal === 'number' && quote.finalTotal > 0) {
-    reviewMsg = 'Your all-in price is <strong>$' + quote.finalTotal.toFixed(2) + '</strong> &mdash; HST and installation included. Just complete checkout. Call 519-397-4686 with any questions.';
-  }
+    : 'Call 519-397-4686 if anything needs to change.';
+  // Always show a real dollar number up front -- customers kept asking "how much
+  // is it?" after getting a quote link because the price was hidden behind the
+  // cart icon unless Caleb had typed a fixed all-in total.
+  let totalLine = '';
+  try {
+    const t = getTotals();
+    if (t && t.total > 0) {
+      const totalLabel = window._quoteFinalTotal ? 'All-in price (HST + install included)' : 'Total (HST included)';
+      totalLine = '<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.75">' + totalLabel + '</div><div style="font-family:\'Barlow Condensed\',sans-serif;font-size:34px;font-weight:900;line-height:1.1">$' + t.total.toFixed(2) + '</div></div>';
+    }
+  } catch(e) {}
+  const payNowBtn = !isComparison ? '<button onclick="document.getElementById(\'quoteBanner\').remove();openCheckout()" style="margin-top:10px;background:#111;color:var(--yellow);border:none;padding:10px 22px;font-family:Barlow,sans-serif;font-weight:700;font-size:14px;border-radius:2px;cursor:pointer">Pay Now &rarr;</button>' : '';
   const banner = document.createElement('div');
   banner.id = 'quoteBanner';
   banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--yellow);color:#111;padding:14px 50px 14px 20px;text-align:center;font-family:Barlow,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:14px';
-  banner.innerHTML = '<strong style="font-size:15px">&#9889; Hi ' + escapeHtml(firstName) + ' &mdash; quote from Caleb at PC Tires.</strong>' + noteHtml + '<div style="font-size:12px;margin-top:6px;opacity:.85">' + reviewMsg + '</div><button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.12);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700">&times;</button>';
+  banner.innerHTML = '<strong style="font-size:15px">&#9889; Hi ' + escapeHtml(firstName) + ' &mdash; quote from Caleb at PC Tires.</strong>' + noteHtml + totalLine + '<div style="font-size:12px;margin-top:6px;opacity:.85">' + reviewMsg + '</div>' + payNowBtn + '<button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.12);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700">&times;</button>';
   document.body.appendChild(banner);
 }
 
