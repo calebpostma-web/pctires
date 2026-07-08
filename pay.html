@@ -578,7 +578,9 @@ function initStripe() {
   };
   elements = stripe.elements({ appearance });
   cardEl = elements.create('card', {
-    style: { base: { color: '#f4f4f4', fontFamily: 'Barlow, sans-serif', fontSize: '15px', '::placeholder': { color: '#888' } } }
+    style: { base: { color: '#f4f4f4', fontFamily: 'Barlow, sans-serif', fontSize: '15px', '::placeholder': { color: '#888' } } },
+    disableLink: true,
+    hidePostalCode: true
   });
   cardEl.mount('#stripeElements');
   cardEl.on('change', function(e) {
