@@ -4882,7 +4882,9 @@ function initStripeElements() {
     };
     stripeElems = stripeInstance.elements({ appearance });
     stripeCard = stripeElems.create('card', {
-      style: { base: { color: '#f0ece0', fontFamily: 'Barlow, sans-serif', fontSize: '15px', '::placeholder': { color: '#686868' } } }
+      style: { base: { color: '#f0ece0', fontFamily: 'Barlow, sans-serif', fontSize: '15px', '::placeholder': { color: '#686868' } } },
+      disableLink: true,
+      hidePostalCode: true
     });
     stripeCard.mount('#stripeElements');
     stripeCard.on('change', function(e) {
