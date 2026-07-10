@@ -285,9 +285,18 @@ function buildCustomerEmail(order, tdgOrder) {
           <td style="padding:4px 0;text-align:right;color:#e0e0e0">$${order.tax?.toFixed(2)}</td>
         </tr>
         <tr style="border-top:1px solid #2a2a2a">
-          <td style="padding:10px 0 4px;font-weight:700;font-size:15px;color:#fff">Total Charged</td>
+          <td style="padding:10px 0 4px;font-weight:700;font-size:15px;color:#fff">${order.depositPaid > 0 ? 'Order Total' : 'Total Charged'}</td>
           <td style="padding:10px 0 4px;text-align:right;font-weight:900;font-size:18px;color:#f5c518">$${order.total?.toFixed(2)} CAD</td>
         </tr>
+        ${order.depositPaid > 0 ? `<tr>
+          <td style="padding:6px 0 0;font-weight:700;font-size:14px;color:#22c55e">Deposit Paid Today</td>
+          <td style="padding:6px 0 0;text-align:right;font-weight:800;font-size:15px;color:#22c55e">$${Number(order.depositPaid).toFixed(2)} CAD</td>
+        </tr>
+        <tr>
+          <td style="padding:4px 0 0;font-weight:700;font-size:14px;color:#fff">Balance Due at Installation</td>
+          <td style="padding:4px 0 0;text-align:right;font-weight:800;font-size:15px;color:#f5c518">$${Number(order.balanceDue).toFixed(2)} CAD</td>
+        </tr>
+        <tr><td colspan="2" style="padding:6px 0 0;font-size:12px;color:#888">Pay the balance by e-transfer, card, or cash when your tires are installed.</td></tr>` : ''}
       </table>
     </div>
 
@@ -414,9 +423,17 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
       ${order.addonTotal > 0 ? `<tr><td style="${rowLbl}">Add-ons</td><td style="${rowVal}">${money(order.addonTotal)}</td></tr>` : ''}
       <tr><td style="${rowLbl}">HST (13%)</td><td style="${rowVal}">${money(order.tax || 0)}</td></tr>
       <tr style="border-top:1px solid #2a2a2a">
-        <td style="padding:9px 0 0;color:#fff;font-weight:700;font-size:14px">Total Charged</td>
+        <td style="padding:9px 0 0;color:#fff;font-weight:700;font-size:14px">${order.depositPaid > 0 ? 'Order Total' : 'Total Charged'}</td>
         <td style="padding:9px 0 0;text-align:right;color:#f5c518;font-weight:800;font-size:17px">${money(order.total || 0)} ${order.currency || 'CAD'}</td>
       </tr>
+      ${order.depositPaid > 0 ? `<tr>
+        <td style="padding:5px 0 0;color:#22c55e;font-weight:700;font-size:14px">Deposit Paid (Stripe)</td>
+        <td style="padding:5px 0 0;text-align:right;color:#22c55e;font-weight:800;font-size:15px">${money(order.depositPaid)}</td>
+      </tr>
+      <tr>
+        <td style="padding:5px 0 0;color:#ef4444;font-weight:800;font-size:15px">BALANCE OWING AT INSTALL</td>
+        <td style="padding:5px 0 0;text-align:right;color:#ef4444;font-weight:900;font-size:17px">${money(order.balanceDue)}</td>
+      </tr>` : ''}
     </table>
   </div>
 
@@ -537,7 +554,7 @@ export async function onRequest(context) {
   try {
     await sendEmail(RESEND_API_KEY, {
       to: NOTIFY_EMAILS,
-      subject: `🛞 New Order ${order.orderNumber}${tdgError ? ' ⚠️ TDG FAILED' : ''} — ${order.customerName}`,
+      subject: `🛞 New Order ${order.orderNumber}${order.depositPaid > 0 ? ' [DEPOSIT - BALANCE OWING]' : ''}${tdgError ? ' ⚠️ TDG FAILED' : ''} — ${order.customerName}`,
       html: buildInternalEmail(order, tdgOrder, tdgError),
     });
   } catch (e) {
