@@ -419,6 +419,7 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
     <div style="${hdrStyle}">Customer Charged</div>
     <table style="border-collapse:collapse;width:100%">
       <tr><td style="${rowLbl}">Subtotal (tires)</td><td style="${rowVal}">${money(order.subtotal || 0)}</td></tr>
+      ${order.installTotal > 0 ? `<tr><td style="${rowLbl}">Installation</td><td style="${rowVal}">${money(order.installTotal)}</td></tr>` : ''}
       ${order.discount && Number(order.discount) > 0 ? `<tr><td style="padding:5px 0;color:#22c55e;font-size:14px">Discount${order.discountCode ? ` (${order.discountCode})` : ''}</td><td style="padding:5px 0;text-align:right;color:#22c55e;font-size:14px">-${money(order.discount)}</td></tr>` : ''}
       ${order.addonTotal > 0 ? `<tr><td style="${rowLbl}">Add-ons</td><td style="${rowVal}">${money(order.addonTotal)}</td></tr>` : ''}
       <tr><td style="${rowLbl}">HST (13%)</td><td style="${rowVal}">${money(order.tax || 0)}</td></tr>
