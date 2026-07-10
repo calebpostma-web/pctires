@@ -5175,6 +5175,7 @@ async function finishOrder() {
     appointmentTime: selTime || '',
     serviceName: selectedService?.label || '',
     subtotal: t.sub,
+    installTotal: t.inst,
     discount: t.discount || 0,
     discountCode: appliedPromo ? appliedPromo.code : '',
     addonTotal: addonAmt,
