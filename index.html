@@ -2449,6 +2449,16 @@ function getRebateForBrand(brand) {
       </div>
       <!-- Step 4: Payment -->
       <div class="fsec" id="s4">
+        <div id="payChoice" style="display:none;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+          <div id="payOptFull" onclick="setPayMode('full')" style="cursor:pointer;padding:12px 14px;background:var(--raised);border:1px solid var(--yellow);border-radius:2px">
+            <div style="font-weight:700;font-size:14px">Pay in Full</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">All settled today. Nothing owing at pickup.</div>
+          </div>
+          <div id="payOptDeposit" onclick="setPayMode('deposit')" style="cursor:pointer;padding:12px 14px;background:var(--raised);border:1px solid var(--border);border-radius:2px">
+            <div style="font-weight:700;font-size:14px">$50 Deposit</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Holds your booking and orders your tires. Balance due at installation.</div>
+          </div>
+        </div>
         <div class="pay-total-box" id="payBox"></div>
         <div class="card-logos"><span class="clogo">💳</span><span class="clogo">🍎</span><span class="clogo">🅿️</span></div>
         <div class="frow one"><div class="fg"><label>Name on Card</label><input type="text" placeholder="Jane Smith" id="cardName"></div></div>
@@ -4839,13 +4849,19 @@ function payableGrandTotal() {
 
 async function buildPaymentSummary() {
   const box = document.getElementById('payBox'); if (!box) return;
+  var _pc = document.getElementById('payChoice');
+  if (_pc) { _pc.style.display = depositEligible() ? 'grid' : 'none'; }
+  if (!depositEligible()) { window._payMode = 'full'; }
+  payModeStyles();
+  var _nb = document.getElementById('nextBtn');
+  if (_nb && !window._paymentInFlight && window._payMode === 'deposit') { _nb.textContent = 'Pay $' + DEPOSIT_AMOUNT + ' Deposit'; }
   const t = getTotals();
   const grandTotal = payableGrandTotal();
   if (t.override) {
     box.innerHTML = `
     <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
     <div class="ptrow"><span>Tax (HST 13%)</span><span>$${t.tax.toFixed(2)}</span></div>
-    <div class="ptrow bold"><span>Total Due Today (quoted, all-in)</span><span>$${grandTotal.toFixed(2)}</span></div>
+    <div class="ptrow bold"><span>${window._payMode === 'deposit' ? 'Order Total (quoted, all-in)' : 'Total Due Today (quoted, all-in)'}</span><span>$${grandTotal.toFixed(2)}</span></div>${depositRowsHtml(grandTotal)}
     `;
     return;
   }
@@ -4859,7 +4875,7 @@ async function buildPaymentSummary() {
     ${instTotal > 0 ? `<div class="ptrow"><span>Installation</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
     ${addonLines}
     <div class="ptrow"><span>Tax (HST 13%)</span><span>$${(grandTotal * 0.13 / 1.13).toFixed(2)}</span></div>
-    <div class="ptrow bold"><span>Total Due Today</span><span>$${grandTotal.toFixed(2)}</span></div>
+    <div class="ptrow bold"><span>${window._payMode === 'deposit' ? 'Order Total' : 'Total Due Today'}</span><span>$${grandTotal.toFixed(2)}</span></div>${depositRowsHtml(grandTotal)}
   `;
 }
 
@@ -4887,6 +4903,14 @@ function initStripeElements() {
       hidePostalCode: true
     });
     stripeCard.mount('#stripeElements');
+    window._stripeReady = false;
+    stripeCard.on('ready', function() {
+      window._stripeReady = true;
+      var _se = document.getElementById('stripeError');
+      if (_se && _se.getAttribute('data-wait-msg') === '1') {
+        _se.style.display = 'none'; _se.textContent = ''; _se.setAttribute('data-wait-msg', '');
+      }
+    });
     stripeCard.on('change', function(e) {
       var errEl = document.getElementById('stripeError');
       if (errEl) { errEl.textContent = e.error ? e.error.message : ''; errEl.style.display = e.error ? 'block' : 'none'; }
@@ -4964,6 +4988,35 @@ var staffPhoneOrder = false;
     boot();
   }
 })();
+// == DEPOSIT OPTION ==
+var DEPOSIT_AMOUNT = 50;
+var DEPOSIT_MIN_ORDER = 100;
+window._payMode = 'full';
+function depositEligible() {
+  try { return payableGrandTotal() >= DEPOSIT_MIN_ORDER; } catch (e) { return false; }
+}
+function payModeStyles() {
+  var f = document.getElementById('payOptFull'), d = document.getElementById('payOptDeposit');
+  if (!f || !d) return;
+  f.style.borderColor = (window._payMode === 'full') ? 'var(--yellow)' : 'var(--border)';
+  f.style.background  = (window._payMode === 'full') ? 'rgba(245,197,24,0.08)' : 'var(--raised)';
+  d.style.borderColor = (window._payMode === 'deposit') ? 'var(--yellow)' : 'var(--border)';
+  d.style.background  = (window._payMode === 'deposit') ? 'rgba(245,197,24,0.08)' : 'var(--raised)';
+}
+function setPayMode(m) {
+  window._payMode = (m === 'deposit' && depositEligible()) ? 'deposit' : 'full';
+  payModeStyles();
+  try { buildPaymentSummary(); } catch (e) {}
+  var btn = document.getElementById('nextBtn');
+  if (btn && !window._paymentInFlight && typeof nLabels !== 'undefined') {
+    btn.textContent = (window._payMode === 'deposit') ? 'Pay $' + DEPOSIT_AMOUNT + ' Deposit' : nLabels[4];
+  }
+}
+function depositRowsHtml(g) {
+  if (window._payMode !== 'deposit' || !depositEligible()) return '';
+  return '<div class="ptrow" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)"><span>Due today (deposit)</span><span style="color:var(--yellow);font-weight:800">$' + DEPOSIT_AMOUNT.toFixed(2) + '</span></div>'
+       + '<div class="ptrow"><span>Balance at installation (e-transfer, card, or cash)</span><span>$' + (g - DEPOSIT_AMOUNT).toFixed(2) + '</span></div>';
+}
 function getOrCreateOrderId() {
   if (!window._pendingOrderId) {
     window._pendingOrderId = 'PCT-' + Math.random().toString(36).substr(2,6).toUpperCase();
@@ -4974,6 +5027,15 @@ function getOrCreateOrderId() {
 async function processPayment() {
   // ── HARD GUARD: prevent concurrent/duplicate submissions ──
   if (window._paymentInFlight) return;
+  if (!window._stripeReady) {
+    var _se = document.getElementById('stripeError');
+    if (_se) {
+      _se.textContent = 'The secure payment form is still loading - give it a second and tap Pay again. If this does not clear, your browser may be blocking the payment connection: call 519-397-4686 and we will take your order by phone.';
+      _se.style.display = 'block';
+      _se.setAttribute('data-wait-msg', '1');
+    }
+    return;
+  }
   window._paymentInFlight = true;
 
   const btn = document.getElementById('nextBtn');
@@ -4986,7 +5048,9 @@ async function processPayment() {
     const t = getTotals();
     const addonAmt = typeof getAddonTotal === 'function' ? getAddonTotal() : 0;
     const grandTotal = payableGrandTotal();
-    const amountCents = Math.round(grandTotal * 100);
+    const chargeTotal = (window._payMode === 'deposit' && depositEligible()) ? DEPOSIT_AMOUNT : grandTotal;
+    window._lastChargedAmount = chargeTotal;
+    const amountCents = Math.round(chargeTotal * 100);
     const email = document.getElementById('email').value || '';
     // Stable order ID — same value on first click, retry, or any re-entry within this session.
     const orderId = getOrCreateOrderId();
@@ -4996,7 +5060,7 @@ async function processPayment() {
     const piRes = await fetch('/create-pi', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amountCents, orderNumber: orderId, customerEmail: email }),
+      body: JSON.stringify({ amountCents, orderNumber: orderId + (window._payMode === 'deposit' && depositEligible() ? '-DEP' : ''), customerEmail: email }),
     });
     const piData = await piRes.json();
     if (piData.error) throw new Error(piData.error);
@@ -5019,6 +5083,8 @@ async function processPayment() {
     if (typeof markQuoteAsPaid === 'function') { try { await markQuoteAsPaid(); } catch(e) {} }
     // Order succeeded — clear the stable ID so the NEXT checkout starts clean.
     window._pendingOrderId = null;
+    window._lastChargedAmount = null;
+    window._payMode = 'full';
 
   } catch(e) {
     // Failed-checkout alert: fire-and-forget, can never affect the customer flow.
@@ -5045,7 +5111,7 @@ async function processPayment() {
     } else {
       alert('Payment failed: ' + (_isBlocked ? _blockedMsg : e.message));
     }
-    btn.textContent = 'Pay Securely';
+    btn.textContent = (window._payMode === 'deposit') ? 'Pay $' + DEPOSIT_AMOUNT + ' Deposit' : 'Pay Securely';
     btn.disabled = false;
   } finally {
     btn.classList.remove('ld');
@@ -5087,7 +5153,7 @@ async function finishOrder() {
     ${vehicleStr ? `<div class="cd-row"><span class="cd-label">Vehicle</span><span class="cd-val">${vehicleStr}</span></div>` : ''}
     <div class="cd-row"><span class="cd-label">Items</span><span class="cd-val">${cart.map(c=>`${c.qty}× ${c.brand} ${c.name}`).join(', ')}</span></div>
     ${addonAmt > 0 ? `<div class="cd-row"><span class="cd-label">Add-ons</span><span class="cd-val">${addonNames}</span></div>` : ''}
-    <div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div>
+    ${(window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? `<div class="cd-row"><span class="cd-label">Order Total</span><span class="cd-val">$${grandTotal.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Deposit Paid</span><span class="cd-val y">$${window._lastChargedAmount.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Balance at Install</span><span class="cd-val">$${(grandTotal - window._lastChargedAmount).toFixed(2)} CAD (e-transfer, card, or cash)</span></div>` : `<div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div>`}
     <div class="cd-row"><span class="cd-label">Installation</span><span class="cd-val">${instLine}</span></div>
     <div class="cd-row"><span class="cd-label">Confirmation</span><span class="cd-val">Sent to ${email}</span></div>
   `;
@@ -5114,6 +5180,8 @@ async function finishOrder() {
     addonTotal: addonAmt,
     tax: t.tax,
     total: grandTotal,
+    depositPaid: (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? window._lastChargedAmount : 0,
+    balanceDue: (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? Math.round((grandTotal - window._lastChargedAmount) * 100) / 100 : 0,
   };
 
   // Send order email
