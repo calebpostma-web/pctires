@@ -7,7 +7,7 @@ import json, os, re
 DATA = 'tdg-data.txt'
 OUTDIR = 'pages'
 CHECKED = 'July 7, 2026'
-LASTMOD = '2026-07-07'
+LASTMOD = '2026-07-11'
 
 # ---------------------------------------------------------------- parse data
 models_data = {}
@@ -463,8 +463,10 @@ a:hover{border-bottom-color:var(--yellow)}
 .size-table th{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:1px;font-size:13px;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:2px solid var(--border)}
 .size-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--light)}
 .size-table td:first-child{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--white)}
-.size-table td:last-child{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--yellow);white-space:nowrap}
+.size-table td:nth-child(4){font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--yellow);white-space:nowrap}
 .size-table tr:hover td{background:var(--card)}
+.buy-link{display:inline-block;background:var(--yellow);color:#111;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:6px 14px;border-radius:2px;white-space:nowrap}
+.buy-link:hover{background:var(--yellow-dark, #dba900)}
 .stock-in{color:var(--green);font-weight:600}
 .stock-low{color:#d97706;font-weight:600}
 .price-note{font-size:13px;color:var(--muted);margin-bottom:26px}
@@ -523,8 +525,17 @@ def build_page(slug, m, d):
     trs = []
     for r in rows:
         stock = '<span class="stock-in">In stock</span>' if r['qty'] >= 5 else '<span class="stock-low">Low stock</span>'
-        trs.append('<tr><td>%s</td><td>%s%s</td><td>%s</td><td>$%.2f</td></tr>' % (r['size'], r['load'], r['speed'], stock, r['price']))
-    table = '<table class="size-table"><thead><tr><th>Size</th><th>Load/Speed</th><th>Availability</th><th>Price / tire</th></tr></thead><tbody>' + ''.join(trs) + '</tbody></table>'
+        # Buy button: deep-links into the main site, which runs a live TDG search
+        # for this size (handleBuyLink in index.html) so the customer lands on
+        # purchasable results. Required by Google Merchant Center: every product
+        # landing page needs a working path to purchase.
+        # Plain metric size for the search link: drop P/LT/C prefix and any
+        # trailing load-range tokens (XL, LRE, ...) -- the site searches TDG
+        # with plain sizes like 215/55R16, same as its own size dropdowns.
+        plain_size = re.sub(r'^(P|LT|C)(?=\d)', '', r['size'].split(' ')[0])
+        buy_href = 'https://pctires.ca/?buysize=%s&amp;brand=%s#catalog' % (plain_size.replace('/', '%2F'), m['brand'].replace(' ', '%20'))
+        trs.append('<tr><td>%s</td><td>%s%s</td><td>%s</td><td>$%.2f</td><td><a class="buy-link" href="%s">Buy &rarr;</a></td></tr>' % (r['size'], r['load'], r['speed'], stock, r['price'], buy_href))
+    table = '<table class="size-table"><thead><tr><th>Size</th><th>Load/Speed</th><th>Availability</th><th>Price / tire</th><th></th></tr></thead><tbody>' + ''.join(trs) + '</tbody></table>'
 
     product_ld = {
       "@context": "https://schema.org", "@type": "Product",
@@ -666,17 +677,21 @@ def build_page(slug, m, d):
 </html>'''
     return html
 
+# ---------------------------------------------------------------- write pages
+# (Tail reconstructed 2026-07-11 after accidental truncation; verified by
+# diffing regenerated pages against the previously generated pages in the
+# repo root -- only the intended Buy-button changes should differ.)
 os.makedirs(OUTDIR, exist_ok=True)
 manifest = []
 for slug_key, m in M.items():
-    data_key = slug_key.replace('antares-','').replace('michelin-','').replace('pirelli-','').replace('continental-','').replace('bridgestone-','')
+    data_key = slug_key[len(m['brand']) + 1:]
     d = models_data[data_key]
-    html = build_page(slug_key, m, d)
     path = os.path.join(OUTDIR, slug_key + '.html')
     with open(path, 'w', encoding='utf-8') as f:
-        f.write(html)
+        f.write(build_page(slug_key, m, d))
     lo = min(r['price'] for r in d['rows'])
     manifest.append((slug_key, m['brand'] + ' ' + m['model'], len(d['rows']), lo))
     print('%-34s %-38s %3d sizes  from $%.2f' % (slug_key + '.html', m['brand'] + ' ' + m['model'], len(d['rows']), lo))
 
 print('\n%d pages generated in %s/' % (len(manifest), OUTDIR))
+print('Sitemap reminder: set <lastmod> to %s for these pages in sitemap.xml' % LASTMOD)
