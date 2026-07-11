@@ -7278,32 +7278,17 @@ async function checkForQuoteInUrl() {
 }
 
 function showQuoteBanner(quote) {
-  const existing = document.getElementById('quoteBanner');
-  if (existing) existing.remove();
+  // Slim toast instead of the old full-width yellow overlay -- the overlay
+  // covered the products, and quote customers have already talked to Caleb.
+  // The cart drawer auto-opens right after this and shows items, the total,
+  // "Pick this set" buttons on comparisons, and the checkout button.
   const firstName = (quote.customerName || '').split(' ')[0] || 'there';
-  const noteHtml = quote.note ? '<div style="font-weight:400;font-size:13px;margin-top:4px;line-height:1.4">&ldquo;' + escapeHtml(quote.note) + '&rdquo;</div>' : '';
-  // If the cart has multiple items, treat it as a comparison and tell the customer how to pick
-  const isComparison = cart.length > 1;
-  let reviewMsg = isComparison
-    ? 'Caleb sent you <strong>' + cart.length + ' sets</strong> to compare. Tap <strong>&ldquo;Pick this set&rdquo;</strong> on the one you want, or remove items individually. Call 519-397-4686 to discuss.'
-    : 'Call 519-397-4686 if anything needs to change.';
-  // Always show a real dollar number up front -- customers kept asking "how much
-  // is it?" after getting a quote link because the price was hidden behind the
-  // cart icon unless Caleb had typed a fixed all-in total.
-  let totalLine = '';
-  try {
-    const t = getTotals();
-    if (t && t.total > 0) {
-      const totalLabel = window._quoteFinalTotal ? 'All-in price (HST + install included)' : 'Total (HST included)';
-      totalLine = '<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.75">' + totalLabel + '</div><div style="font-family:\'Barlow Condensed\',sans-serif;font-size:34px;font-weight:900;line-height:1.1">$' + t.total.toFixed(2) + '</div></div>';
-    }
-  } catch(e) {}
-  const payNowBtn = !isComparison ? '<button onclick="document.getElementById(\'quoteBanner\').remove();openCheckout()" style="margin-top:10px;background:#111;color:var(--yellow);border:none;padding:10px 22px;font-family:Barlow,sans-serif;font-weight:700;font-size:14px;border-radius:2px;cursor:pointer">Pay Now &rarr;</button>' : '';
-  const banner = document.createElement('div');
-  banner.id = 'quoteBanner';
-  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--yellow);color:#111;padding:14px 50px 14px 20px;text-align:center;font-family:Barlow,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:14px';
-  banner.innerHTML = '<strong style="font-size:15px">&#9889; Hi ' + escapeHtml(firstName) + ' &mdash; quote from Caleb at PC Tires.</strong>' + noteHtml + totalLine + '<div style="font-size:12px;margin-top:6px;opacity:.85">' + reviewMsg + '</div>' + payNowBtn + '<button onclick="document.getElementById(\'quoteBanner\').remove()" style="position:absolute;right:10px;top:10px;background:rgba(0,0,0,.12);border:none;width:30px;height:30px;cursor:pointer;border-radius:2px;font-size:16px;font-weight:700">&times;</button>';
-  document.body.appendChild(banner);
+  const sub = quote.note
+    ? '“' + quote.note + '”'
+    : (cart.length > 1
+        ? 'Tap “Pick this set” on the one you want.'
+        : 'Your cart is loaded — check out when ready.');
+  if (typeof showToast === 'function') showToast('Hi ' + firstName + ' — your PC Tires quote', sub);
 }
 
 function showQuoteError(msg) {
