@@ -7074,6 +7074,8 @@ document.addEventListener('DOMContentLoaded', () => {
   showCatalogIdle();
   // Shareable quote links: detect /q/CODE in URL and load the quote
   checkForQuoteInUrl();
+  // Buy links from tire model pages: /?buysize=SIZE&brand=BRAND
+  handleBuyLink();
   if (typeof updateActiveNav === 'function') updateActiveNav();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTireDetail(); });
@@ -7197,6 +7199,44 @@ function updateShareQuoteButton() {
   const btn = document.getElementById('shareQuoteBtn');
   if (!btn) return;
   btn.style.display = (isOwner() && cart.length > 0) ? 'block' : 'none';
+}
+
+// Buy links from the tire model pages (e.g. /?buysize=225%2F45R18&brand=Michelin#catalog)
+// land here: run a live TDG size search so the customer gets purchasable results.
+async function handleBuyLink() {
+  let size = '', brand = '';
+  try {
+    const p = new URLSearchParams(location.search);
+    size = (p.get('buysize') || '').trim().toUpperCase().replace(/\s+/g, '');
+    brand = (p.get('brand') || '').trim();
+  } catch (e) { return; }
+  size = size.replace(/^(P|LT|C)(?=\d)/, '');           // tolerate P215/55R16, LT265/70R17
+  size = size.replace(/(XL|LR[A-F]|RF)$/, '');           // tolerate trailing load-range tokens
+  if (!size || !/^[\d.]+([X/][\d.]+)?R[\d.]+$/.test(size)) return;
+  const variants = [...new Set([size, size.replace('X', 'x'), size.replace(/R(?=[\d.]+$)/, 'r')])];
+  const resultEl = document.getElementById('lookupResult'), textEl = document.getElementById('lookupText');
+  if (textEl && resultEl) {
+    textEl.innerHTML = 'Searching for <strong>' + size + '</strong> tires…';
+    resultEl.classList.add('show');
+  }
+  try { switchCatalogType('tires'); } catch (e) {}
+  try {
+    await loadTires({ tireSizes: variants });
+  } catch (e) { return; }
+  // Pre-select the brand the customer was reading about, if it's in the results
+  if (brand) {
+    try {
+      const sel = document.getElementById('brandFilter');
+      const opt = sel ? [...sel.options].find(o => o.value && o.value.toLowerCase() === brand.toLowerCase()) : null;
+      if (opt) { sel.value = opt.value; applyRefinements(); }
+    } catch (e) {}
+  }
+  if (textEl) {
+    textEl.innerHTML = filteredTires.length > 0
+      ? 'Found <strong>' + filteredTires.length + '</strong> tire' + (filteredTires.length !== 1 ? 's' : '') + ' in size <strong>' + size + '</strong>.'
+      : 'No tires in stock for size <strong>' + size + '</strong> right now — <a href="tel:5193974686" style="color:var(--yellow)">call us at 519-397-4686</a> and we\'ll source them for you.';
+  }
+  setTimeout(() => { try { smoothScroll('#catalog'); } catch (e) {} }, 400);
 }
 
 // Check URL for /q/CODE on page load — if present, fetch the quote and load it into the cart
@@ -7323,6 +7363,23 @@ async function fetchQuoteItems(quoteItems) {
       const [prodRes, invRes] = await Promise.all([
         tdgFetch('search', { itemnumbers: tireNums }),
         tdgFetch('inventory', { itemnumbers: tireNums }),
+      ]);
+      const invMap = {};
+      extractData(invRes).forEach(i => { if (i && i.itemNumber) invMap[i.itemNumber] = i; });
+      extractData(prodRes)
+        .filter(p => p.type === 'Tire' || p.type === 'tire')
+        .forEach(p => {
+          const tire = normaliseTire(p, invMap[p.itemNumber]);
+          const q = quoteItems.find(x => x.itemNumber === tire.itemNumber);
+          if (q) result.push(Object.assign({}, tire, { price: retailPrice(tire), qty: q.qty, install: !!q.install, itemType: 'tire' }));
+        });
+    } catch(e) { console.warn('Quote tire fetch failed:', e.message); }
+  }
+  if (wheelNums.length) {
+    try {
+      const [prodRes, invRes] = await Promise.all([
+        tdgFetch('search', { itemnumbers: wheelNums }),
+        tdgFetch('inventory', { itemnumbers: wheelNums }),
       ]);
       const invMap = {};
       extractData(invRes).forEach(i => { if (i && i.itemNumber) invMap[i.itemNumber] = i; });
