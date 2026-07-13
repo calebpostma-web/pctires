@@ -2075,6 +2075,7 @@ function getRebateForBrand(brand) {
             <div style="font-size:11px;color:var(--muted)">per tire · HST extra</div>
           </div>
         </div>
+        <div id="tdAffirmMsg" style="margin:6px 0 2px"></div>
         <div class="td-actions">
           <button class="td-add-btn" id="tdAddBtn">Add to Cart +</button>
           <span id="tdStock" style="font-size:12px;color:var(--muted);align-self:center"></span>
@@ -2463,7 +2464,7 @@ function getRebateForBrand(brand) {
         </div>
         <div class="pay-total-box" id="payBox"></div>
         <div class="card-logos"><span class="clogo">💳</span><span class="clogo">🍎</span><span class="clogo">🅿️</span></div>
-        <div class="frow one"><div class="fg"><label>Name on Card</label><input type="text" placeholder="Jane Smith" id="cardName"></div></div>
+        <div class="frow one" style="display:none"><div class="fg"><label>Name on Card</label><input type="text" placeholder="Jane Smith" id="cardName"></div></div>
         <div id="stripeElements" style="margin:12px 0;padding:12px 14px;background:var(--raised);border:1px solid var(--border);border-radius:2px;min-height:44px"></div>
         <div id="stripeError" style="color:var(--red);font-size:13px;margin-top:6px;display:none"></div>
         <p class="field-note">🔒 Payment is encrypted and processed by Stripe. PC Tires never sees your card details.</p>
@@ -4753,7 +4754,7 @@ function updSteps() {
     }
   }
   if (step === 3) buildAddonGrid();
-  if (step === 4) { buildPaymentSummary(); initStripeElements(); }
+  if (step === 4) { buildPaymentSummary(); initStripeElements(); updateStripeAmount(); }
 }
 
 async function nextStep() {
@@ -4883,13 +4884,41 @@ async function buildPaymentSummary() {
 
 let stripeInstance = null;
 let stripeElems = null;
-let stripeCard = null;
+let paymentElement = null;
 
+// Lazily instantiate ONE Stripe.js instance, shared by the checkout Payment
+// Element and the Affirm financing-messaging element on tire detail modals.
+function getStripeInstance() {
+  if (!stripeInstance && typeof Stripe !== 'undefined' && TDG.STRIPE_PK) {
+    try { stripeInstance = Stripe(TDG.STRIPE_PK); } catch (e) { console.warn('Stripe init failed:', e.message); }
+  }
+  return stripeInstance;
+}
+
+// Amount (in cents) we intend to charge right now — deposit or full.
+function currentChargeCents() {
+  const chargeTotal = (window._payMode === 'deposit' && depositEligible())
+    ? DEPOSIT_AMOUNT
+    : payableGrandTotal();
+  return Math.max(50, Math.round(chargeTotal * 100));
+}
+
+// Keep the Payment Element's amount in sync (deposit/full toggle, cart changes).
+// Deferred-mode elements re-render available methods (e.g. Affirm) when the
+// amount crosses their eligibility thresholds.
+function updateStripeAmount() {
+  try { if (stripeElems) stripeElems.update({ amount: currentChargeCents() }); } catch (e) {}
+}
+
+// Deferred Payment Element: mounts WITHOUT a client secret, so the PaymentIntent
+// is still created at "Pay" time with the final amount (keeps the deposit/full
+// logic simple). One element renders Card + Apple/Google Pay + Affirm together.
 function initStripeElements() {
   const pk = TDG.STRIPE_PK;
-  if (!pk || stripeCard) return;
+  if (!pk || paymentElement) return;
   try {
-    stripeInstance = Stripe(pk);
+    stripeInstance = getStripeInstance();
+    if (!stripeInstance) return;
     const appearance = {
       theme: 'night',
       variables: {
@@ -4898,24 +4927,33 @@ function initStripeElements() {
         fontFamily: 'Barlow, sans-serif', borderRadius: '2px',
       }
     };
-    stripeElems = stripeInstance.elements({ appearance });
-    stripeCard = stripeElems.create('card', {
-      style: { base: { color: '#f0ece0', fontFamily: 'Barlow, sans-serif', fontSize: '15px', '::placeholder': { color: '#686868' } } },
-      disableLink: true,
-      hidePostalCode: true
+    stripeElems = stripeInstance.elements({
+      mode: 'payment',
+      currency: 'cad',
+      amount: currentChargeCents(),
+      appearance,
     });
-    stripeCard.mount('#stripeElements');
+    // Prefill billing details from the Contact step (Affirm needs name/email/phone).
+    // Let the Payment Element collect anything else a given method requires.
+    const _cName  = (((document.getElementById('fName') || {}).value || '') + ' ' + ((document.getElementById('lName') || {}).value || '')).trim();
+    const _cEmail = (document.getElementById('email') || {}).value || '';
+    const _cPhone = (document.getElementById('phone') || {}).value || '';
+    paymentElement = stripeElems.create('payment', {
+      layout: 'tabs',
+      defaultValues: { billingDetails: { name: _cName, email: _cEmail, phone: _cPhone } },
+    });
+    paymentElement.mount('#stripeElements');
     window._stripeReady = false;
-    stripeCard.on('ready', function() {
+    paymentElement.on('ready', function() {
       window._stripeReady = true;
       var _se = document.getElementById('stripeError');
       if (_se && _se.getAttribute('data-wait-msg') === '1') {
         _se.style.display = 'none'; _se.textContent = ''; _se.setAttribute('data-wait-msg', '');
       }
     });
-    stripeCard.on('change', function(e) {
+    paymentElement.on('change', function(e) {
       var errEl = document.getElementById('stripeError');
-      if (errEl) { errEl.textContent = e.error ? e.error.message : ''; errEl.style.display = e.error ? 'block' : 'none'; }
+      if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
     });
   } catch(err) { console.warn('Stripe init failed:', err.message); }
 }
@@ -5009,6 +5047,7 @@ function setPayMode(m) {
   window._payMode = (m === 'deposit' && depositEligible()) ? 'deposit' : 'full';
   payModeStyles();
   try { buildPaymentSummary(); } catch (e) {}
+  updateStripeAmount();
   var btn = document.getElementById('nextBtn');
   if (btn && !window._paymentInFlight && typeof nLabels !== 'undefined') {
     btn.textContent = (window._payMode === 'deposit') ? 'Pay $' + DEPOSIT_AMOUNT + ' Deposit' : nLabels[4];
@@ -5024,6 +5063,74 @@ function getOrCreateOrderId() {
     window._pendingOrderId = 'PCT-' + Math.random().toString(36).substr(2,6).toUpperCase();
   }
   return window._pendingOrderId;
+}
+
+// Build the full order object from current cart/DOM state. Single source of truth
+// used BOTH by processPayment (to stash the order server-side before payment, so
+// the Affirm redirect path can place it) AND by finishOrder (the inline card path).
+function collectOrderPayload() {
+  const t = getTotals();
+  const addonAmt = (typeof getAddonTotal === 'function') ? getAddonTotal() : 0;
+  const grandTotal = payableGrandTotal();
+  const name = (document.getElementById('fName').value || 'Customer') + ' ' + (document.getElementById('lName').value || '');
+  const email = document.getElementById('email').value || '';
+  const phone = document.getElementById('phone')?.value || '';
+  const caslOptIn = document.getElementById('caslOptIn')?.checked || false;
+  const orderId = window._pendingOrderId || getOrCreateOrderId();
+  const addonNames = ADDONS.filter(a => selectedAddons.has(a.id)).map(a => a.name).join(', ') || 'None';
+  const vin = lastSearchVehicle?.vin || '';
+  const vehicleYear = lastSearchVehicle?.year || '';
+  const vehicleMake = lastSearchVehicle?.make || '';
+  const vehicleModel = lastSearchVehicle?.model || '';
+  const vehicleTrim = lastSearchVehicle?.trim || '';
+  return {
+    orderNumber: orderId,
+    paymentIntentId: window._stripePaymentIntentId || '',
+    customerName: name.trim(),
+    customerEmail: email,
+    customerPhone: phone,
+    caslOptIn,
+    vin,
+    vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
+    searchMethod: (lastSearchMethod || 'unknown') + (staffPhoneOrder ? ' [PHONE ORDER]' : ''),
+    tires: cart.map(c => ({ tdgId: c.tdgId, qty: c.qty, brand: c.brand, name: c.name, size: c.size || c.diameter + '"', price: c.price })),
+    addons: addonNames,
+    installation: !!selectedService,
+    appointmentDate: selDate || '',
+    appointmentTime: selTime || '',
+    serviceName: selectedService?.label || '',
+    subtotal: t.sub,
+    installTotal: t.inst,
+    discount: t.discount || 0,
+    discountCode: appliedPromo ? appliedPromo.code : '',
+    addonTotal: addonAmt,
+    tax: t.tax,
+    total: grandTotal,
+    depositPaid: (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? window._lastChargedAmount : 0,
+    balanceDue: (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? Math.round((grandTotal - window._lastChargedAmount) * 100) / 100 : 0,
+  };
+}
+
+// Query string for /thank-you. Used for the Affirm return_url (built while the
+// cart is still intact, before redirect) and mirrors finishOrder's card redirect.
+function buildThankYouParams(orderId) {
+  const email = document.getElementById('email').value || '';
+  const firstName = ((document.getElementById('fName')?.value) || '').trim();
+  const grandTotal = payableGrandTotal();
+  const brandsList = [...new Set(cart.map(c => c.brand).filter(Boolean))].join(',');
+  const vehicleStr = [lastSearchVehicle?.year, lastSearchVehicle?.make, lastSearchVehicle?.model, lastSearchVehicle?.trim].filter(Boolean).join(' ');
+  const params = new URLSearchParams({
+    order: orderId,
+    total: grandTotal.toFixed(2),
+    first: firstName,
+    email: email,
+    brands: brandsList,
+  });
+  if (vehicleStr) params.set('vehicle', vehicleStr);
+  if (selDate)    params.set('date', selDate);
+  if (selTime)    params.set('time', selTime);
+  if (selectedService?.label) params.set('service', selectedService.label);
+  return params;
 }
 
 async function processPayment() {
@@ -5047,38 +5154,59 @@ async function processPayment() {
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
 
   try {
-    const t = getTotals();
-    const addonAmt = typeof getAddonTotal === 'function' ? getAddonTotal() : 0;
     const grandTotal = payableGrandTotal();
     const chargeTotal = (window._payMode === 'deposit' && depositEligible()) ? DEPOSIT_AMOUNT : grandTotal;
     window._lastChargedAmount = chargeTotal;
-    const amountCents = Math.round(chargeTotal * 100);
+    const amountCents = Math.max(50, Math.round(chargeTotal * 100));
     const email = document.getElementById('email').value || '';
     // Stable order ID — same value on first click, retry, or any re-entry within this session.
     const orderId = getOrCreateOrderId();
 
-    // Create PaymentIntent server-side. Server uses orderId as Stripe Idempotency-Key
-    // so repeat calls with the same orderId return the SAME PaymentIntent — no double charge.
+    if (!stripeInstance || !stripeElems) throw new Error('Payment form not ready. Please reload and try again.');
+
+    // Sync the Element to the amount we're about to charge, then validate the form.
+    try { stripeElems.update({ amount: amountCents }); } catch(e) {}
+    const submitRes = await stripeElems.submit();
+    if (submitRes.error) throw new Error(submitRes.error.message);
+
+    // Build the full order NOW so create-pi can stash it server-side. Required for
+    // Affirm, where the browser redirects away before finishOrder could ever run.
+    const orderPayload = collectOrderPayload();
+    orderPayload.orderNumber = orderId;
+
+    // Create the PaymentIntent server-side. Server uses orderId as Stripe
+    // Idempotency-Key so repeat calls return the SAME PaymentIntent — no double
+    // charge — and stashes orderPayload in KV keyed by the PaymentIntent id.
     const piRes = await fetch('/create-pi', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amountCents, orderNumber: orderId + (window._payMode === 'deposit' && depositEligible() ? '-DEP' : ''), customerEmail: email }),
+      body: JSON.stringify({
+        amountCents,
+        orderNumber: orderId + (window._payMode === 'deposit' && depositEligible() ? '-DEP' : ''),
+        customerEmail: email,
+        order: orderPayload,
+      }),
     });
     const piData = await piRes.json();
     if (piData.error) throw new Error(piData.error);
 
-    if (!stripeInstance || !stripeCard) throw new Error('Payment form not ready. Please reload and try again.');
-
-    // Confirm card payment with Stripe
-    const cardName = document.getElementById('cardName').value || '';
-    const result = await stripeInstance.confirmCardPayment(piData.clientSecret, {
-      payment_method: { card: stripeCard, billing_details: { name: cardName, email } },
+    // Confirm. Cards (and Apple/Google Pay) confirm INLINE — no redirect — and we
+    // finish the order below. Affirm needs a redirect: the customer is sent to
+    // Affirm, then back to return_url, and the webhook places that order.
+    const returnUrl = location.origin + '/thank-you?' + buildThankYouParams(orderId).toString();
+    const confirmRes = await stripeInstance.confirmPayment({
+      elements: stripeElems,
+      clientSecret: piData.clientSecret,
+      confirmParams: { return_url: returnUrl },
+      redirect: 'if_required',
     });
 
-    if (result.error) throw new Error(result.error.message);
-    if (result.paymentIntent.status !== 'succeeded') throw new Error('Payment did not complete. Please try again.');
+    if (confirmRes.error) throw new Error(confirmRes.error.message);
+    // Still here → no redirect happened → an inline method (card) succeeded.
+    const pi = confirmRes.paymentIntent;
+    if (!pi || pi.status !== 'succeeded') throw new Error('Payment did not complete. Please try again.');
 
-    window._stripePaymentIntentId = result.paymentIntent.id;
+    window._stripePaymentIntentId = pi.id;
     await finishOrder();
     // If this checkout originated from a shared quote link, mark the quote as paid
     // so it can't be reused / double-charged.
@@ -5160,34 +5288,15 @@ async function finishOrder() {
     <div class="cd-row"><span class="cd-label">Confirmation</span><span class="cd-val">Sent to ${email}</span></div>
   `;
 
-  const orderPayload = {
-    orderNumber: window._pendingOrderId || orderId,
-    paymentIntentId: window._stripePaymentIntentId || '',
-    customerName: name.trim(),
-    customerEmail: email,
-    customerPhone: phone,
-    caslOptIn,
-    vin,
-    vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
-    searchMethod: (lastSearchMethod || 'unknown') + (staffPhoneOrder ? ' [PHONE ORDER]' : ''),
-    tires: cart.map(c => ({ tdgId: c.tdgId, qty: c.qty, brand: c.brand, name: c.name, size: c.size || c.diameter + '"', price: c.price })),
-    addons: addonNames,
-    installation: !!selectedService,
-    appointmentDate: selDate || '',
-    appointmentTime: selTime || '',
-    serviceName: selectedService?.label || '',
-    subtotal: t.sub,
-    installTotal: t.inst,
-    discount: t.discount || 0,
-    discountCode: appliedPromo ? appliedPromo.code : '',
-    addonTotal: addonAmt,
-    tax: t.tax,
-    total: grandTotal,
-    depositPaid: (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? window._lastChargedAmount : 0,
-    balanceDue: (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? Math.round((grandTotal - window._lastChargedAmount) * 100) / 100 : 0,
-  };
+  const orderPayload = collectOrderPayload();
+  // Preserve the real PaymentIntent id captured in processPayment (collectOrderPayload
+  // reads window._stripePaymentIntentId, which is now set — but be explicit).
+  orderPayload.paymentIntentId = window._stripePaymentIntentId || orderPayload.paymentIntentId || '';
+  orderPayload.paymentMethod = 'Card';
 
-  // Send order email
+  // Send order email (CLIENT BACKUP path — card only). The Stripe webhook is the
+  // durable path; durable KV dedup keyed by PaymentIntent id means whichever runs
+  // first wins and the other is a no-op, so this can never double-place.
   try {
     await fetch('/send-order-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderPayload) });
   } catch(e) { console.warn('Order email failed:', e.message); }
@@ -6561,6 +6670,29 @@ function openTireDetail(itemNumber) {
   }
   const msrpEl = document.getElementById('tdMsrp');
   msrpEl.textContent = (t.msrp > retail && retail > 0) ? `MSRP $${t.msrp.toFixed(2)}` : '';
+
+  // Affirm financing estimate — real "as low as $X/mo" quote via Stripe's Payment
+  // Method Messaging Element. Priced on a set of 4 (how tires are actually bought).
+  // Shows nothing until Affirm is enabled on the Stripe account, so it's safe to ship.
+  try {
+    const affirmWrap = document.getElementById('tdAffirmMsg');
+    if (affirmWrap) {
+      affirmWrap.innerHTML = '';
+      if (window._tdAffirmEl) { try { window._tdAffirmEl.unmount(); } catch(e) {} window._tdAffirmEl = null; }
+      const s = getStripeInstance();
+      const setPrice = shown * 4; // 4-tire set
+      if (s && setPrice >= 50) {
+        const melGroup = s.elements();
+        window._tdAffirmEl = melGroup.create('paymentMethodMessaging', {
+          amount: Math.round(setPrice * 100), // cents
+          currency: 'CAD',
+          countryCode: 'CA',
+          paymentMethods: ['affirm'],
+        });
+        window._tdAffirmEl.mount('#tdAffirmMsg');
+      }
+    }
+  } catch (e) { /* messaging is non-critical — never block the modal */ }
 
   // Stock & add button
   const addBtn = document.getElementById('tdAddBtn');
