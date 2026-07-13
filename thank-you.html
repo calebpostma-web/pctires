@@ -287,6 +287,27 @@ footer a:hover{color:var(--yellow)}
   var service = getParam('service');
   var vehicle = getParam('vehicle');
 
+  // Stripe appends redirect_status when a customer returns from a redirect method
+  // (e.g. Affirm). Card payments never redirect, so this is empty for them.
+  //   succeeded  → normal confirmation (below)
+  //   processing → Affirm approved but settling; the order is placed by the webhook
+  //   failed     → payment did not go through; show a recovery message, not a receipt
+  var redirectStatus = getParam('redirect_status');
+
+  if (redirectStatus === 'failed') {
+    document.querySelector('.confirm-circle').textContent = '!';
+    document.querySelector('.confirm-circle').style.background = 'var(--red)';
+    document.querySelector('.confirm-circle').style.color = '#fff';
+    document.querySelector('h1').innerHTML = 'Payment <span class="accent" style="color:var(--red)">Didn’t Go Through</span>';
+    document.querySelector('.lead').innerHTML =
+      'Your financing wasn’t completed, so <strong>no order was placed and you have not been charged</strong>.<br>' +
+      'You can head back and try again with a card, or call us at <a href="tel:5193974686" style="color:var(--yellow);text-decoration:none">519-397-4686</a> and we’ll sort it out.';
+    var oc = document.querySelector('.order-card'); if (oc) oc.style.display = 'none';
+    var ss = document.querySelector('.steps-section'); if (ss) ss.style.display = 'none';
+    var rb = document.getElementById('rebatesBox'); if (rb) rb.style.display = 'none';
+    return; // skip the rest of the confirmation rendering
+  }
+
   // Personalize greeting
   if (first) {
     document.getElementById('firstName').textContent = ', ' + first;
@@ -320,6 +341,17 @@ footer a:hover{color:var(--yellow)}
     document.getElementById('apptRowWrap').style.display = 'grid';
     document.getElementById('installStep').style.display = 'flex';
     document.getElementById('finalStepNum').textContent = '3';
+  }
+
+  // Affirm sometimes returns 'processing' (approved, still settling). The order is
+  // already being placed by the webhook — reassure the customer without implying a
+  // problem.
+  if (redirectStatus === 'processing') {
+    var leadEl = document.querySelector('.lead');
+    if (leadEl) {
+      leadEl.innerHTML = 'Your financing is approved and your order is being finalized.<br>' +
+        'A confirmation email is on its way to <strong>' + (email ? escapeHTML(email) : 'your inbox') + '</strong> — usually within a couple of minutes.';
+    }
   }
 
   // ─── REBATES (synced with index.html — update both files seasonally) ───
