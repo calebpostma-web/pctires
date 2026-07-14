@@ -16,17 +16,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 
 <!-- ─────────────────────────────────────────────────────────────────────
-     GOOGLE ADS CONVERSION TRACKING
+     GOOGLE ADS CONVERSION TRACKING — LIVE / CONFIGURED (do not remove)
 
-     STEP 1: Replace AW-XXXXXXXXX below with YOUR Google Ads Conversion ID
-             (Google Ads → Tools → Conversions → click your conversion →
-              "Tag setup" → "Use Google tag" → copy the AW-XXXXXXXXX value)
+     Account tag: AW-18156336783 (loaded below).
+     Conversions in use:
+       • Purchase       AW-18156336783/OxLRCI7XpKscEI_tztFD
+                        (fires in the page script with the order's $ value +
+                         transaction_id for dedupe; enhanced conversions on)
+       • Click-to-call  AW-18156336783/SbSRCNu5nbEcEI_tztFD
+                        (fires on any tel: link click)
 
-     STEP 2: Replace YOUR_CONVERSION_LABEL below with the label for that
-             conversion (same screen, looks like "abcDEF123_GHIjkl45")
-
-     STEP 3: When ready, uncomment the gtag script block. The conversion
-             will fire automatically on this page with the order's $ value.
+     If a conversion ID/label ever changes, update it here AND in the
+     gtag('event', ...) call in the page script near the bottom of this file.
      ─────────────────────────────────────────────────────────────────── -->
 
 <!-- Google tag (gtag.js) — PC Tires Ads -->
@@ -399,10 +400,7 @@ footer a:hover{color:var(--yellow)}
   }
 
   // ─────────────────────────────────────────────────────────────────
-  // FIRE GOOGLE ADS CONVERSION
-  // (Uncomment the gtag loader in <head> first, replace AW-XXXXXXXXX
-  //  and YOUR_CONVERSION_LABEL with your actual values, and this fires
-  //  the conversion event with the order value automatically.)
+  // FIRE GOOGLE ADS CONVERSION — LIVE (AW-18156336783, Purchase)
   // ─────────────────────────────────────────────────────────────────
   // Google Ads Purchase conversion — fires when a valid order lands here.
   // The transaction_id ensures duplicates from refreshes/back-button don't
