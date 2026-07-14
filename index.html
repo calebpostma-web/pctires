@@ -3338,6 +3338,7 @@ function buildRecCard(t, tier) {
     <div class="tc-foot">
       <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}${effectiveNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
         <div class="price-each">per tire · HST extra</div>
+        <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--yellow);letter-spacing:.2px">💳 Monthly payments available</div>
       </div>
       <button class="add-btn" onclick="event.stopPropagation();addToCart('${t.itemNumber}','tire')">Add to Cart +</button>
     </div>
@@ -3402,6 +3403,7 @@ function renderTires() {
       <div class="tc-foot">
         <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
           <div class="price-each">per tire · HST extra${rebate ? ` · <span style="color:var(--yellow)">+$${rebate.amount} rebate</span>` : ''}</div>
+          <div style="margin-top:5px;font-size:11px;font-weight:600;color:var(--yellow);letter-spacing:.2px">💳 Monthly payments available</div>
         </div>
         <button class="add-btn" onclick="event.stopPropagation();addToCart('${t.itemNumber}','tire')" ${t.stock==='out' && !isOwner()?'disabled style="opacity:.4;cursor:not-allowed"':''}>
           ${t.stock==='out'?(isOwner()?'Order In +':'Out of Stock'):'Add to Cart +'}
@@ -3411,6 +3413,27 @@ function renderTires() {
   }).join('');
 
   grid.innerHTML = recHTML + regularCards;
+  mountRecAffirm();
+}
+
+// Mount Affirm "as low as $X/mo" messaging on the 3 recommended-pick cards only.
+// (Not every card — keeps the page fast and stays compliant by using Stripe's
+// real quote.) Priced on a set of 4. Invisible until Affirm is enabled in Stripe.
+function mountRecAffirm() {
+  try {
+    const s = getStripeInstance();
+    if (!s) return;
+    document.querySelectorAll('.rec-affirm[data-affirm-amount]').forEach(function(el) {
+      const amt = parseInt(el.getAttribute('data-affirm-amount'), 10) || 0;
+      if (amt < 5000) return; // Affirm minimum is $50
+      el.innerHTML = '';
+      const grp = s.elements();
+      const m = grp.create('paymentMethodMessaging', {
+        amount: amt, currency: 'CAD', countryCode: 'CA', paymentMethods: ['affirm'],
+      });
+      m.mount(el);
+    });
+  } catch (e) { /* messaging is non-critical — never block rendering */ }
 }
 
 // ─────────────────────────────────────────────────
@@ -6671,28 +6694,15 @@ function openTireDetail(itemNumber) {
   const msrpEl = document.getElementById('tdMsrp');
   msrpEl.textContent = (t.msrp > retail && retail > 0) ? `MSRP $${t.msrp.toFixed(2)}` : '';
 
-  // Affirm financing estimate — real "as low as $X/mo" quote via Stripe's Payment
-  // Method Messaging Element. Priced on a set of 4 (how tires are actually bought).
-  // Shows nothing until Affirm is enabled on the Stripe account, so it's safe to ship.
+  // Financing note — plain text only (no $ amount or APR), so it needs no Affirm
+  // marketing approval or credit disclosures. The real monthly figures appear at
+  // checkout inside Affirm's own compliant UI.
   try {
     const affirmWrap = document.getElementById('tdAffirmMsg');
     if (affirmWrap) {
-      affirmWrap.innerHTML = '';
-      if (window._tdAffirmEl) { try { window._tdAffirmEl.unmount(); } catch(e) {} window._tdAffirmEl = null; }
-      const s = getStripeInstance();
-      const setPrice = shown * 4; // 4-tire set
-      if (s && setPrice >= 50) {
-        const melGroup = s.elements();
-        window._tdAffirmEl = melGroup.create('paymentMethodMessaging', {
-          amount: Math.round(setPrice * 100), // cents
-          currency: 'CAD',
-          countryCode: 'CA',
-          paymentMethods: ['affirm'],
-        });
-        window._tdAffirmEl.mount('#tdAffirmMsg');
-      }
+      affirmWrap.innerHTML = '<span style="font-size:12px;font-weight:600;color:var(--yellow)">💳 Monthly payments available — choose Affirm at checkout</span>';
     }
-  } catch (e) { /* messaging is non-critical — never block the modal */ }
+  } catch (e) { /* non-critical — never block the modal */ }
 
   // Stock & add button
   const addBtn = document.getElementById('tdAddBtn');
