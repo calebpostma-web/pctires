@@ -396,7 +396,7 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
     <div style="${hdrStyle}">Customer Charged</div>
     <table style="border-collapse:collapse;width:100%">
       <tr><td style="${rowLbl}">Subtotal (tires)</td><td style="${rowVal}">${money(order.subtotal || 0)}</td></tr>
-      ${order.installTotal > 0 ? `<tr><td style="${rowLbl}">Installation</td><td style="${rowVal}">${money(order.installTotal)}</td></tr>` : ''}
+      <tr><td style="${rowLbl}">Installation</td><td style="${rowVal}">${money(order.installTotal || 0)}</td></tr>
       ${order.discount && Number(order.discount) > 0 ? `<tr><td style="padding:5px 0;color:#22c55e;font-size:14px">Discount${order.discountCode ? ` (${order.discountCode})` : ''}</td><td style="padding:5px 0;text-align:right;color:#22c55e;font-size:14px">-${money(order.discount)}</td></tr>` : ''}
       ${order.addonTotal > 0 ? `<tr><td style="${rowLbl}">Add-ons</td><td style="${rowVal}">${money(order.addonTotal)}</td></tr>` : ''}
       <tr><td style="${rowLbl}">HST (13%)</td><td style="${rowVal}">${money(order.tax || 0)}</td></tr>
@@ -482,6 +482,16 @@ export async function processOrder(order, env) {
   if (existing) {
     console.log('Duplicate order suppressed for key:', key);
     return { ...existing, duplicate: true };
+  }
+
+  // Reserve the key IMMEDIATELY — before placing the TDG order or sending any email —
+  // so the two paths that call processOrder (the browser via send-order-email.js AND
+  // the Stripe webhook, which fire near-simultaneously on a card order) can't both
+  // slip past the check above and place the order twice / send duplicate emails.
+  // Whichever path writes this marker first wins; the other sees it and returns
+  // { duplicate: true }. The marker is overwritten with the final result at the end.
+  if (key) {
+    await recordDone(env, key, { success: true, orderNumber: order.orderNumber, pending: true });
   }
 
   const skipTdg = env && (env.SKIP_TDG === '1' || env.SKIP_TDG === true);
