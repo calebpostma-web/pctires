@@ -2,6 +2,8 @@
 
 Source for [pctires.ca](https://pctires.ca) — hosted on Cloudflare Pages, deploys automatically from the `main` branch of this repo.
 
+> **⚡ For Claude / AI assistants:** This repo lives **locally** in this folder. Make changes by editing the files right here (Read/Edit) — **do NOT use the GitHub web UI or try to log in to GitHub.** Caleb deploys by running **`.\push-pctires.ps1`** in PowerShell himself (it commits + pushes to `main`; Cloudflare rebuilds in ~1 min). So the flow is: you edit local files → tell Caleb what changed → Caleb runs the push script. See "Local workflow" below.
+
 ## Local workflow (PowerShell)
 
 Two scripts handle GitHub sync from this folder:
