@@ -31,6 +31,8 @@ const HEADERS = [
   'Installation Service',
   'Appointment Date',
   'Appointment Time',
+  'Payment Method',
+  'Payment Status',
 ];
 
 // Columns for the Service Bookings tab (must match the dispatch script).
@@ -82,6 +84,17 @@ function doPost(e) {
       ordersSheet.setFrozenRows(1);
     }
 
+    // Self-healing migration: make sure the payment columns exist on an
+    // Orders tab that predates them, so old sheets get the new columns too.
+    var hdr = ordersSheet.getRange(1, 1, 1, ordersSheet.getLastColumn()).getValues()[0].map(String);
+    ['Payment Method', 'Payment Status'].forEach(function (h) {
+      if (hdr.indexOf(h) === -1) {
+        ordersSheet.getRange(1, hdr.length + 1).setValue(h)
+          .setFontWeight('bold').setBackground('#1a1a1a').setFontColor('#f5c518');
+        hdr.push(h);
+      }
+    });
+
     ordersSheet.appendRow([
       data.timestamp        || new Date().toISOString(),
       data.orderNumber      || '',
@@ -105,6 +118,8 @@ function doPost(e) {
       data.installationService || '',
       data.appointmentDate  || '',
       data.appointmentTime  || '',
+      data.paymentMethod    || 'Card',
+      data.paymentStatus    || '',
     ]);
 
     // ── Email list sheet (CASL opt-ins only) ──────
