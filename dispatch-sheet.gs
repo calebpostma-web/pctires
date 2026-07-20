@@ -84,8 +84,11 @@ function addServiceBooking() {
   buildDispatch();
 }
 
-function buildDispatch() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+// ssArg lets the order logger (Code.gs) rebuild the board straight from a
+// website order/booking. Called with no argument from the menu, it uses the
+// active spreadsheet as before.
+function buildDispatch(ssArg) {
+  var ss = ssArg || SpreadsheetApp.getActiveSpreadsheet();
   var tz = ss.getSpreadsheetTimeZone();
 
   // --- 1. Find the orders tab by its header row (robust to tab name) ---
@@ -204,7 +207,7 @@ function buildDispatch() {
       .setValue('No upcoming installs booked. New bookings from the website appear here automatically after a refresh.')
       .setFontColor('#888888').setFontStyle('italic');
     sh.setFrozenRows(2);
-    SpreadsheetApp.getActiveSpreadsheet().toast('Dispatch refreshed — 0 upcoming.', 'PC Tires', 3);
+    try { ss.toast('Dispatch refreshed — 0 upcoming.', 'PC Tires', 3); } catch (e) {}
     return;
   }
 
@@ -259,7 +262,7 @@ function buildDispatch() {
   }
 
   sh.setFrozenRows(2);
-  SpreadsheetApp.getActiveSpreadsheet().toast('Dispatch refreshed — ' + jobs.length + ' upcoming.', 'PC Tires', 3);
+  try { ss.toast('Dispatch refreshed — ' + jobs.length + ' upcoming.', 'PC Tires', 3); } catch (e) {}
 }
 
 // "July 22, 2026" / "Jul 22 2026" / ISO -> Date (local midnight), or null.
