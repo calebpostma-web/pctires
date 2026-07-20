@@ -2527,7 +2527,7 @@ function getRebateForBrand(brand) {
     <div class="mm-error" id="mmError"></div>
     <div id="mmLogin">
       <div class="mm-field"><label>Email Address</label><input type="email" id="mmEmail" placeholder="you@example.com" autocomplete="email"></div>
-      <div class="mm-field"><label>Invite Code</label><input type="text" id="mmCode" placeholder="Enter invite code" style="letter-spacing:2px;font-family:'IBM Plex Mono',monospace" autocomplete="off"></div>
+      <div class="mm-field"><label>Invite Code</label><input type="text" id="mmCode" placeholder="Enter invite code" style="letter-spacing:2px;font-family:'IBM Plex Mono',monospace" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
       <button class="mm-submit" onclick="memberLogin()">SIGN IN → UNLOCK PRICING</button>
       <p class="mm-note">Don't have an invite code? <a href="#" onclick="switchMmTab('request');return false">Request access</a></p>
     </div>
@@ -2704,7 +2704,7 @@ let currentMember = null;
 window._ownerAuthed = false;
 window._ownerToken = '';
 try {
-  var _ot = sessionStorage.getItem('pc_owner_token');
+  var _ot = localStorage.getItem('pc_owner_token') || sessionStorage.getItem('pc_owner_token');
   if (_ot) { window._ownerToken = _ot; window._ownerAuthed = true; currentMember = { email: 'owner', name: 'Owner', code: 'owner' }; }
 } catch (e) {}
 
@@ -2784,7 +2784,7 @@ function openMemberModal() {
     if (confirm('Sign out?')) {
       currentMember = null; try { localStorage.removeItem('pc_member'); } catch(e) {}
       window._ownerAuthed = false; window._ownerToken = '';
-      try { sessionStorage.removeItem('pc_owner_token'); } catch(e) {}
+      try { localStorage.removeItem('pc_owner_token'); sessionStorage.removeItem('pc_owner_token'); } catch(e) {}
       updateMemberNav(); renderCatalog();
     }
     return;
@@ -2814,7 +2814,7 @@ async function memberLogin() {
     if (r.ok && d && d.ok && d.token) {
       window._ownerAuthed = true;
       window._ownerToken = d.token;
-      try { sessionStorage.setItem('pc_owner_token', d.token); } catch(e) {}
+      try { localStorage.setItem('pc_owner_token', d.token); } catch(e) {}
       currentMember = { email: email || 'owner', name: 'Owner', code: 'owner' };  // session only — not persisted to localStorage
       closeMemberModal(); updateMemberNav(); renderCatalog();
       showToast('Owner mode active', 'Verified — cost pricing on');
@@ -4840,7 +4840,14 @@ function updSteps() {
 async function nextStep() {
   if (step === 1) {
     var _em = (document.getElementById('email').value || '').trim(); document.getElementById('email').value = _em;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(_em)) { alert('Please enter a valid email address (like name@example.com).'); return; }
+    if (staffPhoneOrder) {
+      // Owner phone order: phone is required, email optional (often only have a number).
+      var _ph = (document.getElementById('phone') && document.getElementById('phone').value || '').trim();
+      if (_ph.replace(/\D/g, '').length < 10) { alert("Enter the customer's phone number (10 digits)."); return; }
+      if (_em && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(_em)) { alert('That email looks off — fix it or leave it blank.'); return; }
+    } else {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(_em)) { alert('Please enter a valid email address (like name@example.com).'); return; }
+    }
     if (window._quoteFastLane) { step = 4; updSteps(); return; }
   }
   if (step === 2) {
