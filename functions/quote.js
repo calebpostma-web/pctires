@@ -12,8 +12,10 @@
  *
  * Requires:
  *   - KV namespace bound as QUOTES_KV (create in Cloudflare dashboard)
- *   - Optional env var OWNER_CODE (defaults to 'pctowner2026' to match client)
+ *   - env var OWNER_PASSWORD (owner auth is via signed token from /owner-auth)
  */
+
+import { verifyOwnerToken } from './owner-token.js';
 
 const QUOTE_TTL_SECONDS = 30 * 24 * 60 * 60;       // 30 days for open quotes
 const PAID_TTL_SECONDS  = 90 * 24 * 60 * 60;       // 90 days for paid quotes
@@ -52,9 +54,6 @@ export async function onRequest(context) {
     return json({ error: 'QUOTES_KV not bound. Set up KV namespace in Cloudflare Pages settings.' }, 500);
   }
 
-  // Owner code: env var preferred, fallback matches the client-side default so day-one works
-  const OWNER_CODE = env.OWNER_CODE || 'pctowner2026';
-
   try {
     // ── GET — retrieve a quote ─────────────────────────────────────
     if (method === 'GET') {
@@ -69,7 +68,8 @@ export async function onRequest(context) {
     // ── POST — create a quote (owner auth) ─────────────────────────
     if (method === 'POST') {
       const body = await request.json();
-      if (!body.ownerCode || String(body.ownerCode).toLowerCase() !== OWNER_CODE.toLowerCase()) {
+      const ownerOk = await verifyOwnerToken(body.ownerToken, env);
+      if (!ownerOk) {
         return json({ error: 'Unauthorized' }, 401);
       }
       if (!Array.isArray(body.cart) || body.cart.length === 0) {
