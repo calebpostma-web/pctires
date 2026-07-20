@@ -6849,9 +6849,24 @@ function svcPickDate(d) { svcSelDate = d; svcSelTime = null; buildSvcCal(); }
 function buildSvcTimes() {
   const duration = svcSelected?.duration || 30;
   const slots = getSlotsForDuration(duration);
-  document.getElementById('svcTimeGrid').innerHTML = slots.map(t =>
-    `<div class="time-slot${svcSelTime===t?' sel':''}" onclick="svcPickTime('${t}')">${t}</div>`
-  ).join('');
+  // For a same-day booking, grey out slots that have already passed.
+  const now = new Date();
+  const todayStr = `${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  const isToday = svcSelDate === todayStr;
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const slotMin = (t) => {
+    const m = String(t).match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+    if (!m) return -1;
+    let h = parseInt(m[1], 10); const min = parseInt(m[2], 10); const ap = (m[3] || '').toUpperCase();
+    if (ap === 'PM' && h !== 12) h += 12;
+    if (ap === 'AM' && h === 12) h = 0;
+    return h * 60 + min;
+  };
+  document.getElementById('svcTimeGrid').innerHTML = slots.map(t => {
+    const passed = isToday && slotMin(t) <= nowMin;
+    if (passed) return `<div class="time-slot bkd" title="Already passed">${t}</div>`;
+    return `<div class="time-slot${svcSelTime===t?' sel':''}" onclick="svcPickTime('${t}')">${t}</div>`;
+  }).join('');
 }
 function svcPickTime(t) { svcSelTime = t; buildSvcTimes(); }
 function svcPrevMo() { if(svcCalMo===0){svcCalMo=11;svcCalY--;}else{svcCalMo--;} svcSelDate=null;svcSelTime=null;buildSvcCal(); }
