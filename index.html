@@ -1245,6 +1245,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 <script src="https://js.stripe.com/v3/" defer></script>
 <script src="/promo-codes.js" defer></script>
 <script src="/vehicle-db.js" defer></script>
+<script src="/service-pricing.js" defer></script>
 <style id="pc-callfirst-css">
 /* ===== Mobile call-first layer (added 2026-06) ===== */
 /* mobile-only: desktop stays Caleb's quoting tool, untouched */
@@ -1981,6 +1982,21 @@ function getRebateForBrand(brand) {
         <!-- Left: contact + notes -->
         <div>
           <div class="svc-contact-fields">
+            <div class="svc-field" id="svcRimWrap" style="display:none">
+              <label>Rim size</label>
+              <div style="display:flex;gap:10px">
+                <button type="button" id="svcRimBtnSmall" onclick="setSvcRim(false)">Under 20"</button>
+                <button type="button" id="svcRimBtnLarge" onclick="setSvcRim(true)">20" and up</button>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px;font-style:italic">Low-profile or oversized tires may be quoted separately.</div>
+            </div>
+            <div class="svc-field" id="svcQtyWrap" style="display:none">
+              <label id="svcQtyLabel">How many tires?</label>
+              <div style="display:flex;align-items:center;gap:14px">
+                <input type="number" id="svcQty" min="1" max="20" value="4" oninput="updateSvcQty()" style="width:90px">
+                <div id="svcQtyTotal" style="font-weight:700;color:var(--yellow);font-size:15px"></div>
+              </div>
+            </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
               <div class="svc-field"><label>First Name</label><input type="text" id="svcFName" placeholder="Jane"></div>
               <div class="svc-field"><label>Last Name</label><input type="text" id="svcLName" placeholder="Smith"></div>
@@ -6786,7 +6802,7 @@ const BOOK_SERVICES = [
   { id:'swap',      icon:'❄️',  name:'Seasonal Swap',                  price:'$15',   unit:'per tire', duration:45,  desc:'Swap your pre-mounted stored set — no mounting needed. Torque check included.' },
   { id:'tpms',      icon:'📡', name:'TPMS Relearn',                   price:'$30',   unit:'flat',     duration:30,  desc:'Relearn your TPMS sensors after a tire change, rotation, or battery replacement.' },
   { id:'mountnew',  icon:'⚙️', name:'Install Tires Purchased Here',   price:'$25',   unit:'per tire', duration:60,  desc:'Mount, balance, TPMS reset, and disposal of old tires — included pricing for tires bought from PC Tires.' },
-  { id:'mountown',  icon:'🛠️', name:'Customer-Supplied Tire Install',  price:'$40',   unit:'per tire', duration:60,  desc:'You bring the tires, we install them. Mount, balance, TPMS reset, and disposal of old tires included. Subject to inspection — see disclaimer below.' },
+  { id:'mountown',  icon:'🛠️', name:'Customer-Supplied Tire Install',  price:'$30',   unit:'per tire', duration:60,  desc:'You bring the tires, we install them. Mount, balance, TPMS reset, and disposal of old tires included. Subject to inspection — see disclaimer below.' },
   { id:'patch',     icon:'🩹', name:'Flat Repair — Proper Patch',  price:'$45',   unit:'flat',     duration:45,  desc:'Tire dismounted, internally patched, remounted, balanced, and reinstalled. We do not offer plug repairs — patches are the safe, long-term fix.' },
   { id:'bead',      icon:'💧', name:'Bead Leak Repair',                price:'$55',   unit:'flat',     duration:60,  desc:'Tire dismounted, bead seat cleaned with wire wheel, sealer applied, remounted, balanced, and leak-tested. Severely corroded wheels may require replacement.' },
   { id:'valve',     icon:'🔩', name:'Valve Stem Replacement (rubber)', price:'$25',   unit:'per stem', duration:30,  desc:'Replace faulty, leaking, or corroded rubber valve stems. Tire dismounted and rebalanced.' },
@@ -6795,9 +6811,31 @@ const BOOK_SERVICES = [
 ];
 
 let svcSelected = null;
+let svcQty = 1;
+let svcRimLarge = false;   // true when "20" and up" is chosen for a rim-tiered service
 let svcCalY, svcCalMo, svcSelDate = null, svcSelTime = null;
 
+// Pull prices from service-pricing.js into BOOK_SERVICES. Runs once, on first
+// grid render — by then the deferred pricing file has loaded. If for any reason
+// it hasn't, the hardcoded prices in BOOK_SERVICES stand as a safe fallback.
+let _pricingApplied = false;
+function applyServicePricing() {
+  if (_pricingApplied || typeof SERVICE_PRICING === 'undefined') return;
+  BOOK_SERVICES.forEach(s => {
+    const p = SERVICE_PRICING[s.id];
+    if (!p) return;
+    s.unit = p.unit;
+    s.free = !!p.free;
+    s.priceNum = p.free ? 0 : p.price;
+    s.price = p.free ? 'Free' : ('$' + p.price);
+    if (p.priceLarge != null) { s.priceLargeNum = p.priceLarge; s.largeFrom = p.largeFrom || 20; }
+    else { s.priceLargeNum = null; }
+  });
+  _pricingApplied = true;
+}
+
 function buildSvcGrid() {
+  applyServicePricing();
   const grid = document.getElementById('svcGrid');
   if (!grid) return;
   grid.innerHTML = BOOK_SERVICES.map(s => `
@@ -6812,10 +6850,75 @@ function buildSvcGrid() {
     </div>`).join('');
 }
 
+// Effective per-unit price, accounting for the 20"+ rim tier when selected.
+function svcUnitPrice(s) {
+  if (!s) return 0;
+  if (s.priceLargeNum != null && svcRimLarge) return s.priceLargeNum;
+  if (s.priceNum != null) return s.priceNum;
+  const n = parseFloat(String(s.price || '').replace(/[^0-9.]/g, ''));
+  return isNaN(n) ? 0 : n;
+}
+// Is this service priced per unit (per tire / per stem)?
+function svcIsPerUnit(s) { return s && /per/i.test(s.unit || ''); }
+// Does this service have a 20"+ rim price tier?
+function svcHasRimTier(s) { return s && s.priceLargeNum != null; }
+
+// Style a rim button as active/inactive.
+function styleRimBtn(btn, active) {
+  btn.style.cssText = 'flex:1;padding:10px;border-radius:2px;cursor:pointer;font-weight:700;font-size:13px;transition:all .15s;'
+    + 'border:1px solid ' + (active ? 'var(--yellow)' : 'var(--border)') + ';'
+    + 'background:' + (active ? 'var(--yellow)' : 'var(--raised)') + ';'
+    + 'color:' + (active ? 'var(--black)' : 'var(--white)') + ';';
+}
+function setSvcRim(large) {
+  svcRimLarge = large;
+  const bS = document.getElementById('svcRimBtnSmall'), bL = document.getElementById('svcRimBtnLarge');
+  if (bS) styleRimBtn(bS, !large);
+  if (bL) styleRimBtn(bL, large);
+  updateSvcQty();
+}
+
+// Recompute the live total shown next to the quantity box.
+function updateSvcQty() {
+  const inp = document.getElementById('svcQty');
+  if (!inp) return;
+  let q = parseInt(inp.value, 10);
+  if (isNaN(q) || q < 1) q = 1;
+  if (q > 20) q = 20;
+  svcQty = q; inp.value = q;
+  const total = svcUnitPrice(svcSelected) * q;
+  document.getElementById('svcQtyTotal').textContent = '= $' + total + ' total';
+}
+
 function selectSvc(id) {
   svcSelected = BOOK_SERVICES.find(s => s.id === id);
   svcSelDate = null; svcSelTime = null;
   buildSvcGrid();
+
+  // Rim-size tier (e.g. customer-supplied install: $30 under 20", $35 for 20"+).
+  const rimWrap = document.getElementById('svcRimWrap');
+  if (svcHasRimTier(svcSelected)) {
+    svcRimLarge = false;
+    setSvcRim(false);          // default to Under 20"
+    rimWrap.style.display = 'block';
+  } else {
+    svcRimLarge = false;
+    rimWrap.style.display = 'none';
+  }
+
+  // Show / configure the quantity picker for per-unit services.
+  const wrap = document.getElementById('svcQtyWrap');
+  if (svcIsPerUnit(svcSelected)) {
+    const word = (svcSelected.unit || '').replace(/^per\s+/i, '');   // 'tire' or 'stem'
+    svcQty = (word === 'tire') ? 4 : 1;                              // sensible default
+    document.getElementById('svcQtyLabel').textContent = 'How many ' + word + 's?';
+    document.getElementById('svcQty').value = svcQty;
+    wrap.style.display = 'block';
+    updateSvcQty();
+  } else {
+    svcQty = 1;
+    wrap.style.display = 'none';
+  }
   const panel = document.getElementById('svcBookingPanel');
   panel.classList.add('show');
   // Reset confirm state
@@ -6882,6 +6985,17 @@ async function submitServiceBooking() {
   const btn = document.getElementById('svcSubmitBtn');
   btn.textContent = 'Sending…'; btn.disabled = true;
 
+  // Quantity + total price for per-unit services (per tire / per stem),
+  // honouring the 20"+ rim tier when it applies.
+  const perUnit = svcIsPerUnit(svcSelected);
+  const qty = perUnit ? svcQty : 1;
+  const unit = svcUnitPrice(svcSelected);
+  const total = unit * qty;
+  const rimNote = svcHasRimTier(svcSelected) ? (svcRimLarge ? ', 20"+' : ', under 20"') : '';
+  const priceLine = perUnit
+    ? '$' + total + ' (' + qty + ' × $' + unit + rimNote + ')'
+    : svcSelected.price;
+
   const payload = {
     service: svcSelected.name,
     customerName: name,
@@ -6892,7 +7006,8 @@ async function submitServiceBooking() {
     preferredDate: svcSelDate,
     preferredTime: svcSelTime,
     duration: svcSelected.duration,
-    price: svcSelected.price,
+    quantity: perUnit ? qty : '',
+    price: priceLine,
   };
 
   try {
@@ -6918,6 +7033,8 @@ async function submitServiceBooking() {
         notes: document.getElementById('svcNotes').value.trim(),
         preferredDate: svcSelDate,
         preferredTime: svcSelTime,
+        quantity: perUnit ? qty : '',
+        price: priceLine,
       }),
     });
   } catch(e) { console.warn('Service sheet log failed:', e.message); }
@@ -6925,7 +7042,8 @@ async function submitServiceBooking() {
   // Show confirmation
   document.getElementById('svcFormWrap').style.display = 'none';
   const msg = document.getElementById('svcConfirmMsg');
-  msg.innerHTML = `<strong style="color:var(--white)">${svcSelected.name}</strong> requested for <strong style="color:var(--white)">${svcSelDate} at ${svcSelTime}</strong>.<br>We'll call <strong style="color:var(--white)">${phone}</strong> to confirm within a few hours.`;
+  const qtyLine = perUnit ? ` (${qty} ${(svcSelected.unit || '').replace(/^per\s+/i, '')}s — ${priceLine})` : '';
+  msg.innerHTML = `<strong style="color:var(--white)">${svcSelected.name}</strong>${qtyLine} requested for <strong style="color:var(--white)">${svcSelDate} at ${svcSelTime}</strong>.<br>We'll call <strong style="color:var(--white)">${phone}</strong> to confirm within a few hours.`;
   document.getElementById('svcConfirmBox').classList.add('show');
 
   // Reset for next use
