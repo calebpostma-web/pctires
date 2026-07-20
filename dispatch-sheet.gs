@@ -30,8 +30,8 @@ var GREEN        = '#1e8f4e';
 
 // Columns shown on the board, in order.
 // (Named DISPATCH_COLS so it can't clash with the order logger's HEADERS in Code.gs.)
-var DISPATCH_COLS = ['Time', 'Customer', 'Phone', 'Vehicle', 'Tires', 'Service', 'Notes'];
-var COL_WIDTHS = [78, 160, 128, 170, 320, 200, 170];
+var DISPATCH_COLS = ['Time', 'Customer', 'Phone', 'Vehicle', 'Tires', 'Service', 'Paid', 'Notes'];
+var COL_WIDTHS = [78, 160, 128, 170, 300, 190, 80, 170];
 
 // Tab where service-only jobs (swap, rotation, repair) are entered by hand.
 var SERVICE_TAB = 'Service Bookings';
@@ -112,7 +112,8 @@ function buildDispatch(ssArg) {
   var idx = function (name) { return cols.indexOf(name); };
   var iDate = idx('Appointment Date'), iTime = idx('Appointment Time'),
       iName = idx('Customer Name'), iPhone = idx('Phone'), iVeh = idx('Vehicle'),
-      iItems = idx('Items Ordered'), iSvc = idx('Installation Service'), iOrd = idx('Order #');
+      iItems = idx('Items Ordered'), iSvc = idx('Installation Service'), iOrd = idx('Order #'),
+      iPay = idx('Payment Status');
 
   var all = src.getDataRange().getValues().slice(headerRowIdx + 1);
 
@@ -127,7 +128,7 @@ function buildDispatch(ssArg) {
     if (!d || d < today) continue;          // skip unparseable + past dates
 
     var name = String(row[iName] || '').trim();
-    var time = String(row[iTime] || '').trim();
+    var time = cellTimeStr(row[iTime], tz);
     var key = name.toLowerCase() + '|' + dateStr + '|' + time;
     if (seen[key]) continue;                // drop double-submits
     seen[key] = true;
@@ -140,6 +141,7 @@ function buildDispatch(ssArg) {
       veh: String(row[iVeh] || '').trim(),
       items: String(row[iItems] || '').trim(),
       svc: String(row[iSvc] || '').trim(),
+      pay: (iPay > -1 ? String(row[iPay] || '').trim() : ''),
       notes: ''
     });
   }
@@ -161,12 +163,13 @@ function buildDispatch(ssArg) {
       if (!dd || dd < today) continue;
       jobs.push({
         d: dd,
-        time: String(rr[sT] || '').trim(),
+        time: cellTimeStr(rr[sT], tz),
         name: String(rr[sN] || '').trim(),
         phone: String(rr[sP] || '').trim(),
         veh: String(rr[sV] || '').trim(),
         items: '',
         svc: String(rr[sS] || '').trim(),
+        pay: '',
         notes: String(rr[sNo] || '').trim()
       });
     }
@@ -228,8 +231,8 @@ function buildDispatch(ssArg) {
         .setValue(label)
         .setBackground(isToday ? BRAND_YELLOW : DARK)
         .setFontColor(isToday ? '#0a0a0a' : '#ffffff')
-        .setFontWeight('bold').setFontSize(12).setVerticalAlignment('middle');
-      sh.setRowHeight(rowPtr, 26);
+        .setFontWeight('bold').setFontSize(13).setVerticalAlignment('middle');
+      sh.setRowHeight(rowPtr, 30);
       rowPtr++;
 
       // Column headers
@@ -240,12 +243,25 @@ function buildDispatch(ssArg) {
     }
 
     var timeCell = job.time ? prettyTime(job.time) : '— set time';
-    var rowVals = [[timeCell, job.name, job.phone, job.veh, job.items, job.svc, job.notes || '']];
+    var payDisplay = payText(job.pay);
+    var rowVals = [[timeCell, job.name, fmtPhone(job.phone), job.veh, job.items, job.svc, payDisplay, job.notes || '']];
     var rng = sh.getRange(rowPtr, 1, 1, NC);
     rng.setValues(rowVals).setFontSize(10).setVerticalAlignment('middle')
        .setWrap(false);
     rng.setBackground(band ? BAND : '#ffffff');
-    sh.setRowHeight(rowPtr, 24);
+    rng.setBorder(false, false, true, false, false, false, '#ececec', SpreadsheetApp.BorderStyle.SOLID);
+    sh.setRowHeight(rowPtr, 27);
+
+    // Customer name in bold
+    sh.getRange(rowPtr, 2).setFontWeight('bold').setFontColor('#111111');
+
+    // Paid / owing marker (column 7), colour-coded
+    var payCell = sh.getRange(rowPtr, 7);
+    var pu = String(job.pay || '').toUpperCase();
+    payCell.setFontWeight('bold').setHorizontalAlignment('center');
+    if (pu === 'PAID')         payCell.setFontColor(GREEN);
+    else if (pu === 'OWING')   payCell.setFontColor(RED);
+    else if (pu === 'DEPOSIT') payCell.setFontColor('#c77f0a');
 
     // Time cell styling
     var tCell = sh.getRange(rowPtr, 1);
@@ -265,13 +281,37 @@ function buildDispatch(ssArg) {
   try { ss.toast('Dispatch refreshed — ' + jobs.length + ' upcoming.', 'PC Tires', 3); } catch (e) {}
 }
 
-// "July 22, 2026" / "Jul 22 2026" / ISO -> Date (local midnight), or null.
+// "July 22, 2026" / "Jul 22 2026" / ISO / a Date cell -> Date (local midnight), or null.
 function parseApptDate(s) {
-  if (!s) return null;
-  var d = new Date(s);
+  if (!s && s !== 0) return null;
+  var d = (s instanceof Date) ? new Date(s.getTime()) : new Date(s);
   if (isNaN(d.getTime())) return null;
   d.setHours(0, 0, 0, 0);
   return d;
+}
+
+// Google Sheets often coerces a typed time ("10:00 AM") into a time VALUE, which
+// reads back as a Date on 1899-12-30. Normalize any cell to a clean time string.
+function cellTimeStr(v, tz) {
+  if (v instanceof Date) return Utilities.formatDate(v, tz, 'h:mm a');
+  return String(v || '').trim();
+}
+
+// Normalize the payment-status cell to a short board label.
+function payText(p) {
+  var u = String(p || '').toUpperCase();
+  if (u === 'PAID')    return 'PAID';
+  if (u === 'OWING')   return 'OWING';
+  if (u === 'DEPOSIT') return 'DEPOSIT';
+  return '';
+}
+
+// Format a phone number as (519) 380-5104 when it's a standard 10 digits.
+function fmtPhone(p) {
+  var d = String(p || '').replace(/\D/g, '');
+  if (d.length === 11 && d.charAt(0) === '1') d = d.slice(1);
+  if (d.length === 10) return '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+  return String(p || '');
 }
 
 // "16:30" / "9:00" / "9:00 AM" -> minutes from midnight. Blank -> 9999 (sorts last).
