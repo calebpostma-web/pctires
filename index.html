@@ -6885,6 +6885,26 @@ async function submitServiceBooking() {
     });
   } catch(e) { console.warn('Service request email failed:', e.message); }
 
+  // Also log to the sheet -> "Service Bookings" tab -> shows on the dispatch board.
+  // Same web app the order logger uses; type:'service' routes it to the right tab.
+  try {
+    await fetch('https://script.google.com/macros/s/AKfycbyYNGjt0JIz1NTFeWgal4aMUp49Nyy-ceE8Y-MB3kpA6QWsFkdzWRG0EASapp-46cZ8/exec', {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'service',
+        service: svcSelected.name,
+        customerName: name,
+        customerPhone: phone,
+        customerEmail: document.getElementById('svcEmail').value.trim(),
+        vehicle: document.getElementById('svcVehicle').value.trim(),
+        notes: document.getElementById('svcNotes').value.trim(),
+        preferredDate: svcSelDate,
+        preferredTime: svcSelTime,
+      }),
+    });
+  } catch(e) { console.warn('Service sheet log failed:', e.message); }
+
   // Show confirmation
   document.getElementById('svcFormWrap').style.display = 'none';
   const msg = document.getElementById('svcConfirmMsg');
