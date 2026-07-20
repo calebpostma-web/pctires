@@ -8,7 +8,7 @@
  *   token = "<expiryMillis>.<base64url(HMAC-SHA256(expiryMillis, OWNER_PASSWORD))>"
  */
 
-const TTL_MS = 12 * 60 * 60 * 1000; // owner sessions last 12 hours
+const TTL_MS = 30 * 24 * 60 * 60 * 1000; // owner sessions last 30 days (convenience on your own devices)
 
 function enc(s) { return new TextEncoder().encode(String(s)); }
 
