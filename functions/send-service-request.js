@@ -34,7 +34,7 @@ export async function onRequest(context) {
     const req = await request.json();
     const {
       service, customerName, customerPhone, customerEmail,
-      vehicle, notes, preferredDate, preferredTime, duration, price,
+      vehicle, notes, preferredDate, preferredTime, duration, price, quantity,
     } = req;
 
     const resendKey = env.RESEND_API_KEY;
@@ -75,6 +75,7 @@ export async function onRequest(context) {
     <div class="alert">📅 New service booking request — please confirm with the customer.</div>
     <table>
       <tr><td>Service</td><td><strong>${service}</strong></td></tr>
+      ${quantity ? `<tr><td>Quantity</td><td>${quantity}</td></tr>` : ''}
       <tr><td>Duration</td><td>${duration} minutes</td></tr>
       <tr><td>Price</td><td>${price}</td></tr>
       <tr><td>Preferred Date</td><td>${preferredDate || '—'}</td></tr>
