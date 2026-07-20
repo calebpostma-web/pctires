@@ -2468,6 +2468,17 @@ function getRebateForBrand(brand) {
       </div>
       <!-- Step 4: Payment -->
       <div class="fsec" id="s4">
+        <!-- Owner-only: pay method for phone orders. Hidden for customers. -->
+        <div id="staffPayWrap" style="display:none;margin-bottom:14px;border:1px dashed var(--yellow);border-radius:2px;padding:12px 14px;background:rgba(245,197,24,0.06)">
+          <div style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:8px">Staff — Payment Method</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button type="button" id="spm-card"      onclick="setStaffPay('card')">Card (charge now)</button>
+            <button type="button" id="spm-etransfer" onclick="setStaffPay('etransfer')">E-transfer received</button>
+            <button type="button" id="spm-cash"      onclick="setStaffPay('cash')">Cash</button>
+            <button type="button" id="spm-pickup"    onclick="setStaffPay('pickup')">Pay on pickup</button>
+          </div>
+          <div id="staffPayNote" style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic"></div>
+        </div>
         <div id="payChoice" style="display:none;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
           <div id="payOptFull" onclick="setPayMode('full')" style="cursor:pointer;padding:12px 14px;background:var(--raised);border:1px solid var(--yellow);border-radius:2px">
             <div style="font-weight:700;font-size:14px">Pay in Full</div>
@@ -2665,7 +2676,7 @@ function memberPrice(item) {
   return Math.round(retailPrice(item) * (1 - TDG.MEMBER_DISCOUNT) * 100) / 100;
 }
 function ownerPrice(item) { return Math.round(item.price * 100) / 100; }
-function isOwner() { return currentMember && currentMember.code.toLowerCase() === OWNER_CODE.toLowerCase(); }
+function isOwner() { return window._ownerAuthed === true; }
 function displayedPrice(item) {
   // Customer View mode: even when signed in as owner, show retail prices.
   // Lets Caleb walk through the site with a customer without doing markup math in his head.
@@ -2683,9 +2694,19 @@ function priceBadgeHTML(item) {
 //  MEMBER SYSTEM
 // ─────────────────────────────────────────────────
 const MEMBER_CODE = 'postmah&c';
-const OWNER_CODE = 'pctowner2026';
 const APPROVED_MEMBERS = {};
 let currentMember = null;
+
+// Owner is verified SERVER-SIDE via /owner-auth — there is NO owner code in this
+// page. _ownerAuthed drives owner UI (cost view, phone order); _ownerToken is the
+// signed session token that authorises no-charge staff orders. Restored from
+// sessionStorage so an owner stays signed in for the tab session.
+window._ownerAuthed = false;
+window._ownerToken = '';
+try {
+  var _ot = sessionStorage.getItem('pc_owner_token');
+  if (_ot) { window._ownerToken = _ot; window._ownerAuthed = true; currentMember = { email: 'owner', name: 'Owner', code: 'owner' }; }
+} catch (e) {}
 
 // Customer View mode — when active, owner sees retail prices instead of cost.
 // Lets Caleb show a customer prices on the site without doing markup math.
@@ -2727,12 +2748,13 @@ function updateCustomerViewBtn() {
 }
 
 function initMemberState() {
+  if (window._ownerAuthed) return;   // owner session already restored from token
   try {
     const saved = localStorage.getItem('pc_member');
     if (saved) {
       const m = JSON.parse(saved);
       const approved = APPROVED_MEMBERS[m.email];
-      const universalOk = m.code.toLowerCase() === MEMBER_CODE.toLowerCase() || m.code.toLowerCase() === OWNER_CODE.toLowerCase();
+      const universalOk = m.code.toLowerCase() === MEMBER_CODE.toLowerCase();
       const namedOk = approved && approved.code === m.code;
       if (universalOk || namedOk) {
         const name = approved?.name || m.email.split('@')[0];
@@ -2759,8 +2781,10 @@ function updateMemberNav() {
 
 function openMemberModal() {
   if (currentMember) {
-    if (confirm('Sign out of member account?')) {
+    if (confirm('Sign out?')) {
       currentMember = null; try { localStorage.removeItem('pc_member'); } catch(e) {}
+      window._ownerAuthed = false; window._ownerToken = '';
+      try { sessionStorage.removeItem('pc_owner_token'); } catch(e) {}
       updateMemberNav(); renderCatalog();
     }
     return;
@@ -2776,20 +2800,37 @@ function switchMmTab(tab) {
   document.getElementById('mmRequest').style.display = tab === 'request' ? 'block' : 'none';
   document.getElementById('mmError').classList.remove('show');
 }
-function memberLogin() {
+async function memberLogin() {
   const email = document.getElementById('mmEmail').value.trim().toLowerCase();
   const code  = document.getElementById('mmCode').value.trim();
   const errEl = document.getElementById('mmError');
   if (!email || !code) { errEl.textContent = 'Please enter your email and invite code.'; errEl.classList.add('show'); return; }
-  const universalMatch = code.toLowerCase() === MEMBER_CODE.toLowerCase() || code.toLowerCase() === OWNER_CODE.toLowerCase();
+
+  // Owner login is verified SERVER-SIDE (password checked against Cloudflare env
+  // var, never against anything in this page). Try it first.
+  try {
+    const r = await fetch('/owner-auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: code }) });
+    const d = await r.json().catch(() => ({}));
+    if (r.ok && d && d.ok && d.token) {
+      window._ownerAuthed = true;
+      window._ownerToken = d.token;
+      try { sessionStorage.setItem('pc_owner_token', d.token); } catch(e) {}
+      currentMember = { email: email || 'owner', name: 'Owner', code: 'owner' };  // session only — not persisted to localStorage
+      closeMemberModal(); updateMemberNav(); renderCatalog();
+      showToast('Owner mode active', 'Verified — cost pricing on');
+      return;
+    }
+  } catch(e) { /* fall through to member check */ }
+
+  // Otherwise treat as a member invite code (10% off — low-stakes, client-side).
+  const universalMatch = code.toLowerCase() === MEMBER_CODE.toLowerCase();
   const namedMatch = APPROVED_MEMBERS[email] && APPROVED_MEMBERS[email].code === code;
   if (!universalMatch && !namedMatch) { errEl.textContent = 'Invite code not recognized. Contact PC Tires to request access.'; errEl.classList.add('show'); return; }
   const name = APPROVED_MEMBERS[email]?.name || email.split('@')[0];
   currentMember = { email, name, code };
   try { localStorage.setItem('pc_member', JSON.stringify(currentMember)); } catch(e) {}
   closeMemberModal(); updateMemberNav(); renderCatalog();
-  if (isOwner()) showToast('Owner mode active', 'Showing TDG cost pricing');
-  else showToast('Welcome! Member pricing is active', '10% off all products unlocked');
+  showToast('Welcome! Member pricing is active', '10% off all products unlocked');
 }
 function memberRequest() {
   const name  = document.getElementById('mmReqName').value.trim();
@@ -4891,12 +4932,14 @@ function payableGrandTotal() {
 
 async function buildPaymentSummary() {
   const box = document.getElementById('payBox'); if (!box) return;
+  renderStaffPay();
   var _pc = document.getElementById('payChoice');
-  if (_pc) { _pc.style.display = depositEligible() ? 'grid' : 'none'; }
+  if (_pc) { _pc.style.display = staffNoCharge() ? 'none' : (depositEligible() ? 'grid' : 'none'); }
   if (!depositEligible()) { window._payMode = 'full'; }
   payModeStyles();
   var _nb = document.getElementById('nextBtn');
-  if (_nb && !window._paymentInFlight && window._payMode === 'deposit') { _nb.textContent = 'Pay $' + DEPOSIT_AMOUNT + ' Deposit'; }
+  if (_nb && !window._paymentInFlight && !staffNoCharge() && window._payMode === 'deposit') { _nb.textContent = 'Pay $' + DEPOSIT_AMOUNT + ' Deposit'; }
+  if (_nb && !window._paymentInFlight && staffNoCharge()) { _nb.textContent = staffPayLabel(); }
   const t = getTotals();
   const grandTotal = payableGrandTotal();
   if (t.override) {
@@ -5071,6 +5114,76 @@ var staffPhoneOrder = false;
 var DEPOSIT_AMOUNT = 50;
 var DEPOSIT_MIN_ORDER = 100;
 window._payMode = 'full';
+window._staffPay = 'card';   // 'card' | 'etransfer' | 'cash' | 'pickup' — owner phone orders only
+
+// True when the owner has chosen a non-card method → no Stripe charge is taken.
+function staffNoCharge() {
+  return staffPhoneOrder && window._staffPay && window._staffPay !== 'card';
+}
+// Label for the internal order log / email when the owner takes payment off-site.
+function staffPayMethodLabel() {
+  if (staffPhoneOrder) {
+    switch (window._staffPay) {
+      case 'etransfer': return 'E-transfer (received)';
+      case 'cash':      return 'Cash';
+      case 'pickup':    return 'Unpaid — Pay on pickup';
+    }
+  }
+  return 'Card';
+}
+function staffPayLabel() {
+  switch (window._staffPay) {
+    case 'etransfer': return 'Place Order — E-transfer ✓';
+    case 'cash':      return 'Place Order — Cash ✓';
+    case 'pickup':    return 'Place Order — Pay on Pickup';
+    default:          return (window._payMode === 'deposit') ? 'Pay $' + DEPOSIT_AMOUNT + ' Deposit' : (typeof nLabels !== 'undefined' ? nLabels[4] : 'Pay Securely 🔒');
+  }
+}
+function styleStaffPayBtn(btn, active) {
+  btn.style.cssText = 'padding:9px;border-radius:2px;cursor:pointer;font-weight:700;font-size:12px;transition:all .15s;'
+    + 'border:1px solid ' + (active ? 'var(--yellow)' : 'var(--border)') + ';'
+    + 'background:' + (active ? 'var(--yellow)' : 'var(--raised)') + ';'
+    + 'color:' + (active ? 'var(--black)' : 'var(--white)') + ';';
+}
+// Show/configure the staff pay-method row when entering the payment step.
+function renderStaffPay() {
+  var wrap = document.getElementById('staffPayWrap');
+  if (!wrap) return;
+  if (staffPhoneOrder) {
+    wrap.style.display = 'block';
+    if (!window._staffPay) window._staffPay = 'card';
+    setStaffPay(window._staffPay);
+  } else {
+    wrap.style.display = 'none';
+    window._staffPay = 'card';
+  }
+}
+function setStaffPay(method) {
+  window._staffPay = method;
+  ['card', 'etransfer', 'cash', 'pickup'].forEach(function (m) {
+    var b = document.getElementById('spm-' + m);
+    if (b) styleStaffPayBtn(b, m === method);
+  });
+  var noCharge = method !== 'card';
+  var se = document.getElementById('stripeElements');
+  var pc = document.getElementById('payChoice');
+  var logos = document.querySelector('#s4 .card-logos');
+  var fnote = document.querySelector('#s4 .field-note');
+  if (se) se.style.display = noCharge ? 'none' : '';
+  if (logos) logos.style.display = noCharge ? 'none' : '';
+  if (fnote) fnote.style.display = noCharge ? 'none' : '';
+  if (pc) pc.style.display = noCharge ? 'none' : (depositEligible() ? 'grid' : 'none');
+  if (noCharge) window._payMode = 'full';
+  var spn = document.getElementById('staffPayNote');
+  if (spn) {
+    spn.textContent =
+      method === 'etransfer' ? 'Confirm the e-transfer is in your account BEFORE placing. Tagged PAID — E-transfer.' :
+      method === 'cash'      ? 'Cash collected in shop. Tagged PAID — Cash.' :
+      method === 'pickup'    ? 'No payment taken — balance owing, collect on pickup. Tagged UNPAID.' : '';
+  }
+  var nb = document.getElementById('nextBtn');
+  if (nb && !window._paymentInFlight) nb.textContent = staffPayLabel();
+}
 function depositEligible() {
   try { return payableGrandTotal() >= DEPOSIT_MIN_ORDER; } catch (e) { return false; }
 }
@@ -5172,9 +5285,37 @@ function buildThankYouParams(orderId) {
   return params;
 }
 
+// Owner phone order paid off-site (e-transfer/cash) or pay-on-pickup: no Stripe,
+// place the TDG order and log it, tagged with the chosen method.
+async function placeStaffOrder() {
+  if (window._paymentInFlight) return;
+  window._paymentInFlight = true;
+  const btn = document.getElementById('nextBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Placing order…'; btn.classList.add('ld'); }
+  const errEl = document.getElementById('stripeError');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  try {
+    window._stripePaymentIntentId = '';   // no charge → no PaymentIntent
+    window._lastChargedAmount = null;
+    window._payMode = 'full';
+    window._pendingOrderId = getOrCreateOrderId();
+    await finishOrder();                   // places TDG + logs + emails, advances to confirm
+    window._pendingOrderId = null;
+    window._staffPay = 'card';             // reset for the next order
+  } catch (e) {
+    if (errEl) { errEl.textContent = (e && e.message) || 'Could not place order.'; errEl.style.display = 'block'; }
+    if (btn) { btn.disabled = false; btn.textContent = staffPayLabel(); }
+  } finally {
+    if (btn) btn.classList.remove('ld');
+    window._paymentInFlight = false;
+  }
+}
+
 async function processPayment() {
   // ── HARD GUARD: prevent concurrent/duplicate submissions ──
   if (window._paymentInFlight) return;
+  // ── OWNER PHONE ORDER, no card charge (e-transfer / cash / pay on pickup) ──
+  if (staffNoCharge()) { return placeStaffOrder(); }
   if (!window._stripeReady) {
     var _se = document.getElementById('stripeError');
     if (_se) {
@@ -5322,7 +5463,11 @@ async function finishOrder() {
     ${vehicleStr ? `<div class="cd-row"><span class="cd-label">Vehicle</span><span class="cd-val">${vehicleStr}</span></div>` : ''}
     <div class="cd-row"><span class="cd-label">Items</span><span class="cd-val">${cart.map(c=>`${c.qty}× ${c.brand} ${c.name}`).join(', ')}</span></div>
     ${addonAmt > 0 ? `<div class="cd-row"><span class="cd-label">Add-ons</span><span class="cd-val">${addonNames}</span></div>` : ''}
-    ${(window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? `<div class="cd-row"><span class="cd-label">Order Total</span><span class="cd-val">$${grandTotal.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Deposit Paid</span><span class="cd-val y">$${window._lastChargedAmount.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Balance at Install</span><span class="cd-val">$${(grandTotal - window._lastChargedAmount).toFixed(2)} CAD (e-transfer, card, or cash)</span></div>` : `<div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div>`}
+    ${staffNoCharge()
+        ? `<div class="cd-row"><span class="cd-label">Order Total</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Payment</span><span class="cd-val">${staffPayMethodLabel()}</span></div>`
+        : (window._lastChargedAmount && window._lastChargedAmount < grandTotal)
+        ? `<div class="cd-row"><span class="cd-label">Order Total</span><span class="cd-val">$${grandTotal.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Deposit Paid</span><span class="cd-val y">$${window._lastChargedAmount.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Balance at Install</span><span class="cd-val">$${(grandTotal - window._lastChargedAmount).toFixed(2)} CAD (e-transfer, card, or cash)</span></div>`
+        : `<div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div>`}
     <div class="cd-row"><span class="cd-label">Installation</span><span class="cd-val">${instLine}</span></div>
     <div class="cd-row"><span class="cd-label">Confirmation</span><span class="cd-val">Sent to ${email}</span></div>
   `;
@@ -5331,14 +5476,32 @@ async function finishOrder() {
   // Preserve the real PaymentIntent id captured in processPayment (collectOrderPayload
   // reads window._stripePaymentIntentId, which is now set — but be explicit).
   orderPayload.paymentIntentId = window._stripePaymentIntentId || orderPayload.paymentIntentId || '';
-  orderPayload.paymentMethod = 'Card';
+  orderPayload.paymentMethod = staffPayMethodLabel();
+  // Owner token authorises a no-charge order server-side (only sent for owner orders).
+  orderPayload.ownerToken = staffPhoneOrder ? (window._ownerToken || '') : '';
+  // Paid / owing status for the dispatch board.
+  const _payStatus = staffNoCharge()
+      ? (window._staffPay === 'pickup' ? 'OWING' : 'PAID')
+      : (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? 'DEPOSIT'
+      : 'PAID';
 
   // Send order email (CLIENT BACKUP path — card only). The Stripe webhook is the
   // durable path; durable KV dedup keyed by PaymentIntent id means whichever runs
   // first wins and the other is a no-op, so this can never double-place.
+  let _orderRes = null;
   try {
-    await fetch('/send-order-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderPayload) });
+    _orderRes = await fetch('/send-order-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderPayload) });
   } catch(e) { console.warn('Order email failed:', e.message); }
+  // A staff no-charge order has no Stripe webhook backup — this call is the ONLY
+  // path that places it, so a failure must stop and surface (never fake success).
+  if (staffNoCharge()) {
+    if (!_orderRes || !_orderRes.ok) {
+      let _msg = 'Order could not be placed. Please try again.';
+      if (_orderRes && _orderRes.status === 401) _msg = 'Owner session expired — sign in again, then place the order.';
+      else if (_orderRes) { try { const _d = await _orderRes.json(); if (_d && _d.error) _msg = _d.error; } catch(e) {} }
+      throw new Error(_msg);
+    }
+  }
 
   // Write to Google Sheets
   try {
@@ -5368,6 +5531,8 @@ async function finishOrder() {
         installationService: selectedService?.label || 'Not booked',
         appointmentDate: selDate || '',
         appointmentTime: selTime || '',
+        paymentMethod: staffPayMethodLabel(),
+        paymentStatus: _payStatus,
       }),
     });
   } catch(e) { console.warn('Sheets write failed:', e.message); }
@@ -5400,6 +5565,10 @@ async function finishOrder() {
   }
 
   step = 5; updSteps();
+
+  // Staff phone orders stay in the app (take the next call) and must NOT fire the
+  // customer /thank-you page or its Google Ads conversion tracking.
+  if (staffPhoneOrder) return;
 
   // Redirect to /thank-you for a real URL + Google Ads conversion tracking.
   // Done AFTER step=5 so the in-modal confirmation is the visual fallback
@@ -7419,7 +7588,7 @@ async function createQuoteLink() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        ownerCode: currentMember ? currentMember.code : '',
+        ownerToken: window._ownerToken || '',
         cart: quoteItems,
         appliedPromo: null,
         finalTotal,
