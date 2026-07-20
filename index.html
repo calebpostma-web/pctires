@@ -6829,8 +6829,10 @@ function selectSvc(id) {
 
 function buildSvcCal() {
   document.getElementById('svcCalMo').textContent = `${MONTHS[svcCalMo]} ${svcCalY}`;
-  const minDate = new Date(); minDate.setHours(minDate.getHours() + 24); minDate.setHours(0,0,0,0);
-  if (new Date().getHours() >= 12) minDate.setDate(minDate.getDate() + 1);
+  // Service bookings (repair, customer-supplied install, swap, rotation) don't
+  // require ordering tires, so same-day is allowed — only past days and Sundays
+  // are blocked. The 24h lead time still applies to ONLINE TIRE ORDERS via buildCal().
+  const minDate = new Date(); minDate.setHours(0,0,0,0);
   const firstDay = new Date(svcCalY, svcCalMo, 1).getDay(), days = new Date(svcCalY, svcCalMo+1, 0).getDate();
   let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
