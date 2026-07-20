@@ -59,9 +59,12 @@ function doPost(e) {
         data.customerName   || '',
         data.customerPhone  || '',
         data.vehicle        || '',
-        data.service        || '',
+        (data.service || '') + (data.quantity ? '  ×' + data.quantity : ''),
         data.notes          || '',
       ]);
+      // Rebuild the dispatch board so this booking appears at the top immediately.
+      // Wrapped so a board error can never break the booking write.
+      try { buildDispatch(ss); } catch (e) {}
       return ContentService
         .createTextOutput(JSON.stringify({ status: 'ok', type: 'service' }))
         .setMimeType(ContentService.MimeType.JSON);
@@ -130,6 +133,9 @@ function doPost(e) {
         ]);
       }
     }
+
+    // Rebuild the dispatch board so a booked install shows on the board immediately.
+    try { buildDispatch(ss); } catch (e) {}
 
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'ok' }))
