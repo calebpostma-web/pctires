@@ -1397,6 +1397,7 @@ function getRebateForBrand(brand) {
   <div class="nav-right">
     <a class="phone-link" href="tel:5193974686">📞 519-397-4686</a>
     <button class="member-btn" id="customerViewBtn" onclick="toggleCustomerView()" title="Toggle owner cost view ↔ customer retail view" style="display:none">&#9889; Cost View</button>
+    <button class="member-btn" id="textCustomerBtn" onclick="openTextCustomer()" title="Send a customer a text from the shop line" style="display:none">💬 Text Customer</button>
     <button class="member-btn" id="memberNavBtn" onclick="openMemberModal()">Member Login</button>
     <button id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode" style="background:none;border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:2px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0">🌙</button>
     <button class="cart-btn" onclick="openCart()">🛒 Cart <span class="cart-badge" id="cartCount">0</span></button>
@@ -2259,6 +2260,48 @@ function getRebateForBrand(brand) {
   </div>
 </div>
 
+<!-- TEXT A CUSTOMER MODAL (owner only) -->
+<div class="overlay" id="textCustomerOverlay" onclick="bgClose(event,'textCustomerOverlay')">
+  <div class="cart-drawer" style="margin:auto;max-width:520px;width:92%;height:auto;max-height:90vh;border:1px solid var(--border);border-radius:2px">
+    <div class="dhead">
+      <div class="dtitle">💬 Text a Customer</div>
+      <button class="close-x" onclick="closeTextCustomer()">✕</button>
+    </div>
+    <div style="padding:20px;overflow-y:auto">
+      <div style="color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5">
+        Sends one text from the shop line (519-397-4686). If they reply, it lands in the <strong>VoIP.ms app</strong> on the iPad — open it from the button at the bottom to chat back.
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Customer Name (optional)</label>
+        <input type="text" id="textSmsName" oninput="rebuildActiveTemplate()" placeholder="e.g. Sam" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:10px;font-family:Barlow,sans-serif;font-size:14px" autocomplete="off">
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Phone</label>
+        <input type="tel" id="textSmsPhone" placeholder="519-555-1234" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:10px;font-family:Barlow,sans-serif;font-size:14px" autocomplete="off">
+      </div>
+      <div style="margin-bottom:8px">
+        <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Quick Templates</label>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <button type="button" class="sms-tmpl" onclick="applySmsTemplate('in')" style="background:var(--raised);border:1px solid var(--border);color:var(--white);padding:7px 11px;cursor:pointer;font-size:12px;border-radius:2px">Tires are in</button>
+          <button type="button" class="sms-tmpl" onclick="applySmsTemplate('confirm')" style="background:var(--raised);border:1px solid var(--border);color:var(--white);padding:7px 11px;cursor:pointer;font-size:12px;border-radius:2px">Confirm appt</button>
+          <button type="button" class="sms-tmpl" onclick="applySmsTemplate('pickup')" style="background:var(--raised);border:1px solid var(--border);color:var(--white);padding:7px 11px;cursor:pointer;font-size:12px;border-radius:2px">Ready for pickup</button>
+          <button type="button" class="sms-tmpl" onclick="applySmsTemplate('behind')" style="background:var(--raised);border:1px solid var(--border);color:var(--white);padding:7px 11px;cursor:pointer;font-size:12px;border-radius:2px">Running behind</button>
+        </div>
+      </div>
+      <div style="margin-bottom:6px">
+        <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Message</label>
+        <textarea id="textSmsMessage" rows="4" maxlength="160" oninput="updateSmsCounter()" placeholder="Type a message, or tap a template above and edit it." style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:10px;font-family:Barlow,sans-serif;font-size:14px;resize:vertical"></textarea>
+        <div style="text-align:right;font-size:11px;color:var(--muted);margin-top:2px"><span id="textSmsCount">0</span>/160</div>
+      </div>
+      <button type="button" id="textSmsSendBtn" onclick="sendCustomerSms()" class="checkout-btn" style="background:var(--green);color:white">📱 Send Text</button>
+      <div id="textSmsStatus" style="display:none;font-size:12px;margin-top:10px"></div>
+      <div style="border-top:1px solid var(--border);margin:18px 0 14px"></div>
+      <a href="https://sms.voip.ms" target="_blank" rel="noopener" style="display:block;text-align:center;background:var(--raised);border:1px solid var(--border);color:var(--white);padding:11px;text-decoration:none;font-size:13px">💬 Open VoIP.ms to chat / see replies →</a>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;text-align:center">On the iPad, the VoIP.ms app is the full two-way inbox. This panel is just for quick send-outs.</div>
+    </div>
+  </div>
+</div>
+
 <!-- SELECTION GUIDE MODAL -->
 <div class="sg-overlay" id="sgOverlay" onclick="if(event.target===this)closeSelectionGuide()">
   <div class="sg-modal">
@@ -2732,6 +2775,9 @@ function toggleCustomerView() {
 }
 
 function updateCustomerViewBtn() {
+  // Owner-only "Text Customer" button rides the same show/hide as Cost View.
+  const txtBtn = document.getElementById('textCustomerBtn');
+  if (txtBtn) txtBtn.style.display = isOwner() ? 'inline-flex' : 'none';
   const btn = document.getElementById('customerViewBtn');
   if (!btn) return;
   if (!isOwner()) { btn.style.display = 'none'; return; }
@@ -7672,6 +7718,104 @@ function updateShareQuoteButton() {
   const btn = document.getElementById('shareQuoteBtn');
   if (!btn) return;
   btn.style.display = (isOwner() && cart.length > 0) ? 'block' : 'none';
+}
+
+// ─────────────────────────────────────────────────
+//  TEXT A CUSTOMER (owner only)
+//  Quick one-off SMS from the shop line via /send-sms (voip.ms server-side,
+//  owner-token gated). Two-way chat lives in the VoIP.ms app — see the link
+//  in the modal. Bodies are kept plain ASCII + under 160 so one text = one SMS.
+// ─────────────────────────────────────────────────
+const SMS_TEMPLATES = {
+  in:      "your tires are in and ready to book your install. -PC Tires",
+  confirm: "you're confirmed for [time]. See you at our Pain Court shop. -PC Tires",
+  pickup:  "your order is ready for pickup at our Pain Court shop. -PC Tires",
+  behind:  "we're running a little behind - we'll text you when we're ready. -PC Tires",
+};
+window._activeSmsTmpl = '';
+window._lastTmplText = '';
+
+function smsFirstName() {
+  const el = document.getElementById('textSmsName');
+  return el ? (el.value.trim().split(/\s+/)[0] || '') : '';
+}
+function composeSmsTemplate(key) {
+  const body = SMS_TEMPLATES[key];
+  if (!body) return '';
+  const fn = smsFirstName();
+  return fn ? ('Hi ' + fn + ', ' + body) : (body.charAt(0).toUpperCase() + body.slice(1));
+}
+function applySmsTemplate(key) {
+  window._activeSmsTmpl = key;
+  const text = composeSmsTemplate(key);
+  const ta = document.getElementById('textSmsMessage');
+  ta.value = text;
+  window._lastTmplText = text;
+  updateSmsCounter();
+  ta.focus();
+}
+// When the name changes, refresh the template greeting ONLY if she hasn't hand-edited it.
+function rebuildActiveTemplate() {
+  const ta = document.getElementById('textSmsMessage');
+  if (window._activeSmsTmpl && ta && ta.value === window._lastTmplText) {
+    const text = composeSmsTemplate(window._activeSmsTmpl);
+    ta.value = text;
+    window._lastTmplText = text;
+    updateSmsCounter();
+  }
+}
+function updateSmsCounter() {
+  const ta = document.getElementById('textSmsMessage');
+  const c  = document.getElementById('textSmsCount');
+  if (!ta || !c) return;
+  const n = ta.value.length;
+  c.textContent = n;
+  c.style.color = n > 160 ? '#ef4444' : (n > 140 ? 'var(--yellow)' : 'var(--muted)');
+}
+function openTextCustomer() {
+  if (!isOwner()) { alert('Sign in as owner to text customers.'); return; }
+  const st = document.getElementById('textSmsStatus');
+  if (st) { st.style.display = 'none'; st.textContent = ''; }
+  updateSmsCounter();
+  document.getElementById('textCustomerOverlay').classList.add('show');
+}
+function closeTextCustomer() {
+  document.getElementById('textCustomerOverlay').classList.remove('show');
+}
+async function sendCustomerSms() {
+  const btn    = document.getElementById('textSmsSendBtn');
+  const status = document.getElementById('textSmsStatus');
+  const phone  = document.getElementById('textSmsPhone').value.trim();
+  const message = document.getElementById('textSmsMessage').value.trim();
+  status.style.display = 'block';
+  if (!isOwner()) { status.textContent = 'Sign in as owner first.'; status.style.color = '#ef4444'; return; }
+  if (!phone || phone.replace(/\D/g, '').length < 10) {
+    status.textContent = "Enter the customer's 10-digit phone number first.";
+    status.style.color = '#ef4444'; return;
+  }
+  if (!message) { status.textContent = 'Type a message to send.'; status.style.color = '#ef4444'; return; }
+  if (message.length > 160) { status.textContent = 'Message is over 160 characters — shorten it.'; status.style.color = '#ef4444'; return; }
+  btn.disabled = true;
+  const orig = btn.textContent;
+  btn.textContent = 'SENDING…';
+  try {
+    const res = await fetch('/send-sms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, message, ownerToken: window._ownerToken || '' }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Send failed');
+    status.textContent = '✓ Text sent to ' + phone;
+    status.style.color = 'var(--green)';
+    btn.textContent = '✓ SENT';
+    setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 3000);
+  } catch (e) {
+    status.textContent = "Couldn't send: " + e.message + ' — try the VoIP.ms app instead.';
+    status.style.color = '#ef4444';
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
 }
 
 // Buy links from the tire model pages (e.g. /?buysize=225%2F45R18&brand=Michelin#catalog)
