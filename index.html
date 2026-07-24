@@ -2696,6 +2696,7 @@ const WHEEL_WIDTHS    = [5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,12.0
 // ─────────────────────────────────────────────────
 function markupMult(cost){ var f = 0.35 - 0.001*((+cost||0)-75); if(f>0.35)f=0.35; if(f<0.18)f=0.18; return 1+f; }
 function retailPrice(item) {
+  if (!(item.price > 0)) return 0;   // no real TDG cost -> "Call for price" (matches wheelRetailPrice); stops the $20/0.9 = $22.22 floor bug
   let price = item.price * markupMult(item.price);
   const _floor = (item.price + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT);
   if (_floor > price) price = _floor;
@@ -4443,6 +4444,12 @@ function addToCart(itemNumber, itemType) {
   const pool = itemType === 'wheel' ? allWheels : allTires;
   const item = pool.find(t => t.itemNumber === itemNumber);
   if (!item) return;
+
+  // No real price from TDG (cost <= 0) — never let it into the cart at $0/floor. Send them to call.
+  if (!(item.price > 0)) {
+    if (typeof showToast === 'function') showToast('Call for pricing', 'Please call 519-397-4686 for a price on this one.');
+    return;
+  }
 
   // ── Rim/tire diameter mismatch check ──
   if (itemType === 'wheel') {
