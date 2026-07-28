@@ -7,43 +7,43 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/tire-installation.html</loc>
+    <loc>https://pctires.ca/tire-installation</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/winter-tires.html</loc>
+    <loc>https://pctires.ca/winter-tires</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/trailer-tires.html</loc>
+    <loc>https://pctires.ca/trailer-tires</loc>
     <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/farm-tires.html</loc>
+    <loc>https://pctires.ca/farm-tires</loc>
     <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/tpms-service.html</loc>
+    <loc>https://pctires.ca/tpms-service</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/seasonal-changeover.html</loc>
+    <loc>https://pctires.ca/seasonal-changeover</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/best-winter-tires-2026.html</loc>
+    <loc>https://pctires.ca/best-winter-tires-2026</loc>
     <lastmod>2026-05-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -97,32 +97,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/swap.html</loc>
+    <loc>https://pctires.ca/swap</loc>
     <lastmod>2026-05-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/privacy.html</loc>
+    <loc>https://pctires.ca/privacy</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/returns.html</loc>
+    <loc>https://pctires.ca/returns</loc>
     <lastmod>2026-05-31</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://pctires.ca/manuals/autel-ts508wf.pdf</loc>
-    <lastmod>2026-05-22</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://pctires.ca/manuals/cae-3446wb.pdf</loc>
-    <lastmod>2026-05-22</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
@@ -223,13 +211,13 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/shipping.html</loc>
+    <loc>https://pctires.ca/shipping</loc>
     <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://pctires.ca/about.html</loc>
+    <loc>https://pctires.ca/about</loc>
     <lastmod>2026-07-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
