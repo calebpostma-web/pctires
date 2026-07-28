@@ -216,6 +216,12 @@ footer a:hover { color:var(--yellow); }
       </div>
 
       <div class="fg">
+        <label for="genPhone">Customer Phone</label>
+        <input type="tel" id="genPhone" placeholder="519-555-1234" inputmode="tel" autocomplete="off">
+        <div class="helper">Needed for the Text button. Texts go out from the shop line via VoIP.ms.</div>
+      </div>
+
+      <div class="fg">
         <label for="genInvoice">Invoice / Reference #</label>
         <input type="text" id="genInvoice" placeholder="auto-generates if blank" autocomplete="off">
         <div class="helper">Optional. If blank, an INV-XXXXXXX number is generated when the customer pays.</div>
@@ -431,17 +437,28 @@ function generateLink() {
 
   const url = 'https://pctires.ca/pay?' + params.toString();
 
-  document.getElementById('generatedUrl').textContent = url;
+  showGeneratedUrl(url);
   document.getElementById('generatedCard').style.display = '';
 
-  // QR code via api.qrserver.com (free, no auth)
-  const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=' + encodeURIComponent(url);
-  document.getElementById('qrImage').src = qrSrc;
+  // Ask the server for a short code (https://pctires.ca/pay?c=XXXXXXXX) so texts
+  // and QR codes stay short. Long URL shows instantly; swaps when the code lands.
+  fetch('/pay-link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ amount: amount.toFixed(2), desc: desc, name: name, email: email, invoice: invoice }),
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d && d.ok && d.url) showGeneratedUrl(d.url);
+  }).catch(function(){});
 
   // Scroll the result into view
   setTimeout(() => {
     document.getElementById('generatedCard').scrollIntoView({behavior:'smooth', block:'start'});
   }, 50);
+}
+
+function showGeneratedUrl(u) {
+  document.getElementById('generatedUrl').textContent = u;
+  document.getElementById('qrImage').src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=' + encodeURIComponent(u);
 }
 
 function getGeneratedUrl() {
@@ -472,46 +489,62 @@ function fallbackCopy(text) {
   document.body.removeChild(ta);
 }
 
-function sendSMS() {
+async function sendSMS() {
   const url = getGeneratedUrl();
-  if (!url) return;
-  const amount = document.getElementById('genAmount').value;
+  if (!url || url === 'Generated link goes here') return;
+  const phone = document.getElementById('genPhone').value.trim();
+  if (!phone) {
+    showToast('Enter the customer phone number first', 'error');
+    document.getElementById('genPhone').focus();
+    return;
+  }
   const name = document.getElementById('genName').value.trim();
-  const desc = document.getElementById('genDesc').value.trim();
-  const greeting = name ? ('Hi ' + name.split(' ')[0] + ', ') : 'Hi, ';
-  const what = desc ? (' for ' + desc) : '';
-  const body = greeting + 'your PC Tires invoice' + what + ' is ready: $' + amount + '. Pay here: ' + url;
-  // sms: scheme works on iOS and most Android; ?&body= is the cross-platform form
-  window.location.href = 'sms:?&body=' + encodeURIComponent(body);
+  const amount = document.getElementById('genAmount').value;
+  showToast('Sending text...');
+  try {
+    const r = await fetch('/send-quote-sms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phone, link: url, name: name, kind: 'invoice', amount: amount }),
+    });
+    const d = await r.json();
+    if (d && d.ok) showToast('Text sent to ' + phone);
+    else showToast((d && d.error) ? d.error : 'Text failed. Use Copy instead.', 'error');
+  } catch (e) {
+    showToast('Text failed. Check your connection.', 'error');
+  }
 }
 
-function sendEmail() {
+async function sendEmail() {
   const url = getGeneratedUrl();
-  if (!url) return;
-  const amount = document.getElementById('genAmount').value;
+  if (!url || url === 'Generated link goes here') return;
   const email = document.getElementById('genEmail').value.trim();
+  if (!email) {
+    showToast('Enter the customer email first', 'error');
+    document.getElementById('genEmail').focus();
+    return;
+  }
   const name = document.getElementById('genName').value.trim();
   const desc = document.getElementById('genDesc').value.trim();
   const invoice = document.getElementById('genInvoice').value.trim();
-
-  const subject = 'PC Tires Invoice' + (invoice ? ' ' + invoice : '') + (desc ? ' - ' + desc : '');
-  const greeting = name ? ('Hi ' + name.split(' ')[0] + ',') : 'Hi,';
-  const lines = [
-    greeting, '',
-    'Your PC Tires invoice is ready.',
-    '',
-    'Amount: $' + amount,
-  ];
-  if (desc) lines.push('For: ' + desc);
-  lines.push('', 'Pay securely here:', url, '', 'Questions? Call us at 519-397-4686.', '', 'Thanks,', 'PC Tires');
-  const body = lines.join('\n');
-
-  const to = email ? encodeURIComponent(email) : '';
-  window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  const amount = document.getElementById('genAmount').value;
+  showToast('Sending email...');
+  try {
+    const r = await fetch('/send-invoice-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, name: name, amount: amount, desc: desc, invoice: invoice, link: url }),
+    });
+    const d = await r.json();
+    if (d && d.ok) showToast('Email sent to ' + email);
+    else showToast((d && d.error) ? d.error : 'Email failed. Use Copy instead.', 'error');
+  } catch (e) {
+    showToast('Email failed. Check your connection.', 'error');
+  }
 }
 
 function resetGenerator() {
-  ['genAmount','genDesc','genName','genEmail','genInvoice'].forEach(id => document.getElementById(id).value = '');
+  ['genAmount','genDesc','genName','genEmail','genPhone','genInvoice'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('generatedCard').style.display = 'none';
   document.getElementById('genPreview').classList.remove('show');
   document.getElementById('genAmount').focus();
@@ -678,7 +711,36 @@ function showErr(msg) {
 // ============================================================
 // INIT
 // ============================================================
-decideView();
+async function boot() {
+  const c = urlParam('c');
+  if (c && !initial.amount) {
+    try {
+      const r = await fetch('/pay-link?c=' + encodeURIComponent(c));
+      const d = await r.json();
+      if (d && d.ok && d.amount) {
+        initial.amount  = parseFloat(d.amount) || null;
+        initial.desc    = d.desc || '';
+        initial.invoice = d.invoice || '';
+        initial.name    = d.name || '';
+        initial.email   = d.email || '';
+      } else {
+        window._linkExpired = true;
+      }
+    } catch (e) { window._linkExpired = true; }
+  }
+  if (window._linkExpired) {
+    // Expired/unknown code: show the customer form (not the owner generator)
+    // with an explanation and an editable amount.
+    document.getElementById('payForm').style.display = '';
+    document.getElementById('linkGenerator').style.display = 'none';
+    renderInvoiceCard();
+    initStripe();
+    showErr('This payment link has expired. Enter the amount from your invoice, or call us at 519-397-4686.');
+    return;
+  }
+  decideView();
+}
+boot();
 </script>
 
 </body>
