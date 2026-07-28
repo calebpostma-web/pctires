@@ -47,13 +47,21 @@ function normalizePhone(raw) {
 
 // Build a GSM-7-safe message under 160 chars. Plain ASCII only -
 // unicode (em dashes, emoji) forces 70-char segments and higher cost.
-function buildMessage(name, link) {
+function buildMessage(name, link, kind, amount) {
   const clean = (s) =>
     String(s || '')
       .replace(/[^\x20-\x7E]/g, '')
       .trim()
       .slice(0, 40);
   const who = clean(name);
+  if (kind === 'invoice') {
+    const amt = String(amount || '').replace(/[^0-9.]/g, '').slice(0, 10);
+    const a = amt ? ' for $' + amt : '';
+    const full = 'PC Tires: your invoice' + a + ' is ready. Pay securely: ' + link + ' Questions? Call 519-397-4686';
+    if (full.length <= 160) return full;
+    const short = 'PC Tires invoice. Pay: ' + link;
+    return short.length <= 160 ? short : short.slice(0, 160);
+  }
   const full = who
     ? `PC Tires quote for ${who}: ${link} Questions? Call 519-397-4686`
     : `Your PC Tires quote: ${link} Questions? Call 519-397-4686`;
@@ -116,7 +124,7 @@ export async function onRequestPost(context) {
   const rl = await rateLimit(env, ip);
   if (!rl.allowed) return json({ ok: false, error: rl.error }, 429);
 
-  const message = buildMessage(body.name, link);
+  const message = buildMessage(body.name, link, body.kind, body.amount);
 
   const params = new URLSearchParams({
     api_username: env.VOIPMS_API_USERNAME,
