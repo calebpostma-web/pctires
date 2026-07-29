@@ -1547,6 +1547,7 @@ function getRebateForBrand(brand) {
           <strong>🔩 Finding your wheel specs:</strong>
           Your bolt pattern and hub bore are on the wheel itself, or look up your vehicle below.
           Common sizes: bolt pattern <strong>5×114.3</strong>, diameter <strong>17"</strong>, width <strong>7.5"</strong>.
+          <br><strong>💰 Wheel install:</strong> $25/wheel mount &amp; balance with new tires · $40/wheel to remount your existing tires. TPMS: screw-in sensors can transfer; snap-in stems need new sensors (programmed on-site).
         </div>
 
         <!-- Category -->
@@ -2594,6 +2595,8 @@ const TDG = {
   INSTALL_PRICE:   25,
   INSTALL_LARGE:   30,   // per-tire install for big rims (>= INSTALL_LARGE_MIN_DIA inches)
   INSTALL_LARGE_MIN_DIA: 20,   // rim diameter at/above which INSTALL_LARGE applies
+  WHEEL_MOUNT:     25,   // per wheel: mount & balance new tires onto new wheels
+  WHEEL_REMOUNT:   40,   // per wheel: dismount existing tires, remount & balance on new wheels
   MARKUP:          1.35,
   MEMBER_DISCOUNT: 0.10,
   MIN_MARGIN:      20,   // minimum dollars kept per tire/wheel, survives member discount
@@ -4434,6 +4437,7 @@ function tireSizeRimDia(size) {
 // Per-tire install price by rim diameter. Wheels are never installed (return 0).
 // Base = TDG.INSTALL_PRICE; rims >= TDG.INSTALL_LARGE_MIN_DIA charge TDG.INSTALL_LARGE.
 function installPriceEach(item){
+  if (item.itemType === 'wheel') return item.remount ? TDG.WHEEL_REMOUNT : TDG.WHEEL_MOUNT;
   if(!item || item.itemType === 'wheel') return 0;
   var dia = (typeof tireSizeRimDia === 'function') ? tireSizeRimDia(item.size) : null;
   if(dia && TDG.INSTALL_LARGE_MIN_DIA && dia >= TDG.INSTALL_LARGE_MIN_DIA) return TDG.INSTALL_LARGE;
@@ -4542,6 +4546,16 @@ function isCommercialTire(item) {
   if (/R(?:17\.5|19\.5|22\.5|24\.5)\b/.test(size)) return true;          // 295/75R22.5, 215/75R17.5
   return false;
 }
+// Wheel install selector: 'none' | 'mount' (new tires, WHEEL_MOUNT) | 'remount' (existing tires, WHEEL_REMOUNT)
+function setWheelInst(itemNumber, mode) {
+  if (quoteLockBlocked()) return;
+  const item = cart.find(c => c.itemNumber === itemNumber);
+  if (!item || item.itemType !== 'wheel') return;
+  item.install = (mode !== 'none');
+  item.remount = (mode === 'remount');
+  saveCartToStorage();
+  renderCart();
+}
 function togInst(itemNumber) {
   if (quoteLockBlocked()) return;
   const item = cart.find(c => c.itemNumber === itemNumber);
@@ -4584,7 +4598,14 @@ function renderCart() {
           ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">🚛 <strong style="color:var(--light)">Commercial size</strong> — sell-only, no in-shop install. We'll source &amp; ship or arrange pickup.</div>`
           : (item.itemType !== 'wheel'
               ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${installPriceEach(item)}/tire</b></span></label>`
-              : '')}
+              : `<div class="inst-toggle" style="display:block">
+                  <select onchange="setWheelInst('${item.itemNumber}', this.value)" style="width:100%;background:var(--raised);color:var(--white);border:1px solid var(--border);border-radius:2px;padding:7px 8px;font-family:Barlow,sans-serif;font-size:12.5px">
+                    <option value="none" ${!item.install ? 'selected' : ''}>No installation — wheels only</option>
+                    <option value="mount" ${item.install && !item.remount ? 'selected' : ''}>Mount &amp; balance my new tires (+$${TDG.WHEEL_MOUNT}/wheel)</option>
+                    <option value="remount" ${item.install && item.remount ? 'selected' : ''}>Remount my existing tires (+$${TDG.WHEEL_REMOUNT}/wheel)</option>
+                  </select>
+                  <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4">TPMS: screw-in sensors can transfer to new wheels; rubber snap-in stems need new sensors — we confirm &amp; program at the shop.</div>
+                </div>`)}
         ${rebateNote}${memberNote}
       </div>
       <div class="ci-right">
@@ -5839,6 +5860,7 @@ const FAQS = [
   {q:"Can I put winter tires on only the front or rear?",a:"Never install winter tires on just two wheels. On a front-wheel-drive car with only front winters, the rear end will slide out in corners. Always install a matching set of four."},
   {q:"Do I need to change tires if I have all-weather (3PMSF) tires?",a:"No — all-weather tires with the mountain/snowflake symbol are certified for severe winter conditions and can be driven year-round without swapping."},
   {q:"What's included in the $25/tire installation fee?",a:"Mount, balance, valve stem check, TPMS sensor reset, torque check to manufacturer specs, and disposal of your old tires. No hidden charges."},
+  {q:"Do you install wheels and rims?",a:"Yes. Mount and balance is $25/wheel when we're putting new tires on your new wheels, or $40/wheel to dismount your existing tires and remount them on the new wheels. TPMS: screw-in style sensors can usually transfer to the new wheels; rubber snap-in sensors can't be safely reused, so we stock and program new sensors on-site."},
   {q:"What's the difference between bolt patterns (e.g. 5×114.3)?",a:"The first number is the number of bolts/studs. The second is the diameter of the circle they form in millimetres. A wheel with the wrong bolt pattern will not fit — it's one of the most important specs to match when buying wheels."},
   {q:"What is hub bore and does it matter?",a:"Hub bore is the centre hole diameter of the wheel. Your wheel's hub bore must match or be larger than your vehicle's hub diameter. If it's larger, a hub centric ring is used. If it's too small, the wheel won't mount."},
   {q:"Can I buy tires now and book installation later?",a:"Yes. You can purchase tires online today and contact us to schedule installation at any time. Tires will be held for you for up to 30 days."},
