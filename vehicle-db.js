@@ -46,6 +46,10 @@ var OEM_BOLT_PATTERNS = {
   "Ford Mustang":         { bolt:'5x114.3', bore:70.5,  dia:19 },
   "Ford Mustang Mach-E":  { bolt:'5x108',   bore:63.4,  dia:20 },
   "Ford Fusion":          { bolt:'5x108',   bore:63.4,  dia:18 },
+  "Ford Transit (RWD)":   { bolt:'5x160',   bore:65.1,  dia:16 },
+  "Ford Transit (AWD)":   { bolt:'6x180',   bore:138.8, dia:16 },
+  "Ford Transit Connect": { bolt:'5x108',   bore:63.4,  dia:16 },
+  "Ford E-Series":        { bolt:'8x165.1', bore:124.9, dia:16 },
   // Chevrolet
   "Chevrolet Silverado 1500": { bolt:'6x139.7', bore:78.1, dia:18 },
   "Chevrolet Silverado 2500": { bolt:'8x180',   bore:124.1,dia:18 },
@@ -62,6 +66,7 @@ var OEM_BOLT_PATTERNS = {
   "Chevrolet Camaro":     { bolt:'5x120',   bore:66.9,  dia:20 },
   "Chevrolet Corvette":   { bolt:'5x120',   bore:70.3,  dia:19 },
   "Chevrolet Spark":      { bolt:'4x100',   bore:56.6,  dia:15 },
+  "Chevrolet Express 2500/3500": { bolt:'8x165.1', bore:116.7, dia:16 },
   // GMC
   "GMC Sierra 1500":      { bolt:'6x139.7', bore:78.1,  dia:18 },
   "GMC Sierra 2500":      { bolt:'8x180',   bore:124.1, dia:18 },
@@ -73,6 +78,7 @@ var OEM_BOLT_PATTERNS = {
   "GMC Canyon":           { bolt:'6x139.7', bore:78.1,  dia:17 },
   "GMC Envoy":            { bolt:'5x127',   bore:78.1,  dia:17 },
   "GMC Envista":          { bolt:'5x105',   bore:56.6,  dia:17 },
+  "GMC Savana 2500/3500": { bolt:'8x165.1', bore:116.7, dia:16 },
   // Dodge
   "Dodge Durango":        { bolt:'5x139.7', bore:71.5,  dia:18 },
   "Dodge Charger":        { bolt:'5x115',   bore:71.5,  dia:18 },
@@ -84,8 +90,12 @@ var OEM_BOLT_PATTERNS = {
   "RAM 2500":             { bolt:'8x165.1', bore:116.9, dia:18 },
   "RAM 3500":             { bolt:'8x165.1', bore:116.9, dia:17 },
   "RAM ProMaster City":   { bolt:'5x108',   bore:65.1,  dia:16 },
+  "RAM ProMaster":        { bolt:'5x130',   bore:78.1,  dia:16 },
   "RAM 1500 Classic":     { bolt:'5x139.7', bore:77.8,  dia:17 },
   // Hyundai
+  // Mercedes-Benz (vans)
+  "Mercedes-Benz Sprinter 2500": { bolt:'6x130', bore:84.1, dia:16 },
+  // Hyundai continues
   "Hyundai Elantra":      { bolt:'5x114.3', bore:67.1,  dia:17 },
   "Hyundai Tucson":       { bolt:'5x114.3', bore:67.1,  dia:17 },
   "Hyundai Santa Fe":     { bolt:'5x114.3', bore:67.1,  dia:18 },
@@ -329,6 +339,10 @@ var VD = {
     "Mustang":["EcoBoost","GT","Mach 1","Shelby GT500","Dark Horse"],
     "Mustang Mach-E":["Select","Premium","GT","California Route 1"],
     Fusion:["S","SE","SEL","Titanium","Sport"],
+    "Transit (RWD)":["150","250","350","Cargo","Passenger"],
+    "Transit (AWD)":["150","250","350","Cargo","Passenger"],
+    "Transit Connect":["XL","XLT","Titanium"],
+    "E-Series":["E-250","E-350 SRW","Cutaway"],
   },
   Chevrolet:{
     "Silverado 1500":["WT","Custom","Custom Trail Boss","LT","LT Trail Boss","RST","LTZ","Trail Boss","High Country","ZR2"],
@@ -346,6 +360,7 @@ var VD = {
     Camaro:["LS","LT","SS","ZL1","LT1"],
     Corvette:["Stingray","E-Ray","Z06","ZR1"],
     "Spark":["LS","LT","ACTIV"],
+    "Express 2500/3500":["WT","LS","LT"],
   },
   GMC:{
     "Sierra 1500":["Pro","SLE","Elevation","SLT","AT4","Denali","AT4X","Denali Ultimate"],
@@ -358,6 +373,7 @@ var VD = {
     Canyon:["Elevation","AT4","Denali","AT4X"],
     Envoy:["SLE","SLT","Denali"],
     Envista:["ST","SLE","Denali"],
+    "Savana 2500/3500":["Work Van","LS","LT"],
   },
   Dodge:{
     Durango:["SXT","GT","Citadel","R/T","SRT 392","SRT Hellcat"],
@@ -372,6 +388,7 @@ var VD = {
     "3500":["Tradesman","Big Horn","Laramie","Laramie Longhorn","Limited"],
     "ProMaster City":["Tradesman","Wagon SLT"],
     "1500 Classic":["Tradesman","SLT","Warlock","Express","GT"],
+    "ProMaster":["1500","2500","3500"],
   },
   Hyundai:{
     Elantra:["SE","SEL","N Line","Limited","N","Hybrid Blue","Hybrid Limited"],
@@ -511,6 +528,7 @@ var VD = {
     Z4:["sDrive30i","M40i"],
   },
   "Mercedes-Benz":{
+    "Sprinter 2500":["144 WB","170 WB","Cargo","Crew","Passenger","4x4"],
     "C-Class":["C 300","C 300 4MATIC","AMG C 43","AMG C 63 S E","AMG C 63"],
     "E-Class":["E 350","E 450","AMG E 53","AMG E 63 S"],
     "S-Class":["S 500","S 580","AMG S 63","Maybach S 580","Maybach S 680"],
@@ -644,6 +662,12 @@ var OEM_SIZES = {
   "Dodge Grand Caravan":"225/65R16","Dodge Hornet":"225/55R18",
   "RAM 1500":"275/60R20","RAM 2500":"265/70R17","RAM 3500":"245/70R17",
   "RAM ProMaster City":"215/60R16","RAM 1500 Classic":"275/60R20",
+  "RAM ProMaster":"225/75R16",
+  // Vans
+  "Ford Transit (RWD)":"235/65R16","Ford Transit (AWD)":"235/65R16",
+  "Ford Transit Connect":"215/55R16","Ford E-Series":"245/75R16",
+  "Chevrolet Express 2500/3500":"245/75R16","GMC Savana 2500/3500":"245/75R16",
+  "Mercedes-Benz Sprinter 2500":"245/75R16",
   // Hyundai
   "Hyundai Elantra":"205/55R16","Hyundai Tucson":"235/55R17","Hyundai Santa Fe":"235/60R18",
   "Hyundai Santa Cruz":"245/60R18","Hyundai Sonata":"225/50R17","Hyundai Kona":"215/55R17",
@@ -744,6 +768,8 @@ var OEM_SIZES = {
 
 // Alternate OEM sizes per vehicle (e.g. different trim levels or staggered fitments)
 var OEM_ALT_SIZES = {
+  "Ford Transit Connect": ["215/50R17"],
+  "Mercedes-Benz Sprinter 2500": ["235/65R16","245/70R17"],
   "Honda Civic":          ["205/55R16","225/45R17"],
   "Honda CR-V":           ["225/65R17","235/65R17"],
   "Honda Accord":         ["245/40R19","235/50R18"],
