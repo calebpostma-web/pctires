@@ -1732,6 +1732,8 @@ function getRebateForBrand(brand) {
         </select>
         <div class="refine-divider"></div>
         <label class="refine-label">Price</label>
+        <button type="button" id="shareSearchBtn" onclick="shareSearch()" style="display:none;background:var(--raised);border:1px solid var(--yellow);color:var(--yellow);padding:7px 12px;border-radius:2px;font-family:Barlow,sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">&#128228; Share results</button>
+        <div class="refine-divider"></div>
         <select id="priceFilter" aria-label="Filter tires by price" onchange="applyRefinements()">
           <option value="">Any Price</option>
           <option value="0-100">Under $100</option>
@@ -3014,6 +3016,8 @@ function renderCatalog() {
 async function loadTires(searchParams = null) {
   showCatalogLoading(true);
   if (searchParams?.tireSizes?.length) lastTireSearchSize = searchParams.tireSizes[0];
+  window._shareSize = (searchParams && searchParams.tireSizes && searchParams.tireSizes.length) ? searchParams.tireSizes[0] : null;
+  try { const _sb = document.getElementById('shareSearchBtn'); if (_sb) _sb.style.display = window._shareSize ? '' : 'none'; } catch (e) {}
   // Store base params (without season/serviceType) for chip re-queries
   if (searchParams) {
     const base = {};
@@ -7800,6 +7804,34 @@ function updateSmsCounter() {
   const n = ta.value.length;
   c.textContent = n;
   c.style.color = n > 160 ? '#ef4444' : (n > 140 ? 'var(--yellow)' : 'var(--muted)');
+}
+// ── SHARE SEARCH RESULTS ─────────────────────────────────────────
+// After any tire-size search: owner gets the Text Customer panel prefilled
+// (sends from the shop line via VoIP.ms); everyone else copies the link.
+// Links use the existing /?buysize= deep-link handler, so they open a LIVE search.
+function shareSearch() {
+  const size = String(window._shareSize || '').toUpperCase().replace(/\s+/g, '');
+  if (!size) return;
+  let url = 'https://pctires.ca/?buysize=' + size;
+  try {
+    const b = document.getElementById('brandFilter').value;
+    if (b) url += '&brand=' + encodeURIComponent(b);
+  } catch (e) {}
+  if (isOwner()) {
+    openTextCustomer();
+    const msg = document.getElementById('textSmsMessage');
+    if (msg) {
+      msg.value = 'PC Tires: here is everything we can get in ' + size + ': ' + url + ' Questions? Call 519-397-4686';
+      try { updateSmsCounter(); } catch (e) {}
+    }
+    return;
+  }
+  const ok = () => { try { showToast('Link copied', 'Paste it into a text or email'); } catch (e) { alert('Link copied:\n' + url); } };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(ok, () => prompt('Copy this link:', url));
+  } else {
+    prompt('Copy this link:', url);
+  }
 }
 function openTextCustomer() {
   if (!isOwner()) { alert('Sign in as owner to text customers.'); return; }
