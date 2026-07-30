@@ -2602,7 +2602,8 @@ const TDG = {
   MARKUP:          1.35,
   MEMBER_DISCOUNT: 0.10,
   MIN_MARGIN:      20,   // minimum dollars kept per tire/wheel, survives member discount
-  TEST_NET_TARGET: 25,   // TEST Jun2026: cap each consumer TIRE at cost+$25 net after Stripe+$5 recycle; never raises; set null to revert
+  RECYCLE_FEE:     6,    // per-tire recycling/eco fee baked into pricing (was $5, raised to $6 July 2026)
+  TEST_NET_TARGET: 25,   // TEST Jun2026: cap each consumer TIRE at cost+$25 net after Stripe+recycle fee; never raises; set null to revert
   SEASON_MAP:   { 1:'summer', 2:'allseason', 3:'allweather', 4:'winter' },
   SEASON_LABEL: { 1:'Summer', 2:'All-Season', 3:'All-Weather', 4:'Winter' },
 };
@@ -2706,9 +2707,9 @@ function retailPrice(item) {
   const _floor = (item.price + TDG.MIN_MARGIN) / (1 - TDG.MEMBER_DISCOUNT);
   if (_floor > price) price = _floor;
   if (item.map && item.map > price) price = item.map;
-  // TEST Jun2026: cap consumer tires at cost + $25 net (after Stripe + $5 recycle). Never raises; excludes wheels + commercial. null = off.
+  // TEST Jun2026: cap consumer tires at cost + $25 net (after Stripe + recycle fee). Never raises; excludes wheels + commercial. null = off.
   if (TDG.TEST_NET_TARGET != null && !item.boltPattern && !isCommercialTire(item)) {
-    var _R = 0.029 * 1.13, _ots = 5;
+    var _R = 0.029 * 1.13, _ots = TDG.RECYCLE_FEE;
     var _n = item.price + (TDG.TEST_NET_TARGET + _ots + _R * item.price) / (1 - _R);
     if (_n < price) price = Math.max(_n, item.map || 0);
   }
@@ -4747,7 +4748,7 @@ function calculatePromoDiscount(promo, sub, inst, cartItems) {
     }
     case 'free_install': return { sub: 0, inst: inst };
     case 'net_target': {
-      // Auto-prices each tire so you net def.value AFTER Stripe and the $5 OTS fee.
+      // Auto-prices each tire so you net def.value AFTER Stripe and the recycle fee (TDG.RECYCLE_FEE).
       // Stripe charges 2.9% on the HST-inclusive charge, so R = 0.029 * 1.13.
       // markup = (target + OTS + R*cost) / (1 - R); price = cost + markup.
       // OTS eco fee applies to tires only. orig.price is your raw TDG cost.
@@ -4757,7 +4758,7 @@ function calculatePromoDiscount(promo, sub, inst, cartItems) {
         const pool = c.itemType === 'wheel' ? allWheels : allTires;
         const orig = pool.find(t => t.itemNumber === c.itemNumber);
         if (!orig) continue;
-        const ots = c.itemType === 'wheel' ? 0 : 5;
+        const ots = c.itemType === 'wheel' ? 0 : TDG.RECYCLE_FEE;
         const markup = (def.value + ots + R * orig.price) / (1 - R);
         const newPrice = Math.round((orig.price + markup) * 100) / 100;
         if (c.price > newPrice) savings += (c.price - newPrice) * c.qty;
