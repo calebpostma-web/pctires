@@ -6,8 +6,8 @@ import json, os, re
 
 DATA = 'tdg-data.txt'
 OUTDIR = 'pages'
-CHECKED = 'July 7, 2026'
-LASTMOD = '2026-07-11'
+CHECKED = 'August 1, 2026'
+LASTMOD = '2026-08-01'
 
 # ---------------------------------------------------------------- parse data
 models_data = {}
