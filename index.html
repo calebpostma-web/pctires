@@ -1823,7 +1823,7 @@ function getRebateForBrand(brand) {
       <p class="section-sub" style="margin-top:8px">Unlike online-only competitors, we complete the job — from purchase to pavement. Book your install slot right in checkout.</p>
       <div class="install-list">
         <div class="inst-item"><div class="inst-check">🔧</div><div class="inst-txt"><strong>Certified Technicians</strong><span>Experienced, trained professionals — not a subcontracted third party.</span></div></div>
-        <div class="inst-item"><div class="inst-check">⚖️</div><div class="inst-txt"><strong>Mount, Balance &amp; Disposal Included</strong><span>No surprise charges at the counter. $25/tire, all-in.</span></div></div>
+        <div class="inst-item"><div class="inst-check">⚖️</div><div class="inst-txt"><strong>Mount, Balance &amp; Disposal Included</strong><span>No surprise charges at the counter. $25/tire on passenger sizes; larger truck and off-road tires are priced up front in your cart.</span></div></div>
         <div class="inst-item"><div class="inst-check">📅</div><div class="inst-txt"><strong>Book Online, Instantly</strong><span>Pick your date and time slot during checkout. No phone calls required.</span></div></div>
         <div class="inst-item"><div class="inst-check">✅</div><div class="inst-txt"><strong>TPMS Reset &amp; Torque Check Included</strong><span>We complete the job properly so you drive away with confidence.</span></div></div>
       </div>
@@ -2597,6 +2597,18 @@ const TDG = {
   INSTALL_PRICE:   25,
   INSTALL_LARGE:   30,   // per-tire install for big rims (>= INSTALL_LARGE_MIN_DIA inches)
   INSTALL_LARGE_MIN_DIA: 20,   // rim diameter at/above which INSTALL_LARGE applies
+  // ── Flotation / LT off-road sizing (33X12.50R17 style). Aug 2026. ──
+  // Priced off real labour: a 37" 8-ply M/T is ~3-4x a passenger tire and runs
+  // both machines near their rating (Nitto 37x12.50R17 = 87.3 lb bare).
+  INSTALL_FLOTATION:      40,   // flotation under FLOTATION_XL_MIN_DIA overall
+  INSTALL_FLOTATION_XL:   60,   // flotation at/above FLOTATION_XL_MIN_DIA overall
+  FLOTATION_XL_MIN_DIA:   36,   // overall tire dia (in) at/above which XL applies
+  // Hard machine ceiling — beyond this we sell the tire but not the labour.
+  // Balancer CAE-3446WB: 65 kg / 143 lb max assembly, rim 10"-24".
+  // Changer CAEL TC-200: max overall dia 44.9", tire width 3"-15", clamp 12"-23" outer.
+  // 40x13.50R17 ~= 140 lb assembly = at the balancer's rating. That's the wall.
+  INSTALL_MAX_DIA:      40,     // max overall tire diameter (in) we will install
+  INSTALL_MAX_WIDTH:    14.5,   // max NOMINAL section width (in); actuals run ~1" over
   WHEEL_MOUNT:     25,   // per wheel: mount & balance new tires onto new wheels
   WHEEL_REMOUNT:   40,   // per wheel: dismount existing tires, remount & balance on new wheels
   MARKUP:          1.35,
@@ -4442,8 +4454,16 @@ function tireSizeRimDia(size) {
 // Per-tire install price by rim diameter. Wheels are never installed (return 0).
 // Base = TDG.INSTALL_PRICE; rims >= TDG.INSTALL_LARGE_MIN_DIA charge TDG.INSTALL_LARGE.
 function installPriceEach(item){
+  if (!item) return 0;
   if (item.itemType === 'wheel') return item.remount ? TDG.WHEEL_REMOUNT : TDG.WHEEL_MOUNT;
-  if(!item || item.itemType === 'wheel') return 0;
+  // Sell-only categories never carry an install charge.
+  if (isCommercialTire(item)) return 0;
+  if (isOversizeTire(item)) return 0;
+  // Flotation / LT off-road: two bands off overall diameter.
+  const flot = parseFlotationTire(item);
+  if (flot) {
+    return flot.dia >= TDG.FLOTATION_XL_MIN_DIA ? TDG.INSTALL_FLOTATION_XL : TDG.INSTALL_FLOTATION;
+  }
   var dia = (typeof tireSizeRimDia === 'function') ? tireSizeRimDia(item.size) : null;
   if(dia && TDG.INSTALL_LARGE_MIN_DIA && dia >= TDG.INSTALL_LARGE_MIN_DIA) return TDG.INSTALL_LARGE;
   return TDG.INSTALL_PRICE;
@@ -4551,6 +4571,20 @@ function isCommercialTire(item) {
   if (/R(?:17\.5|19\.5|22\.5|24\.5)\b/.test(size)) return true;          // 295/75R22.5, 215/75R17.5
   return false;
 }
+// Parse a flotation size (37X12.50R17) into inches. Returns null for metric/commercial.
+function parseFlotationTire(item) {
+  if (!item || item.itemType === 'wheel') return null;
+  const s = String(item.size || '').toUpperCase().replace(/\s+/g, '');
+  const m = s.match(/^(\d+(?:\.\d+)?)X(\d+(?:\.\d+)?)R(\d+(?:\.\d+)?)$/);
+  if (!m) return null;
+  return { dia: parseFloat(m[1]), width: parseFloat(m[2]), rim: parseFloat(m[3]) };
+}
+// Beyond the shop's machine capacity — sell-only, same treatment as commercial.
+function isOversizeTire(item) {
+  const f = parseFlotationTire(item);
+  if (!f) return false;
+  return f.dia > TDG.INSTALL_MAX_DIA || f.width > TDG.INSTALL_MAX_WIDTH;
+}
 // Wheel install selector: 'none' | 'mount' (new tires, WHEEL_MOUNT) | 'remount' (existing tires, WHEEL_REMOUNT)
 function setWheelInst(itemNumber, mode) {
   if (quoteLockBlocked()) return;
@@ -4585,6 +4619,7 @@ function renderCart() {
     const rebate = item.itemType !== 'wheel' && typeof getRebateForBrand === 'function' ? getRebateForBrand(item.brand) : null;
     const rebateNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:3px">💰 $${rebate.amount} mail-in rebate available — <a href="${rebate.url}" target="_blank" style="color:var(--yellow);text-decoration:none">apply here →</a></div>` : '';
     const commercial = isCommercialTire(item);
+    const oversize   = isOversizeTire(item);
     let memberNote = '';
     if (currentMember && !isOwner() && item.discEligible === true && item.qty < 4) {
       memberNote = '<div style="font-size:11px;color:var(--yellow);margin-top:3px">Member 10% applies on a full set of 4+</div>';
@@ -4598,9 +4633,11 @@ function renderCart() {
         <div class="ci-brand">${item.brand}</div>
         <div class="ci-name">${item.name}</div>
         <div class="ci-size">${item.size || (item.diameter ? item.diameter+'" · '+item.boltPattern : '')}</div>
-        ${item.install && item.itemType !== 'wheel' && !commercial ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
+        ${item.install && item.itemType !== 'wheel' && !commercial && !oversize ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
         ${commercial
           ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">🚛 <strong style="color:var(--light)">Commercial size</strong> — sell-only, no in-shop install. We'll source &amp; ship or arrange pickup.</div>`
+          : oversize
+          ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">🛻 <strong style="color:var(--light)">Oversize</strong> — beyond our mounting equipment, so we sell these but can't install them in-shop. Call <a href="tel:5193974686" style="color:var(--yellow)">519-397-4686</a> and we'll help you sort out install.</div>`
           : (item.itemType !== 'wheel'
               ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${installPriceEach(item)}/tire</b></span></label>`
               : `<div class="inst-toggle" style="display:block">
@@ -4853,7 +4890,7 @@ function loadCartFromStorage() {
     if (Array.isArray(data.cart)) {
       cart = data.cart;
       // Defensive: legacy carts may have install=true on commercial sizes; commercial is sell-only.
-      cart.forEach(c => { if (isCommercialTire(c)) c.install = false; });
+      cart.forEach(c => { if (isCommercialTire(c) || isOversizeTire(c)) c.install = false; });
     }
     if (data.appliedPromo) appliedPromo = data.appliedPromo;
     if (typeof data.quoteFinalTotal === 'number' && data.quoteFinalTotal > 0) {
@@ -5864,7 +5901,8 @@ const FAQS = [
   {q:"How do I know when to replace my tires?",a:"Check tread depth — use a toonie coin. Insert it into a tread groove. If the silver outer band is visible, you're at or below 4/32\" and should replace soon. Below 2/32\" is the legal minimum in Canada."},
   {q:"Can I put winter tires on only the front or rear?",a:"Never install winter tires on just two wheels. On a front-wheel-drive car with only front winters, the rear end will slide out in corners. Always install a matching set of four."},
   {q:"Do I need to change tires if I have all-weather (3PMSF) tires?",a:"No — all-weather tires with the mountain/snowflake symbol are certified for severe winter conditions and can be driven year-round without swapping."},
-  {q:"What's included in the $25/tire installation fee?",a:"Mount, balance, valve stem check, TPMS sensor reset, torque check to manufacturer specs, and disposal of your old tires. No hidden charges."},
+  {q:"What's included in the $25/tire installation fee?",a:"Mount, balance, valve stem check, TPMS sensor reset, torque check to manufacturer specs, and disposal of your old tires. No hidden charges. $25 covers passenger and light-truck sizes up to 19\" rims; 20\"+ rims are $30, and off-road flotation sizes are priced separately — see below."},
+  {q:"What does it cost to install oversized or off-road tires?",a:"Flotation sizes (the 33X12.50R17 style) are $40 per tire up to 35\" overall, and $60 per tire at 36\" and above. Big off-road tires take considerably longer to mount, run our balancer near its rated capacity, and need far more balance weight than a passenger tire — the higher price reflects the real work. Your exact install price always shows in the cart before you pay. Anything over 40\" overall is past what our equipment will safely handle, so we'll sell you the tires but can't mount them in-shop — give us a call at 519-397-4686 and we'll point you somewhere that can."},
   {q:"Do you install wheels and rims?",a:"Yes. Mount and balance is $25/wheel when we're putting new tires on your new wheels, or $40/wheel to dismount your existing tires and remount them on the new wheels. TPMS: screw-in style sensors can usually transfer to the new wheels; rubber snap-in sensors can't be safely reused, so we stock and program new sensors on-site."},
   {q:"What's the difference between bolt patterns (e.g. 5×114.3)?",a:"The first number is the number of bolts/studs. The second is the diameter of the circle they form in millimetres. A wheel with the wrong bolt pattern will not fit — it's one of the most important specs to match when buying wheels."},
   {q:"What is hub bore and does it matter?",a:"Hub bore is the centre hole diameter of the wheel. Your wheel's hub bore must match or be larger than your vehicle's hub diameter. If it's larger, a hub centric ring is used. If it's too small, the wheel won't mount."},
