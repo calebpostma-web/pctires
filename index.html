@@ -1285,7 +1285,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 <!-- PROMO BAR -->
 <div class="promo-bar" id="promoBar">
   <div class="promo-bar-inner">
-    <span class="promo-bar-msg"><strong class="pb-prefix">LOCAL INSTALL:</strong> <span class="pb-long">All four tires installed for $25/tire in Chatham-Kent</span><span class="pb-short">$25/tire install</span></span>
+    <span class="promo-bar-msg"><strong class="pb-prefix">LOCAL INSTALL:</strong> <span class="pb-long">All four tires installed from $25/tire in Chatham-Kent</span><span class="pb-short">Install from $25/tire</span></span>
     <span class="promo-bar-sep">&middot;</span>
     <span><a href="tel:5193974686" class="promo-bar-code" style="text-decoration:none">519-397-4686</a></span>
   </div>
@@ -1335,7 +1335,7 @@ function dismissPromoBar(){
 
 <!-- TRUST CHIP BAR -->
 <div class="trust-bar">
-  <div class="trust-chip"><span class="tc-icon">🔧</span><span><strong>$25/tire</strong> Local Install</span></div>
+  <div class="trust-chip"><span class="tc-icon">🔧</span><span><strong>From $25/tire</strong> Local Install</span></div>
   <div class="trust-chip"><span class="tc-icon">📍</span><span><strong>Chatham-Kent</strong> Based</span></div>
   <div class="trust-chip"><span class="tc-icon">💰</span><span>Rebates up to <strong>$180</strong></span></div>
   <div class="trust-chip"><span class="tc-icon">🔒</span><span><strong>Secure</strong> Stripe Checkout</span></div>
@@ -1424,7 +1424,7 @@ function getRebateForBrand(brand) {
 <section class="lookup-section" id="lookup">
   <div class="lookup-inner">
     <div class="pc-callfirst">
-      <p class="pc-cf-offer">Tires installed in Chatham-Kent &mdash; <span class="y">$25/tire, all in.</span></p>
+      <p class="pc-cf-offer">Tires installed in Chatham-Kent &mdash; <span class="y">from $25/tire, all in.</span></p>
       <p class="pc-cf-sub">Mount, balance, TPMS reset &amp; disposal included. Open Saturdays.</p>
       <a class="pc-cf-call" href="tel:5193974686">
         <span class="pc-cf-call-main">&#128222; Call 519-397-4686</span>
@@ -1988,10 +1988,7 @@ function getRebateForBrand(brand) {
           <div class="svc-contact-fields">
             <div class="svc-field" id="svcRimWrap" style="display:none">
               <label>Rim size</label>
-              <div style="display:flex;gap:10px">
-                <button type="button" id="svcRimBtnSmall" onclick="setSvcRim(false)">Under 20"</button>
-                <button type="button" id="svcRimBtnLarge" onclick="setSvcRim(true)">20" and up</button>
-              </div>
+              <div style="display:flex;gap:6px" id="svcRimBtns"></div>
               <div style="font-size:11px;color:var(--muted);margin-top:6px;font-style:italic">Low-profile or oversized tires may be quoted separately.</div>
             </div>
             <div class="svc-field" id="svcQtyWrap" style="display:none">
@@ -2594,8 +2591,14 @@ function getRebateForBrand(brand) {
 const TDG = {
   BASE_URL:  'https://www.tdgaccess.ca/api',
   STRIPE_PK: 'pk_live_51T86uxRufNpmOxQPt6KAjj4Yb8UOOpJqJAQ2KIae2d9adLFF9Ty8hS4T38GHaGHCOfsFVzBEHWKVGCl2Jq99N5Np00oylz5jPV',
-  INSTALL_PRICE:   25,
-  INSTALL_LARGE:   30,   // per-tire install for big rims (>= INSTALL_LARGE_MIN_DIA inches)
+  INSTALL_PRICE:   25,   // per-tire install, rims 16" and under
+  // Rim-size install ladder (Aug 2026). Benchmarked against Blackcircles Canada's
+  // published Ontario rates (17" $28.95 / 18" $32.95 / 19" $35.49 / 20" $39.95,
+  // PLUS a $5/tire surcharge they add for alloy wheels). We sit under them at
+  // every rung with no alloy surcharge. Bigger rim = lower profile = more time
+  // on the bar and more weight to balance, so the ladder tracks real labour.
+  INSTALL_LADDER: { 17: 29, 18: 33, 19: 36 },
+  INSTALL_LARGE:   40,   // per-tire install for big rims (>= INSTALL_LARGE_MIN_DIA inches)
   INSTALL_LARGE_MIN_DIA: 20,   // rim diameter at/above which INSTALL_LARGE applies
   // ── Flotation / LT off-road sizing (33X12.50R17 style). Aug 2026. ──
   // Priced off real labour: a 37" 8-ply M/T is ~3-4x a passenger tire and runs
@@ -2613,9 +2616,15 @@ const TDG = {
   WHEEL_REMOUNT:   40,   // per wheel: dismount existing tires, remount & balance on new wheels
   MARKUP:          1.35,
   MEMBER_DISCOUNT: 0.10,
-  MIN_MARGIN:      20,   // minimum dollars kept per tire/wheel, survives member discount
+  MIN_MARGIN:      25,   // minimum dollars kept per tire/wheel, survives member discount (was 20 → 25 Aug 8 2026)
   RECYCLE_FEE:     6,    // per-tire recycling/eco fee baked into pricing (was $5, raised to $6 July 2026)
-  TEST_NET_TARGET: 25,   // TEST Jun2026: cap each consumer TIRE at cost+$25 net after Stripe+recycle fee; never raises; set null to revert
+  // Net-per-tire target. Caps each consumer TIRE at cost + this much NET, after
+  // Stripe (2.9% + HST on the fee) and the recycle fee. Only ever lowers a price,
+  // never raises one. MAP is still respected as a hard floor. null = revert to
+  // pure sliding markup. Raised 25 → 30 on Aug 8 2026 (was "TEST Jun2026").
+  // At 30 we sit ~$1-2 over Quattro on MAP-protected Michelin and ~$17 under on
+  // Bridgestone, while still winning the installed out-the-door total on all three.
+  TEST_NET_TARGET: 30,
   SEASON_MAP:   { 1:'summer', 2:'allseason', 3:'allweather', 4:'winter' },
   SEASON_LABEL: { 1:'Summer', 2:'All-Season', 3:'All-Weather', 4:'Winter' },
 };
@@ -4465,7 +4474,10 @@ function installPriceEach(item){
     return flot.dia >= TDG.FLOTATION_XL_MIN_DIA ? TDG.INSTALL_FLOTATION_XL : TDG.INSTALL_FLOTATION;
   }
   var dia = (typeof tireSizeRimDia === 'function') ? tireSizeRimDia(item.size) : null;
-  if(dia && TDG.INSTALL_LARGE_MIN_DIA && dia >= TDG.INSTALL_LARGE_MIN_DIA) return TDG.INSTALL_LARGE;
+  if (dia) {
+    if (TDG.INSTALL_LARGE_MIN_DIA && dia >= TDG.INSTALL_LARGE_MIN_DIA) return TDG.INSTALL_LARGE;
+    if (TDG.INSTALL_LADDER && TDG.INSTALL_LADDER[dia] != null) return TDG.INSTALL_LADDER[dia];
+  }
   return TDG.INSTALL_PRICE;
 }
 
@@ -5901,7 +5913,7 @@ const FAQS = [
   {q:"How do I know when to replace my tires?",a:"Check tread depth — use a toonie coin. Insert it into a tread groove. If the silver outer band is visible, you're at or below 4/32\" and should replace soon. Below 2/32\" is the legal minimum in Canada."},
   {q:"Can I put winter tires on only the front or rear?",a:"Never install winter tires on just two wheels. On a front-wheel-drive car with only front winters, the rear end will slide out in corners. Always install a matching set of four."},
   {q:"Do I need to change tires if I have all-weather (3PMSF) tires?",a:"No — all-weather tires with the mountain/snowflake symbol are certified for severe winter conditions and can be driven year-round without swapping."},
-  {q:"What's included in the $25/tire installation fee?",a:"Mount, balance, valve stem check, TPMS sensor reset, torque check to manufacturer specs, and disposal of your old tires. No hidden charges. $25 covers passenger and light-truck sizes up to 19\" rims; 20\"+ rims are $30, and off-road flotation sizes are priced separately — see below."},
+  {q:"What's included in the $25/tire installation fee?",a:"Mount, balance, valve stem check, TPMS sensor reset, torque check to manufacturer specs, and disposal of your old tires. No hidden charges. Install is priced by rim size — $25 up to 16\", $29 for 17\", $33 for 18\", $36 for 19\", and $40 for 20\" and up. Bigger rims mean lower-profile tires that take longer to mount and need more balance weight. Off-road flotation sizes are priced separately — see below. Your exact price always shows in the cart before you pay, and unlike most online tire sellers we don't add a surcharge for alloy wheels."},
   {q:"What does it cost to install oversized or off-road tires?",a:"Flotation sizes (the 33X12.50R17 style) are $40 per tire up to 35\" overall, and $60 per tire at 36\" and above. Big off-road tires take considerably longer to mount, run our balancer near its rated capacity, and need far more balance weight than a passenger tire — the higher price reflects the real work. Your exact install price always shows in the cart before you pay. Anything over 40\" overall is past what our equipment will safely handle, so we'll sell you the tires but can't mount them in-shop — give us a call at 519-397-4686 and we'll point you somewhere that can."},
   {q:"Do you install wheels and rims?",a:"Yes. Mount and balance is $25/wheel when we're putting new tires on your new wheels, or $40/wheel to dismount your existing tires and remount them on the new wheels. TPMS: screw-in style sensors can usually transfer to the new wheels; rubber snap-in sensors can't be safely reused, so we stock and program new sensors on-site."},
   {q:"What's the difference between bolt patterns (e.g. 5×114.3)?",a:"The first number is the number of bolts/studs. The second is the diameter of the circle they form in millimetres. A wheel with the wrong bolt pattern will not fit — it's one of the most important specs to match when buying wheels."},
@@ -7106,7 +7118,8 @@ const BOOK_SERVICES = [
 
 let svcSelected = null;
 let svcQty = 1;
-let svcRimLarge = false;   // true when "20" and up" is chosen for a rim-tiered service
+let svcRim = 16;           // chosen rim diameter for a rim-tiered service (16 = "16 and under", 20 = "20 and up")
+const SVC_RIM_OPTS = [16, 17, 18, 19, 20];
 let svcCalY, svcCalMo, svcSelDate = null, svcSelTime = null;
 
 // Pull prices from service-pricing.js into BOOK_SERVICES. Runs once, on first
@@ -7121,9 +7134,11 @@ function applyServicePricing() {
     s.unit = p.unit;
     s.free = !!p.free;
     s.priceNum = p.free ? 0 : p.price;
-    s.price = p.free ? 'Free' : ('$' + p.price);
+    const _tiered = !!(p.ladder || p.priceLarge != null);
+    s.price = p.free ? 'Free' : ((_tiered ? 'from $' : '$') + p.price);
     if (p.priceLarge != null) { s.priceLargeNum = p.priceLarge; s.largeFrom = p.largeFrom || 20; }
     else { s.priceLargeNum = null; }
+    s.ladderNum = p.ladder || null;
   });
   _pricingApplied = true;
 }
@@ -7147,7 +7162,10 @@ function buildSvcGrid() {
 // Effective per-unit price, accounting for the 20"+ rim tier when selected.
 function svcUnitPrice(s) {
   if (!s) return 0;
-  if (s.priceLargeNum != null && svcRimLarge) return s.priceLargeNum;
+  if (svcHasRimTier(s)) {
+    if (s.priceLargeNum != null && svcRim >= (s.largeFrom || 20)) return s.priceLargeNum;
+    if (s.ladderNum && s.ladderNum[svcRim] != null) return s.ladderNum[svcRim];
+  }
   if (s.priceNum != null) return s.priceNum;
   const n = parseFloat(String(s.price || '').replace(/[^0-9.]/g, ''));
   return isNaN(n) ? 0 : n;
@@ -7155,20 +7173,29 @@ function svcUnitPrice(s) {
 // Is this service priced per unit (per tire / per stem)?
 function svcIsPerUnit(s) { return s && /per/i.test(s.unit || ''); }
 // Does this service have a 20"+ rim price tier?
-function svcHasRimTier(s) { return s && s.priceLargeNum != null; }
+function svcHasRimTier(s) { return !!(s && (s.priceLargeNum != null || s.ladderNum)); }
+// Human label for a rung: 16 -> ≤16", 20 -> 20"+, else 18"
+function svcRimLabel(r) { return r <= 16 ? '\u226416"' : (r >= 20 ? '20"+' : r + '"'); }
 
 // Style a rim button as active/inactive.
 function styleRimBtn(btn, active) {
-  btn.style.cssText = 'flex:1;padding:10px;border-radius:2px;cursor:pointer;font-weight:700;font-size:13px;transition:all .15s;'
+  btn.style.cssText = 'flex:1;padding:9px 2px;border-radius:2px;cursor:pointer;font-weight:700;font-size:12px;transition:all .15s;'
     + 'border:1px solid ' + (active ? 'var(--yellow)' : 'var(--border)') + ';'
     + 'background:' + (active ? 'var(--yellow)' : 'var(--raised)') + ';'
     + 'color:' + (active ? 'var(--black)' : 'var(--white)') + ';';
 }
-function setSvcRim(large) {
-  svcRimLarge = large;
-  const bS = document.getElementById('svcRimBtnSmall'), bL = document.getElementById('svcRimBtnLarge');
-  if (bS) styleRimBtn(bS, !large);
-  if (bL) styleRimBtn(bL, large);
+function buildSvcRimBtns() {
+  const wrap = document.getElementById('svcRimBtns');
+  if (!wrap) return;
+  wrap.innerHTML = SVC_RIM_OPTS.map(r =>
+    `<button type="button" data-rim="${r}" onclick="setSvcRim(${r})">${svcRimLabel(r)}</button>`).join('');
+  setSvcRim(svcRim);
+}
+function setSvcRim(rim) {
+  svcRim = rim;
+  const wrap = document.getElementById('svcRimBtns');
+  if (wrap) Array.prototype.forEach.call(wrap.querySelectorAll('button'),
+    b => styleRimBtn(b, Number(b.getAttribute('data-rim')) === rim));
   updateSvcQty();
 }
 
@@ -7192,11 +7219,11 @@ function selectSvc(id) {
   // Rim-size tier (e.g. customer-supplied install: $30 under 20", $35 for 20"+).
   const rimWrap = document.getElementById('svcRimWrap');
   if (svcHasRimTier(svcSelected)) {
-    svcRimLarge = false;
-    setSvcRim(false);          // default to Under 20"
+    svcRim = 16;               // default to the base rung
+    buildSvcRimBtns();
     rimWrap.style.display = 'block';
   } else {
-    svcRimLarge = false;
+    svcRim = 16;
     rimWrap.style.display = 'none';
   }
 
@@ -7285,7 +7312,7 @@ async function submitServiceBooking() {
   const qty = perUnit ? svcQty : 1;
   const unit = svcUnitPrice(svcSelected);
   const total = unit * qty;
-  const rimNote = svcHasRimTier(svcSelected) ? (svcRimLarge ? ', 20"+' : ', under 20"') : '';
+  const rimNote = svcHasRimTier(svcSelected) ? (', ' + svcRimLabel(svcRim) + ' rim') : '';
   const priceLine = perUnit
     ? '$' + total + ' (' + qty + ' × $' + unit + rimNote + ')'
     : svcSelected.price;
