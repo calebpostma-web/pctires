@@ -1952,7 +1952,7 @@ function getRebateForBrand(brand) {
       </div>
       <div style="text-align:right">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:var(--yellow);line-height:1">5.0 <span style="font-size:20px">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
-        <a href="https://www.google.com/search?q=PC+Tires+Pain+Court" target="_blank" rel="noopener" style="font-size:13px;color:var(--muted);text-decoration:none">14 Google reviews &middot; 5.0 rated &middot; read them on Google &rarr;</a>
+        <a href="https://www.google.com/search?q=PC+Tires+Pain+Court" target="_blank" rel="noopener" style="font-size:13px;color:var(--muted);text-decoration:none">21 Google reviews &middot; 5.0 rated &middot; read them on Google &rarr;</a>
       </div>
     </div>
     <div class="reviews-grid" id="reviewsGrid"></div>
@@ -5942,8 +5942,11 @@ function toggleFAQ(i) {
 //  REVIEWS
 // ─────────────────────────────────────────────────
 const REVIEWS = [
-  { rating:5, date:'4 days ago',  text:"These young fellas really nailed it. No hesitation on such short notice, and the price was very good. Thanks guys, much appreciated.", name:'Paul',   initials:'P', avatar:'#19a957' },
-  { rating:5, date:'4 weeks ago', text:"I love my new rims and tires! Ordering through their website was easy.", name:'Andrea', initials:'A', avatar:'#f5c518' },
+  // NOTE: 'date' renders verbatim. Relative strings ("4 days ago") go stale and
+  // eventually read as false — prefer a month, e.g. 'June 2026'. 21 reviews on
+  // Google as of Aug 8 2026, all 5-star; only these are featured here.
+  { rating:5, date:'Recently',    text:"These young fellas really nailed it. No hesitation on such short notice, and the price was very good. Thanks guys, much appreciated.", name:'Paul',   initials:'P', avatar:'#19a957' },
+  { rating:5, date:'Recently',    text:"I love my new rims and tires! Ordering through their website was easy.", name:'Andrea', initials:'A', avatar:'#f5c518' },
 ];
 function buildReviews() {
   const grid = document.getElementById('reviewsGrid');
