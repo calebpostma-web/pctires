@@ -5,6 +5,8 @@ User-agent: *
 Allow: /
 Disallow: /tech.html
 Disallow: /tech
+Disallow: /tech-log.html
+Disallow: /tech-log
 Disallow: /pay.html
 Disallow: /thank-you.html
 Disallow: /functions/
