@@ -57,6 +57,7 @@ Return ONLY this JSON object, nothing else:
   "lug_hex_mm": <17 | 19 | 21 | 22 | null>,
   "lug_seat": "<conical | ball | mag | flat | unknown>",
   "lug_type": "<nut | bolt | unknown>",
+  "oe_tire_size": "<e.g. '225/65R17' or 'LT265/70R17' or null>",
   "notes": "<short caveat or empty string>"
 }
 
@@ -66,6 +67,11 @@ Rules:
 - Cold pressure: the door jamb sticker is the final authority. Return typical OEM spec if widely known, else null.
 - For relearn: OBD = requires scan tool, auto = drives 15-20min, stationary = manual procedure.
 - Lug hardware: thread like 'M12x1.5', 'M14x1.5', '1/2-20', '9/16-18'. Seat: conical (most Asian/domestic), ball (VW/Audi/Mercedes/Porsche, Honda OEM alloys), mag = flat-washer/shank style (Toyota trucks, many Toyota OEM alloys). Type: bolt for most German vehicles, nut otherwise. If not certain, return null/unknown. Never guess thread size.
+- oe_tire_size: the most common factory tire size for this vehicle, in standard
+  metric form. This one is NOT safety-critical -- it feeds a stocking report, not
+  a torque wrench -- but still return null rather than invent a size you don't
+  know. If the vehicle shipped in several sizes, give the highest-volume one and
+  say so in notes.
 - "notes" should flag known quirks (e.g. "Some trims use 18in wheels with different pressure", "Dual pattern 6x135, 6x139.7").
 - JSON only. No markdown fences, no prose before or after.`;
 
@@ -122,6 +128,13 @@ Rules:
         pattern: parsed.torque_pattern || null,
         warn: torqueWarn,
       },
+      // Factory size, used to seed the VIN scan log so the stocking report has
+      // something even when nobody photographs a sidewall. Shape-checked here so
+      // a hallucinated string can never reach the log.
+      oeTireSize: (function (v) {
+        const t = String(v || '').toUpperCase().replace(/\s+/g, '');
+        return /^[A-Z]{0,2}[\d.]+([X/][\d.]+)?Z?R[\d.]+/.test(t) ? t : null;
+      })(parsed.oe_tire_size),
       tpms: {
         freqMhz: parsed.tpms_freq_mhz || null,
         relearn: parsed.tpms_relearn || 'unknown',
