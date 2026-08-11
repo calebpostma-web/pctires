@@ -32,6 +32,13 @@ const RECENTS_MAX = 10;
 const NOTE_PREFIX = 'notes:vin:';
 const TORQUE_PREFIX = 'torque:verified:';
 
+// Permanent VIN scan log. One entry per vehicle per DAY -- re-scanning the same
+// truck twice in an afternoon is one job, not two, so the demand counts stay honest.
+// Key: vinlog:<YYYY-MM-DD>:<VIN>. Lexicographic order == chronological order.
+// The whole entry also goes in KV metadata so the report can be built from a
+// single list() call instead of one get() per scan.
+const VINLOG_PREFIX = 'vinlog:';
+
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -41,6 +48,54 @@ const CORS = {
 
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), { status, headers: CORS });
+}
+
+// ── AUTH ────────────────────────────────────────────────────────────────────
+// This endpoint used to accept any POST from anywhere: the tech password gated
+// the tech.html UI, but not the data behind it, so a stranger could read the
+// bay's recent VINs and -- worse -- write to the verified torque DB. Now every
+// action needs the token /tech-auth issues.
+//
+// Token shape (set by tech-auth.js): btoa("pctech:<issued-ms>:<first 4 chars of
+// TECH_PASSWORD>"). Rotating TECH_PASSWORD invalidates every existing token.
+// It is a weak scheme -- unsigned, and it leaks a 4-char password prefix to
+// anyone holding a token -- but validating it here is a large improvement over
+// no check at all. Worth replacing with a signed token later.
+function techTokenOk(token, env) {
+  if (!token || !env.TECH_PASSWORD) return false;
+  let decoded;
+  try { decoded = atob(String(token)); } catch (e) { return false; }
+  const parts = decoded.split(':');
+  if (parts.length !== 3 || parts[0] !== 'pctech') return false;
+  const a = new TextEncoder().encode(parts[2]);
+  const b = new TextEncoder().encode(String(env.TECH_PASSWORD).slice(0, 4));
+  let match = a.length === b.length;
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    if (a[i] !== b[i]) match = false;
+  }
+  return match;
+}
+
+function bearerFrom(request, body) {
+  const h = request.headers.get('Authorization') || '';
+  if (h.slice(0, 7).toLowerCase() === 'bearer ') return h.slice(7).trim();
+  return (body && body.token) || '';
+}
+
+// YYYY-MM-DD in America/Toronto, so "today" matches the shop's day, not UTC's.
+function shopDate(ms) {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Toronto', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(new Date(ms));
+}
+
+// Normalise a sidewall size for counting: strip spaces, upper-case, drop the
+// P/LT service prefix so P225/65R17 and 225/65R17 are one bucket.
+function normSize(raw) {
+  const s = String(raw || '').toUpperCase().replace(/\s+/g, '');
+  if (!s) return '';
+  if (!/^[A-Z]{0,2}[\d.]+([X/][\d.]+)?Z?R[\d.]+/.test(s)) return '';
+  return s.replace(/^(P|LT|C)(?=\d)/, '');
 }
 
 function normTorqueKey({ make, model, year }) {
@@ -65,6 +120,11 @@ export async function onRequestPost(context) {
   }
 
   const action = body.action;
+
+  // Fail closed. tech.html attaches the token to every /tech-sync call.
+  if (!techTokenOk(bearerFrom(request, body), env)) {
+    return json({ ok: false, error: 'Not authorised — sign in on the tech page again.' }, 401);
+  }
 
   try {
     switch (action) {
@@ -128,6 +188,7 @@ export async function onRequestPost(context) {
             model: veh.model || '',
             trim: veh.trim || '',
           },
+          tireSize: normSize(entry.tireSize) || null,
           ts: Date.now(),
         });
         if (recents.length > RECENTS_MAX) recents.length = RECENTS_MAX;
@@ -284,12 +345,124 @@ export async function onRequestPost(context) {
         return json({ ok: true, entries });
       }
 
+
+      // ── PERMANENT VIN SCAN LOG ──────────────────────────────────────
+      // The rolling `recents` list above is a 10-item scratchpad that
+      // de-dupes by VIN, so it forgets. This is the durable record: what
+      // rolled through the bay, and what size it was actually wearing.
+      case 'logScan': {
+        const e = body.entry || {};
+        const vin = String(e.vin || '').toUpperCase().trim();
+        if (!vin) return json({ ok: false, error: 'Missing entry.vin' }, 400);
+
+        const now = Date.now();
+        const veh = e.vehicle || {};
+        const size = normSize(e.tireSize);
+        const rec = {
+          vin,
+          year: veh.year || null,
+          make: veh.make || '',
+          model: veh.model || '',
+          trim: veh.trim || '',
+          size: size || null,
+          // 'confirmed' = a human typed or corrected it. 'oe' = looked up from
+          // the vehicle. Confirmed always wins, so the report can weight it.
+          sizeSource: size ? (e.sizeSource || 'oe') : null,
+          ts: now,
+        };
+
+        const key = VINLOG_PREFIX + shopDate(now) + ':' + vin;
+        const prior = await env.TECH_KV.get(key, { type: 'json' });
+        if (prior) {
+          rec.ts = prior.ts || now;                       // keep first-seen time
+          if (!rec.size && prior.size) {                  // don't lose a known size
+            rec.size = prior.size; rec.sizeSource = prior.sizeSource;
+          }
+          if (prior.sizeSource === 'confirmed' && rec.sizeSource !== 'confirmed') {
+            rec.size = prior.size; rec.sizeSource = prior.sizeSource;
+          }
+        }
+
+        // The entry rides in KV metadata as well as the value, so sizeReport can
+        // read everything from list() alone -- no get() per scan.
+        await env.TECH_KV.put(key, JSON.stringify(rec), { metadata: rec });
+        return json({ ok: true, entry: rec });
+      }
+
+      // Raw log, newest first. `limit` caps the rows returned.
+      case 'getVinLog': {
+        const limit = Math.min(Math.max(parseInt(body.limit, 10) || 200, 1), 2000);
+        const { rows, truncated } = await listVinLog(env, body.from, body.to);
+        rows.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+        return json({ ok: true, total: rows.length, truncated, scans: rows.slice(0, limit) });
+      }
+
+      // What sizes are actually coming through the door.
+      case 'sizeReport': {
+        const { rows, truncated } = await listVinLog(env, body.from, body.to);
+        const sizes = new Map(), makes = new Map();
+        let known = 0, unknown = 0, confirmed = 0;
+        for (const r of rows) {
+          const mk = (r.make || 'Unknown');
+          makes.set(mk, (makes.get(mk) || 0) + 1);
+          if (r.size) {
+            known++;
+            if (r.sizeSource === 'confirmed') confirmed++;
+            const cur = sizes.get(r.size) || { size: r.size, count: 0, confirmed: 0 };
+            cur.count++;
+            if (r.sizeSource === 'confirmed') cur.confirmed++;
+            sizes.set(r.size, cur);
+          } else {
+            unknown++;
+          }
+        }
+        const bySize = [...sizes.values()].sort((a, b) => b.count - a.count || a.size.localeCompare(b.size));
+        const byMake = [...makes.entries()].map(([make, count]) => ({ make, count }))
+          .sort((a, b) => b.count - a.count || a.make.localeCompare(b.make));
+        const dates = rows.map(r => r.date).filter(Boolean).sort();
+        return json({
+          ok: true,
+          truncated,
+          scans: rows.length,
+          withSize: known,
+          withoutSize: unknown,
+          confirmedSizes: confirmed,
+          firstDate: dates[0] || null,
+          lastDate: dates[dates.length - 1] || null,
+          bySize,
+          byMake,
+        });
+      }
+
       default:
         return json({ ok: false, error: `Unknown action: ${action}` }, 400);
     }
   } catch (err) {
     return json({ ok: false, error: err.message }, 500);
   }
+}
+
+// Walk the whole vinlog prefix. Entries come back from KV metadata, so this is
+// one list() round-trip per 1000 scans rather than one get() per scan.
+// Caps at 20 pages (20k scans) -- far beyond a one-bay shop, but it stops a
+// runaway key space from hanging the report. `truncated` is surfaced, never silent.
+async function listVinLog(env, from, to) {
+  const lo = from || '0000-00-00';
+  const hi = to || '9999-99-99';
+  const rows = [];
+  let cursor = undefined, truncated = false;
+  for (let page = 0; ; page++) {
+    if (page >= 20) { truncated = true; break; }
+    const res = await env.TECH_KV.list({ prefix: VINLOG_PREFIX, cursor, limit: 1000 });
+    for (const k of res.keys) {
+      const date = k.name.slice(VINLOG_PREFIX.length, VINLOG_PREFIX.length + 10);
+      if (date < lo || date > hi) continue;
+      if (k.metadata) rows.push({ ...k.metadata, date });
+    }
+    if (res.list_complete) break;
+    cursor = res.cursor;
+  }
+  return { rows, truncated };
 }
 
 export async function onRequestOptions() {
