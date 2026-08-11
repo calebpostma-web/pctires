@@ -5,9 +5,31 @@
 import json, os, re
 
 DATA = 'tdg-data.txt'
+FEED_IDS_FILE = 'feed-ids.txt'
 OUTDIR = 'pages'
 CHECKED = 'August 1, 2026'
 LASTMOD = '2026-08-01'
+
+# ------------------------------------------------- per-SKU landing page IDs
+# build-feed.py writes feed-ids.txt (slug|size|load|speed|feed-id) for every row
+# that survived feed validation. Each Buy button below targets /p/<feed-id> when
+# a match exists, so a Buy click lands on that one size at its exact feed price.
+# RUN ORDER MATTERS: build-feed.py must run BEFORE generate.py. If feed-ids.txt
+# is missing, every Buy button silently falls back to the old size-search link,
+# which is what Merchant Center rejected -- so we make that loud instead.
+FEED_IDS = {}
+if os.path.exists(FEED_IDS_FILE):
+    for line in open(FEED_IDS_FILE, encoding='utf-8'):
+        line = line.strip()
+        if not line or line.startswith('#'): continue
+        p = line.split('|')
+        if len(p) != 5: continue
+        FEED_IDS[(p[0], p[1], p[2], p[3])] = p[4]
+    print('loaded %d feed ids from %s' % (len(FEED_IDS), FEED_IDS_FILE))
+else:
+    print('WARNING: %s not found -- run build-feed.py FIRST.' % FEED_IDS_FILE)
+    print('         Buy buttons will fall back to /?buysize= links, which')
+    print('         Google Merchant Center rejects as non-purchasable.')
 
 # ---------------------------------------------------------------- parse data
 models_data = {}
@@ -521,19 +543,30 @@ def build_page(slug, m, d):
     lo = min(r['price'] for r in rows); hi = max(r['price'] for r in rows)
     full = m['brand'] + ' ' + m['model']
     url = 'https://pctires.ca/' + slug
+    data_key = slug[len(m['brand']) + 1:]
 
     trs = []
     for r in rows:
         stock = '<span class="stock-in">In stock</span>' if r['qty'] >= 5 else '<span class="stock-low">Low stock</span>'
-        # Buy button: deep-links into the main site, which runs a live TDG search
-        # for this size (handleBuyLink in index.html) so the customer lands on
-        # purchasable results. Required by Google Merchant Center: every product
-        # landing page needs a working path to purchase.
-        # Plain metric size for the search link: drop P/LT/C prefix and any
-        # trailing load-range tokens (XL, LRE, ...) -- the site searches TDG
-        # with plain sizes like 215/55R16, same as its own size dropdowns.
-        plain_size = re.sub(r'^(P|LT|C)(?=\d)', '', r['size'].split(' ')[0])
-        buy_href = 'https://pctires.ca/?buysize=%s&amp;brand=%s#catalog' % (plain_size.replace('/', '%2F'), m['brand'].replace(' ', '%20'))
+        # Buy button destination, in order of preference:
+        #
+        #   1. /p/<feed-id> -- the per-SKU landing page (functions/p/[pid].js).
+        #      This is the Google Merchant Center requirement: a Buy click must
+        #      land on THIS size at THIS price with a working path to checkout,
+        #      not on a page listing 100+ sizes. Same URL the feed's `link`
+        #      column uses, so feed and site agree by construction.
+        #
+        #   2. /?buysize=...  -- fallback for sizes that are on the page but not
+        #      in the feed (feed requires qty>=5 + GTIN + image; the page keeps
+        #      anything qty>0). These aren't advertised, so a live size search is
+        #      a fine destination. Plain metric size only: drop the P/LT/C prefix
+        #      and any trailing load-range token, matching the site's own dropdowns.
+        feed_id = FEED_IDS.get((data_key, r['size'], r['load'], r['speed']))
+        if feed_id:
+            buy_href = 'https://pctires.ca/p/%s' % feed_id
+        else:
+            plain_size = re.sub(r'^(P|LT|C)(?=\d)', '', r['size'].split(' ')[0])
+            buy_href = 'https://pctires.ca/?buysize=%s&amp;brand=%s#catalog' % (plain_size.replace('/', '%2F'), m['brand'].replace(' ', '%20'))
         trs.append('<tr><td>%s</td><td>%s%s</td><td>%s</td><td>$%.2f</td><td><a class="buy-link" href="%s">Buy &rarr;</a></td></tr>' % (r['size'], r['load'], r['speed'], stock, r['price'], buy_href))
     table = '<table class="size-table"><thead><tr><th>Size</th><th>Load/Speed</th><th>Availability</th><th>Price / tire</th><th></th></tr></thead><tbody>' + ''.join(trs) + '</tbody></table>'
 
