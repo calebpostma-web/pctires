@@ -1,3 +1,7 @@
 # Cloudflare Pages redirect rules
 # Quote share links: /q/CODE → serve the SPA, JS reads the path
 /q/* /index.html 200
+
+# Per-SKU product landing pages live at /product?id=<feed-id> (functions/product.js).
+# Keep the shorter /p/<feed-id> form working for anything already linked or crawled.
+/p/* /product?id=:splat 301
