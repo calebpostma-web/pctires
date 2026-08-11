@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Scan Log — PC Tires Tech</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0a0a0a;--card:#141414;--raised:#1c1c1c;--border:#2a2a2a;--white:#f4f4f4;--light:#d4d4d4;--muted:#8a8a8a;--yellow:#f5c518;--green:#16a34a;--red:#dc2626}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#121212;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;letter-spacing:2px;color:var(--white);text-decoration:none}
+.logo .pc{color:var(--yellow)}
+header a.back{font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:1px;text-transform:uppercase}
+header a.back:hover{color:var(--yellow)}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 18px 70px}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+.gate{max-width:340px;margin:70px auto;text-align:center}
+.gate input{width:100%;padding:13px 14px;background:var(--card);border:1px solid var(--border);border-radius:3px;color:var(--white);font-size:16px;margin-bottom:10px;font-family:inherit}
+.gate input:focus{outline:none;border-color:var(--yellow)}
+button{background:var(--yellow);color:#111;border:0;border-radius:3px;padding:11px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
+button:hover{background:#dba900}
+button.ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+button.ghost:hover{color:var(--white);border-color:var(--yellow)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:22px}
+.controls label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;margin-bottom:5px}
+.controls input[type=date]{background:var(--card);border:1px solid var(--border);color:var(--white);border-radius:3px;padding:9px 10px;font-family:inherit;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:26px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:14px 16px}
+.stat .k{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700}
+.stat .v{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--yellow);line-height:1.1;margin-top:2px}
+.stat .n{font-size:11px;color:var(--muted)}
+h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:30px 0 12px;color:var(--white)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;padding:9px 10px;border-bottom:2px solid var(--border)}
+td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--light)}
+td.mono,th.mono{font-family:'IBM Plex Mono',monospace;font-size:13px}
+tr:hover td{background:var(--card)}
+.bar{height:7px;background:var(--yellow);border-radius:2px;min-width:2px;display:block}
+.bar-cell{width:34%}
+.tag{display:inline-block;font-size:10px;letter-spacing:.5px;padding:1px 6px;border-radius:2px;border:1px solid var(--border);color:var(--muted)}
+.tag.ok{border-color:var(--green);color:#4ade80}
+.msg{padding:16px;background:var(--card);border-left:3px solid var(--yellow);border-radius:2px;color:var(--light);font-size:14px}
+.msg.err{border-color:var(--red)}
+.hide{display:none}
+.foot{margin-top:34px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:14px}
+@media(max-width:640px){.wrap{padding:18px 14px 60px}.bar-cell{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo"><span class="pc">PC</span>TIRES</a>
+  <a class="back" href="/tech">&larr; Tech portal</a>
+</header>
+
+<!-- Password gate — same TECH_PASSWORD / token as the tech portal -->
+<div class="gate" id="gate">
+  <h1 style="font-size:24px;margin-bottom:14px">Scan Log</h1>
+  <input type="password" id="pw" placeholder="Tech password" autocomplete="current-password">
+  <button onclick="signIn()" style="width:100%">Sign in</button>
+  <div id="gateMsg" style="color:#f87171;font-size:13px;margin-top:10px"></div>
+</div>
+
+<div class="wrap hide" id="app">
+  <h1>Scan Log</h1>
+  <div class="sub" id="range">&nbsp;</div>
+
+  <div class="controls">
+    <div><label for="from">From</label><input type="date" id="from"></div>
+    <div><label for="to">To</label><input type="date" id="to"></div>
+    <button onclick="load()">Apply</button>
+    <button class="ghost" onclick="setDays(30)">30d</button>
+    <button class="ghost" onclick="setDays(90)">90d</button>
+    <button class="ghost" onclick="setDays(3650)">All</button>
+    <button class="ghost" onclick="exportCsv()">Export CSV</button>
+  </div>
+
+  <div id="msg" class="msg hide"></div>
+
+  <div class="stats" id="stats"></div>
+
+  <h2>Sizes coming through the bay</h2>
+  <div id="sizes"></div>
+
+  <h2>Makes</h2>
+  <div id="makes"></div>
+
+  <h2>Recent scans</h2>
+  <div id="scans"></div>
+
+  <div class="foot">
+    One row per vehicle per day &mdash; re-scanning the same vehicle twice in an afternoon counts once.
+    Sizes marked <span class="tag ok">confirmed</span> were typed or corrected by a tech; the rest are the
+    factory size looked up from the VIN, or read off a sidewall photo. Confirmed always wins.
+  </div>
+</div>
+
+<script>
+const TOKEN_KEY = 'pctech_token';
+let TOKEN = '';
+let lastScans = [];
+
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function el(id){return document.getElementById(id);}
+function show(id){el(id).classList.remove('hide');}
+function hide(id){el(id).classList.add('hide');}
+
+function msg(text, isErr){
+  const m = el('msg');
+  if(!text){ m.classList.add('hide'); return; }
+  m.textContent = text;
+  m.className = 'msg' + (isErr ? ' err' : '');
+}
+
+async function sync(payload){
+  const r = await fetch('/tech-sync', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+TOKEN},
+    body: JSON.stringify(payload),
+  });
+  if(r.status === 401){ localStorage.removeItem(TOKEN_KEY); location.reload(); throw new Error('Session expired'); }
+  return r.json();
+}
+
+async function signIn(){
+  const pw = el('pw').value;
+  if(!pw) return;
+  el('gateMsg').textContent = 'Checking…';
+  try{
+    const r = await fetch('/tech-auth', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password: pw }),
+    });
+    const d = await r.json();
+    if(!d.ok){ el('gateMsg').textContent = d.error || 'Incorrect password'; return; }
+    localStorage.setItem(TOKEN_KEY, d.token);
+    TOKEN = d.token;
+    start();
+  }catch(e){ el('gateMsg').textContent = 'Sign in failed: ' + e.message; }
+}
+
+function setDays(n){
+  const to = new Date();
+  const from = new Date(Date.now() - n*86400000);
+  el('to').value = to.toISOString().slice(0,10);
+  el('from').value = from.toISOString().slice(0,10);
+  load();
+}
+
+function bar(count, max){
+  const pct = max > 0 ? Math.max(2, Math.round(100*count/max)) : 2;
+  return '<span class="bar" style="width:'+pct+'%"></span>';
+}
+
+function renderSizes(bySize){
+  if(!bySize.length){ el('sizes').innerHTML = '<div class="msg">No sizes recorded yet. Scan a vehicle in the tech portal and it will show up here.</div>'; return; }
+  const max = bySize[0].count;
+  el('sizes').innerHTML =
+    '<table><thead><tr><th>#</th><th class="mono">Size</th><th>Vehicles</th><th class="bar-cell"></th><th>Confirmed</th></tr></thead><tbody>' +
+    bySize.map(function(s,i){
+      return '<tr><td>'+(i+1)+'</td><td class="mono">'+esc(s.size)+'</td><td>'+s.count+'</td>'+
+             '<td class="bar-cell">'+bar(s.count,max)+'</td>'+
+             '<td>'+(s.confirmed ? '<span class="tag ok">'+s.confirmed+'</span>' : '<span class="tag">0</span>')+'</td></tr>';
+    }).join('') + '</tbody></table>';
+}
+
+function renderMakes(byMake){
+  if(!byMake.length){ el('makes').innerHTML = '<div class="msg">Nothing yet.</div>'; return; }
+  const max = byMake[0].count;
+  el('makes').innerHTML =
+    '<table><thead><tr><th>Make</th><th>Vehicles</th><th class="bar-cell"></th></tr></thead><tbody>' +
+    byMake.map(function(m){
+      return '<tr><td>'+esc(m.make)+'</td><td>'+m.count+'</td><td class="bar-cell">'+bar(m.count,max)+'</td></tr>';
+    }).join('') + '</tbody></table>';
+}
+
+function renderScans(scans){
+  if(!scans.length){ el('scans').innerHTML = '<div class="msg">No scans in this range.</div>'; return; }
+  el('scans').innerHTML =
+    '<table><thead><tr><th>Date</th><th>Vehicle</th><th class="mono">Size</th><th class="mono">VIN</th></tr></thead><tbody>' +
+    scans.map(function(s){
+      const veh = [s.year||'', s.make||'', s.model||''].filter(Boolean).join(' ');
+      const srcTag = s.sizeSource === 'confirmed' ? ' <span class="tag ok">conf</span>'
+                   : s.sizeSource === 'sidewall' ? ' <span class="tag">wall</span>'
+                   : s.size ? ' <span class="tag">oe</span>' : '';
+      return '<tr><td class="mono">'+esc(s.date||'')+'</td><td>'+esc(veh)+'</td>'+
+             '<td class="mono">'+(s.size?esc(s.size):'&mdash;')+srcTag+'</td>'+
+             '<td class="mono">'+esc(s.vin||'')+'</td></tr>';
+    }).join('') + '</tbody></table>';
+}
+
+async function load(){
+  msg('');
+  const from = el('from').value || '0000-00-00';
+  const to   = el('to').value   || '9999-99-99';
+  el('range').textContent = 'Loading…';
+  try{
+    const [rep, log] = await Promise.all([
+      sync({ action:'sizeReport', from: from, to: to }),
+      sync({ action:'getVinLog', from: from, to: to, limit: 500 }),
+    ]);
+    if(!rep.ok){ msg(rep.error || 'Report failed', true); el('range').textContent=''; return; }
+
+    el('stats').innerHTML =
+      stat('Vehicles', rep.scans, 'one per vehicle per day') +
+      stat('With a size', rep.withSize, rep.scans ? Math.round(100*rep.withSize/rep.scans)+'% of scans' : '') +
+      stat('Distinct sizes', rep.bySize.length, '') +
+      stat('Tech-confirmed', rep.confirmedSizes, 'typed or corrected by hand');
+
+    el('range').textContent = rep.firstDate
+      ? ('First scan ' + rep.firstDate + ' · last ' + rep.lastDate)
+      : 'No scans recorded yet.';
+
+    if(rep.truncated) msg('Only the first 20,000 scans were read — the report is incomplete. Narrow the date range.', true);
+
+    renderSizes(rep.bySize);
+    renderMakes(rep.byMake);
+    lastScans = (log.ok && log.scans) ? log.scans : [];
+    renderScans(lastScans);
+  }catch(e){
+    msg('Could not load: ' + e.message, true);
+    el('range').textContent = '';
+  }
+}
+
+function stat(k, v, n){
+  return '<div class="stat"><div class="k">'+esc(k)+'</div><div class="v">'+v+'</div><div class="n">'+esc(n||'')+'</div></div>';
+}
+
+function exportCsv(){
+  if(!lastScans.length){ msg('Nothing to export in this range.', true); return; }
+  const head = ['date','vin','year','make','model','trim','size','sizeSource'];
+  const rows = lastScans.map(function(s){
+    return head.map(function(h){
+      const val = s[h] == null ? '' : String(s[h]);
+      return /[",\n]/.test(val) ? '"' + val.replace(/"/g,'""') + '"' : val;
+    }).join(',');
+  });
+  const blob = new Blob([head.join(',')+'\n'+rows.join('\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'pctires-scan-log.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function start(){
+  hide('gate'); show('app');
+  setDays(90);
+}
+
+(function init(){
+  TOKEN = localStorage.getItem(TOKEN_KEY) || '';
+  if(TOKEN) start();
+  el('pw').addEventListener('keydown', function(e){ if(e.key === 'Enter') signIn(); });
+})();
+</script>
+</body>
+</html>
