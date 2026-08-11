@@ -550,7 +550,7 @@ def build_page(slug, m, d):
         stock = '<span class="stock-in">In stock</span>' if r['qty'] >= 5 else '<span class="stock-low">Low stock</span>'
         # Buy button destination, in order of preference:
         #
-        #   1. /p/<feed-id> -- the per-SKU landing page (functions/p/[pid].js).
+        #   1. /product?id=<feed-id> -- the per-SKU landing page (functions/product.js).
         #      This is the Google Merchant Center requirement: a Buy click must
         #      land on THIS size at THIS price with a working path to checkout,
         #      not on a page listing 100+ sizes. Same URL the feed's `link`
@@ -563,7 +563,7 @@ def build_page(slug, m, d):
         #      and any trailing load-range token, matching the site's own dropdowns.
         feed_id = FEED_IDS.get((data_key, r['size'], r['load'], r['speed']))
         if feed_id:
-            buy_href = 'https://pctires.ca/p/%s' % feed_id
+            buy_href = 'https://pctires.ca/product?id=%s' % feed_id
         else:
             plain_size = re.sub(r'^(P|LT|C)(?=\d)', '', r['size'].split(' ')[0])
             buy_href = 'https://pctires.ca/?buysize=%s&amp;brand=%s#catalog' % (plain_size.replace('/', '%2F'), m['brand'].replace(' ', '%20'))
