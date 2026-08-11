@@ -75,12 +75,12 @@ for line in open('feed-src.txt', encoding='utf-8'):
             'Sold by PC Tires in Chatham-Kent, Ontario with local installation for $25 per tire.') % (
             brand, model, season.lower(), disp_size, load, speed)
     # The landing page MUST be the per-SKU page, not the shared model page.
-    # /p/<id> is served by functions/p/[pid].js, which reads this same feed
+    # /product?id=<id> is served by functions/product.js, which reads this same feed
     # file -- so the price Google sees on the landing page is the price in this
     # row, by construction. Pointing `link` at the model page is what got the
     # account flagged for "user cannot complete purchase" + price mismatch
     # (Merchant Center, Aug 2026).
-    link = 'https://pctires.ca/p/' + pid
+    link = 'https://pctires.ca/product?id=' + pid
     image = 'https://' + img.replace(' ', '%20')
     rows.append([pid, title, desc, link, image, 'in_stock', '%.2f CAD' % price, 'new', brand, gtin, mpn, GPC, 'Tires > ' + season])
     feed_ids.append('%s|%s|%s|%s|%s' % (slug, size, load, speed, pid))
