@@ -49,6 +49,10 @@ for line in open('tdg-data.txt', encoding='utf-8'):
         page_price[k] = pr
 
 rows, dropped_price, dropped_gtin, dropped_missing, seen_ids = [], 0, 0, 0, set()
+# feed-ids.txt lets generate.py point each model-page Buy button at the matching
+# /p/<id> landing page. It is written here rather than in generate.py so that
+# only rows which actually survived feed validation can ever be linked to.
+feed_ids = []
 for line in open('feed-src.txt', encoding='utf-8'):
     line = line.strip()
     if not line: continue
@@ -70,9 +74,16 @@ for line in open('feed-src.txt', encoding='utf-8'):
     desc = ('%s %s %s tire, size %s, load index %s, speed rating %s. New tire with full manufacturer warranty. '
             'Sold by PC Tires in Chatham-Kent, Ontario with local installation for $25 per tire.') % (
             brand, model, season.lower(), disp_size, load, speed)
-    link = 'https://pctires.ca/' + pageslug
+    # The landing page MUST be the per-SKU page, not the shared model page.
+    # /p/<id> is served by functions/p/[pid].js, which reads this same feed
+    # file -- so the price Google sees on the landing page is the price in this
+    # row, by construction. Pointing `link` at the model page is what got the
+    # account flagged for "user cannot complete purchase" + price mismatch
+    # (Merchant Center, Aug 2026).
+    link = 'https://pctires.ca/p/' + pid
     image = 'https://' + img.replace(' ', '%20')
     rows.append([pid, title, desc, link, image, 'in_stock', '%.2f CAD' % price, 'new', brand, gtin, mpn, GPC, 'Tires > ' + season])
+    feed_ids.append('%s|%s|%s|%s|%s' % (slug, size, load, speed, pid))
 
 header = ['id','title','description','link','image_link','availability','price','condition','brand','gtin','mpn','google_product_category','product_type']
 with open('product-feed.txt', 'w', encoding='utf-8') as f:
@@ -81,7 +92,12 @@ with open('product-feed.txt', 'w', encoding='utf-8') as f:
         assert all('\t' not in c and '\n' not in c for c in r)
         f.write('\t'.join(r) + '\n')
 
+with open('feed-ids.txt', 'w', encoding='utf-8') as f:
+    f.write('# slug|size|load|speed|feed-id  -- written by build-feed.py, read by generate.py\n')
+    f.write('\n'.join(feed_ids) + '\n')
+
 print('feed items: %d | dropped: price-mismatch %d, not-on-page %d, bad-gtin %d' % (len(rows), dropped_price, dropped_missing, dropped_gtin))
+print('feed-ids.txt rows: %d' % len(feed_ids))
 brands = {}
 for r in rows: brands[r[8]] = brands.get(r[8], 0) + 1
 print('by brand:', brands)
