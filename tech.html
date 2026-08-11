@@ -203,6 +203,19 @@
     font-size: 11px; color: var(--muted); margin-top: 3px;
     letter-spacing: .5px; word-break: break-all;
   }
+  /* Tire size on the vehicle — tap to correct. Feeds the stocking report. */
+  .vehicle-size {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 7px; padding: 4px 10px; cursor: pointer;
+    border: 1px solid var(--border); border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    color: var(--light); background: rgba(255,255,255,.03);
+  }
+  .vehicle-size:hover { border-color: var(--yellow); }
+  .vehicle-size .vs-src { font-size: 10px; color: var(--muted); letter-spacing: .3px; }
+  .vehicle-size.confirmed { border-color: #16a34a; }
+  .vehicle-size.confirmed .vs-src { color: #4ade80; }
+  .vehicle-size.missing { border-style: dashed; color: var(--muted); }
   .vehicle-clear {
     background: transparent; border: 1px solid var(--border);
     color: var(--muted); font-size: 11px; font-weight: 600;
@@ -1245,6 +1258,28 @@
    CONSTANTS & STATE
    ═══════════════════════════════════════════════════════════════ */
 const TOKEN_KEY = 'pctech_token';
+
+// /tech-sync now requires the tech token (it used to accept any POST from
+// anywhere, which meant the bay's recent VINs -- and the verified torque DB --
+// were readable and writable by strangers). Wrapping fetch here means all ten
+// call sites below get the header automatically and none of them can drift out
+// of sync. Only /tech-sync requests are touched.
+(function () {
+  const _fetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    try {
+      const url = typeof input === 'string' ? input : (input && input.url) || '';
+      if (url.indexOf('/tech-sync') !== -1) {
+        const tok = localStorage.getItem(TOKEN_KEY) || '';
+        if (tok) {
+          init = init || {};
+          init.headers = Object.assign({}, init.headers || {}, { Authorization: 'Bearer ' + tok });
+        }
+      }
+    } catch (e) { /* never let this break a request */ }
+    return _fetch(input, init);
+  };
+})();
 const BAY_ID = 1;
 const TV_POLL_MS = 2000;
 
@@ -2149,6 +2184,9 @@ const COMMERCIAL_101 = [
 // Current vehicle state (phone mode)
 let currentScan = null;
 let currentRecents = [];
+// Size read off the sidewall in the last scan, if the photo showed one.
+// Beats the AI's factory-size guess because it is what the vehicle is wearing.
+let scannedTireSize = null;
 
 /* ═══════════════════════════════════════════════════════════════
    AUTH
@@ -2398,6 +2436,11 @@ async function handleCamCapture(event) {
         return;
       }
 
+      // /vin-scan reads a sidewall size when one is visible in the photo. It has
+      // always returned it; this page used to throw it away. Stash it so
+      // loadSpecsForVehicle can log it against the vehicle.
+      scannedTireSize = d.tireSize || null;
+
       await processVIN(d.vin);
     } catch (err) {
       hideLoading();
@@ -2533,11 +2576,20 @@ async function loadSpecsForVehicle(vin, vehicle) {
     jackpoints,
   };
 
+  // Best size we have: what the tech actually photographed beats the factory
+  // size the specs lookup guessed at.
+  const oeSize = (aiRes.ok && aiRes.oeTireSize) || null;
+  const bestSize = scannedTireSize || oeSize;
+  scan.tireSize = bestSize || null;
+  scan.tireSizeSource = scannedTireSize ? 'sidewall' : (oeSize ? 'oe' : null);
+
   currentScan = scan;
   await pushToTV(scan);
   renderPhoneResult(scan);
   await loadNotes(vin);
-  pushRecent(vin, vehicle);
+  pushRecent(vin, vehicle, bestSize);
+  logScan(vin, vehicle, bestSize, scan.tireSizeSource);
+  scannedTireSize = null;   // consumed — don't leak onto the next vehicle
   hideLoading();
   toast('Specs loaded — TV updated', 'success');
 }
@@ -2686,6 +2738,18 @@ function renderPhoneResult(scan) {
         <div>
           <div class="vehicle-name">${escapeHtml(v.year || '')} ${escapeHtml(v.make || '')} ${escapeHtml(v.model || '')}</div>
           <div class="vehicle-vin">${v.trim ? escapeHtml(v.trim) + ' · ' : ''}VIN ${escapeHtml(scan.vin || '—')}</div>
+          ${(function () {
+            const sz = scan.tireSize, src = scan.tireSizeSource;
+            const cls = src === 'confirmed' ? ' confirmed' : (sz ? '' : ' missing');
+            const label = src === 'confirmed' ? '&#10003; confirmed'
+                        : src === 'sidewall' ? 'from sidewall &middot; tap to correct'
+                        : src === 'oe' ? 'factory size &middot; tap to confirm'
+                        : 'tap to record';
+            return `<div class="vehicle-size${cls}" onclick="confirmTireSize()">
+              <span>&#128736; ${sz ? escapeHtml(sz) : 'Tire size'}</span>
+              <span class="vs-src">${label}</span>
+            </div>`;
+          })()}
         </div>
         <button class="vehicle-clear" onclick="clearVehicle()">Clear</button>
       </div>
@@ -2785,7 +2849,7 @@ function tapRecent(vinStr) {
   }
 }
 
-function pushRecent(vin, vehicle) {
+function pushRecent(vin, vehicle, tireSize) {
   if (!vin) return;
   fetch('/tech-sync', {
     method: 'POST',
@@ -2800,11 +2864,58 @@ function pushRecent(vin, vehicle) {
           model: (vehicle && vehicle.model) || '',
           trim: (vehicle && vehicle.trim) || '',
         },
+        tireSize: tireSize || null,
       },
     }),
   }).then(function(r) { return r.json(); })
     .then(function(d) { if (d && d.ok) renderRecents(d.recents); })
     .catch(function() { /* ignore */ });
+}
+
+// Durable record of what came through the bay. Unlike pushRecent (a rolling 10
+// that de-dupes by VIN and forgets), this is never overwritten -- it is what the
+// stocking report at /tech-log reads. Fire-and-forget: a logging failure must
+// never interrupt a tech mid-job.
+function logScan(vin, vehicle, tireSize, sizeSource) {
+  if (!vin) return;
+  fetch('/tech-sync', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      action: 'logScan',
+      entry: {
+        vin: vin,
+        vehicle: {
+          year: (vehicle && vehicle.year) || null,
+          make: (vehicle && vehicle.make) || '',
+          model: (vehicle && vehicle.model) || '',
+          trim: (vehicle && vehicle.trim) || '',
+        },
+        tireSize: tireSize || null,
+        sizeSource: sizeSource || null,
+      },
+    }),
+  }).catch(function() { /* silent — logging is never worth a failed job */ });
+}
+
+// Tech corrects the size by hand. Overwrites whatever was guessed and marks it
+// 'confirmed', which outranks every other source in the report.
+function confirmTireSize() {
+  if (!currentScan || !currentScan.vin) return;
+  const cur = currentScan.tireSize || '';
+  const entered = prompt('Tire size on this vehicle (e.g. 225/65R17):', cur);
+  if (entered === null) return;
+  const val = entered.trim();
+  if (!val) return;
+  if (!/^[A-Za-z]{0,2}[\d.]+([Xx/][\d.]+)?[Zz]?[Rr][\d.]+/.test(val.replace(/\s+/g, ''))) {
+    toast('That does not look like a tire size', 'error');
+    return;
+  }
+  currentScan.tireSize = val.toUpperCase().replace(/\s+/g, '');
+  currentScan.tireSizeSource = 'confirmed';
+  logScan(currentScan.vin, currentScan.vehicle, currentScan.tireSize, 'confirmed');
+  renderPhoneResult(currentScan);
+  toast('Size recorded: ' + currentScan.tireSize, 'success');
 }
 
 /* ═══════════════════════════════════════════════════════════════
