@@ -8,6 +8,8 @@ Disallow: /tech
 Disallow: /pay.html
 Disallow: /thank-you.html
 Disallow: /functions/
+# Build tooling / generated page copies -- the live pages are at the repo root
+Disallow: /refresh-tools/
 Disallow: /TDG/
 Disallow: /*.ps1$
 Disallow: /.pctires-token
