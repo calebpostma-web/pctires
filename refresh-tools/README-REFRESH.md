@@ -63,16 +63,32 @@ Caleb only runs the final push.
 
 ## Per-SKU landing pages (added 2026-08-11)
 
-`functions/p/[pid].js` serves `https://pctires.ca/p/<feed-id>` for every SKU in
-the feed. It reads `product-feed.txt` at request time — the same file Google
-fetches — so the landing-page price cannot drift from the feed price. There is
-no per-SKU HTML to generate or push; a feed rebuild is all it takes.
+`functions/product.js` serves `https://pctires.ca/product?id=<feed-id>` for every
+SKU in the feed. It reads `product-feed.txt` at request time -- the same file
+Google fetches -- so the landing-page price cannot drift from the feed price.
+There is no per-SKU HTML to generate or push; a feed rebuild is all it takes.
+`_redirects` also 301s the shorter `/p/<feed-id>` form to it.
 
 Two things must stay in sync with `build-feed.py` when a model is added or
-removed: the `META` map at the top of `[pid].js`, and the `META` map in
+removed: the `META` map at the top of `product.js`, and the `META` map in
 `build-feed.py`. Same 16 keys in both.
 
 Why it exists: Merchant Center suspended the account in August 2026 for "User
 cannot complete purchase" and a price mismatch. Both traced to the feed's `link`
 column pointing at the shared model page (100+ sizes, a "from $X" headline, no
 single buyable item) instead of the specific size.
+
+### Routing gotcha -- do not "tidy" this into /p/<id>
+
+Two earlier attempts failed in production on this project:
+
+1. `functions/p/[pid].js` -- the correct Cloudflare convention, but `push-pctires.ps1`
+   deploys by PUTting each file to the GitHub Contents API by URL, and a filename
+   containing `[` `]` is not safely representable in that path.
+2. `functions/p/_middleware.js` -- a Pages directory containing ONLY middleware and
+   no route file never gets routed. `/p/<id>` returned 404 live while `/used-tires`
+   (a top-level function file) worked fine. `/q/` survives only because `_redirects`
+   has an explicit `/q/*` rule.
+
+A top-level function file is the only pattern proven on this deployment. Query-string
+landing pages are entirely normal for Merchant Center.
