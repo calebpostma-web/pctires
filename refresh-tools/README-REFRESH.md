@@ -8,8 +8,9 @@ Caleb only runs the final push.
 
 ## What lives here
 
-- `generate.py` — builds all 16 model pages from `tdg-data.txt` (per-model copy is embedded in the script)
-- `build-feed.py` — builds `product-feed.txt` from `feed-src.txt`, validated against `tdg-data.txt` (price match + GTIN check digits)
+- `build-feed.py` — builds `product-feed.txt` from `feed-src.txt`, validated against `tdg-data.txt` (price match + GTIN check digits). Also writes `feed-ids.txt`. **Run this FIRST.**
+- `generate.py` — builds all 16 model pages from `tdg-data.txt` (per-model copy is embedded in the script). Reads `feed-ids.txt` so every Buy button points at that size's `/p/<id>` page
+- `feed-ids.txt` — generated map `slug|size|load|speed|feed-id`; the handshake between the feed and the model pages. Not deployed, but keep it in the repo so a page rebuild without a feed rebuild is obvious
 - `build-local-feed.py` — builds `local-inventory-feed.txt` from `product-feed.txt`; store code argument: `11770934583290184135`
 - `tdg-data.txt` — page dataset: `#Brand|model-key|Season|Service` headers + `size|load|speed|qty|retail` rows (LAST REFRESH: 2026-07-07)
 - `feed-src.txt` — feed dataset: `model-key|size|load|speed|qty|retail|gtin|mpn|image-path` rows (LAST REFRESH: 2026-07-07)
@@ -33,11 +34,19 @@ Caleb only runs the final push.
    get_page_text, then navigate the tab back to pctires.ca.
 3. **Update the two dataset files** (tdg-data.txt, feed-src.txt) and the `CHECKED`/`LASTMOD`
    date constants in generate.py.
-4. **Regenerate:** `python3 generate.py` (16 pages), `python3 build-feed.py`,
+4. **Regenerate, IN THIS ORDER** — `build-feed.py` writes `feed-ids.txt`, which
+   `generate.py` needs to point Buy buttons at the per-SKU pages:
+   `python3 build-feed.py`, then `python3 generate.py` (16 pages), then
    `python3 build-local-feed.py 11770934583290184135`.
+   If generate.py prints a `feed-ids.txt not found` warning, stop — the Buy
+   buttons have silently fallen back to the size-search links that Google
+   Merchant Center rejected in August 2026.
 5. **Verify** (same checks as the original build): HTML parses, 2 JSON-LD blocks per page and they
    json-parse, price spot-checks vs data, all GTINs check-digit valid, feed columns = 13 tab-separated,
    local feed row count == product feed row count, no WELCOME10, phone 519-397-4686 only.
+   Plus, since Aug 2026: every feed `link` is `https://pctires.ca/p/<id>` and unique;
+   every `/p/<id>` in a model page exists in the feed; and `/p/<id>` renders the same
+   price as that row of the feed.
 6. **Copy outputs to the repo folder** (16 .html files, product-feed.txt, local-inventory-feed.txt)
    and update the copies of the dataset files in refresh-tools/. Report results to Caleb.
 7. **Caleb:** `cd C:\Users\Caleb\Documents\Claude\Projects\PCtires` then `.\push-pctires.ps1`.
@@ -50,3 +59,20 @@ Caleb only runs the final push.
 - Delivery policy: Destination/Postcodes zone (N7L, N7M, N0P, N8A) at $25 — do not touch during refresh.
 - Pricing engine note: TEST_NET_TARGET toggle in index.html changes retailPrice(); using the live
   site's own function (step 2) keeps everything consistent automatically, whatever Caleb has toggled.
+
+
+## Per-SKU landing pages (added 2026-08-11)
+
+`functions/p/[pid].js` serves `https://pctires.ca/p/<feed-id>` for every SKU in
+the feed. It reads `product-feed.txt` at request time — the same file Google
+fetches — so the landing-page price cannot drift from the feed price. There is
+no per-SKU HTML to generate or push; a feed rebuild is all it takes.
+
+Two things must stay in sync with `build-feed.py` when a model is added or
+removed: the `META` map at the top of `[pid].js`, and the `META` map in
+`build-feed.py`. Same 16 keys in both.
+
+Why it exists: Merchant Center suspended the account in August 2026 for "User
+cannot complete purchase" and a price mismatch. Both traced to the feed's `link`
+column pointing at the shared model page (100+ sizes, a "from $X" headline, no
+single buyable item) instead of the specific size.
