@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Status Card Payment — PC Tires</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+:root {
+  --black:#0a0a0a; --dark:#121212; --card:#161616; --raised:#1d1d1d;
+  --border:#252525; --mid:#2d2d2d; --muted:#888;
+  --light:#cfcfcf; --white:#f4f4f4;
+  --yellow:#f5c518; --yellow-dark:#dba900;
+  --green:#16a34a; --red:#dc2626;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--black); color:var(--white); font-family:Barlow,-apple-system,sans-serif; }
+.site-header { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-bottom:1px solid var(--border); }
+.logo { font-size:22px; font-weight:900; letter-spacing:2px; color:var(--white); text-decoration:none; }
+.logo .pc { color:var(--yellow); }
+.nav-phone { color:var(--muted); text-decoration:none; font-size:14px; font-weight:600; }
+.wrap { max-width:560px; margin:0 auto; padding:28px 20px 60px; }
+h1 { font-size:28px; font-weight:900; letter-spacing:-.5px; margin:0 0 6px; }
+h1 .accent { color:var(--yellow); }
+.subline { color:var(--muted); font-size:14px; margin:0 0 24px; line-height:1.5; }
+.form-card { background:var(--card); border:1px solid var(--border); border-radius:3px; padding:22px; margin-bottom:16px; }
+.form-section-head { font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+.fg { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.fg label { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
+.fg input {
+  background:var(--raised); border:1px solid var(--border); border-radius:2px;
+  color:var(--white); padding:12px 13px; font-family:Barlow,sans-serif; font-size:15px; width:100%;
+}
+.fg input:focus { outline:0; border-color:var(--yellow); }
+.fg input[readonly] { background:var(--dark); color:var(--light); cursor:default; }
+.fg .helper { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.45; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media(max-width:600px) { .form-row { grid-template-columns:1fr; gap:0; } }
+.calc { background:var(--raised); border:1px solid var(--border); border-radius:2px; padding:14px 16px; margin-top:6px; font-size:14px; }
+.calc-row { display:flex; justify-content:space-between; padding:5px 0; color:var(--white); }
+.calc-row .lbl { color:var(--muted); }
+.calc-row.sep { border-top:1px solid var(--border); margin-top:7px; padding-top:9px; }
+.calc-row.grand { font-weight:900; font-size:17px; color:var(--yellow); }
+.calc-row.save { color:var(--green); font-weight:700; }
+.pay-btn {
+  width:100%; background:var(--yellow); color:var(--black); border:0; border-radius:2px;
+  padding:15px; font-family:Barlow,sans-serif; font-size:15px; font-weight:900;
+  letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; margin-top:6px;
+}
+.pay-btn:hover { background:var(--yellow-dark); }
+.pay-btn:disabled { opacity:.5; cursor:not-allowed; }
+.pay-btn.ghost { background:var(--mid); color:var(--white); }
+.amount-display { text-align:center; padding:22px 0 18px; border-bottom:1px solid var(--border); margin-bottom:18px; }
+.amount-label { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:6px; }
+.amount-value { font-size:40px; font-weight:900; color:var(--yellow); line-height:1; }
+.amount-value .cur { font-size:16px; color:var(--muted); margin-left:6px; font-weight:700; }
+.note-box { border:1px solid rgba(245,197,24,.35); background:rgba(245,197,24,.05); border-radius:2px; padding:13px 15px; margin-bottom:16px; font-size:12.5px; color:var(--light); line-height:1.55; }
+.form-error { display:none; background:rgba(220,38,38,.12); border:1px solid var(--red); border-radius:2px; padding:11px 14px; color:#fca5a5; font-size:13.5px; margin-top:12px; }
+.form-error.show { display:block; }
+.gen-url-box { background:var(--raised); border:1px dashed var(--yellow); border-radius:2px; padding:13px; font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--yellow); word-break:break-all; cursor:pointer; }
+.action-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:14px; }
+.action-btn { background:var(--raised); border:1px solid var(--border); border-radius:2px; color:var(--white); padding:11px 6px; font-family:Barlow,sans-serif; font-size:13px; font-weight:700; cursor:pointer; }
+.action-btn:hover { border-color:var(--yellow); }
+.success-state { display:none; text-align:center; padding:40px 20px; }
+.success-state.show { display:block; }
+.success-circle { width:66px; height:66px; border-radius:50%; background:var(--green); color:#fff; font-size:34px; line-height:66px; margin:0 auto 18px; }
+.success-title { font-size:24px; font-weight:900; margin-bottom:8px; }
+.toast-popup { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:var(--yellow); color:var(--black); padding:11px 22px; border-radius:2px; font-weight:800; font-size:13px; letter-spacing:1px; text-transform:uppercase; z-index:1000; opacity:0; pointer-events:none; transition:opacity .2s; }
+.toast-popup.show { opacity:1; }
+#stripeElements { background:var(--raised); border:1px solid var(--border); border-radius:2px; padding:13px; }
+#stripeError { color:#fca5a5; font-size:13px; margin-top:8px; display:none; }
+footer { padding:30px 24px; text-align:center; color:var(--muted); font-size:12px; border-top:1px solid var(--border); }
+footer a { color:var(--muted); text-decoration:none; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="logo"><span class="pc">PC</span>TIRES</a>
+  <a href="tel:5193974686" class="nav-phone">519-397-4686</a>
+</header>
+
+<div class="wrap">
+
+  <!-- ============================================================ -->
+  <!-- OWNER SIGN-IN (no code in URL, no valid owner token)          -->
+  <!-- ============================================================ -->
+  <div id="ownerGate" style="display:none">
+    <h1>Owner <span class="accent">Sign In</span></h1>
+    <p class="subline">This page builds status card payment links. Sign in to use it.</p>
+    <div class="form-card">
+      <div class="fg">
+        <label for="ownerPw">Owner Password</label>
+        <input type="password" id="ownerPw" autocomplete="current-password" onkeydown="if(event.key==='Enter'){event.preventDefault();ownerSignIn();}">
+      </div>
+      <button class="pay-btn" onclick="ownerSignIn()">Sign In</button>
+      <div class="form-error" id="ownerError"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- OWNER MODE: build the link                                    -->
+  <!-- ============================================================ -->
+  <div id="linkGenerator" style="display:none">
+    <h1>Status Card <span class="accent">Payment</span></h1>
+    <p class="subline">For a status card holder settling up. Type the pre-tax subtotal off your order email &mdash; this prices it at 5% GST and takes off whatever deposit they&rsquo;ve already paid.</p>
+
+    <div class="form-card">
+      <div class="form-section-head">From Your Order Email</div>
+
+      <div class="fg">
+        <label for="genOrder">Order # *</label>
+        <input type="text" id="genOrder" placeholder="e.g. PCT-10482" autocomplete="off">
+        <div class="helper">Ties the record back to the original order. Your books will show a 13% sale with a short payment against it &mdash; this is what explains the gap.</div>
+      </div>
+
+      <div class="fg">
+        <label for="genTotal">Subtotal Before Tax *</label>
+        <input type="number" id="genTotal" step="0.01" min="0.01" max="20000" placeholder="1484.00" inputmode="decimal" autocomplete="off">
+        <div class="helper">The &ldquo;Subtotal before tax&rdquo; line on your order email &mdash; tires, install and add-ons, no tax on it yet.</div>
+      </div>
+
+      <div class="fg">
+        <label for="genGoods">What They Bought *</label>
+        <input type="text" id="genGoods" placeholder="4x Michelin X-Ice Snow 275/60R20 + install" autocomplete="off">
+        <div class="helper">Copy it off the Items line of your order email. Ontario wants a description of the goods on the record.</div>
+      </div>
+
+      <div class="fg">
+        <label for="genDeposit">Deposit Already Paid</label>
+        <input type="number" id="genDeposit" step="0.01" min="0" max="20000" placeholder="50.00" inputmode="decimal" autocomplete="off" value="50.00">
+        <div class="helper">Leave at 0 if they haven&rsquo;t paid anything yet.</div>
+      </div>
+
+      <div class="calc" id="genCalc" style="display:none">
+        <div class="calc-row"><span class="lbl">Subtotal before tax</span><span id="calcPre">$0.00</span></div>
+        <div class="calc-row"><span class="lbl">HST (13%)</span><span id="calcHst">$0.00</span></div>
+        <div class="calc-row save"><span>Less First Nations relief (8%)</span><span id="calcSave">$0.00</span></div>
+        <div class="calc-row sep"><span class="lbl">GST payable (5%)</span><span id="calcGst">$0.00</span></div>
+        <div class="calc-row"><span class="lbl">Order total</span><span id="calcTotal">$0.00</span></div>
+        <div class="calc-row"><span class="lbl">Less deposit paid</span><span id="calcDep">$0.00</span></div>
+        <div class="calc-row sep grand"><span>Balance due</span><span id="calcBal">$0.00</span></div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-section-head">Customer (optional)</div>
+      <div class="form-row">
+        <div class="fg"><label for="genName">Name</label><input type="text" id="genName" placeholder="Jane Smith" autocomplete="off"></div>
+        <div class="fg"><label for="genPhone">Phone</label><input type="tel" id="genPhone" placeholder="519-555-1234" autocomplete="off"></div>
+      </div>
+      <div class="fg"><label for="genEmail">Email</label><input type="email" id="genEmail" placeholder="jane@example.com" autocomplete="off"></div>
+
+      <button class="pay-btn" id="genBtn" onclick="generateLink()">Build Link &rarr;</button>
+      <div class="form-error" id="genError"></div>
+    </div>
+
+    <div class="form-card" id="generatedCard" style="display:none">
+      <div class="form-section-head" style="color:var(--yellow)">Your Link</div>
+      <div class="gen-url-box" id="generatedUrl" onclick="copyLink()" title="Click to copy">&mdash;</div>
+      <div class="action-row">
+        <button class="action-btn" onclick="copyLink()">Copy</button>
+        <button class="action-btn" onclick="sendSMS()">Text</button>
+        <button class="action-btn" onclick="sendEmailLink()">Email</button>
+      </div>
+      <div class="helper" style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.5">They open this on their phone, type in their status card details, and pay. You and postmacontracting get a printable copy with everything on it.</div>
+      <button class="pay-btn ghost" onclick="location.href='/statuspay'" style="margin-top:16px">Build Another</button>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CUSTOMER MODE: pay the balance                                -->
+  <!-- ============================================================ -->
+  <div id="payForm" style="display:none">
+    <h1>Status Card <span class="accent">Payment</span></h1>
+    <p class="subline">Your balance has been recalculated at 5% GST. Fill in your Certificate of Indian Status details below and pay the balance.</p>
+
+    <div class="form-card">
+      <div class="amount-display">
+        <div class="amount-label">Balance Due</div>
+        <div class="amount-value">$<span id="displayAmount">0.00</span><span class="cur">CAD</span></div>
+      </div>
+      <div class="calc" style="margin-top:0">
+        <div class="calc-row"><span class="lbl">Subtotal before tax</span><span id="cPre">$0.00</span></div>
+        <div class="calc-row"><span class="lbl">HST (13%)</span><span id="cHst">$0.00</span></div>
+        <div class="calc-row save"><span>Less Ontario First Nations relief (8%)</span><span id="cRelief">$0.00</span></div>
+        <div class="calc-row sep"><span class="lbl">GST payable (5%)</span><span id="cGst">$0.00</span></div>
+        <div class="calc-row"><span class="lbl">Order total</span><span id="cTotal">$0.00</span></div>
+        <div class="calc-row" id="cDepRow"><span class="lbl">Deposit already paid</span><span id="cDep" style="color:var(--green)">$0.00</span></div>
+        <div class="calc-row sep grand"><span>Balance due</span><span id="cBal">$0.00</span></div>
+      </div>
+      <div class="helper" style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.5" id="cOrderLine"></div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-section-head">Certificate of Indian Status</div>
+      <div class="note-box">
+        The 8% provincial portion of HST has been removed under the Ontario First Nations point-of-sale exemption. We&rsquo;re required to record these details, and to see your physical card at the shop.
+      </div>
+      <div class="fg">
+        <label for="sName">Name on Card *</label>
+        <input type="text" id="sName" placeholder="As printed on the card" autocomplete="off">
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label for="sCard">Status Card Number *</label>
+          <input type="text" id="sCard" placeholder="10 digits" inputmode="numeric" autocomplete="off">
+        </div>
+        <div class="fg">
+          <label for="sBand">Band Registry Number *</label>
+          <input type="text" id="sBand" placeholder="e.g. 164" inputmode="numeric" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-section-head">Your Details</div>
+      <div class="form-row">
+        <div class="fg"><label for="pName">Your Name *</label><input type="text" id="pName" placeholder="Jane Smith" autocomplete="name"></div>
+        <div class="fg"><label for="pPhone">Phone</label><input type="tel" id="pPhone" placeholder="519-555-1234" autocomplete="tel"></div>
+      </div>
+      <div class="fg">
+        <label for="pEmail">Email * (for your receipt)</label>
+        <input type="email" id="pEmail" placeholder="jane@example.com" autocomplete="email">
+      </div>
+
+      <div class="form-section-head" style="margin-top:20px">Card</div>
+      <div class="fg">
+        <label>Card Number, Expiry, CVC</label>
+        <div id="stripeElements"></div>
+        <div id="stripeError"></div>
+      </div>
+
+      <button class="pay-btn" id="payBtn" onclick="processPayment()">Pay Balance</button>
+      <div class="form-error" id="formError"></div>
+      <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:14px">Encrypted &middot; PCI-compliant &middot; Stripe</div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SUCCESS                                                       -->
+  <!-- ============================================================ -->
+  <div class="success-state" id="paySuccess">
+    <div class="success-circle">&check;</div>
+    <div class="success-title">Payment Received</div>
+    <p class="subline" style="margin-bottom:22px">Thanks, <span id="paidName">there</span>. A receipt is on its way to <span id="paidEmail" style="color:var(--light)"></span>.</p>
+    <div class="form-card" style="text-align:left">
+      <div class="calc" style="margin-top:0">
+        <div class="calc-row"><span class="lbl">Paid</span><span id="paidAmount" style="color:var(--yellow);font-weight:800">$0.00</span></div>
+        <div class="calc-row"><span class="lbl">Order</span><span id="paidRef" style="font-family:'IBM Plex Mono',monospace"></span></div>
+        <div class="calc-row"><span class="lbl">Tax</span><span>GST 5% &mdash; status exempt</span></div>
+      </div>
+    </div>
+    <a href="/" class="pay-btn ghost" style="display:block;text-decoration:none;text-align:center;line-height:1.4">Back to PC Tires</a>
+  </div>
+
+  <!-- Expired / already paid -->
+  <div id="deadLink" style="display:none">
+    <h1>Link <span class="accent">Unavailable</span></h1>
+    <p class="subline" id="deadMsg">This payment link has expired or has already been paid.</p>
+    <div class="form-card">
+      <div style="font-size:14px;line-height:1.6;color:var(--light)">Give us a call at <a href="tel:5193974686" style="color:var(--yellow);text-decoration:none">519-397-4686</a> and we&rsquo;ll sort it out.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-popup" id="toast"></div>
+
+<footer>
+  PC Tires &middot; 7144 Grande River Line, Pain Court, ON &middot; <a href="tel:5193974686">519-397-4686</a>
+</footer>
+
+<script>
+// ============================================================
+//  STATUS CARD PAYMENT PAGE
+//  Owner builds a link -> customer opens it, enters their status
+//  card details and pays the balance recalculated at 5% GST.
+// ============================================================
+var STRIPE_PK = 'pk_live_51T86uxRufNpmOxQPt6KAjj4Yb8UOOpJqJAQ2KIae2d9adLFF9Ty8hS4T38GHaGHCOfsFVzBEHWKVGCl2Jq99N5Np00oylz5jPV';
+var GST_RATE = 0.05, HST_RATE = 0.13;
+
+var stripe = null, elements = null, cardEl = null;
+var linkData = null, linkCode = '', generatedLink = '';
+
+function $(id) { return document.getElementById(id); }
+function money(n) { return '$' + Number(n).toFixed(2); }
+function round2(n) { return Math.round(Number(n) * 100) / 100; }
+function urlParam(n) {
+  try { return (new URL(window.location.href)).searchParams.get(n) || ''; }
+  catch (e) { return ''; }
+}
+function showToast(msg) {
+  var t = $('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(function () { t.classList.remove('show'); }, 2000);
+}
+function showError(id, msg) {
+  var el = $(id); el.textContent = msg; el.classList.add('show');
+}
+function hideError(id) { $(id).classList.remove('show'); }
+
+// Mirrors computeStatusTotals() in functions/statuspay-link.js — keep in sync.
+// Input is the pre-tax subtotal. Nothing here touches 13%: under the exemption
+// the provincial 8% never applies, so there is nothing to strip off.
+function computeTotals(pretaxIn, deposit) {
+  var pretax = round2(pretaxIn);
+  var dep    = round2(deposit || 0);
+  var gst    = round2(pretax * GST_RATE);
+  var hst    = round2(pretax * HST_RATE);
+  var relief = round2(hst - gst);
+  var newTot = round2(pretax + gst);
+  return { pretax: pretax, hst: hst, relief: relief, gst: gst, newTotal: newTot, deposit: dep, balance: round2(newTot - dep) };
+}
+
+// ============================================================
+//  OWNER AUTH — shares the token the main site already stores
+// ============================================================
+function ownerToken() {
+  try { return localStorage.getItem('pc_owner_token') || sessionStorage.getItem('pc_owner_token') || ''; }
+  catch (e) { return ''; }
+}
+async function ownerSignIn() {
+  hideError('ownerError');
+  var pw = $('ownerPw').value;
+  if (!pw) { showError('ownerError', 'Enter the owner password.'); return; }
+  try {
+    var r = await fetch('/owner-auth', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    var d = await r.json();
+    if (!d.ok || !d.token) { showError('ownerError', d.error || 'Incorrect password.'); return; }
+    try { localStorage.setItem('pc_owner_token', d.token); } catch (e) {}
+    $('ownerGate').style.display = 'none';
+    $('linkGenerator').style.display = '';
+    initGenerator();
+  } catch (e) {
+    showError('ownerError', 'Network error: ' + e.message);
+  }
+}
+
+// ============================================================
+//  OWNER MODE — build the link
+// ============================================================
+function initGenerator() {
+  ['genTotal', 'genDeposit'].forEach(function (id) {
+    $(id).addEventListener('input', updateCalc);
+  });
+  updateCalc();
+}
+
+function updateCalc() {
+  var pretax = parseFloat($('genTotal').value);
+  var dep    = parseFloat($('genDeposit').value) || 0;
+  if (isNaN(pretax) || pretax <= 0) { $('genCalc').style.display = 'none'; return; }
+  var t = computeTotals(pretax, dep);
+  $('calcPre').textContent   = money(t.pretax);
+  $('calcHst').textContent   = money(t.hst);
+  $('calcSave').textContent  = '-' + money(t.relief);
+  $('calcGst').textContent   = money(t.gst);
+  $('calcTotal').textContent = money(t.newTotal);
+  $('calcDep').textContent   = '-' + money(t.deposit);
+  $('calcBal').textContent   = money(t.balance);
+  $('genCalc').style.display = '';
+}
+
+async function generateLink() {
+  hideError('genError');
+  var orderNumber = $('genOrder').value.trim();
+  var goods = $('genGoods').value.trim();
+  var pretax = parseFloat($('genTotal').value);
+  var dep    = parseFloat($('genDeposit').value) || 0;
+
+  if (!orderNumber) { showError('genError', 'Enter the order number so the record ties back to the original order.'); return; }
+  if (!goods) { showError('genError', 'Enter what they bought — Ontario requires a description of the goods on the record.'); return; }
+  if (isNaN(pretax) || pretax <= 0) { showError('genError', 'Enter the subtotal before tax from your order email.'); return; }
+  if (dep < 0) { showError('genError', 'Deposit cannot be negative.'); return; }
+  if (dep > computeTotals(pretax, 0).newTotal) { showError('genError', 'Deposit is more than the order total.'); return; }
+
+  var btn = $('genBtn');
+  btn.disabled = true; btn.textContent = 'Building...';
+
+  try {
+    var r = await fetch('/statuspay-link', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ownerToken: ownerToken(),
+        orderNumber: orderNumber,
+        pretax: pretax,
+        deposit: dep,
+        goods: goods,
+        name:  $('genName').value.trim(),
+        email: $('genEmail').value.trim(),
+        phone: $('genPhone').value.trim(),
+      }),
+    });
+    var d = await r.json();
+    if (!d.ok) { showError('genError', d.error || 'Could not build the link.'); return; }
+    generatedLink = d.url;
+    linkCode = d.code;
+    $('generatedUrl').textContent = d.url;
+    $('generatedCard').style.display = '';
+    $('generatedCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    showError('genError', 'Network error: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Build Link →';
+  }
+}
+
+function copyLink() {
+  if (!generatedLink) return;
+  try {
+    navigator.clipboard.writeText(generatedLink);
+    showToast('Link copied');
+  } catch (e) {
+    var el = $('generatedUrl'), rng = document.createRange();
+    rng.selectNodeContents(el);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(rng);
+  }
+}
+
+async function sendSMS() {
+  var phone = $('genPhone').value.trim();
+  if (!phone) { showToast('Enter a phone number first'); return; }
+  var name = $('genName').value.trim();
+  var msg = (name ? 'Hi ' + name.split(' ')[0] + ', ' : '') + 'here is your PC Tires balance at 5% GST: ' + generatedLink;
+  try {
+    var r = await fetch('/send-sms', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phone, message: msg, ownerToken: ownerToken() }),
+    });
+    var d = await r.json();
+    showToast(d && (d.ok || d.success) ? 'Text sent' : 'Text failed');
+  } catch (e) { showToast('Text failed'); }
+}
+
+function sendEmailLink() {
+  var email = $('genEmail').value.trim();
+  var subject = 'Your PC Tires balance';
+  var body = 'Here is your balance, recalculated at 5% GST:\n\n' + generatedLink + '\n\nPC Tires\n519-397-4686';
+  window.location.href = 'mailto:' + encodeURIComponent(email) +
+    '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+
+// ============================================================
+//  CUSTOMER MODE — pay the balance
+// ============================================================
+function renderCustomer(d) {
+  $('displayAmount').textContent = Number(d.balance).toFixed(2);
+  $('cPre').textContent    = money(d.pretax);
+  $('cHst').textContent    = money(d.hst);
+  $('cRelief').textContent = '-' + money(d.relief);
+  $('cGst').textContent    = money(d.gst);
+  $('cTotal').textContent = money(d.newTotal);
+  $('cDep').textContent   = '-' + money(d.deposit);
+  $('cBal').textContent   = money(d.balance);
+  if (!d.deposit || Number(d.deposit) <= 0) $('cDepRow').style.display = 'none';
+  $('cOrderLine').textContent = d.orderNumber ? 'Order ' + d.orderNumber : '';
+  if (d.name)  $('pName').value = d.name;
+  if (d.email) $('pEmail').value = d.email;
+  if (d.phone) $('pPhone').value = d.phone;
+}
+
+function initStripe() {
+  if (typeof Stripe === 'undefined') { setTimeout(initStripe, 200); return; }
+  stripe = Stripe(STRIPE_PK);
+  elements = stripe.elements();
+  cardEl = elements.create('card', {
+    style: {
+      base: {
+        color: '#f4f4f4', fontFamily: 'Barlow, sans-serif', fontSize: '15px',
+        '::placeholder': { color: '#888' },
+      },
+      invalid: { color: '#fca5a5' },
+    },
+    hidePostalCode: false,
+  });
+  cardEl.mount('#stripeElements');
+  cardEl.on('change', function (e) {
+    var err = $('stripeError');
+    err.textContent = e.error ? e.error.message : '';
+    err.style.display = e.error ? 'block' : 'none';
+  });
+}
+
+async function processPayment() {
+  hideError('formError');
+  if (!linkData) return;
+
+  var sName = $('sName').value.trim();
+  var sCard = $('sCard').value.trim();
+  var sBand = $('sBand').value.trim();
+  var name  = $('pName').value.trim();
+  var phone = $('pPhone').value.trim();
+  var email = $('pEmail').value.trim();
+
+  if (!sName) return showError('formError', 'Enter the name as printed on your status card.');
+  if (!sCard) return showError('formError', 'Enter your status card number.');
+  if (!sBand) return showError('formError', 'Enter your band registry number.');
+  if (!name)  return showError('formError', 'Enter your name.');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('formError', 'Enter a valid email address for your receipt.');
+  if (!stripe || !cardEl) return showError('formError', 'Payment form is still loading. Give it a second and try again.');
+
+  var amount = Number(linkData.balance);
+  var reference = linkData.orderNumber || ('SP-' + linkCode);
+  var btn = $('payBtn');
+  btn.disabled = true; btn.textContent = 'Processing...';
+
+  try {
+    var piRes = await fetch('/create-pi', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amountCents: Math.round(amount * 100),
+        orderNumber: reference,
+        customerEmail: email,
+      }),
+    });
+    var piData = await piRes.json();
+    if (piData.error) throw new Error(piData.error);
+    if (!piData.clientSecret) throw new Error('Server did not return a payment session.');
+
+    var result = await stripe.confirmCardPayment(piData.clientSecret, {
+      payment_method: { card: cardEl, billing_details: { name: name, email: email, phone: phone } },
+      receipt_email: email,
+    });
+    if (result.error) throw new Error(result.error.message);
+    if (result.paymentIntent.status !== 'succeeded') throw new Error('Payment did not complete. Try again or call the shop.');
+
+    var piId = result.paymentIntent.id;
+
+    // Burn the link so it can't be paid twice, and stash the card details.
+    try {
+      await fetch('/statuspay-link', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: linkCode, statusName: sName, statusCard: sCard, statusBand: sBand }),
+      });
+    } catch (e) {}
+
+    // Record email — printable copy for the shop, receipt for the customer.
+    try {
+      await fetch('/send-payment-notification', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          invoiceNumber:   reference,
+          description:     'Balance on order ' + reference + ' — status card exemption',
+          amount:          amount,
+          currency:        'CAD',
+          customerName:    name,
+          customerEmail:   email,
+          customerPhone:   phone,
+          paymentIntentId: piId,
+          notes:           '',
+          statusExempt:    true,
+          statusName:      sName,
+          statusCard:      sCard,
+          statusBand:      sBand,
+          orderNumber:     linkData.orderNumber || '',
+          goods:           linkData.goods || '',
+          pretax:          linkData.pretax,
+          hst:             linkData.hst,
+          relief:          linkData.relief,
+          gst:             linkData.gst,
+          newTotal:        linkData.newTotal,
+          depositPaid:     linkData.deposit,
+        }),
+      });
+    } catch (e) { console.warn('Notification failed:', e.message); }
+
+    $('paidAmount').textContent = money(amount);
+    $('paidName').textContent   = name.split(' ')[0] || name;
+    $('paidEmail').textContent  = email;
+    $('paidRef').textContent    = reference;
+    $('payForm').style.display = 'none';
+    $('paySuccess').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (e) {
+    showError('formError', e.message || 'Payment failed. Try again or call 519-397-4686.');
+    btn.disabled = false; btn.textContent = 'Pay Balance';
+  }
+}
+
+// ============================================================
+//  BOOT
+// ============================================================
+async function boot() {
+  var c = urlParam('c').toUpperCase();
+
+  // No code -> owner mode (build a link)
+  if (!c) {
+    if (ownerToken()) {
+      $('linkGenerator').style.display = '';
+      initGenerator();
+    } else {
+      $('ownerGate').style.display = '';
+    }
+    return;
+  }
+
+  // Code present -> customer mode
+  linkCode = c;
+  try {
+    var r = await fetch('/statuspay-link?c=' + encodeURIComponent(c));
+    var d = await r.json();
+    if (!d.ok) {
+      $('deadLink').style.display = '';
+      $('deadMsg').textContent = d.error || 'This payment link has expired or has already been paid.';
+      return;
+    }
+    linkData = d;
+    renderCustomer(d);
+    $('payForm').style.display = '';
+    initStripe();
+  } catch (e) {
+    $('deadLink').style.display = '';
+    $('deadMsg').textContent = 'Could not load this link. Give us a call and we will sort it out.';
+  }
+}
+
+boot();
+</script>
+
+</body>
+</html>
