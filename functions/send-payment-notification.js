@@ -27,8 +27,46 @@ function esc(s) {
 }
 
 // --- Internal notification email (to Caleb) -------------------------------
+// Ontario First Nations point-of-sale exemption: the five fields the province
+// requires on the record, plus the tax breakdown, rendered only when the
+// payment came through /statuspay. Ordinary /pay notifications are untouched.
+function statusBlocks(p) {
+  if (p.statusExempt !== true) return { rows: '', audit: '' };
+  const m = n => '$' + Number(n || 0).toFixed(2);
+  const dateStr = new Date().toLocaleDateString('en-CA', {
+    timeZone: 'America/Toronto', year: 'numeric', month: '2-digit', day: '2-digit',
+  });
+  const rows = `
+      <tr><td>Order #</td><td>${esc(p.orderNumber) || '&mdash;'}</td></tr>
+      <tr><td>Subtotal before tax</td><td>${m(p.pretax)}</td></tr>
+      <tr><td>HST (13%)</td><td>${m(p.hst)}</td></tr>
+      <tr><td>Less Ontario First Nations relief (8%)</td><td>&minus;${m(p.relief)}</td></tr>
+      <tr><td>GST payable (5%)</td><td>${m(p.gst)}</td></tr>
+      <tr><td>Order total</td><td><strong>${m(p.newTotal)}</strong></td></tr>
+      ${Number(p.depositPaid) > 0 ? `<tr><td>Less deposit already paid</td><td>${m(p.depositPaid)}</td></tr>` : ''}
+      <tr><td>Balance paid now</td><td><strong>${m(p.amount)}</strong></td></tr>`;
+  const audit = `
+    <div style="border:2px solid #111;border-radius:4px;padding:16px 18px;margin-top:22px">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#555;border-bottom:1px solid #e5e5e5;padding-bottom:6px;margin-bottom:10px">First Nations Exemption &mdash; Audit Record</div>
+      <table>
+        <tr><td>Purchase date</td><td>${esc(dateStr)}</td></tr>
+        <tr><td>Customer name</td><td>${esc(p.statusName) || '&mdash;'}</td></tr>
+        <tr><td>Status card #</td><td style="font-family:monospace">${esc(p.statusCard) || '&mdash;'}</td></tr>
+        <tr><td>Band registry #</td><td style="font-family:monospace">${esc(p.statusBand) || '&mdash;'}</td></tr>
+        <tr><td>Goods / services</td><td>${esc(p.goods) || esc(p.description) || 'Tires and installation'}</td></tr>
+      </table>
+      <div style="font-size:11.5px;color:#555;margin-top:11px;line-height:1.5">
+        Report the full HST of <strong>${m(p.hst)}</strong> on line 105 of the HST return
+        and claim the <strong>${m(p.relief)}</strong> credited here back on line 111.
+        Keep this sheet for audit.
+      </div>
+    </div>`;
+  return { rows, audit };
+}
+
 function buildInternalEmail(p) {
   const amt = Number(p.amount).toFixed(2);
+  const sb = statusBlocks(p);
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><style>
@@ -45,6 +83,12 @@ function buildInternalEmail(p) {
   td:last-child{color:#111;font-weight:500}
   .amount{font-size:22px;font-weight:800;color:#f5c518;font-family:Arial,sans-serif}
   .footer{background:#f9f9f9;padding:16px 28px;font-size:12px;color:#aaa;border-top:1px solid #eee}
+  @media print {
+    body{background:#fff;padding:0}
+    .card{box-shadow:none;border:1px solid #ccc;max-width:none}
+    td:first-child{color:#555}
+    div[style*="border:2px solid"]{break-inside:avoid;page-break-inside:avoid}
+  }
 </style></head>
 <body>
 <div class="card">
@@ -53,7 +97,7 @@ function buildInternalEmail(p) {
     <div class="header-sub">Payment Received</div>
   </div>
   <div class="body">
-    <div class="alert">&#x1F4B0; ${esc(p.customerName) || 'A customer'} paid $${esc(amt)} via /pay.</div>
+    <div class="alert">&#x1F4B0; ${esc(p.customerName) || 'A customer'} paid $${esc(amt)}${p.statusExempt === true ? ' via /statuspay &mdash; STATUS CARD, 5% GST.' : ' via /pay.'}</div>
     <table>
       <tr><td>Amount</td><td><span class="amount">$${esc(amt)} ${esc(p.currency || 'CAD')}</span></td></tr>
       ${p.invoiceNumber ? `<tr><td>Invoice #</td><td>${esc(p.invoiceNumber)}</td></tr>` : ''}
@@ -63,7 +107,9 @@ function buildInternalEmail(p) {
       <tr><td>Phone</td><td>${p.customerPhone ? `<a href="tel:${esc(p.customerPhone)}">${esc(p.customerPhone)}</a>` : '&mdash;'}</td></tr>
       <tr><td>Stripe Payment</td><td style="font-family:monospace;font-size:12px">${esc(p.paymentIntentId) || '&mdash;'}</td></tr>
       ${p.notes ? `<tr><td>Notes</td><td>${esc(p.notes)}</td></tr>` : ''}
+      ${sb.rows}
     </table>
+    ${sb.audit}
   </div>
   <div class="footer">PC Tires &middot; 7144 Grande River Line, Pain Court, ON &middot; 519-397-4686</div>
 </div>
@@ -120,6 +166,30 @@ function buildCustomerReceipt(p) {
           <td style="padding:8px 0;color:#888;font-size:13px;border-bottom:1px solid #2a2a2a">Paid by</td>
           <td style="padding:8px 0;text-align:right;color:#e0e0e0;border-bottom:1px solid #2a2a2a">${esc(p.customerName)}</td>
         </tr>` : ''}
+        ${p.statusExempt === true ? `<tr>
+          <td style="padding:8px 0;color:#888;font-size:13px;border-bottom:1px solid #2a2a2a">Subtotal before tax</td>
+          <td style="padding:8px 0;text-align:right;color:#e0e0e0;border-bottom:1px solid #2a2a2a">$${Number(p.pretax || 0).toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#888;font-size:13px;border-bottom:1px solid #2a2a2a">HST (13%)</td>
+          <td style="padding:8px 0;text-align:right;color:#e0e0e0;border-bottom:1px solid #2a2a2a">$${Number(p.hst || 0).toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#888;font-size:13px;border-bottom:1px solid #2a2a2a">Less Ontario First Nations relief (8%)</td>
+          <td style="padding:8px 0;text-align:right;color:#4ade80;border-bottom:1px solid #2a2a2a">&minus;$${Number(p.relief || 0).toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#888;font-size:13px;border-bottom:1px solid #2a2a2a">GST payable (5%)</td>
+          <td style="padding:8px 0;text-align:right;color:#e0e0e0;border-bottom:1px solid #2a2a2a">$${Number(p.gst || 0).toFixed(2)}</td>
+        </tr>
+        ${Number(p.depositPaid) > 0 ? `<tr>
+          <td style="padding:8px 0;color:#888;font-size:13px;border-bottom:1px solid #2a2a2a">Deposit already paid</td>
+          <td style="padding:8px 0;text-align:right;color:#4ade80;border-bottom:1px solid #2a2a2a">$${Number(p.depositPaid).toFixed(2)}</td>
+        </tr>` : ''}
+        <tr>
+          <td style="padding:8px 0;color:#888;font-size:13px;border-bottom:1px solid #2a2a2a">Status card</td>
+          <td style="padding:8px 0;text-align:right;color:#e0e0e0;font-family:monospace;border-bottom:1px solid #2a2a2a">${esc(p.statusCard)}</td>
+        </tr>` : ''}
         <tr>
           <td style="padding:8px 0;color:#888;font-size:13px">Payment ID</td>
           <td style="padding:8px 0;text-align:right;color:#888;font-family:monospace;font-size:11px">${esc(p.paymentIntentId) || '&mdash;'}</td>
@@ -174,7 +244,9 @@ export async function onRequest(context) {
     const amtStr = Number(amount).toFixed(2);
 
     // 1) Internal notification (always)
-    const internalSubject = `[PC Tires] Payment Received - $${amtStr} - ${customerName || 'Customer'}`;
+    const internalSubject = req.statusExempt === true
+      ? `[PC Tires] STATUS CARD Payment - $${amtStr} - ${customerName || 'Customer'}${req.orderNumber ? ' - ' + req.orderNumber : ''}`
+      : `[PC Tires] Payment Received - $${amtStr} - ${customerName || 'Customer'}`;
     const internalHtml = buildInternalEmail(req);
     const sends = NOTIFY_EMAILS.map(to => sendEmail(resendKey, {
       to, subject: internalSubject, html: internalHtml,
