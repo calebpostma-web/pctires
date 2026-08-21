@@ -314,10 +314,11 @@ function buildCustomerEmail(order, tdgOrder) {
 function buildInternalEmail(order, tdgOrder, tdgError) {
   const tdgRef = extractTDGRef(tdgOrder) || 'NOT FOUND';
   const tdgStatus = tdgError
-    ? `&#x274C; TDG ORDER FAILED: ${JSON.stringify(tdgError)}`
+    ? `FAILED &mdash; TDG order did not go through: ${JSON.stringify(tdgError)}`
     : tdgOrder?.skipped
-    ? `&#x26A0;&#xFE0F; SKIPPED: ${tdgOrder.reason}`
-    : `&#x2705; TDG Order: ${tdgRef}`;
+    ? `SKIPPED &mdash; ${tdgOrder.reason}`
+    : `TDG Order placed: ${tdgRef}`;
+  const tdgColor = tdgError ? '#b91c1c' : tdgOrder?.skipped ? '#a16207' : '#15803d';
 
   const t = (!tdgError && tdgOrder && !tdgOrder.skipped) ? tdgOrder : null;
   const cost = t ? {
@@ -336,16 +337,44 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
 
   const money = n => `$${Number(n).toFixed(2)}`;
 
+  // ── Order date ──────────────────────────────────────────────────────────
+  // Prefer the date the browser stamped on the order; fall back to now, in
+  // Eastern time so it always matches shop time rather than UTC.
+  let orderDateStr = '';
+  let orderDateShort = '';
+  try {
+    const d = order.orderDate ? new Date(order.orderDate) : new Date();
+    const valid = !isNaN(d.getTime()) ? d : new Date();
+    orderDateStr = valid.toLocaleString('en-CA', {
+      timeZone: 'America/Toronto',
+      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+      hour: 'numeric', minute: '2-digit',
+    });
+    orderDateShort = valid.toLocaleDateString('en-CA', {
+      timeZone: 'America/Toronto', year: 'numeric', month: '2-digit', day: '2-digit',
+    });
+  } catch (e) {
+    orderDateStr = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+    orderDateShort = new Date().toISOString().slice(0, 10);
+  }
+
   const itemsHtml = (order.tires || [])
-    .map(t => `${t.qty}&times; ${t.brand} ${t.name} <span style="color:#888">(${t.size || (t.diameter + '\"')})</span>`)
+    .map(t => `${t.qty}&times; ${t.brand} ${t.name} <span style="color:#555">(${t.size || (t.diameter + '\"')})</span>`)
     .join('<br>');
+
+  // Plain-text goods description — one of the five fields Ontario requires on
+  // the record for a First Nations point-of-sale exemption.
+  const goodsDesc = (order.tires || [])
+    .map(t => `${t.qty}x ${t.brand} ${t.name} ${t.size || (t.diameter + '"')}`)
+    .join('; ') || 'Tires';
 
   const phoneDigits = String(order.customerPhone || '').replace(/\D/g, '');
 
-  const cardStyle = 'background:#161616;border:1px solid #2a2a2a;border-radius:4px;padding:16px 20px;margin-bottom:14px';
-  const hdrStyle  = 'font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:10px;font-weight:700';
-  const rowLbl    = 'padding:5px 0;color:#888;width:55%;font-size:14px';
-  const rowVal    = 'padding:5px 0;text-align:right;color:#e0e0e0;font-size:14px';
+  // ── Print-friendly palette ──────────────────────────────────────────────
+  const cardStyle = 'background:#ffffff;border:1px solid #cccccc;border-radius:4px;padding:14px 18px;margin-bottom:12px';
+  const hdrStyle  = 'font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#555555;margin-bottom:9px;font-weight:700;border-bottom:1px solid #e5e5e5;padding-bottom:5px';
+  const rowLbl    = 'padding:5px 0;color:#555555;width:52%;font-size:13px';
+  const rowVal    = 'padding:5px 0;text-align:right;color:#111111;font-size:13px;font-weight:600';
 
   const lugSpec = (order.vehicleYear && order.vehicleMake && order.vehicleModel)
     ? findLug({ year: order.vehicleYear, make: order.vehicleMake, model: order.vehicleModel })
@@ -355,30 +384,74 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
     if (lugSpec) {
       const specTxt = [lugSpec.thread, lugSpec.hexMm ? lugSpec.hexMm + 'mm hex' : null, lugSpec.seat, lugSpec.type].filter(Boolean).join(' &middot; ');
       const badge = lugSpec.kit
-        ? '<span style="color:#4ade80;font-size:11px;font-weight:700;margin-left:6px">IN STOCK &middot; ' + lugSpec.kit + '</span>'
-        : '<span style="background:#7f1d1d;color:#fecaca;font-size:11px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:6px">HEADS UP &mdash; NOT IN LUG STOCK</span>';
+        ? '<span style="color:#15803d;font-size:11px;font-weight:700;margin-left:6px">IN STOCK &middot; ' + lugSpec.kit + '</span>'
+        : '<span style="border:1px solid #b91c1c;color:#b91c1c;font-size:11px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:6px">NOT IN LUG STOCK</span>';
       lugRowHtml = '<tr><td style="' + rowLbl + '">Lug Spec</td><td style="' + rowVal + '">' + specTxt + badge + '</td></tr>'
-        + (lugSpec.note ? '<tr><td></td><td style="padding:0 0 5px;text-align:right;color:#888;font-size:11px">' + lugSpec.note + '</td></tr>' : '');
+        + (lugSpec.note ? '<tr><td></td><td style="padding:0 0 5px;text-align:right;color:#555;font-size:11px;font-weight:400">' + lugSpec.note + '</td></tr>' : '');
     } else {
-      lugRowHtml = '<tr><td style="' + rowLbl + '">Lug Spec</td><td style="' + rowVal + ';color:#888">Unknown &mdash; check at write-up</td></tr>';
+      lugRowHtml = '<tr><td style="' + rowLbl + '">Lug Spec</td><td style="' + rowVal + ';color:#555;font-weight:400">Unknown &mdash; check at write-up</td></tr>';
     }
   }
 
+  // Everything the customer is charged before tax: tires + install + add-ons,
+  // less any promo discount. This is the line the HST is calculated on.
+  const preTaxSubtotal = Number(order.subtotal || 0)
+                       + Number(order.installTotal || 0)
+                       + Number(order.addonTotal || 0)
+                       - Number(order.discount || 0);
+
+  // ── Tax line: 13% HST normally, 5% GST on a verified status exemption ────
+  const isStatusExempt = order.statusExempt === true || order.statusExempt === 'true';
+  const taxRatePct = isStatusExempt ? '5' : (order.taxRatePct || '13');
+  const taxLabel = isStatusExempt ? `GST (${taxRatePct}%) &mdash; status exempt` : `HST (${taxRatePct}%)`;
+
+  const statusBlock = isStatusExempt ? `
+  <!-- Ontario First Nations point-of-sale exemption record -->
+  <div style="background:#ffffff;border:2px solid #111111;border-radius:4px;padding:14px 18px;margin-bottom:12px">
+    <div style="${hdrStyle}">First Nations Exemption &mdash; Audit Record</div>
+    <table style="border-collapse:collapse;width:100%">
+      <tr><td style="${rowLbl}">Purchase date</td><td style="${rowVal}">${orderDateShort}</td></tr>
+      <tr><td style="${rowLbl}">Customer name</td><td style="${rowVal}">${order.statusName || order.customerName || '-'}</td></tr>
+      <tr><td style="${rowLbl}">Status card #</td><td style="${rowVal};font-family:monospace">${order.statusCard || '-'}</td></tr>
+      <tr><td style="${rowLbl}">Band registry #</td><td style="${rowVal};font-family:monospace">${order.statusBand || '-'}</td></tr>
+      <tr><td style="${rowLbl}">Goods / services</td><td style="${rowVal};font-weight:400">${goodsDesc}</td></tr>
+    </table>
+    <div style="font-size:11px;color:#555;margin-top:9px;line-height:1.45">
+      8% provincial portion relieved at point of sale. Report the full 13% on line 105 of the HST return and claim
+      ${money(preTaxSubtotal * 0.08)}
+      back on line 111. Keep this sheet for audit.
+    </div>
+  </div>` : '';
+
   return `<!DOCTYPE html>
 <html>
-<body style="font-family:'Helvetica Neue',Arial,sans-serif;background:#0e0e0e;color:#e0e0e0;padding:24px;margin:0">
+<head>
+<meta charset="UTF-8">
+<style>
+  @media print {
+    body { padding:0 !important; }
+    .no-print { display:none !important; }
+    div[style*="border"] { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body style="font-family:'Helvetica Neue',Arial,sans-serif;background:#ffffff;color:#111111;padding:20px;margin:0">
 <div style="max-width:640px;margin:0 auto">
 
-  <h2 style="color:#f5c518;margin:0 0 6px;font-size:22px;font-weight:800">&#x1F6DE; New Order &mdash; ${order.orderNumber}</h2>
-  <p style="margin:0 0 18px;color:${tdgError ? '#ef4444' : tdgOrder?.skipped ? '#f5c518' : '#4ade80'};font-size:14px">${tdgStatus}</p>
+  <div style="border-bottom:3px solid #111111;padding-bottom:10px;margin-bottom:14px">
+    <h2 style="color:#111111;margin:0 0 4px;font-size:21px;font-weight:800">New Order &mdash; ${order.orderNumber}</h2>
+    <div style="font-size:13px;color:#333333;font-weight:600">${orderDateStr}</div>
+    <div style="margin-top:5px;color:${tdgColor};font-size:13px;font-weight:600">${tdgStatus}</div>
+  </div>
 
   <!-- Customer -->
   <div style="${cardStyle}">
     <div style="${hdrStyle}">Customer</div>
     <table style="border-collapse:collapse;width:100%">
+      <tr><td style="${rowLbl}">Order date</td><td style="${rowVal}">${orderDateStr}</td></tr>
       <tr><td style="${rowLbl}">Name</td><td style="${rowVal}">${order.customerName || '-'}</td></tr>
-      <tr><td style="${rowLbl}">Email</td><td style="${rowVal}">${order.customerEmail ? `<a href="mailto:${order.customerEmail}" style="color:#f5c518;text-decoration:none">${order.customerEmail}</a>` : '-'}</td></tr>
-      <tr><td style="${rowLbl}">Phone</td><td style="${rowVal}">${order.customerPhone ? `<a href="tel:${phoneDigits}" style="color:#f5c518;text-decoration:none">${order.customerPhone}</a>` : '-'}</td></tr>
+      <tr><td style="${rowLbl}">Email</td><td style="${rowVal}">${order.customerEmail ? `<a href="mailto:${order.customerEmail}" style="color:#111111;text-decoration:none">${order.customerEmail}</a>` : '-'}</td></tr>
+      <tr><td style="${rowLbl}">Phone</td><td style="${rowVal}">${order.customerPhone ? `<a href="tel:${phoneDigits}" style="color:#111111;text-decoration:none">${order.customerPhone}</a>` : '-'}</td></tr>
       <tr><td style="${rowLbl}">Vehicle</td><td style="${rowVal}">${order.vehicle || '-'}</td></tr>
       ${lugRowHtml}
     </table>
@@ -387,30 +460,36 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
   <!-- Items -->
   <div style="${cardStyle}">
     <div style="${hdrStyle}">Items</div>
-    <div style="font-size:14px;line-height:1.7">${itemsHtml || '-'}</div>
-    <div style="margin-top:10px;font-size:13px;color:#888">Add-ons: <span style="color:#e0e0e0">${order.addons || 'None'}</span></div>
+    <div style="font-size:14px;line-height:1.7;color:#111111">${itemsHtml || '-'}</div>
+    <div style="margin-top:9px;font-size:13px;color:#555555">Add-ons: <span style="color:#111111;font-weight:600">${order.addons || 'None'}</span></div>
   </div>
 
-  <!-- Customer charge breakdown (with HST line item) -->
+  ${statusBlock}
+
+  <!-- Customer charge breakdown -->
   <div style="${cardStyle}">
     <div style="${hdrStyle}">Customer Charged</div>
     <table style="border-collapse:collapse;width:100%">
       <tr><td style="${rowLbl}">Subtotal (tires)</td><td style="${rowVal}">${money(order.subtotal || 0)}</td></tr>
       <tr><td style="${rowLbl}">Installation</td><td style="${rowVal}">${money(order.installTotal || 0)}</td></tr>
-      ${order.discount && Number(order.discount) > 0 ? `<tr><td style="padding:5px 0;color:#22c55e;font-size:14px">Discount${order.discountCode ? ` (${order.discountCode})` : ''}</td><td style="padding:5px 0;text-align:right;color:#22c55e;font-size:14px">-${money(order.discount)}</td></tr>` : ''}
+      ${order.discount && Number(order.discount) > 0 ? `<tr><td style="padding:5px 0;color:#15803d;font-size:13px">Discount${order.discountCode ? ` (${order.discountCode})` : ''}</td><td style="padding:5px 0;text-align:right;color:#15803d;font-size:13px;font-weight:600">-${money(order.discount)}</td></tr>` : ''}
       ${order.addonTotal > 0 ? `<tr><td style="${rowLbl}">Add-ons</td><td style="${rowVal}">${money(order.addonTotal)}</td></tr>` : ''}
-      <tr><td style="${rowLbl}">HST (13%)</td><td style="${rowVal}">${money(order.tax || 0)}</td></tr>
-      <tr style="border-top:1px solid #2a2a2a">
-        <td style="padding:9px 0 0;color:#fff;font-weight:700;font-size:14px">${order.depositPaid > 0 ? 'Order Total' : 'Total Charged'}</td>
-        <td style="padding:9px 0 0;text-align:right;color:#f5c518;font-weight:800;font-size:17px">${money(order.total || 0)} ${order.currency || 'CAD'}</td>
+      <tr style="border-top:1px solid #cccccc">
+        <td style="padding:8px 0 5px;color:#111111;font-size:13px;font-weight:700">Subtotal before tax</td>
+        <td style="padding:8px 0 5px;text-align:right;color:#111111;font-size:13px;font-weight:700">${money(preTaxSubtotal)}</td>
+      </tr>
+      <tr><td style="${rowLbl}">${taxLabel}</td><td style="${rowVal}">${money(order.tax || 0)}</td></tr>
+      <tr style="border-top:2px solid #111111">
+        <td style="padding:9px 0 0;color:#111111;font-weight:700;font-size:14px">${order.depositPaid > 0 ? 'Order Total' : 'Total Charged'}</td>
+        <td style="padding:9px 0 0;text-align:right;color:#111111;font-weight:800;font-size:17px">${money(order.total || 0)} ${order.currency || 'CAD'}</td>
       </tr>
       ${order.depositPaid > 0 ? `<tr>
-        <td style="padding:5px 0 0;color:#22c55e;font-weight:700;font-size:14px">Deposit Paid (Stripe)</td>
-        <td style="padding:5px 0 0;text-align:right;color:#22c55e;font-weight:800;font-size:15px">${money(order.depositPaid)}</td>
+        <td style="padding:5px 0 0;color:#15803d;font-weight:700;font-size:13px">Deposit Paid (Stripe)</td>
+        <td style="padding:5px 0 0;text-align:right;color:#15803d;font-weight:800;font-size:15px">${money(order.depositPaid)}</td>
       </tr>
       <tr>
-        <td style="padding:5px 0 0;color:#ef4444;font-weight:800;font-size:15px">BALANCE OWING AT INSTALL</td>
-        <td style="padding:5px 0 0;text-align:right;color:#ef4444;font-weight:900;font-size:17px">${money(order.balanceDue)}</td>
+        <td style="padding:5px 0 0;color:#b91c1c;font-weight:800;font-size:14px">BALANCE OWING AT INSTALL</td>
+        <td style="padding:5px 0 0;text-align:right;color:#b91c1c;font-weight:900;font-size:17px">${money(order.balanceDue)}</td>
       </tr>` : ''}
     </table>
   </div>
@@ -420,22 +499,22 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
   <div style="${cardStyle}">
     <div style="${hdrStyle}">PC Tires Cost (TDG)</div>
     <table style="border-collapse:collapse;width:100%">
-      <tr><td style="${rowLbl}">TDG Order #</td><td style="${rowVal};font-family:monospace;font-size:13px">${cost.orderNum}</td></tr>
-      <tr><td style="${rowLbl}">Reference</td><td style="${rowVal};font-family:monospace;font-size:13px">${cost.ref}</td></tr>
+      <tr><td style="${rowLbl}">TDG Order #</td><td style="${rowVal};font-family:monospace;font-size:12px">${cost.orderNum}</td></tr>
+      <tr><td style="${rowLbl}">Reference</td><td style="${rowVal};font-family:monospace;font-size:12px">${cost.ref}</td></tr>
       <tr><td style="${rowLbl}">Subtotal</td><td style="${rowVal}">${money(cost.subtotal)}</td></tr>
       ${cost.shipping > 0 ? `<tr><td style="${rowLbl}">Shipping</td><td style="${rowVal}">${money(cost.shipping)}</td></tr>` : ''}
       ${cost.fees > 0 ? `<tr><td style="${rowLbl}">Fees</td><td style="${rowVal}">${money(cost.fees)}</td></tr>` : ''}
       <tr><td style="${rowLbl}">HST (TDG paid)</td><td style="${rowVal}">${money(cost.tax)}</td></tr>
-      <tr style="border-top:1px solid #2a2a2a">
-        <td style="padding:9px 0 0;color:#fff;font-weight:700;font-size:14px">Total Cost</td>
-        <td style="padding:9px 0 0;text-align:right;color:#fff;font-weight:800;font-size:15px">${money(cost.total)} ${cost.currency}</td>
+      <tr style="border-top:1px solid #cccccc">
+        <td style="padding:9px 0 0;color:#111111;font-weight:700;font-size:14px">Total Cost</td>
+        <td style="padding:9px 0 0;text-align:right;color:#111111;font-weight:800;font-size:15px">${money(cost.total)} ${cost.currency}</td>
       </tr>
       ${margin !== null ? `<tr>
-        <td style="padding:5px 0 0;color:#4ade80;font-weight:700;font-size:14px">Gross Margin</td>
-        <td style="padding:5px 0 0;text-align:right;color:#4ade80;font-weight:800;font-size:17px">${money(margin)}${marginPct !== null ? ` <span style="color:#888;font-weight:500;font-size:12px">(${marginPct}%)</span>` : ''}</td>
+        <td style="padding:5px 0 0;color:#15803d;font-weight:700;font-size:14px">Gross Margin</td>
+        <td style="padding:5px 0 0;text-align:right;color:#15803d;font-weight:800;font-size:17px">${money(margin)}${marginPct !== null ? ` <span style="color:#555;font-weight:500;font-size:12px">(${marginPct}%)</span>` : ''}</td>
       </tr>` : ''}
     </table>
-    <div style="font-size:11px;color:#666;margin-top:8px;line-height:1.4">Margin = Customer Total &minus; TDG Total. Both include HST and fees. Net margin after HST reconciliation will differ.</div>
+    <div style="font-size:11px;color:#555555;margin-top:8px;line-height:1.4">Margin = Customer Total &minus; TDG Total. Both include tax and fees. Net margin after tax reconciliation will differ.</div>
   </div>` : ''}
 
   <!-- Install + source -->
@@ -447,6 +526,10 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
       <tr><td style="${rowLbl}">Search Method</td><td style="${rowVal}">${order.searchMethod || '-'}</td></tr>
       <tr><td style="${rowLbl}">CASL Opt-in</td><td style="${rowVal}">${order.caslOptIn ? 'Yes' : 'No'}</td></tr>
     </table>
+  </div>
+
+  <div style="border-top:1px solid #cccccc;margin-top:14px;padding-top:9px;font-size:11px;color:#555555;text-align:center">
+    PC Tires &middot; 7144 Grande River Line, Pain Court, ON &middot; 519-397-4686
   </div>
 
 </div>
