@@ -181,6 +181,10 @@ function extractTDGRef(tdgOrder) {
 }
 
 // ─── Customer confirmation email ───────────────────────────────────────────────
+const SHOP_MAPS_URL = 'https://maps.app.goo.gl/DPeffYusxUSSRs9c8';
+const SHOP_STREET   = '7144 Grande River Line';
+const SHOP_CITY     = 'Pain Court, ON N0P 1Z0';
+
 function buildCustomerEmail(order, tdgOrder) {
   const tdgRef = extractTDGRef(tdgOrder);
   const itemsHtml = (order.tires || [])
@@ -285,7 +289,16 @@ function buildCustomerEmail(order, tdgOrder) {
     <div style="background:#1a1a2a;border:1px solid #2a2a4a;border-radius:4px;padding:20px 32px;margin-bottom:16px">
       <div style="font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:10px">📅 Installation</div>
       <div style="font-size:15px;color:#e0e0e0">${installLine}</div>
-      <div style="font-size:12px;color:#888;margin-top:8px">PC Tires · Chatham-Kent, ON · 519-397-4686</div>
+
+      <div style="border-top:1px solid #2a2a4a;margin-top:16px;padding-top:16px">
+        <div style="font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:8px">Where to find us</div>
+        <div style="font-size:15px;color:#fff;font-weight:700;line-height:1.5">PC Tires</div>
+        <div style="font-size:14px;color:#e0e0e0;line-height:1.6">${SHOP_STREET}<br>${SHOP_CITY}</div>
+        <div style="margin:14px 0 4px">
+          <a href="${SHOP_MAPS_URL}" style="display:inline-block;background:#f5c518;color:#0e0e0e;text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.5px;padding:11px 22px;border-radius:3px">📍 Get Directions</a>
+        </div>
+        <div style="font-size:13px;color:#888;margin-top:10px">Questions before you come? Call or text <a href="tel:5193974686" style="color:#f5c518;text-decoration:none">519-397-4686</a>.</div>
+      </div>
     </div>
 
     <!-- What's next -->
@@ -300,7 +313,7 @@ function buildCustomerEmail(order, tdgOrder) {
 
     <!-- Footer -->
     <div style="text-align:center;font-size:12px;color:#555;line-height:1.8">
-      <div>PC Tires · Chatham-Kent, Ontario</div>
+      <div><a href="${SHOP_MAPS_URL}" style="color:#888;text-decoration:none">PC Tires · ${SHOP_STREET}, ${SHOP_CITY}</a></div>
       <div>📞 519-397-4686 · orders@pctires.ca · pctires.ca</div>
       <div style="margin-top:8px">Questions? Just reply to this email or give us a call.</div>
     </div>
