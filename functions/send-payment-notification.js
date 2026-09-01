@@ -260,7 +260,7 @@ export async function onRequest(context) {
       const customerHtml = buildCustomerReceipt(req);
       sends.push(sendEmail(resendKey, {
         to: customerEmail, subject: customerSubject, html: customerHtml,
-        replyTo: 'payments@pctires.ca',
+        replyTo: 'contact@pctires.ca',
       }));
       customerSent = true;
     }
