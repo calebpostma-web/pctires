@@ -7,8 +7,8 @@ import json, os, re
 DATA = 'tdg-data.txt'
 FEED_IDS_FILE = 'feed-ids.txt'
 OUTDIR = 'pages'
-CHECKED = 'August 1, 2026'
-LASTMOD = '2026-08-01'
+CHECKED = 'September 1, 2026'
+LASTMOD = '2026-09-01'
 
 # ------------------------------------------------- per-SKU landing page IDs
 # build-feed.py writes feed-ids.txt (slug|size|load|speed|feed-id) for every row
