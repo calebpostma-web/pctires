@@ -12,8 +12,8 @@ Caleb only runs the final push.
 - `generate.py` — builds all 16 model pages from `tdg-data.txt` (per-model copy is embedded in the script). Reads `feed-ids.txt` so every Buy button points at that size's `/p/<id>` page
 - `feed-ids.txt` — generated map `slug|size|load|speed|feed-id`; the handshake between the feed and the model pages. Not deployed, but keep it in the repo so a page rebuild without a feed rebuild is obvious
 - `build-local-feed.py` — builds `local-inventory-feed.txt` from `product-feed.txt`; store code argument: `11770934583290184135`
-- `tdg-data.txt` — page dataset: `#Brand|model-key|Season|Service` headers + `size|load|speed|qty|retail` rows (LAST REFRESH: 2026-07-07)
-- `feed-src.txt` — feed dataset: `model-key|size|load|speed|qty|retail|gtin|mpn|image-path` rows (LAST REFRESH: 2026-07-07)
+- `tdg-data.txt` — page dataset: `#Brand|model-key|Season|Service` headers + `size|load|speed|qty|retail` rows (LAST REFRESH: 2026-09-01)
+- `feed-src.txt` — feed dataset: `model-key|size|load|speed|qty|retail|gtin|mpn|image-path` rows (LAST REFRESH: 2026-09-01)
 
 ## Refresh procedure (Claude does steps 1-6, Caleb does step 7)
 
