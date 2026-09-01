@@ -25,6 +25,7 @@ const TDG_SHIPPING_METHOD = '5E47CBB0A4659509A3DF1D4BA96E2FFB|29667'; // TDG Del
 const TDG_PAYMENT_METHOD   = '1A0DFD32C9C2AF74B0B3A8F872BF8244|METHOD_22640'; // Amex *2004
 
 const FROM_EMAIL    = 'orders@pctires.ca';
+const REPLY_TO      = 'contact@pctires.ca';
 const NOTIFY_EMAILS = ['calebpostma@gmail.com', 'postmacontracting@gmail.com'];
 
 // ─── Durable dedup (KV, with in-memory fallback) ───────────────────────────────
@@ -557,7 +558,9 @@ async function sendEmail(resendKey, { to, subject, html }) {
       'Authorization': `Bearer ${resendKey}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ from: FROM_EMAIL, to, subject, html }),
+    // orders@pctires.ca only SENDS (Resend). The confirmation tells customers to
+    // "just reply to this email", so replies have to land somewhere real.
+    body: JSON.stringify({ from: FROM_EMAIL, to, subject, html, reply_to: REPLY_TO }),
   });
   const data = await res.json();
   if (!res.ok) throw new Error(`Resend error: ${JSON.stringify(data)}`);
