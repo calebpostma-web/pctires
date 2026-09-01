@@ -19,7 +19,8 @@ const CORS = {
 };
 
 const FROM_EMAIL  = 'PC Tires <orders@pctires.ca>';
-const SHOP_EMAIL  = 'postmacontracting@gmail.com';
+const SHOP_EMAIL  = 'postmacontracting@gmail.com';  // bcc: internal copy, direct to Gmail
+const REPLY_TO    = 'contact@pctires.ca';                   // what the customer sees and replies to
 
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
@@ -145,7 +146,7 @@ export async function onRequestPost(context) {
         from: FROM_EMAIL,
         to: email,
         bcc: SHOP_EMAIL,
-        reply_to: SHOP_EMAIL,
+        reply_to: REPLY_TO,
         subject,
         html,
       }),
