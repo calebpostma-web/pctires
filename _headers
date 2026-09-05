@@ -1,0 +1,14 @@
+# Reel Builder only: these headers turn on cross-origin isolation so the multi-core ffmpeg
+# engine (SharedArrayBuffer) can run. Scoped to /video and its library files — do not widen;
+# COEP would break Stripe, Google and other embeds on the rest of the site.
+# The worker script (/video-lib/814.ffmpeg.js) MUST carry COEP too or the engine never starts.
+/video
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+/video.html
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+/video-lib/*
+  Cross-Origin-Embedder-Policy: require-corp
+/video-sw.js
+  Cross-Origin-Embedder-Policy: require-corp
