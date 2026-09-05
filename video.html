@@ -5,22 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#17181a">
-<title>Reel Builder — PC Tires</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Reel Builder">
+<link rel="manifest" href="/video-manifest.json">
+<link rel="apple-touch-icon" href="/pctires-logo-192.png">
 <link rel="icon" href="/favicon-32.png">
+<title>Reel Builder — PC Tires</title>
 <!-- ffmpeg.wasm loader + its worker chunk are self-hosted in /video-lib/ (a Web Worker must be
-     same-origin, so they cannot come from a CDN). The 32 MB engine (ffmpeg-core) is too big for
-     Cloudflare Pages and is fetched from a CDN at build time — see ensureFFmpeg(). -->
+     same-origin, so they cannot come from a CDN). The 32 MB engine (ffmpeg-core / core-mt) is too big
+     for Cloudflare Pages and is fetched from a CDN at build time — see ensureFFmpeg(). The multi-core
+     engine needs the COOP/COEP headers set for /video in _headers; without them it falls back to
+     the single-core engine automatically. -->
 <script src="/video-lib/ffmpeg.js"></script>
 <style>
   :root{
     --bg: #17181a; --panel: #1f2124; --panel-2: #26282c; --line: #34363a;
-    --text: #eceae6; --text-dim: #9a9da2; --accent: #e8622c; --ok: #4caf6a;
+    --text: #eceae6; --text-dim: #9a9da2; --accent: #e8622c; --gold: #c8942a; --ok: #4caf6a;
     --warn: #e0a83a; --danger: #d1483f;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
   *{ box-sizing: border-box; }
   html{ -webkit-text-size-adjust: 100%; }
-  body{ margin:0; background: var(--bg); color: var(--text); padding: 20px 14px calc(60px + env(safe-area-inset-bottom)); }
+  body{ margin:0; background: var(--bg); color: var(--text); padding: calc(20px + env(safe-area-inset-top)) 14px calc(60px + env(safe-area-inset-bottom)); }
   .wrap{ max-width: 620px; margin: 0 auto; }
   h1{ font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px; }
   .sub{ color: var(--text-dim); font-size: 14px; margin: 0 0 22px; line-height:1.5; }
@@ -34,26 +41,39 @@
   .droparea:active, .droparea.drag{ border-color: var(--accent); background: rgba(232,98,44,0.08); }
   .droparea input{ display:none; }
   .clip-list{ margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
-  .clip-row{ display:flex; align-items:center; gap:10px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; }
+  .clip{ background: var(--panel-2); border: 1px solid var(--line); border-radius: 7px; }
+  .clip-row{ display:flex; align-items:center; gap:10px; padding: 8px 10px; }
   .clip-row video, .clip-row img, .clip-row .thumb-ph{ width:52px; height:52px; object-fit:cover; border-radius:5px; background:#000; flex-shrink:0; }
   .clip-row .thumb-ph{ display:flex; align-items:center; justify-content:center; color: var(--text-dim); font-size:18px; }
-  .clip-row select.secs{ background: var(--panel); color: var(--text); border:1px solid var(--line); border-radius:5px; font-size:12px; padding:3px 4px; }
-  .clip-row .bad{ color: var(--warn); }
   .clip-row .meta{ flex:1; min-width:0; }
   .clip-row .name{ font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .clip-row .info{ font-size:11px; color: var(--text-dim); margin-top:2px; }
-  .clip-row .btns{ display:flex; gap:6px; flex-shrink:0; }
+  .clip-row .info{ font-size:11px; color: var(--text-dim); margin-top:3px; display:flex; flex-wrap:wrap; gap:4px 8px; align-items:center; }
+  .clip-row .info .trimmed{ color: var(--gold); }
+  .clip-row select.secs, .clip-row .mini{ background: var(--panel); color: var(--text); border:1px solid var(--line); border-radius:5px; font-size:12px; padding:3px 6px; font-family:inherit; cursor:pointer; }
+  .clip-row .mini.on{ border-color: var(--gold); color: var(--gold); }
+  .clip-row .bad{ color: var(--warn); }
+  .clip-row .btns{ display:flex; gap:4px; flex-shrink:0; }
   .iconbtn{
     background: var(--panel); border: 1px solid var(--line); color: var(--text);
-    width:38px; height:38px; border-radius:7px; cursor:pointer; font-size:16px;
-    display:flex; align-items:center; justify-content:center; -webkit-tap-highlight-color: transparent;
+    width:34px; height:38px; border-radius:7px; cursor:pointer; font-size:15px;
+    display:flex; align-items:center; justify-content:center; -webkit-tap-highlight-color: transparent; font-family:inherit;
   }
   .iconbtn:active{ border-color: var(--accent); }
   .iconbtn:disabled{ opacity:.25; cursor:default; }
   .iconbtn.danger:active{ border-color: var(--danger); color: var(--danger); }
+  .trim{ border-top:1px solid var(--line); padding: 10px; display:none; }
+  .trim.open{ display:block; }
+  .trim video{ width:100%; max-height:260px; background:#000; border-radius:6px; }
+  .trim .row{ display:flex; align-items:center; gap:8px; margin-top:8px; font-size:13px; }
+  .trim .row label{ width:44px; color: var(--text-dim); }
+  .trim .row input[type=range]{ flex:1; }
+  .trim .row .val{ width:52px; text-align:right; font-variant-numeric: tabular-nums; }
+  .trim .row .setbtn{ background: var(--panel); border:1px solid var(--line); color: var(--text); border-radius:6px; padding:6px 8px; font-size:12px; cursor:pointer; font-family:inherit; white-space:nowrap; }
+  .trim .foot{ display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:12px; color: var(--text-dim); }
+  .trim .foot button{ background:transparent; border:1px solid var(--line); color: var(--text); border-radius:6px; padding:6px 10px; font-size:12px; cursor:pointer; font-family:inherit; }
   label.field{ display:block; font-size:13px; color: var(--text-dim); margin: 12px 0 6px; }
   label.field:first-child{ margin-top:0; }
-  input[type=text], input[type=password]{ width:100%; background: var(--panel-2); border:1px solid var(--line); color: var(--text); border-radius:7px; padding:11px 10px; font-size:16px; }
+  input[type=text], input[type=password]{ width:100%; background: var(--panel-2); border:1px solid var(--line); color: var(--text); border-radius:7px; padding:11px 10px; font-size:16px; font-family:inherit; }
   input[type=range]{ width:100%; accent-color: var(--accent); }
   .radiorow{ display:flex; gap:8px; flex-wrap:wrap; }
   .radiorow label{
@@ -63,12 +83,28 @@
   .radiorow label .t{ display:flex; flex-direction:column; gap:2px; }
   .radiorow label small{ color: var(--text-dim); font-size:11px; }
   .radiorow input{ accent-color: var(--accent); flex-shrink:0; }
+  .chips{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+  .chip{ background: var(--panel-2); border:1px solid var(--line); color: var(--text); border-radius:20px; padding:7px 12px; font-size:12px; cursor:pointer; font-family:inherit; }
+  .chip:active{ border-color: var(--accent); }
   .filepill{ display:flex; align-items:center; justify-content:space-between; gap:8px; background: var(--panel-2); border:1px solid var(--line); border-radius:7px; padding:10px; font-size:13px; margin-top:8px; }
   .filepill span:first-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .filepill .x{ cursor:pointer; color: var(--text-dim); padding: 4px 8px; font-size:16px; }
-  button.primary{ width:100%; background: var(--accent); border:none; color:#1a1a1a; font-weight:700; font-size:16px; padding:15px; border-radius:9px; cursor:pointer; margin-top: 6px; }
+  .filepill audio{ width:100%; margin-top:6px; height:32px; }
+  .pillwrap audio{ width:100%; height:34px; margin-top:6px; }
+  .recrow{ display:flex; gap:8px; margin-top:8px; }
+  .recbtn{ flex:1; background: var(--panel-2); border:1px solid var(--line); color: var(--text); border-radius:8px; padding:13px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .recbtn .dot{ width:12px; height:12px; border-radius:50%; background: var(--danger); display:inline-block; }
+  .recbtn.rec{ border-color: var(--danger); color: var(--danger); }
+  .recbtn.rec .dot{ animation: blink 1s infinite; }
+  @keyframes blink{ 50%{ opacity:.2; } }
+  .orpick{ flex:1; }
+  .orpick .droparea{ padding: 13px 10px; height:100%; display:flex; align-items:center; justify-content:center; }
+  button.primary{ width:100%; background: var(--accent); border:none; color:#1a1a1a; font-weight:700; font-size:16px; padding:15px; border-radius:9px; cursor:pointer; margin-top: 6px; font-family:inherit; }
   button.primary:disabled{ opacity:.4; cursor:default; }
-  button.secondary{ width:100%; background:transparent; border:1px solid var(--line); color: var(--text); font-size:14px; padding:12px; border-radius:9px; cursor:pointer; margin-top:8px; }
+  .toggles{ display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+  .toggle{ display:flex; align-items:center; gap:10px; background: var(--panel-2); border:1px solid var(--line); border-radius:7px; padding:11px 10px; font-size:13px; cursor:pointer; }
+  .toggle input{ accent-color: var(--accent); width:18px; height:18px; flex-shrink:0; }
+  .toggle small{ display:block; color: var(--text-dim); font-size:11px; margin-top:2px; }
   .progresswrap{ margin-top:14px; }
   .bar{ height:10px; background: var(--panel-2); border-radius:5px; overflow:hidden; border:1px solid var(--line); }
   .bar .fill{ height:100%; width:0%; background: var(--accent); transition: width .3s; }
@@ -88,7 +124,7 @@
   .badge{ font-size:11px; color: var(--text-dim); }
   .tips{ font-size:12px; color: var(--text-dim); line-height:1.55; margin-top:18px; }
   .tips b{ color: var(--text); font-weight:600; }
-  /* lock screen */
+  .engine{ font-size:11px; color: var(--text-dim); margin-top:10px; }
   #lock{ max-width: 360px; margin: 60px auto 0; text-align:center; }
   #lock .step{ text-align:left; }
   #lockError{ color: var(--danger); font-size:13px; min-height:18px; margin-top:8px; }
@@ -111,12 +147,12 @@
 <div id="app">
 <div class="wrap">
   <h1>Reel Builder</h1>
-  <p class="sub">Order your clips, add music or a voiceover, drop in a caption, export. Everything renders on this device — nothing is uploaded.</p>
+  <p class="sub">Order your clips, trim them, add a voiceover or music, caption, export. Everything renders on this device — nothing is uploaded.</p>
 
   <div class="step">
-    <h2>1. Clips</h2>
+    <h2>1. Clips &amp; photos</h2>
     <div class="droparea" id="dropClips">
-      Tap to add video clips or photos<br><span class="badge">Pick several at once. More can be added later — they go to the end. Photos show for a few seconds each (adjustable).</span>
+      Tap to add video clips or photos<br><span class="badge">Pick several at once. Long videos are fine — tap Trim and cut out the piece you want. Photos show for a few seconds each.</span>
       <input type="file" id="clipInput" accept="video/*,image/*,.heic,.heif" multiple>
     </div>
     <div class="clip-list" id="clipList"></div>
@@ -132,11 +168,15 @@
       <label><input type="radio" name="audioMode" value="mute"> No clip sound</label>
     </div>
     <div id="voiceoverArea" style="display:none">
-      <label class="field">Voiceover file (Voice Memos → share → Save to Files)</label>
-      <div class="droparea" id="dropVO">Tap to add voiceover audio
-        <input type="file" id="voInput" accept="audio/*,.m4a,.mp3,.wav,.aac">
+      <label class="field">Voiceover — record it here, or pick a file</label>
+      <div class="recrow">
+        <button class="recbtn" id="recBtn" type="button"><span class="dot"></span><span id="recLabel">Record</span></button>
+        <div class="orpick"><div class="droparea" id="dropVO">Pick audio file
+          <input type="file" id="voInput" accept="audio/*,.m4a,.mp3,.wav,.aac,.webm">
+        </div></div>
       </div>
-      <div id="voPill"></div>
+      <div class="note" id="recNote">Tap Record, talk, tap Stop. Hold the phone close and quiet the shop for a minute.</div>
+      <div id="voPill" class="pillwrap"></div>
     </div>
 
     <label class="field">Background music (optional)</label>
@@ -145,15 +185,16 @@
     </div>
     <div id="musicPill"></div>
     <div id="musicVolWrap" style="display:none">
-      <label class="field">Music volume: <span id="musicVolLabel">35</span>%</label>
+      <label class="field">Music volume: <span id="musicVolLabel">35</span>% &nbsp;<span class="badge">fades out at the end</span></label>
       <input type="range" id="musicVol" min="0" max="100" value="35">
     </div>
+    <div class="note">For Instagram/TikTok, export with no music and add a trending sound when you post.</div>
   </div>
 
   <div class="step">
     <h2>3. Caption (optional)</h2>
-    <label class="field">Text to overlay on the whole video</label>
-    <input type="text" id="captionText" placeholder="e.g. Full seasonal tire changeover" maxlength="120" enterkeyhint="done">
+    <div class="chips" id="capChips"></div>
+    <input type="text" id="captionText" placeholder="Tap a preset or type your own" maxlength="120" enterkeyhint="done">
     <label class="field">Position</label>
     <div class="radiorow">
       <label><input type="radio" name="capPos" value="bottom" checked> Bottom</label>
@@ -162,7 +203,7 @@
   </div>
 
   <div class="step">
-    <h2>4. Format</h2>
+    <h2>4. Look</h2>
     <label class="field">Frame shape</label>
     <div class="radiorow">
       <label><input type="radio" name="aspect" value="vertical" checked> <span class="t">Reel / Story<small>9:16 vertical</small></span></label>
@@ -175,14 +216,26 @@
         <label><input type="radio" name="fit" value="fill"> <span class="t">Fill<small>crop the sides</small></span></label>
       </div>
     </div>
+    <label class="field">Between clips</label>
+    <div class="radiorow">
+      <label><input type="radio" name="transition" value="dissolve" checked> <span class="t">Dissolve<small>half-second crossfade</small></span></label>
+      <label><input type="radio" name="transition" value="fade"> <span class="t">Fade to black</span></label>
+      <label><input type="radio" name="transition" value="none"> <span class="t">Hard cut</span></label>
+    </div>
     <label class="field">Quality</label>
     <div class="radiorow">
       <label><input type="radio" name="quality" value="fast" checked> <span class="t">Fast<small>720p — fine for social, ~2× quicker</small></span></label>
-      <label><input type="radio" name="quality" value="hd"> <span class="t">HD<small>1080p — slower on a phone</small></span></label>
+      <label><input type="radio" name="quality" value="hd"> <span class="t">HD<small>1080p — best on a laptop</small></span></label>
+    </div>
+    <label class="field">Branding</label>
+    <div class="toggles">
+      <label class="toggle"><input type="checkbox" id="optWatermark" checked> <span>PC Tires watermark<small>small wordmark in the top corner</small></span></label>
+      <label class="toggle"><input type="checkbox" id="optEndcard" checked> <span>End card<small>3 s: PC Tires · Pain Court · 519-397-4686 · pctires.ca</small></span></label>
     </div>
   </div>
 
-  <button class="primary" id="buildBtn" disabled>Add at least 2 clips to build</button>
+  <button class="primary" id="buildBtn" disabled>Add at least 1 clip to build</button>
+  <div class="engine" id="engineNote"></div>
   <div class="progresswrap" id="progressWrap" style="display:none">
     <div class="bar"><div class="fill" id="progressFill"></div></div>
     <div class="status" id="statusText">Starting…</div>
@@ -193,9 +246,8 @@
   <div class="result" id="result" style="display:none"></div>
 
   <div class="tips">
-    <b>Tips for phone use.</b> Trim clips in the Photos app first — short clips render much faster and there's no trimming here.
-    On iPhone, Settings → Camera → Formats → <b>Most Compatible</b> and Record Video at 1080p makes clips 3–4× faster to render than 4K HEVC.
-    The first build downloads a 32 MB video engine (do it on Wi-Fi once; it's cached after that).
+    <b>Tips.</b> Tap a clip to trim it — shorter clips render faster. On iPhone, Settings → Camera → Formats → <b>Most Compatible</b> and 1080p makes clips 3–4× faster to render than 4K HEVC.
+    Big jobs: open this page on the laptop — same link, same password, many times faster. Add to Home Screen from the share menu to get an app icon.
   </div>
 </div>
 </div>
@@ -225,28 +277,63 @@ async function lockSubmit(){
   btn.disabled = false; btn.textContent = 'Unlock';
 }
 
-/* ═══════════════════ STATE ═══════════════════ */
+/* ═══════════════════ SERVICE WORKER (caches the 32 MB engine; scoped to /video only) ═══════════════════ */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/video-sw.js', { scope: '/video' }).catch(() => {});
+}
+
+/* ═══════════════════ CONSTANTS / STATE ═══════════════════ */
 const { FFmpeg } = FFmpegWASM;
-let ffmpeg = null;
-let ffmpegLoaded = false;
-let building = false;
+const BRAND = { name1: 'PC', name2: 'Tires', sub: 'Chatham-Kent', line1: '7144 Grande River Line, Pain Court', phone: '519-397-4686', site: 'pctires.ca', gold: '#c8942a' };
+const CAPTION_PRESETS = ['Seasonal tire changeover', 'New tires installed', 'Tire repair', 'Wheel alignment', 'TPMS service', 'Balancing & rotation', 'Book online at pctires.ca'];
+const PHOTO_DEFAULT_SECS = 3;
+const XFADE = 0.5;      // dissolve length
+const FADE = 0.35;      // fade-to-black length
+const ENDCARD_SECS = 3;
 
-let clips = [];        // {file, url, id, duration, hasAudio, w, h}
-let voFile = null;
-let musicFile = null;
-let idCounter = 0;
-let lastResultURL = null;
-let lastResultBlob = null;
-
-const $ = id => document.getElementById(id);
-const clipInput = $('clipInput'), dropClips = $('dropClips'), clipList = $('clipList'), buildBtn = $('buildBtn');
-
-// Core engine sources, tried in order. All serve CORS. Version must stay on 0.12.x to match /video-lib/ffmpeg.js (0.12.15).
-const CORE_BASES = [
+// Engine sources. Version must stay on 0.12.x to match /video-lib/ffmpeg.js (0.12.15).
+const CORE_ST = [
   'https://cdnjs.cloudflare.com/ajax/libs/ffmpeg-core/0.12.10/umd',
   'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd',
   'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd',
 ];
+const CORE_MT = [
+  'https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.10/dist/umd',
+  'https://unpkg.com/@ffmpeg/core-mt@0.12.10/dist/umd',
+];
+
+let ffmpeg = null, ffmpegLoaded = false, engineMode = null, building = false;
+let clips = [];        // {kind:'video'|'image', file, url, id, duration, w, h, hasAudio, trimStart, trimEnd, kb, bad}
+let voFile = null, musicFile = null, idCounter = 0, lastResultURL = null;
+
+const $ = id => document.getElementById(id);
+const clipInput = $('clipInput'), dropClips = $('dropClips'), clipList = $('clipList'), buildBtn = $('buildBtn');
+const threads = Math.max(1, Math.min(16, navigator.hardwareConcurrency || 2));
+$('engineNote').textContent = self.crossOriginIsolated ? `Engine: multi-core (${threads} threads available)` : 'Engine: single-core';
+
+/* ═══════════════════ SETTINGS MEMORY ═══════════════════ */
+const SETTINGS_KEY = 'rb_settings';
+const settingRadios = ['aspect','fit','transition','quality','capPos'];
+const settingChecks = ['optWatermark','optEndcard'];
+function saveSettings(){
+  try{
+    const s = {};
+    settingRadios.forEach(n => { const el = document.querySelector(`input[name=${n}]:checked`); if(el) s[n] = el.value; });
+    settingChecks.forEach(id => s[id] = $(id).checked);
+    s.musicVol = $('musicVol').value;
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+  }catch(e){}
+}
+function loadSettings(){
+  try{
+    const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+    settingRadios.forEach(n => { if(s[n]){ const el = document.querySelector(`input[name=${n}][value=${s[n]}]`); if(el) el.checked = true; } });
+    settingChecks.forEach(id => { if(typeof s[id] === 'boolean') $(id).checked = s[id]; });
+    if(s.musicVol){ $('musicVol').value = s.musicVol; $('musicVolLabel').textContent = s.musicVol; }
+  }catch(e){}
+}
+loadSettings();
+document.querySelectorAll('input[type=radio], input[type=checkbox], #musicVol').forEach(el => el.addEventListener('change', saveSettings));
 
 /* ═══════════════════ INPUTS ═══════════════════ */
 function setupDrop(dropEl, inputEl, onFiles){
@@ -256,12 +343,22 @@ function setupDrop(dropEl, inputEl, onFiles){
   ['dragleave','drop'].forEach(ev => dropEl.addEventListener(ev, e => { e.preventDefault(); dropEl.classList.remove('drag'); }));
   dropEl.addEventListener('drop', e => { onFiles(Array.from(e.dataTransfer.files)); });
 }
-
 function fmtMB(bytes){ return (bytes/1048576).toFixed(bytes > 10*1048576 ? 0 : 1) + ' MB'; }
-function fmtSec(s){ if(!isFinite(s)) return '?'; return s < 60 ? Math.round(s) + 's' : Math.floor(s/60) + 'm ' + Math.round(s%60) + 's'; }
+function fmtSec(s){ if(!isFinite(s)) return '?'; return s < 60 ? (Math.round(s*10)/10) + 's' : Math.floor(s/60) + 'm ' + Math.round(s%60) + 's'; }
+function fmtT(s){ return (Math.round(s*10)/10).toFixed(1) + 's'; }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+function makeEven(n){ return n % 2 === 0 ? n : n - 1; }
+function extOf(file, fallback){ const m = file.name.match(/\.([a-zA-Z0-9]+)$/); return m ? m[1].toLowerCase() : fallback; }
+const isImageFile = f => f.type.startsWith('image/') || /\.(jpe?g|png|webp|heic|heif|gif|bmp)$/i.test(f.name);
+const isVideoFile = f => f.type.startsWith('video/') || /\.(mp4|mov|m4v|webm|3gp)$/i.test(f.name);
+function clipDur(c){ // effective seconds after trim
+  if(c.kind === 'image') return c.duration || PHOTO_DEFAULT_SECS;
+  if(!isFinite(c.duration)) return NaN;
+  const s = c.trimStart || 0, e = isFinite(c.trimEnd) ? c.trimEnd : c.duration;
+  return Math.max(0.5, e - s);
+}
 
 function probeVideoEl(url){
-  // Browser-side metadata: duration + dimensions (fast; used for the size warning + ETA before ffmpeg runs)
   return new Promise((resolve) => {
     const v = document.createElement('video');
     v.preload = 'metadata'; v.muted = true; v.playsInline = true;
@@ -273,19 +370,14 @@ function probeVideoEl(url){
   });
 }
 
-const PHOTO_DEFAULT_SECS = 3;
-const isImageFile = f => f.type.startsWith('image/') || /\.(jpe?g|png|webp|heic|heif|gif|bmp)$/i.test(f.name);
-const isVideoFile = f => f.type.startsWith('video/') || /\.(mp4|mov|m4v|webm|3gp)$/i.test(f.name);
-
 // Decode a photo in the browser (bakes in EXIF orientation, converts HEIC on iPhones, shrinks 12 MP
 // down to output size) and hand ffmpeg a plain JPEG. Returns { blob, w, h } or throws.
-async function decodePhoto(file, maxEdge){
+async function decodePhoto(src, maxEdge){
   let bmp = null;
-  try{ bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+  try{ bmp = await createImageBitmap(src, { imageOrientation: 'from-image' }); }
   catch(e){
-    // Fallback: <img> (Safari decodes HEIC here; Chrome/Android generally cannot)
     bmp = await new Promise((res, rej) => {
-      const img = new Image(); const u = URL.createObjectURL(file);
+      const img = new Image(); const u = URL.createObjectURL(src);
       img.onload = () => { URL.revokeObjectURL(u); res(img); };
       img.onerror = () => { URL.revokeObjectURL(u); rej(new Error('cannot decode')); };
       img.src = u;
@@ -306,11 +398,9 @@ async function decodePhoto(file, maxEdge){
 setupDrop(dropClips, clipInput, async (files) => {
   for(const f of files){
     if(isImageFile(f)){
-      const c = { kind: 'image', file: f, url: null, id: idCounter++, duration: PHOTO_DEFAULT_SECS, w:0, h:0, hasAudio: false, bad: false };
-      clips.push(c);
-      renderClips();
+      const c = { kind: 'image', file: f, url: null, id: idCounter++, duration: PHOTO_DEFAULT_SECS, w:0, h:0, hasAudio: false, kb: true, bad: false };
+      clips.push(c); renderClips();
       try{
-        // small preview now; the full-size version is made at build time
         const p = await decodePhoto(f, 400);
         c.url = URL.createObjectURL(p.blob);
         const full = await createImageBitmap(f, { imageOrientation: 'from-image' }).catch(() => null);
@@ -318,11 +408,11 @@ setupDrop(dropClips, clipInput, async (files) => {
       } catch(e){ c.bad = true; }
       renderClips();
     } else if(isVideoFile(f)){
-      const c = { kind: 'video', file: f, url: URL.createObjectURL(f), id: idCounter++, duration: NaN, w:0, h:0, hasAudio: null };
-      clips.push(c);
-      renderClips();
+      const c = { kind: 'video', file: f, url: URL.createObjectURL(f), id: idCounter++, duration: NaN, w:0, h:0, hasAudio: null, trimStart: 0, trimEnd: NaN, open: false };
+      clips.push(c); renderClips();
       const m = await probeVideoEl(c.url);
       Object.assign(c, m);
+      if(isFinite(c.duration)) c.trimEnd = c.duration;
       renderClips();
     }
   }
@@ -332,73 +422,112 @@ function renderClips(){
   clipList.innerHTML = '';
   let totalBytes = 0, totalDur = 0;
   clips.forEach((c, i) => {
-    totalBytes += c.file.size; if(isFinite(c.duration)) totalDur += c.duration;
-    const row = document.createElement('div');
-    row.className = 'clip-row';
+    totalBytes += c.file.size; const d = clipDur(c); if(isFinite(d)) totalDur += d;
+    const box = document.createElement('div'); box.className = 'clip';
     let thumb, info;
     if(c.kind === 'image'){
       thumb = c.url ? `<img src="${c.url}" alt="">` : `<div class="thumb-ph">${c.bad ? '⚠︎' : '…'}</div>`;
       const opts = [2,3,4,5,6,8,10].map(s => `<option value="${s}" ${s===c.duration?'selected':''}>${s}s</option>`).join('');
       info = c.bad
         ? `<span class="bad">Can't read this photo — try saving it as JPEG</span>`
-        : `Photo · show for <select class="secs" data-secs>${opts}</select>${c.w ? ` · ${c.w}×${c.h}` : ''}`;
+        : `<span>Photo · show for</span><select class="secs" data-secs>${opts}</select><button type="button" class="mini ${c.kb?'on':''}" data-kb>${c.kb ? '✓ Slow zoom' : 'Slow zoom'}</button>`;
     } else {
       thumb = `<video src="${c.url}" muted playsinline preload="metadata"></video>`;
-      info = [fmtMB(c.file.size), isFinite(c.duration) ? fmtSec(c.duration) : '', c.w ? `${c.w}×${c.h}` : ''].filter(Boolean).join(' · ');
+      const trimmed = isFinite(c.duration) && (c.trimStart > 0.05 || c.trimEnd < c.duration - 0.05);
+      info = `<span>${fmtMB(c.file.size)}</span>` +
+        (isFinite(c.duration) ? `<span class="${trimmed?'trimmed':''}">${trimmed ? '✂ ' + fmtT(c.trimStart) + '–' + fmtT(c.trimEnd) + ' (' + fmtSec(d) + ')' : fmtSec(c.duration)}</span>` : '') +
+        (c.w ? `<span>${c.w}×${c.h}</span>` : '') +
+        (isFinite(c.duration) ? `<button type="button" class="mini ${c.open?'on':''}" data-trim>${c.open ? 'Close' : 'Trim'}</button>` : '');
     }
-    row.innerHTML = `
-      ${thumb}
-      <div class="meta"><div class="name">${i+1}. ${escapeHtml(c.file.name)}</div><div class="info">${info}</div></div>
-      <div class="btns">
-        <button class="iconbtn" data-act="up" ${i===0?'disabled':''} aria-label="Move up">↑</button>
-        <button class="iconbtn" data-act="down" ${i===clips.length-1?'disabled':''} aria-label="Move down">↓</button>
-        <button class="iconbtn danger" data-act="del" aria-label="Remove">✕</button>
-      </div>`;
-    row.querySelector('[data-act=up]').onclick = () => { [clips[i-1],clips[i]]=[clips[i],clips[i-1]]; renderClips(); };
-    row.querySelector('[data-act=down]').onclick = () => { [clips[i+1],clips[i]]=[clips[i],clips[i+1]]; renderClips(); };
-    row.querySelector('[data-act=del]').onclick = () => { if(c.url) URL.revokeObjectURL(c.url); clips.splice(i,1); renderClips(); };
-    const secs = row.querySelector('[data-secs]');
-    if(secs) secs.onchange = () => { c.duration = +secs.value; renderClips(); };
-    clipList.appendChild(row);
+    box.innerHTML = `
+      <div class="clip-row">
+        ${thumb}
+        <div class="meta"><div class="name">${i+1}. ${escapeHtml(c.file.name)}</div><div class="info">${info}</div></div>
+        <div class="btns">
+          <button class="iconbtn" data-act="up" ${i===0?'disabled':''} aria-label="Move up">↑</button>
+          <button class="iconbtn" data-act="down" ${i===clips.length-1?'disabled':''} aria-label="Move down">↓</button>
+          ${c.kind === 'video' ? `<button class="iconbtn" data-act="dup" aria-label="Duplicate (cut another piece from this video)" title="Duplicate">⧉</button>` : ''}
+          <button class="iconbtn danger" data-act="del" aria-label="Remove">✕</button>
+        </div>
+      </div>
+      ${c.kind === 'video' && isFinite(c.duration) ? `
+      <div class="trim ${c.open?'open':''}">
+        <video src="${c.url}" controls playsinline preload="metadata"></video>
+        <div class="row"><label>Start</label><input type="range" data-ts min="0" max="${c.duration.toFixed(2)}" step="0.1" value="${c.trimStart}"><span class="val" data-tsv>${fmtT(c.trimStart)}</span><button type="button" class="setbtn" data-setstart>Set here</button></div>
+        <div class="row"><label>End</label><input type="range" data-te min="0" max="${c.duration.toFixed(2)}" step="0.1" value="${c.trimEnd}"><span class="val" data-tev>${fmtT(c.trimEnd)}</span><button type="button" class="setbtn" data-setend>Set here</button></div>
+        <div class="foot"><span data-tlen>Keeps ${fmtSec(d)} of ${fmtSec(c.duration)}</span><button type="button" data-reset>Reset</button></div>
+      </div>` : ''}`;
+    box.querySelector('[data-act=up]').onclick = () => { [clips[i-1],clips[i]]=[clips[i],clips[i-1]]; renderClips(); };
+    box.querySelector('[data-act=down]').onclick = () => { [clips[i+1],clips[i]]=[clips[i],clips[i+1]]; renderClips(); };
+    box.querySelector('[data-act=del]').onclick = () => { if(c.url && !clips.some((o, j) => j !== i && o.url === c.url)) URL.revokeObjectURL(c.url); clips.splice(i,1); renderClips(); };
+    const dup = box.querySelector('[data-act=dup]');
+    if(dup) dup.onclick = () => { clips.splice(i+1, 0, { ...c, id: idCounter++, open: true, trimStart: c.trimEnd < c.duration - 0.5 ? c.trimEnd : c.trimStart, trimEnd: c.duration }); renderClips(); };
+    const secs = box.querySelector('[data-secs]'); if(secs) secs.onchange = () => { c.duration = +secs.value; renderClips(); };
+    const kb = box.querySelector('[data-kb]'); if(kb) kb.onclick = () => { c.kb = !c.kb; renderClips(); };
+    const tb = box.querySelector('[data-trim]'); if(tb) tb.onclick = () => { c.open = !c.open; renderClips(); };
+    const trim = box.querySelector('.trim');
+    if(trim){
+      const pv = trim.querySelector('video'), ts = trim.querySelector('[data-ts]'), te = trim.querySelector('[data-te]');
+      const refresh = () => {
+        trim.querySelector('[data-tsv]').textContent = fmtT(c.trimStart);
+        trim.querySelector('[data-tev]').textContent = fmtT(c.trimEnd);
+        trim.querySelector('[data-tlen]').textContent = `Keeps ${fmtSec(clipDur(c))} of ${fmtSec(c.duration)}`;
+        ts.value = c.trimStart; te.value = c.trimEnd;
+      };
+      ts.oninput = () => { c.trimStart = Math.min(+ts.value, c.trimEnd - 0.5); pv.currentTime = c.trimStart; refresh(); };
+      te.oninput = () => { c.trimEnd = Math.max(+te.value, c.trimStart + 0.5); pv.currentTime = c.trimEnd; refresh(); };
+      ts.onchange = te.onchange = () => renderClips();
+      trim.querySelector('[data-setstart]').onclick = () => { c.trimStart = Math.min(pv.currentTime, c.trimEnd - 0.5); renderClips(); };
+      trim.querySelector('[data-setend]').onclick = () => { c.trimEnd = Math.max(pv.currentTime, c.trimStart + 0.5); renderClips(); };
+      trim.querySelector('[data-reset]').onclick = () => { c.trimStart = 0; c.trimEnd = c.duration; renderClips(); };
+      pv.ontimeupdate = () => { if(!pv.paused && pv.currentTime >= c.trimEnd){ pv.pause(); pv.currentTime = c.trimStart; } };
+      pv.onplay = () => { if(pv.currentTime < c.trimStart || pv.currentTime >= c.trimEnd) pv.currentTime = c.trimStart; };
+    }
+    clipList.appendChild(box);
   });
 
   const warn = $('sizeWarn');
-  const big4k = clips.some(c => c.w * c.h > 2500*1500);
-  if(totalBytes > 400*1048576){
+  const big4k = clips.some(c => c.kind === 'video' && c.w * c.h > 2500*1500);
+  const longest = Math.max(0, ...clips.filter(c => c.kind === 'video').map(clipDur).filter(isFinite));
+  if(totalDur > 180){
     warn.style.display = 'block';
-    warn.textContent = `Clips total ${fmtMB(totalBytes)}. That is likely too much for a phone browser — it may run out of memory and reload. Trim clips in Photos first, or build on a laptop.`;
-  } else if(totalBytes > 200*1048576 || big4k){
+    warn.textContent = `This reel would be ${fmtSec(totalDur)} long. Reels are 15–90 s — tap a long clip and trim it to the part you want (⧉ duplicates a clip so you can cut several pieces from one video).`;
+  } else if(longest > 60 || big4k){
     warn.style.display = 'block';
-    warn.textContent = (big4k ? '4K clip detected — rendering will be slow. ' : '') + `Clips total ${fmtMB(totalBytes)}${isFinite(totalDur)&&totalDur ? ', ' + fmtSec(totalDur) : ''}. Shorter, 1080p clips render much faster.`;
+    warn.textContent = (big4k ? '4K clip detected — rendering will be slow. ' : '') + (longest > 60 ? `A clip runs ${fmtSec(longest)} — trim it down. ` : '') + `Total ${fmtSec(totalDur)}.`;
   } else warn.style.display = 'none';
 
   if(!building){
-    if(clips.length >= 2){
-      buildBtn.disabled = false;
-      buildBtn.textContent = `Build reel from ${clips.length} clips` + (totalDur ? ` (${fmtSec(totalDur)})` : '');
-    } else {
-      buildBtn.disabled = true;
-      buildBtn.textContent = 'Add at least 2 clips to build';
-    }
+    buildBtn.disabled = clips.length < 1 || clips.some(c => c.bad);
+    buildBtn.textContent = clips.length ? `Build reel from ${clips.length} clip${clips.length>1?'s':''}` + (totalDur ? ` (${fmtSec(totalDur)})` : '') : 'Add at least 1 clip to build';
   }
 }
-function escapeHtml(s){ return s.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 
-document.querySelectorAll('input[name=audioMode]').forEach(r => {
-  r.addEventListener('change', () => {
-    $('voiceoverArea').style.display = document.querySelector('input[name=audioMode]:checked').value === 'voiceover' ? 'block' : 'none';
-  });
-});
-document.querySelectorAll('input[name=aspect]').forEach(r => {
-  r.addEventListener('change', () => {
-    $('fitWrap').style.display = document.querySelector('input[name=aspect]:checked').value === 'vertical' ? 'block' : 'none';
-  });
-});
+document.querySelectorAll('input[name=audioMode]').forEach(r => r.addEventListener('change', () => {
+  $('voiceoverArea').style.display = document.querySelector('input[name=audioMode]:checked').value === 'voiceover' ? 'block' : 'none';
+}));
+document.querySelectorAll('input[name=aspect]').forEach(r => r.addEventListener('change', () => {
+  $('fitWrap').style.display = document.querySelector('input[name=aspect]:checked').value === 'vertical' ? 'block' : 'none';
+}));
+$('fitWrap').style.display = document.querySelector('input[name=aspect]:checked').value === 'vertical' ? 'block' : 'none';
 $('musicVol').addEventListener('input', () => { $('musicVolLabel').textContent = $('musicVol').value; });
 
-setupDrop($('dropVO'), $('voInput'), (files) => {
-  if(files[0]){ voFile = files[0]; renderPill('voPill', voFile, () => { voFile = null; renderPill('voPill', null); }); }
+// caption presets
+CAPTION_PRESETS.forEach(t => {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = t;
+  b.onclick = () => { $('captionText').value = t; };
+  $('capChips').appendChild(b);
 });
+
+function setVoiceFile(file, fromRecording){
+  voFile = file;
+  const el = $('voPill');
+  if(!file){ el.innerHTML = ''; return; }
+  const u = URL.createObjectURL(file);
+  el.innerHTML = `<div class="filepill"><span>${fromRecording ? 'Recorded voiceover' : escapeHtml(file.name)} · ${fmtMB(file.size)}</span><span class="x" role="button" aria-label="Remove">✕</span></div><audio controls src="${u}"></audio>`;
+  el.querySelector('.x').onclick = () => { URL.revokeObjectURL(u); setVoiceFile(null); };
+}
+setupDrop($('dropVO'), $('voInput'), (files) => { if(files[0]) setVoiceFile(files[0], false); });
 setupDrop($('dropMusic'), $('musicInput'), (files) => {
   if(files[0]){
     musicFile = files[0];
@@ -412,6 +541,36 @@ function renderPill(elId, file, onRemove){
   el.innerHTML = `<div class="filepill"><span>${escapeHtml(file.name)} · ${fmtMB(file.size)}</span><span class="x" role="button" aria-label="Remove">✕</span></div>`;
   el.querySelector('.x').onclick = onRemove;
 }
+
+/* ═══════════════════ VOICE RECORDING ═══════════════════ */
+let recorder = null, recChunks = [], recStream = null, recTimer = null, recStart = 0;
+const REC_TYPES = [['audio/mp4','m4a'], ['audio/webm;codecs=opus','webm'], ['audio/webm','webm'], ['audio/ogg;codecs=opus','ogg']];
+$('recBtn').addEventListener('click', async () => {
+  if(recorder && recorder.state === 'recording'){ recorder.stop(); return; }
+  if(!navigator.mediaDevices || !window.MediaRecorder){ $('recNote').textContent = 'Recording is not supported in this browser — pick a file instead.'; return; }
+  try{
+    recStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+  } catch(e){ $('recNote').textContent = 'Microphone permission was refused. Allow it in browser settings, or pick a file.'; return; }
+  const pick = REC_TYPES.find(([t]) => MediaRecorder.isTypeSupported(t));
+  const mime = pick ? pick[0] : '', ext = pick ? pick[1] : 'webm';
+  recChunks = [];
+  try{ recorder = new MediaRecorder(recStream, mime ? { mimeType: mime, audioBitsPerSecond: 128000 } : undefined); }
+  catch(e){ recorder = new MediaRecorder(recStream); }
+  recorder.ondataavailable = e => { if(e.data && e.data.size) recChunks.push(e.data); };
+  recorder.onstop = () => {
+    clearInterval(recTimer);
+    recStream.getTracks().forEach(t => t.stop());
+    const blob = new Blob(recChunks, { type: recorder.mimeType || mime || 'audio/webm' });
+    $('recBtn').classList.remove('rec'); $('recLabel').textContent = 'Record again';
+    if(blob.size < 1000){ $('recNote').textContent = 'Nothing was recorded — try again.'; return; }
+    setVoiceFile(new File([blob], 'voiceover.' + ext, { type: blob.type }), true);
+    $('recNote').textContent = `Recorded ${fmtSec((Date.now()-recStart)/1000)}. Play it back below; record again to replace it.`;
+  };
+  recorder.start(250);
+  recStart = Date.now();
+  $('recBtn').classList.add('rec'); $('recLabel').textContent = 'Stop 0:00';
+  recTimer = setInterval(() => { const s = Math.floor((Date.now()-recStart)/1000); $('recLabel').textContent = `Stop ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }, 500);
+});
 
 /* ═══════════════════ LOG / STATUS ═══════════════════ */
 let logLines = [];
@@ -430,11 +589,9 @@ $('logToggle').addEventListener('click', () => {
 function setStatus(msg, isErr){ const el = $('statusText'); el.textContent = msg; el.className = 'status' + (isErr ? ' err' : ''); }
 function setProgress(pct){ $('progressFill').style.width = Math.min(100,Math.max(0,pct)) + '%'; }
 
-/* ═══════════════════ WAKE LOCK (keeps the phone screen on while rendering) ═══════════════════ */
+/* ═══════════════════ WAKE LOCK ═══════════════════ */
 let wakeLock = null;
-async function acquireWakeLock(){
-  try{ if('wakeLock' in navigator){ wakeLock = await navigator.wakeLock.request('screen'); } }catch(e){ /* not critical */ }
-}
+async function acquireWakeLock(){ try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){} }
 function releaseWakeLock(){ try{ wakeLock && wakeLock.release(); }catch(e){} wakeLock = null; }
 document.addEventListener('visibilitychange', () => { if(building && document.visibilityState === 'visible') acquireWakeLock(); });
 
@@ -442,54 +599,56 @@ document.addEventListener('visibilitychange', () => { if(building && document.vi
 async function fetchToBlobURL(url, mimeType, onBytes){
   const resp = await fetch(url);
   if(!resp.ok) throw new Error(`HTTP ${resp.status} for ${url}`);
-  if(!resp.body || !onBytes){
-    return URL.createObjectURL(new Blob([await resp.arrayBuffer()], { type: mimeType }));
-  }
+  if(!resp.body || !onBytes) return URL.createObjectURL(new Blob([await resp.arrayBuffer()], { type: mimeType }));
   const reader = resp.body.getReader(); const chunks = []; let got = 0;
   for(;;){ const { done, value } = await reader.read(); if(done) break; chunks.push(value); got += value.length; onBytes(got); }
   return URL.createObjectURL(new Blob(chunks, { type: mimeType }));
 }
-
-async function ensureFFmpeg(){
-  if(ffmpegLoaded) return;
-  ffmpeg = new FFmpeg();
-  ffmpeg.on('log', ({ message }) => log(message));
+async function tryLoad(bases, mt){
   let lastErr = null;
-  for(const base of CORE_BASES){
+  for(const base of bases){
     try{
       setStatus('Downloading video engine (32 MB, first time only)…');
       const coreURL = await fetchToBlobURL(`${base}/ffmpeg-core.js`, 'text/javascript');
       const wasmURL = await fetchToBlobURL(`${base}/ffmpeg-core.wasm`, 'application/wasm',
-        got => { setStatus(`Downloading video engine (first time only)… ${fmtMB(got)}`); setProgress(got / (32.3*1048576) * 100); });
+        got => { setStatus(`Downloading video engine (first time only)… ${fmtMB(got)}`); setProgress(got / (32.5*1048576) * 100); });
+      const opts = { coreURL, wasmURL };
+      if(mt) opts.workerURL = await fetchToBlobURL(`${base}/ffmpeg-core.worker.js`, 'text/javascript');
       setStatus('Starting video engine…');
-      await ffmpeg.load({ coreURL, wasmURL });
-      ffmpegLoaded = true;
-      log('engine loaded from ' + base);
-      return;
+      ffmpeg = new FFmpeg();
+      ffmpeg.on('log', ({ message }) => log(message));
+      await Promise.race([ ffmpeg.load(opts), new Promise((_, rej) => setTimeout(() => rej(new Error('engine start timed out')), 60000)) ]);
+      log(`engine loaded (${mt ? 'multi-core' : 'single-core'}) from ${base}`);
+      return true;
     } catch(err){
       lastErr = err; log('engine source failed: ' + base + ' — ' + (err && err.message));
+      try{ ffmpeg && ffmpeg.terminate(); }catch(e){} ffmpeg = null;
     }
   }
-  throw new Error('Could not download the video engine (' + (lastErr && lastErr.message) + '). Check your connection and try again.');
+  throw lastErr || new Error('no engine source');
 }
-function resetFFmpeg(){
-  try{ ffmpeg && ffmpeg.terminate(); }catch(e){}
-  ffmpeg = null; ffmpegLoaded = false;
+async function ensureFFmpeg(){
+  if(ffmpegLoaded) return;
+  const wantMT = !!self.crossOriginIsolated;
+  try{
+    if(wantMT){ await tryLoad(CORE_MT, true); engineMode = 'mt'; }
+    else { await tryLoad(CORE_ST, false); engineMode = 'st'; }
+  } catch(err){
+    if(!wantMT) throw new Error('Could not download the video engine (' + (err && err.message) + '). Check your connection and try again.');
+    log('multi-core engine failed, falling back to single-core');
+    await tryLoad(CORE_ST, false); engineMode = 'st';
+  }
+  ffmpegLoaded = true;
+  $('engineNote').textContent = engineMode === 'mt' ? `Engine: multi-core (${threads} threads)` : 'Engine: single-core';
 }
+function resetFFmpeg(){ try{ ffmpeg && ffmpeg.terminate(); }catch(e){} ffmpeg = null; ffmpegLoaded = false; }
 
-/* ═══════════════════ HELPERS ═══════════════════ */
-function extOf(file, fallback){
-  const m = file.name.match(/\.([a-zA-Z0-9]+)$/);
-  return m ? m[1].toLowerCase() : fallback;
-}
-function makeEven(n){ return n % 2 === 0 ? n : n - 1; }
-
-// Probe a file already written to the ffmpeg FS: does it have an audio stream, and how long is it?
+// Probe a file already in the ffmpeg FS: audio stream? duration?
 async function probeInFFmpeg(name){
   const lines = [];
   const cap = ({ message }) => lines.push(message);
   ffmpeg.on('log', cap);
-  try{ await ffmpeg.exec(['-hide_banner', '-i', name]); }catch(e){} // exits non-zero by design (no output)
+  try{ await ffmpeg.exec(['-hide_banner', '-i', name]); }catch(e){}
   ffmpeg.off('log', cap);
   const hasAudio = lines.some(l => /Stream #\d+:\d+.*Audio:/.test(l));
   const hasVideo = lines.some(l => /Stream #\d+:\d+.*Video:/.test(l));
@@ -500,34 +659,61 @@ async function probeInFFmpeg(name){
   return { hasAudio, hasVideo, duration, unsupported };
 }
 
-async function makeCaptionPNG(text, W, H, position){
-  const canvas = document.createElement('canvas');
-  canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0,0,W,H);
-  const fontSize = Math.round(W * 0.06);
-  ctx.font = `800 ${fontSize}px -apple-system, "Helvetica Neue", Arial, sans-serif`;
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  const maxWidth = W * 0.86;
-  const words = text.split(/\s+/);
-  let lines = [], cur = '';
-  for(const w of words){
-    const test = cur ? cur + ' ' + w : w;
-    if(ctx.measureText(test).width > maxWidth && cur){ lines.push(cur); cur = w; } else cur = test;
+/* ═══════════════════ CANVAS ART: overlay (caption + watermark) and end card ═══════════════════ */
+const FONT = '-apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif';
+function drawWordmark(ctx, x, y, size, align){
+  // "PC" gold + "Tires" white, heavy weight, with a soft shadow so it reads on any footage
+  ctx.font = `800 ${size}px ${FONT}`; ctx.textBaseline = 'alphabetic';
+  const w1 = ctx.measureText(BRAND.name1).width, w2 = ctx.measureText(BRAND.name2).width, total = w1 + w2;
+  let sx = align === 'right' ? x - total : align === 'center' ? x - total/2 : x;
+  ctx.shadowColor = 'rgba(0,0,0,0.7)'; ctx.shadowBlur = size * 0.18; ctx.shadowOffsetY = size * 0.05;
+  ctx.textAlign = 'left';
+  ctx.fillStyle = BRAND.gold; ctx.fillText(BRAND.name1, sx, y);
+  ctx.fillStyle = '#ffffff'; ctx.fillText(BRAND.name2, sx + w1, y);
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+  return total;
+}
+async function makeOverlayPNG(text, W, H, position, watermark){
+  const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d'); ctx.clearRect(0,0,W,H);
+  if(watermark){
+    const size = Math.round(W * 0.045), m = Math.round(W * 0.035);
+    drawWordmark(ctx, W - m, m + size, size, 'right');
   }
-  if(cur) lines.push(cur);
-  const lh = fontSize * 1.3, totalH = lines.length * lh;
-  const startY = position === 'top' ? H * 0.12 + lh/2 : H * 0.86 - totalH + lh/2;
-  lines.forEach((line, i) => {
-    const y = startY + i * lh;
-    const tw = ctx.measureText(line).width;
-    const padX = fontSize * 0.45;
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.fillRect(W/2 - tw/2 - padX, y - lh/2, tw + padX*2, lh);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(line, W/2, y);
-  });
-  return new Promise(resolve => canvas.toBlob(blob => blob.arrayBuffer().then(buf => resolve(new Uint8Array(buf))), 'image/png'));
+  if(text){
+    const fontSize = Math.round(W * 0.06);
+    ctx.font = `800 ${fontSize}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const maxWidth = W * 0.86, words = text.split(/\s+/); let lines = [], cur = '';
+    for(const w of words){ const t = cur ? cur + ' ' + w : w; if(ctx.measureText(t).width > maxWidth && cur){ lines.push(cur); cur = w; } else cur = t; }
+    if(cur) lines.push(cur);
+    const lh = fontSize * 1.3, totalH = lines.length * lh;
+    const startY = position === 'top' ? H * 0.14 + lh/2 : H * 0.86 - totalH + lh/2;
+    lines.forEach((line, i) => {
+      const y = startY + i * lh, tw = ctx.measureText(line).width, padX = fontSize * 0.45;
+      ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(W/2 - tw/2 - padX, y - lh/2, tw + padX*2, lh);
+      ctx.fillStyle = '#ffffff'; ctx.fillText(line, W/2, y);
+    });
+  }
+  return new Promise(resolve => canvas.toBlob(b => b.arrayBuffer().then(buf => resolve(new Uint8Array(buf))), 'image/png'));
+}
+async function makeEndCard(W, H){
+  const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#141414'; ctx.fillRect(0,0,W,H);
+  const big = Math.round(W * 0.17);
+  const cy = H * 0.44;
+  drawWordmark(ctx, W/2, cy, big, 'center');
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.font = `600 ${Math.round(W*0.055)}px ${FONT}`; ctx.fillStyle = BRAND.gold;
+  ctx.fillText(BRAND.sub, W/2, cy + big * 0.55);
+  ctx.fillStyle = BRAND.gold; ctx.fillRect(W/2 - W*0.12, cy + big*0.75, W*0.24, Math.max(2, Math.round(W*0.004)));
+  ctx.font = `500 ${Math.round(W*0.04)}px ${FONT}`; ctx.fillStyle = '#d8d6d2';
+  ctx.fillText(BRAND.line1, W/2, cy + big*0.75 + W*0.09);
+  ctx.font = `800 ${Math.round(W*0.075)}px ${FONT}`; ctx.fillStyle = '#ffffff';
+  ctx.fillText(BRAND.phone, W/2, cy + big*0.75 + W*0.20);
+  ctx.font = `600 ${Math.round(W*0.05)}px ${FONT}`; ctx.fillStyle = BRAND.gold;
+  ctx.fillText(BRAND.site, W/2, cy + big*0.75 + W*0.28);
+  return new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
 }
 
 /* ═══════════════════ BUILD ═══════════════════ */
@@ -539,13 +725,13 @@ async function build(){
   buildBtn.disabled = true; buildBtn.textContent = 'Working…';
   $('progressWrap').style.display = 'block';
   $('result').style.display = 'none';
-  if(lastResultURL){ URL.revokeObjectURL(lastResultURL); lastResultURL = null; lastResultBlob = null; }
+  if(lastResultURL){ URL.revokeObjectURL(lastResultURL); lastResultURL = null; }
   logLines = []; $('logBox').textContent = '';
   setProgress(0);
   acquireWakeLock();
-  $('keepOpen').style.display = 'block';
+  $('keepOpen').style.display = engineMode === 'mt' && !/iPhone|iPad|Android/i.test(navigator.userAgent) ? 'none' : 'block';
 
-  const written = [];      // files to delete from the ffmpeg FS afterwards
+  const written = [], mounted = [];
   const t0 = Date.now();
 
   try{
@@ -556,102 +742,158 @@ async function build(){
     const fit      = document.querySelector('input[name=fit]:checked').value;
     const quality  = document.querySelector('input[name=quality]:checked').value;
     const audioMode= document.querySelector('input[name=audioMode]:checked').value;
+    let transition = document.querySelector('input[name=transition]:checked').value;
     const captionText = $('captionText').value.trim();
     const capPos   = document.querySelector('input[name=capPos]:checked').value;
     const musicVol = $('musicVol').value / 100;
+    const watermark = $('optWatermark').checked;
+    const endcard   = $('optEndcard').checked;
 
-    if(audioMode === 'voiceover' && !voFile) throw new Error('Voiceover is selected but no voiceover file was added.');
+    if(audioMode === 'voiceover' && !voFile) throw new Error('Voiceover is selected but nothing was recorded or picked.');
 
     // ── output size ──
     const maxEdge = quality === 'hd' ? 1920 : 1280;
     let W, H;
     if(aspect === 'vertical'){ if(quality === 'hd'){ W = 1080; H = 1920; } else { W = 720; H = 1280; } }
     else {
-      const c0 = clips[0];
-      let w = c0.w || 1280, h = c0.h || 720;
+      const c0 = clips[0]; let w = c0.w || 1280, h = c0.h || 720;
       if(Math.max(w,h) > maxEdge){ const s = maxEdge / Math.max(w,h); w = Math.round(w*s); h = Math.round(h*s); }
       W = makeEven(w); H = makeEven(h);
     }
+    const frameFor = (w, h) => (aspect === 'vertical' && fit === 'fill')
+      ? `scale=w=${w}:h=${h}:force_original_aspect_ratio=increase,crop=${w}:${h}`
+      : `scale=w=${w}:h=${h}:force_original_aspect_ratio=decrease,pad=${w}:${h}:(ow-iw)/2:(oh-ih)/2:color=black`;
+    const frame = frameFor(W, H);
+    const bigW = makeEven(Math.round(W * 1.25)), bigH = makeEven(Math.round(H * 1.25));   // Ken Burns source size
 
-    // ── write clips into the engine one at a time, probing each ──
-    const args = [];
-    const meta = [];
-    let totalDur = 0;
-    for(let i = 0; i < clips.length; i++){
-      setStatus(`Loading clip ${i+1} of ${clips.length}…`);
-      const c = clips[i];
+    // ── the list to render: user clips + optional end card ──
+    const items = clips.slice();
+    if(endcard) items.push({ kind: 'image', synthetic: true, blob: await makeEndCard(W, H), duration: ENDCARD_SECS, kb: false, file: { name: 'end card', size: 0 } });
+
+    // ── write inputs into the engine one at a time ──
+    const args = [], meta = [];
+    for(let i = 0; i < items.length; i++){
+      const c = items[i];
+      setStatus(`Loading ${c.kind === 'image' ? 'photo' : 'clip'} ${i+1} of ${items.length}…`);
       if(c.kind === 'image'){
-        if(c.bad) throw new Error(`Clip ${i+1} (${c.file.name}) is a photo this phone can't decode. Save it as JPEG and try again.`);
+        if(c.bad) throw new Error(`Clip ${i+1} (${c.file.name}) is a photo this device can't decode. Save it as JPEG and try again.`);
         const name = `clip${i}.jpg`;
-        const p = await decodePhoto(c.file, Math.max(W, H));
+        const dur = c.duration || PHOTO_DEFAULT_SECS;
+        const p = await decodePhoto(c.synthetic ? c.blob : c.file, c.kb ? Math.max(bigW, bigH) : Math.max(W, H));
         await ffmpeg.writeFile(name, new Uint8Array(await p.blob.arrayBuffer()));
         written.push(name);
-        const dur = c.duration || PHOTO_DEFAULT_SECS;
-        meta.push({ name, hasAudio: false, duration: dur });
-        totalDur += dur;
-        args.push('-loop', '1', '-framerate', '30', '-t', dur.toFixed(3), '-i', name);   // still image held for dur seconds
-        log(`clip${i}: photo ${p.w}×${p.h}, ${dur}s`);
+        meta.push({ name, kind: 'image', hasAudio: false, duration: dur, kb: !!c.kb });
+        if(c.kb) args.push('-framerate', '30', '-i', name);                                  // single frame; zoompan makes the motion
+        else     args.push('-loop', '1', '-framerate', '30', '-t', dur.toFixed(3), '-i', name);
+        log(`clip${i}: photo ${p.w}×${p.h}, ${dur}s${c.kb ? ', slow zoom' : ''}`);
         continue;
       }
-      const name = `clip${i}.${extOf(c.file, 'mp4')}`;
-      await ffmpeg.writeFile(name, new Uint8Array(await c.file.arrayBuffer()));
-      written.push(name);
+      // Mount the file instead of copying it into memory: the engine reads only the bytes it needs,
+      // so a 20-minute phone video trimmed to 15 s costs 15 s of decoding, not 3 GB of RAM.
+      const dir = `/in${i}`;
+      await ffmpeg.createDir(dir);
+      await ffmpeg.mount('WORKERFS', { files: [c.file] }, dir);
+      mounted.push(dir);
+      const name = `${dir}/${c.file.name}`;
       const p = await probeInFFmpeg(name);
       if(p.unsupported || !p.hasVideo) throw new Error(`Clip ${i+1} (${c.file.name}) could not be read as a video.`);
-      const dur = isFinite(p.duration) ? p.duration : (isFinite(c.duration) ? c.duration : 5);
-      meta.push({ name, hasAudio: p.hasAudio, duration: dur });
-      totalDur += dur;
+      const fullDur = isFinite(p.duration) ? p.duration : (isFinite(c.duration) ? c.duration : 5);
+      const start = Math.max(0, Math.min(c.trimStart || 0, fullDur - 0.5));
+      const end = isFinite(c.trimEnd) ? Math.min(c.trimEnd, fullDur) : fullDur;
+      const dur = Math.max(0.5, end - start);
+      meta.push({ name, kind: 'video', hasAudio: p.hasAudio, duration: dur });
+      if(start > 0.01 || end < fullDur - 0.01) args.push('-ss', start.toFixed(3), '-t', dur.toFixed(3));
       args.push('-i', name);
-      log(`clip${i}: ${dur.toFixed(2)}s, audio=${p.hasAudio}`);
+      log(`clip${i}: ${dur.toFixed(2)}s${start ? ' from ' + start.toFixed(1) + 's' : ''}, audio=${p.hasAudio}`);
     }
-    let nextInputIdx = clips.length;
+    const n = items.length;
+    let nextInputIdx = n;
 
-    // ── video chain: fps first (drops frames before the expensive scale), then scale, then pad or crop ──
+    // dissolves need every segment longer than the crossfade; otherwise drop to fade-to-black
+    if(transition === 'dissolve' && n > 1 && meta.some(m => m.duration < XFADE * 2 + 0.2)){ transition = 'fade'; log('a clip is too short for a dissolve — using fade to black'); }
+    if(n === 1) transition = 'none';
+    const totalDur = meta.reduce((s, m) => s + m.duration, 0) - (transition === 'dissolve' ? (n - 1) * XFADE : 0);
+
+    // ── video chain per segment ──
     const filters = [];
-    const frame = (aspect === 'vertical' && fit === 'fill')
-      ? `scale=w=${W}:h=${H}:force_original_aspect_ratio=increase,crop=${W}:${H}`
-      : `scale=w=${W}:h=${H}:force_original_aspect_ratio=decrease,pad=${W}:${H}:(ow-iw)/2:(oh-ih)/2:color=black`;
-    for(let i = 0; i < clips.length; i++){
-      filters.push(`[${i}:v]fps=30,${frame},setsar=1,format=yuv420p[v${i}]`);
+    meta.forEach((m, i) => {
+      let chain;
+      if(m.kind === 'image' && m.kb){
+        const N = Math.round(m.duration * 30);
+        const z = (i % 2 === 0) ? `1+0.12*on/${N}` : `1.12-0.12*on/${N}`;
+        chain = `${frameFor(bigW, bigH)},setsar=1,zoompan=z='${z}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${N}:s=${W}x${H}:fps=30`;
+      } else {
+        chain = `fps=30,${frame},setsar=1`;
+      }
+      if(transition === 'fade'){
+        chain += `,fade=t=in:st=0:d=${FADE},fade=t=out:st=${Math.max(0, m.duration - FADE).toFixed(3)}:d=${FADE}`;
+      }
+      filters.push(`[${i}:v]${chain},format=yuv420p[v${i}]`);
+    });
+    let vlabel;
+    if(n === 1) vlabel = '[v0]';
+    else if(transition === 'dissolve'){
+      let prev = '[v0]', off = 0;
+      for(let k = 1; k < n; k++){
+        off += meta[k-1].duration - XFADE;
+        const out = k === n-1 ? '[vcat]' : `[vx${k}]`;
+        filters.push(`${prev}[v${k}]xfade=transition=fade:duration=${XFADE}:offset=${off.toFixed(3)}${out}`);
+        prev = out;
+      }
+      vlabel = '[vcat]';
+    } else {
+      filters.push(meta.map((_, i) => `[v${i}]`).join('') + `concat=n=${n}:v=1:a=0[vcat]`);
+      vlabel = '[vcat]';
     }
-    filters.push(clips.map((_, i) => `[v${i}]`).join('') + `concat=n=${clips.length}:v=1:a=0[vcat]`);
 
-    let videoOutLabel = '[vcat]';
-    if(captionText){
+    // ── overlay: caption + watermark in one PNG ──
+    if(captionText || watermark){
       setStatus('Drawing caption…');
-      await ffmpeg.writeFile('caption.png', await makeCaptionPNG(captionText, W, H, capPos));
-      written.push('caption.png');
+      await ffmpeg.writeFile('overlay.png', await makeOverlayPNG(captionText, W, H, capPos, watermark));
+      written.push('overlay.png');
       const idx = nextInputIdx++;
-      args.push('-loop', '1', '-i', 'caption.png');
-      filters.push(`[vcat][${idx}:v]overlay=0:0:shortest=1[vout]`);
-      videoOutLabel = '[vout]';
+      args.push('-loop', '1', '-i', 'overlay.png');
+      // keep the caption/watermark off the end card
+      const hideAt = endcard ? (totalDur - ENDCARD_SECS + (transition === 'dissolve' ? XFADE/2 : 0)) : null;
+      filters.push(`${vlabel}[${idx}:v]overlay=0:0:shortest=1${hideAt ? `:enable='lt(t,${hideAt.toFixed(3)})'` : ''}[vout]`);
+      vlabel = '[vout]';
     }
 
     // ── primary audio ──
     const AF = 'aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo';
-    let primaryLabel = '[aprim]';
+    let alabel = '[aprim]';
     if(audioMode === 'voiceover'){
       const voName = `voice.${extOf(voFile, 'm4a')}`;
       await ffmpeg.writeFile(voName, new Uint8Array(await voFile.arrayBuffer()));
       written.push(voName);
       const idx = nextInputIdx++;
       args.push('-i', voName);
-      // apad: if the voiceover is shorter than the video, pad with silence instead of ending early
-      filters.push(`[${idx}:a]${AF},apad[aprim]`);
+      filters.push(`[${idx}:a]${AF},apad[aprim]`);           // pad with silence if shorter than the video
     } else if(audioMode === 'mute'){
       filters.push(`anullsrc=r=48000:cl=stereo[aprim]`);
     } else {
-      // original sound: clips with no audio track get a silent segment of the same length
-      const segs = [];
       meta.forEach((m, i) => {
-        if(m.hasAudio){ filters.push(`[${i}:a]${AF}[a${i}]`); }
-        else { filters.push(`anullsrc=r=48000:cl=stereo,atrim=0:${m.duration.toFixed(3)},asetpts=PTS-STARTPTS[a${i}]`); }
-        segs.push(`[a${i}]`);
+        if(m.hasAudio){
+          let ch = `[${i}:a]${AF},atrim=0:${m.duration.toFixed(3)},asetpts=PTS-STARTPTS`;
+          if(transition === 'fade') ch += `,afade=t=in:d=0.2,afade=t=out:st=${Math.max(0, m.duration - 0.2).toFixed(3)}:d=0.2`;
+          filters.push(`${ch}[a${i}]`);
+        } else {
+          filters.push(`anullsrc=r=48000:cl=stereo,atrim=0:${m.duration.toFixed(3)},asetpts=PTS-STARTPTS[a${i}]`);
+        }
       });
-      filters.push(segs.join('') + `concat=n=${clips.length}:v=0:a=1,apad[aprim]`);
+      if(n === 1) filters.push(`[a0]apad[aprim]`);
+      else if(transition === 'dissolve'){
+        let prev = '[a0]';
+        for(let k = 1; k < n; k++){
+          const out = k === n-1 ? '[acat]' : `[ax${k}]`;
+          filters.push(`${prev}[a${k}]acrossfade=d=${XFADE}:c1=tri:c2=tri${out}`);
+          prev = out;
+        }
+        filters.push(`[acat]apad[aprim]`);
+      } else {
+        filters.push(meta.map((_, i) => `[a${i}]`).join('') + `concat=n=${n}:v=0:a=1,apad[aprim]`);
+      }
     }
-
-    let audioOutLabel = primaryLabel;
     if(musicFile){
       const musicName = `music.${extOf(musicFile, 'mp3')}`;
       await ffmpeg.writeFile(musicName, new Uint8Array(await musicFile.arrayBuffer()));
@@ -659,28 +901,28 @@ async function build(){
       const idx = nextInputIdx++;
       args.push('-stream_loop', '-1', '-i', musicName);
       filters.push(`[${idx}:a]${AF},volume=${musicVol.toFixed(2)}[amus]`);
-      filters.push(`${primaryLabel}[amus]amix=inputs=2:duration=first:normalize=0[afinal]`);
-      audioOutLabel = '[afinal]';
+      filters.push(`${alabel}[amus]amix=inputs=2:duration=first:normalize=0[amix]`);
+      alabel = '[amix]';
+      if(totalDur > 3){ filters.push(`${alabel}afade=t=out:st=${(totalDur - 1.5).toFixed(3)}:d=1.5[afinal]`); alabel = '[afinal]'; }
     }
 
+    if(engineMode === 'mt') args.unshift('-filter_complex_threads', '1');   // threaded filtergraphs deadlock in the wasm build
     args.push('-filter_complex', filters.join(';'));
-    args.push('-map', videoOutLabel, '-map', audioOutLabel);
+    args.push('-map', vlabel, '-map', alabel);
     args.push('-t', totalDur.toFixed(3), '-shortest');
-    args.push('-c:v', 'libx264', '-preset', 'ultrafast', '-crf', quality === 'hd' ? '21' : '22',
+    args.push('-c:v', 'libx264', '-preset', engineMode === 'mt' ? 'veryfast' : 'ultrafast', '-crf', quality === 'hd' ? '21' : '22',
               '-maxrate', quality === 'hd' ? '10M' : '6M', '-bufsize', quality === 'hd' ? '20M' : '12M', '-pix_fmt', 'yuv420p', '-r', '30');
+    if(engineMode === 'mt') args.push('-threads', String(threads));
     args.push('-c:a', 'aac', '-b:a', '160k', '-ar', '48000');
     args.push('-movflags', '+faststart');
     args.push('-y', 'output.mp4');
     written.push('output.mp4');
 
-    // progress from the engine's own timestamp, against the known total length
     const tRender = Date.now();
     const onProgress = ({ time }) => {
-      const done = (time || 0) / 1e6;
-      const frac = Math.max(0, Math.min(1, done / totalDur));
+      const done = (time || 0) / 1e6, frac = Math.max(0, Math.min(1, done / totalDur));
       setProgress(frac * 100);
-      const elapsed = (Date.now() - tRender) / 1000;
-      const eta = frac > 0.03 ? elapsed / frac - elapsed : NaN;
+      const elapsed = (Date.now() - tRender) / 1000, eta = frac > 0.03 ? elapsed / frac - elapsed : NaN;
       setStatus(`Rendering… ${Math.round(frac*100)}%` + (isFinite(eta) ? ` — about ${fmtSec(eta)} left` : ''));
     };
     ffmpeg.on('progress', onProgress);
@@ -693,7 +935,6 @@ async function build(){
     const data = await ffmpeg.readFile('output.mp4');
     if(!data || !data.length) throw new Error('Output was empty.');
     const blob = new Blob([data.buffer], { type: 'video/mp4' });
-    lastResultBlob = blob;
     lastResultURL = URL.createObjectURL(blob);
     showResult(blob, lastResultURL, (Date.now() - t0) / 1000);
     setProgress(100);
@@ -702,11 +943,14 @@ async function build(){
     console.error(err);
     const msg = (err && err.message) ? err.message : String(err);
     const oom = /memory|allocat|abort|RuntimeError/i.test(msg);
-    setStatus((oom ? 'Ran out of memory. Use fewer / shorter clips, or Fast quality. ' : 'Something went wrong. ') + msg, true);
+    setStatus((oom ? 'Ran out of memory. Trim clips, use fewer of them, or build on the laptop. ' : 'Something went wrong. ') + msg, true);
     log('ERROR: ' + msg);
-    resetFFmpeg();           // a wedged worker never recovers; reload it on the next build
+    resetFFmpeg();
   } finally {
-    if(ffmpegLoaded){ for(const f of written){ try{ await ffmpeg.deleteFile(f); }catch(e){} } }
+    if(ffmpegLoaded){
+      for(const f of written){ try{ await ffmpeg.deleteFile(f); }catch(e){} }
+      for(const d of mounted){ try{ await ffmpeg.unmount(d); await ffmpeg.deleteDir(d); }catch(e){} }
+    }
     releaseWakeLock();
     $('keepOpen').style.display = 'none';
     building = false;
@@ -729,7 +973,7 @@ function showResult(blob, url, secs){
   if(canShare){
     result.querySelector('[data-share]').addEventListener('click', async () => {
       try{ await navigator.share({ files: [file], title: 'PC Tires reel' }); }
-      catch(e){ if(e && e.name !== 'AbortError') alert('Sharing failed: ' + e.message + '\nUse the Download button instead.'); }
+      catch(e){ if(e && e.name !== 'AbortError') setStatus('Sharing failed: ' + e.message + ' — use the Download button instead.', true); }
     });
   }
   result.scrollIntoView({ behavior: 'smooth', block: 'center' });
