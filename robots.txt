@@ -7,6 +7,9 @@ Disallow: /tech.html
 Disallow: /tech
 Disallow: /tech-log.html
 Disallow: /tech-log
+Disallow: /video.html
+Disallow: /video
+Disallow: /video-lib/
 Disallow: /pay.html
 Disallow: /thank-you.html
 Disallow: /functions/
