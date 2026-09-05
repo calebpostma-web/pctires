@@ -5730,22 +5730,23 @@ async function finishOrder() {
 //  CALENDAR + SERVICE MENU
 // ─────────────────────────────────────────────────
 const SERVICES = [
-  { id:'mount4',   label:'4-Tire Mount & Balance',         duration:60, price:25, unit:'per tire', desc:'Mount, balance, TPMS reset & old tire disposal (tires purchased from PC Tires)' },
+  { id:'mount4',   label:'4-Tire Mount & Balance',         duration:60, price:25, unit:'per tire', priceLabel:'from $25/tire', desc:'Mount, balance, TPMS reset & old tire disposal (tires purchased from PC Tires). Priced by rim size — 17 inch and up costs more. Your cart shows the exact amount.' },
   { id:'swap',     label:'Seasonal Swap (pre-mounted set)', duration:60, price:15, unit:'per tire', desc:'Swap your stored set — no mounting needed' },
-  { id:'patch',    label:'Flat Repair — Proper Patch',     duration:45, price:45, unit:'flat',     desc:'Tire dismounted, internally patched, remounted, balanced, reinstalled. No plug repairs.' },
+  { id:'patch',    label:'Flat Repair — Proper Patch',     duration:45, price:45, unit:'flat',     desc:'Tire dismounted, internally patched, remounted, balanced, reinstalled. Patch only — plugs are for tires already being replaced.' },
   { id:'bead',     label:'Bead Leak Repair',               duration:60, price:55, unit:'flat',     desc:'Dismount, wire-wheel the bead seat, apply sealer, remount, balance & leak-test' },
   { id:'valve',    label:'Valve Stem Replacement (rubber)', duration:45, price:25, unit:'per stem', desc:'Replace faulty or leaking rubber valve stems' },
   { id:'tpmsvalve',label:'TPMS Valve Service Kit',         duration:45, price:40, unit:'flat',     desc:'Replace leaking TPMS valve assembly (grommet, core, seal). Reuses your existing sensor.' },
-  { id:'tpms',     label:'TPMS Sensor Relearn',            duration:30, price:20, unit:'flat',     desc:'Relearn sensors after tire or battery change' },
-  { id:'single',   label:'Single Tire Mount & Balance',    duration:30, price:25, unit:'flat',     desc:'Mount and balance one tire (purchased from PC Tires)' },
+  { id:'tpms',     label:'TPMS Sensor Relearn',            duration:30, price:30, unit:'flat',     desc:'Relearn sensors after tire or battery change' },
+  { id:'single',   label:'Single Tire Mount & Balance',    duration:30, price:25, unit:'flat',     priceLabel:'from $25', desc:'Mount and balance one tire (purchased from PC Tires). Priced by rim size — 17 inch and up costs more.' },
 ];
 let selectedService = null;
 function buildServiceMenu() {
+  applyServicePricing();
   const menu = document.getElementById('serviceMenu'); if (!menu) return;
   menu.innerHTML = SERVICES.map(s => `
     <div onclick="selectService('${s.id}')" style="display:flex;align-items:center;gap:14px;padding:13px 14px;background:var(--card);border:2px solid ${selectedService?.id===s.id?'var(--yellow)':'var(--border)'};border-radius:4px;cursor:pointer;transition:all .2s">
       <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--white);margin-bottom:2px">${s.label}</div><div style="font-size:12px;color:var(--muted)">${s.desc}</div></div>
-      <div style="text-align:right;flex-shrink:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:${selectedService?.id===s.id?'var(--yellow)':'var(--white)'}">$${s.price}<span style="font-size:12px;font-weight:400;color:var(--muted)"> ${s.unit}</span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">⏱ ${s.duration} min</div></div>
+      <div style="text-align:right;flex-shrink:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:${selectedService?.id===s.id?'var(--yellow)':'var(--white)'}">${s.priceLabel ? s.priceLabel : '$'+s.price}<span style="font-size:12px;font-weight:400;color:var(--muted)"> ${s.priceLabel ? '' : s.unit}</span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">⏱ ${s.duration} min</div></div>
     </div>`).join('');
 }
 function selectService(id) {
@@ -5787,13 +5788,40 @@ function cartFullyLocal() {
 const FIRST_DAY_EARLIEST_HOUR    = 10;  // on the first eligible day, no slots before 10 AM
 
 // Add N business days (Mon–Fri only) to a date.
+// Saturday we open later — no slots before this hour on a Saturday.
+const SATURDAY_EARLIEST_HOUR = 10;
+
+// Ontario statutory holidays. TDG does not ship and we are not open, so these
+// never count as a business day for tire-arrival lead time and are not bookable.
+// Extend this list each year.
+const SHOP_HOLIDAYS = new Set([
+  '2026-09-07', // Labour Day
+  '2026-10-12', // Thanksgiving
+  '2026-12-25', // Christmas Day
+  '2026-12-26', // Boxing Day
+  '2027-01-01', // New Year's Day
+  '2027-02-15', // Family Day
+  '2027-03-26', // Good Friday
+  '2027-05-24', // Victoria Day
+  '2027-07-01', // Canada Day
+  '2027-08-02', // Civic Holiday
+  '2027-09-06', // Labour Day
+  '2027-10-11', // Thanksgiving
+  '2027-12-25', // Christmas Day
+  '2027-12-26', // Boxing Day
+]);
+function ymdKey(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function isHoliday(d) { return SHOP_HOLIDAYS.has(ymdKey(d)); }
+
 function addBusinessDays(date, n) {
   const d = new Date(date);
   let added = 0;
   while (added < n) {
     d.setDate(d.getDate() + 1);
     const dow = d.getDay();
-    if (dow !== 0 && dow !== 6) added++; // skip Sun(0) and Sat(6)
+    if (dow !== 0 && dow !== 6 && !isHoliday(d)) added++; // skip Sun(0), Sat(6) and stat holidays
   }
   return d;
 }
@@ -5807,9 +5835,9 @@ function getEarliestInstallDate() {
   //   - past 1 PM, missed todays last truck
    //   - weekend, TDG isn't shipping
   let startFrom = new Date(today);
-  if (pastCutoff || dow === 0 || dow === 6) {
+  if (pastCutoff || dow === 0 || dow === 6 || isHoliday(today)) {
     do { startFrom.setDate(startFrom.getDate() + 1); }
-    while (startFrom.getDay() === 0 || startFrom.getDay() === 6);
+    while (startFrom.getDay() === 0 || startFrom.getDay() === 6 || isHoliday(startFrom));
   }
   const leadDays = cartFullyLocal() ? LOCAL_LEAD_BUSINESS_DAYS : NONLOCAL_LEAD_BUSINESS_DAYS;
   return addBusinessDays(startFrom, leadDays);
@@ -5851,7 +5879,7 @@ function buildCal() {
   let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
   for (let d = 1; d <= days; d++) {
-    const dt = new Date(calY, calMo, d), past = dt < minDate, wknd = (dt.getDay() === 0 || dt.getDay() === 6), dis = past || wknd;
+    const dt = new Date(calY, calMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt);
     const dateStr = `${MONTHS[calMo]} ${d}, ${calY}`, isSel = selDate === dateStr;
     html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="pickDate('${dateStr}')"`:''}>${d}</div>`;
   }
@@ -5887,9 +5915,11 @@ function buildTimes() {
   document.getElementById('timeGrid').innerHTML = slots.map(t => {
     const isBooked = booked.includes(t);
     const tooEarly = isFirstDay && slotLabelToHour24(t) < FIRST_DAY_EARLIEST_HOUR;
-    const disabled = isBooked || tooEarly;
+    const satEarly = selDateObj && selDateObj.getDay() === 6 && slotLabelToHour24(t) < SATURDAY_EARLIEST_HOUR;
+    const disabled = isBooked || tooEarly || satEarly;
     const note     = isBooked ? '<br><small>Booked</small>'
-                              : (tooEarly ? '<br><small>Tires arriving</small>' : '');
+                              : (tooEarly ? '<br><small>Tires arriving</small>'
+                              : (satEarly ? '<br><small>Sat opens 10</small>' : ''));
     return `<div class="time-slot${disabled?' bkd':''}${selTime===t?' sel':''}" ${!disabled?`onclick="pickTime('${t}')"`:''}>${t}${note}</div>`;
   }).join('');
 }
@@ -7112,7 +7142,7 @@ const BOOK_SERVICES = [
   { id:'tpms',      icon:'📡', name:'TPMS Relearn',                   price:'$30',   unit:'flat',     duration:30,  desc:'Relearn your TPMS sensors after a tire change, rotation, or battery replacement.' },
   { id:'mountnew',  icon:'⚙️', name:'Install Tires Purchased Here',   price:'$25',   unit:'per tire', duration:60,  desc:'Mount, balance, TPMS reset, and disposal of old tires — included pricing for tires bought from PC Tires.' },
   { id:'mountown',  icon:'🛠️', name:'Customer-Supplied Tire Install',  price:'$30',   unit:'per tire', duration:60,  desc:'You bring the tires, we install them. Mount, balance, TPMS reset, and disposal of old tires included. Subject to inspection — see disclaimer below.' },
-  { id:'patch',     icon:'🩹', name:'Flat Repair — Proper Patch',  price:'$45',   unit:'flat',     duration:45,  desc:'Tire dismounted, internally patched, remounted, balanced, and reinstalled. We do not offer plug repairs — patches are the safe, long-term fix.' },
+  { id:'patch',     icon:'🩹', name:'Flat Repair — Proper Patch',  price:'$45',   unit:'flat',     duration:45,  desc:'Tire dismounted, internally patched, remounted, balanced, and reinstalled. If the tire is staying on the road it gets a patch — we only plug a tire that is already being replaced.' },
   { id:'bead',      icon:'💧', name:'Bead Leak Repair',                price:'$55',   unit:'flat',     duration:60,  desc:'Tire dismounted, bead seat cleaned with wire wheel, sealer applied, remounted, balanced, and leak-tested. Severely corroded wheels may require replacement.' },
   { id:'valve',     icon:'🔩', name:'Valve Stem Replacement (rubber)', price:'$25',   unit:'per stem', duration:30,  desc:'Replace faulty, leaking, or corroded rubber valve stems. Tire dismounted and rebalanced.' },
   { id:'tpmsvalve', icon:'📡', name:'TPMS Valve Service Kit',          price:'$40',   unit:'flat',     duration:45,  desc:'Replace leaking TPMS valve assembly (grommet, core, seal) — reuses your existing sensor. If sensor needs replacing, add $60/sensor (parts + labour).' },
@@ -7143,6 +7173,19 @@ function applyServicePricing() {
     else { s.priceLargeNum = null; }
     s.ladderNum = p.ladder || null;
   });
+  // Checkout's SERVICES list reads from service-pricing.js too, so prices cannot
+  // drift between the booking section and checkout. SERVICES stores price as a
+  // number. mount4/single are skipped on purpose: install for purchased tires is
+  // billed off TDG.INSTALL_LADDER in the cart, not off this menu.
+  if (typeof SERVICES !== 'undefined') {
+    SERVICES.forEach(s => {
+      if (s.id === 'mount4' || s.id === 'single') return;
+      const p = SERVICE_PRICING[s.id];
+      if (!p) return;
+      s.price = p.free ? 0 : p.price;
+      s.unit  = p.unit;
+    });
+  }
   _pricingApplied = true;
 }
 
@@ -7264,7 +7307,7 @@ function buildSvcCal() {
   let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
   for (let d = 1; d <= days; d++) {
-    const dt = new Date(svcCalY, svcCalMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun;
+    const dt = new Date(svcCalY, svcCalMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt);
     const dateStr = `${MONTHS[svcCalMo]} ${d}, ${svcCalY}`, isSel = svcSelDate === dateStr;
     html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="svcPickDate('${dateStr}')"`:''}>${d}</div>`;
   }
@@ -7289,9 +7332,12 @@ function buildSvcTimes() {
     if (ap === 'AM' && h === 12) h = 0;
     return h * 60 + min;
   };
+  const svcDateObj = svcSelDate ? new Date(svcSelDate) : null;
+  const svcIsSat = svcDateObj && svcDateObj.getDay() === 6;
   document.getElementById('svcTimeGrid').innerHTML = slots.map(t => {
     const passed = isToday && slotMin(t) <= nowMin;
     if (passed) return `<div class="time-slot bkd" title="Already passed">${t}</div>`;
+    if (svcIsSat && slotMin(t) < SATURDAY_EARLIEST_HOUR * 60) return `<div class="time-slot bkd" title="Saturday opens at 10 AM">${t}</div>`;
     return `<div class="time-slot${svcSelTime===t?' sel':''}" onclick="svcPickTime('${t}')">${t}</div>`;
   }).join('');
 }
