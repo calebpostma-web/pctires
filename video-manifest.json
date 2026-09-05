@@ -1,0 +1,10 @@
+{
+  "name": "PC Tires Reel Builder",
+  "short_name": "Reel Builder",
+  "start_url": "/video",
+  "scope": "/video",
+  "display": "standalone",
+  "background_color": "#17181a",
+  "theme_color": "#17181a",
+  "icons": [{ "src": "/pctires-logo-192.png", "sizes": "192x192", "type": "image/png" }]
+}
