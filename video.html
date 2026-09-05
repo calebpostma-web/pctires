@@ -15,9 +15,10 @@
 <!-- ffmpeg.wasm loader + its worker chunk are self-hosted in /video-lib/ (a Web Worker must be
      same-origin, so they cannot come from a CDN). The 32 MB engine (ffmpeg-core / core-mt) is too big
      for Cloudflare Pages and is fetched from a CDN at build time — see ensureFFmpeg(). The multi-core
-     engine needs the COOP/COEP headers set for /video in _headers; without them it falls back to
-     the single-core engine automatically. -->
-<script src="/video-lib/ffmpeg.js"></script>
+     engine needs the COOP/COEP headers set for /video and /video-lib/* in _headers; without them it falls back to the single-core
+     engine automatically. Files live under /video-lib/v1/ — bump the folder if they ever change,
+     so Cloudflare's edge cache can't serve a stale copy with old headers. -->
+<script src="/video-lib/v1/ffmpeg.js"></script>
 <style>
   :root{
     --bg: #17181a; --panel: #1f2124; --panel-2: #26282c; --line: #34363a;
@@ -310,6 +311,7 @@ const $ = id => document.getElementById(id);
 const clipInput = $('clipInput'), dropClips = $('dropClips'), clipList = $('clipList'), buildBtn = $('buildBtn');
 const threads = Math.max(1, Math.min(16, navigator.hardwareConcurrency || 2));
 $('engineNote').textContent = self.crossOriginIsolated ? `Engine: multi-core (${threads} threads available)` : 'Engine: single-core';
+if(self.crossOriginIsolated) workerHasCOEP().then(ok => { if(!ok) $('engineNote').textContent = 'Engine: blocked — helper files served without the required header (purge Cloudflare cache)'; });
 
 /* ═══════════════════ SETTINGS MEMORY ═══════════════════ */
 const SETTINGS_KEY = 'rb_settings';
@@ -617,19 +619,30 @@ async function tryLoad(bases, mt){
       setStatus('Starting video engine…');
       ffmpeg = new FFmpeg();
       ffmpeg.on('log', ({ message }) => log(message));
-      await Promise.race([ ffmpeg.load(opts), new Promise((_, rej) => setTimeout(() => rej(new Error('engine start timed out')), 60000)) ]);
+      await Promise.race([ ffmpeg.load(opts), new Promise((_, rej) => setTimeout(() => rej(new Error('engine start timed out')), 30000)) ]);
       log(`engine loaded (${mt ? 'multi-core' : 'single-core'}) from ${base}`);
       return true;
     } catch(err){
       lastErr = err; log('engine source failed: ' + base + ' — ' + (err && err.message));
       try{ ffmpeg && ffmpeg.terminate(); }catch(e){} ffmpeg = null;
+      if(/timed out/.test(String(err && err.message))) break;   // a timeout is not a CDN problem; don't retry other CDNs
     }
   }
   throw lastErr || new Error('no engine source');
 }
+// The multi-core engine only starts if the worker script itself is served with COEP.
+// Check that first instead of discovering it via a silent 30 s timeout.
+async function workerHasCOEP(){
+  try{ const r = await fetch('/video-lib/v1/814.ffmpeg.js', { cache: 'no-store' }); return r.headers.get('cross-origin-embedder-policy') === 'require-corp'; }
+  catch(e){ return false; }
+}
 async function ensureFFmpeg(){
   if(ffmpegLoaded) return;
-  const wantMT = !!self.crossOriginIsolated;
+  let wantMT = !!self.crossOriginIsolated;
+  if(wantMT && !(await workerHasCOEP())){
+    // With COEP on the page, the worker script must carry COEP too or NO engine can start.
+    throw new Error('The site is serving the engine helper files without the required header, so the video engine cannot start on this page. Your connection is fine. Fix on the Cloudflare dashboard: Caching → Configuration → Purge Everything, then reload.');
+  }
   try{
     if(wantMT){ await tryLoad(CORE_MT, true); engineMode = 'mt'; }
     else { await tryLoad(CORE_ST, false); engineMode = 'st'; }
