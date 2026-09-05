@@ -72,6 +72,33 @@
   .trim .row .setbtn{ background: var(--panel); border:1px solid var(--line); color: var(--text); border-radius:6px; padding:6px 8px; font-size:12px; cursor:pointer; font-family:inherit; white-space:nowrap; }
   .trim .foot{ display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:12px; color: var(--text-dim); }
   .trim .foot button{ background:transparent; border:1px solid var(--line); color: var(--text); border-radius:6px; padding:6px 10px; font-size:12px; cursor:pointer; font-family:inherit; }
+  .clip-row .mini.ai{ border-color: rgba(200,148,42,.5); }
+  .aipanel{ border-top:1px solid var(--line); padding:10px; display:none; }
+  .aipanel.open{ display:block; }
+  .aipanel .row{ display:flex; gap:8px; margin-top:8px; }
+  .aipanel .row input[type=text]{ flex:1; }
+  .aipanel .row select{ background: var(--panel-2); color: var(--text); border:1px solid var(--line); border-radius:7px; padding:0 8px; font-size:14px; font-family:inherit; }
+  .aipanel .go{ background: var(--gold); color:#111; border:none; border-radius:8px; padding:12px; font-weight:700; font-size:14px; cursor:pointer; font-family:inherit; width:100%; margin-top:8px; }
+  .aipanel .go:disabled{ opacity:.5; }
+  .aipanel .sugs{ display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+  .aipanel .sug{ display:flex; align-items:center; gap:10px; background: var(--panel); border:1px solid var(--line); border-radius:7px; padding:8px; font-size:13px; }
+  .aipanel .sug img{ width:56px; height:56px; object-fit:cover; border-radius:5px; background:#000; flex-shrink:0; }
+  .aipanel .sug input{ accent-color: var(--gold); width:18px; height:18px; flex-shrink:0; }
+  .aipanel .sug .t{ color: var(--gold); font-variant-numeric: tabular-nums; }
+  .aipanel .sug .l{ flex:1; min-width:0; }
+  .aipanel .msg{ font-size:12px; color: var(--text-dim); margin-top:8px; line-height:1.4; }
+  .aipanel .msg.err{ color: var(--danger); }
+  .writer{ margin-top:10px; }
+  .writer .row{ display:flex; gap:8px; }
+  .writer .row input[type=text]{ flex:1; }
+  .writer .row button{ background: var(--gold); color:#111; border:none; border-radius:8px; padding:0 14px; font-weight:700; font-size:14px; cursor:pointer; font-family:inherit; white-space:nowrap; }
+  .writer .row button:disabled{ opacity:.5; }
+  .posts{ display:none; flex-direction:column; gap:8px; margin-top:10px; }
+  .posts.open{ display:flex; }
+  .post{ background: var(--panel-2); border:1px solid var(--line); border-radius:7px; padding:10px; }
+  .post .h{ display:flex; justify-content:space-between; align-items:center; font-size:12px; color: var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; }
+  .post .h button{ background: var(--panel); color: var(--text); border:1px solid var(--line); border-radius:6px; padding:5px 10px; font-size:12px; cursor:pointer; font-family:inherit; }
+  .post pre{ margin:0; white-space:pre-wrap; font-family:inherit; font-size:13px; line-height:1.45; }
   label.field{ display:block; font-size:13px; color: var(--text-dim); margin: 12px 0 6px; }
   label.field:first-child{ margin-top:0; }
   input[type=text], input[type=password]{ width:100%; background: var(--panel-2); border:1px solid var(--line); color: var(--text); border-radius:7px; padding:11px 10px; font-size:16px; font-family:inherit; }
@@ -196,6 +223,15 @@
     <h2>3. Caption (optional)</h2>
     <div class="chips" id="capChips"></div>
     <input type="text" id="captionText" placeholder="Tap a preset or type your own" maxlength="120" enterkeyhint="done">
+    <div class="writer">
+      <label class="field">Or let Claude write it — what's the video about?</label>
+      <div class="row">
+        <input type="text" id="aboutText" placeholder="e.g. winter changeover on a Silverado, customer waited" maxlength="300" enterkeyhint="go">
+        <button type="button" id="writeBtn">✨ Write</button>
+      </div>
+      <div class="msg" id="writeMsg" style="font-size:12px;color:var(--text-dim);margin-top:6px"></div>
+      <div class="posts" id="posts"></div>
+    </div>
     <label class="field">Position</label>
     <div class="radiorow">
       <label><input type="radio" name="capPos" value="bottom" checked> Bottom</label>
@@ -439,12 +475,13 @@ function renderClips(){
       info = `<span>${fmtMB(c.file.size)}</span>` +
         (isFinite(c.duration) ? `<span class="${trimmed?'trimmed':''}">${trimmed ? '✂ ' + fmtT(c.trimStart) + '–' + fmtT(c.trimEnd) + ' (' + fmtSec(d) + ')' : fmtSec(c.duration)}</span>` : '') +
         (c.w ? `<span>${c.w}×${c.h}</span>` : '') +
-        (isFinite(c.duration) ? `<button type="button" class="mini ${c.open?'on':''}" data-trim>${c.open ? 'Close' : 'Trim'}</button>` : '');
+        (isFinite(c.duration) ? `<button type="button" class="mini ${c.open?'on':''}" data-trim>${c.open ? 'Close' : 'Trim'}</button>` : '') +
+        (isFinite(c.duration) && c.duration >= 25 ? `<button type="button" class="mini ai ${c.aiOpen?'on':''}" data-ai>✨ Find the good bits</button>` : '');
     }
     box.innerHTML = `
       <div class="clip-row">
         ${thumb}
-        <div class="meta"><div class="name">${i+1}. ${escapeHtml(c.file.name)}</div><div class="info">${info}</div></div>
+        <div class="meta"><div class="name">${i+1}. ${c.label ? '✨ ' + escapeHtml(c.label) + ' — ' : ''}${escapeHtml(c.file.name)}</div><div class="info">${info}</div></div>
         <div class="btns">
           <button class="iconbtn" data-act="up" ${i===0?'disabled':''} aria-label="Move up">↑</button>
           <button class="iconbtn" data-act="down" ${i===clips.length-1?'disabled':''} aria-label="Move down">↓</button>
@@ -458,15 +495,29 @@ function renderClips(){
         <div class="row"><label>Start</label><input type="range" data-ts min="0" max="${c.duration.toFixed(2)}" step="0.1" value="${c.trimStart}"><span class="val" data-tsv>${fmtT(c.trimStart)}</span><button type="button" class="setbtn" data-setstart>Set here</button></div>
         <div class="row"><label>End</label><input type="range" data-te min="0" max="${c.duration.toFixed(2)}" step="0.1" value="${c.trimEnd}"><span class="val" data-tev>${fmtT(c.trimEnd)}</span><button type="button" class="setbtn" data-setend>Set here</button></div>
         <div class="foot"><span data-tlen>Keeps ${fmtSec(d)} of ${fmtSec(c.duration)}</span><button type="button" data-reset>Reset</button></div>
+      </div>` : ''}
+      ${c.kind === 'video' && isFinite(c.duration) && c.duration >= 25 ? `
+      <div class="aipanel ${c.aiOpen?'open':''}" data-aipanel>
+        <div class="row"><input type="text" data-hint placeholder="What's in this video? e.g. winter changeover, Silverado" maxlength="200" value="${escapeHtml(c.aiHint || lastHint)}"><select data-target><option value="20">~20 s</option><option value="30" selected>~30 s</option><option value="45">~45 s</option><option value="60">~60 s</option></select></div>
+        <button type="button" class="go" data-scan>Scan this video for highlights</button>
+        <div class="msg" data-aimsg>Claude looks at frames from the whole clip and suggests the moments worth keeping. You pick which to add; the long clip is replaced by the pieces.</div>
+        <div class="sugs" data-sugs></div>
       </div>` : ''}`;
     box.querySelector('[data-act=up]').onclick = () => { [clips[i-1],clips[i]]=[clips[i],clips[i-1]]; renderClips(); };
     box.querySelector('[data-act=down]').onclick = () => { [clips[i+1],clips[i]]=[clips[i],clips[i+1]]; renderClips(); };
     box.querySelector('[data-act=del]').onclick = () => { if(c.url && !clips.some((o, j) => j !== i && o.url === c.url)) URL.revokeObjectURL(c.url); clips.splice(i,1); renderClips(); };
     const dup = box.querySelector('[data-act=dup]');
-    if(dup) dup.onclick = () => { clips.splice(i+1, 0, { ...c, id: idCounter++, open: true, trimStart: c.trimEnd < c.duration - 0.5 ? c.trimEnd : c.trimStart, trimEnd: c.duration }); renderClips(); };
+    if(dup) dup.onclick = () => { clips.splice(i+1, 0, { ...c, id: idCounter++, open: true, aiOpen: false, aiSugs: null, aiFrames: null, label: undefined, trimStart: c.trimEnd < c.duration - 0.5 ? c.trimEnd : c.trimStart, trimEnd: c.duration }); renderClips(); };
     const secs = box.querySelector('[data-secs]'); if(secs) secs.onchange = () => { c.duration = +secs.value; renderClips(); };
     const kb = box.querySelector('[data-kb]'); if(kb) kb.onclick = () => { c.kb = !c.kb; renderClips(); };
     const tb = box.querySelector('[data-trim]'); if(tb) tb.onclick = () => { c.open = !c.open; renderClips(); };
+    const ab = box.querySelector('[data-ai]'); if(ab) ab.onclick = () => { c.aiOpen = !c.aiOpen; renderClips(); };
+    const ai = box.querySelector('[data-aipanel]');
+    if(ai){
+      ai.querySelector('[data-hint]').oninput = (e) => { c.aiHint = e.target.value; };
+      ai.querySelector('[data-scan]').onclick = () => scanHighlights(c, ai);
+      if(c.aiSugs) renderSuggestions(c, ai);
+    }
     const trim = box.querySelector('.trim');
     if(trim){
       const pv = trim.querySelector('video'), ts = trim.querySelector('[data-ts]'), te = trim.querySelector('[data-te]');
@@ -542,6 +593,127 @@ function renderPill(elId, file, onRemove){
   if(!file){ el.innerHTML = ''; return; }
   el.innerHTML = `<div class="filepill"><span>${escapeHtml(file.name)} · ${fmtMB(file.size)}</span><span class="x" role="button" aria-label="Remove">✕</span></div>`;
   el.querySelector('.x').onclick = onRemove;
+}
+
+/* ═══════════════════ CLAUDE: FIND THE GOOD BITS ═══════════════════ */
+let lastHint = localStorage.getItem('rb_hint') || '';
+const AI_URL = '/reel-ai';
+
+// Grab frames from a video file at the given times → array of canvases (long edge `edge` px).
+async function grabFrames(c, times, edge, onProgress){
+  const v = document.createElement('video');
+  v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = c.url;
+  await new Promise((res, rej) => { v.onloadedmetadata = res; v.onerror = () => rej(new Error('cannot open video')); setTimeout(() => rej(new Error('video did not load')), 15000); });
+  try{ await v.play(); v.pause(); }catch(e){}   // primes decoding on iOS
+  const s = edge / Math.max(v.videoWidth, v.videoHeight), w = Math.round(v.videoWidth * s), h = Math.round(v.videoHeight * s);
+  const out = [];
+  for(let i = 0; i < times.length; i++){
+    await new Promise((res) => { const done = () => { v.removeEventListener('seeked', done); res(); }; v.addEventListener('seeked', done); v.currentTime = times[i]; setTimeout(done, 4000); });
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const x = cv.getContext('2d'); x.drawImage(v, 0, 0, w, h);
+    out.push(cv);
+    onProgress && onProgress(i + 1, times.length);
+  }
+  v.removeAttribute('src'); v.load();
+  return { frames: out, w, h };
+}
+
+// Compose frames into contact sheets of 4×3 tiles with the timestamp burned in.
+function makeSheets(frames, times, w, h){
+  const cols = 4, rows = 3, per = cols * rows, sheets = [];
+  for(let i = 0; i < frames.length; i += per){
+    const chunk = frames.slice(i, i + per), n = Math.ceil(chunk.length / cols);
+    const cv = document.createElement('canvas'); cv.width = cols * w; cv.height = n * h;
+    const x = cv.getContext('2d'); x.fillStyle = '#000'; x.fillRect(0, 0, cv.width, cv.height);
+    chunk.forEach((f, k) => {
+      const px = (k % cols) * w, py = Math.floor(k / cols) * h;
+      x.drawImage(f, px, py);
+      const label = fmtClock(times[i + k]); x.font = `bold ${Math.round(h * 0.09)}px ${FONT}`;
+      const tw = x.measureText(label).width, fh = Math.round(h * 0.09);
+      x.fillStyle = 'rgba(0,0,0,0.75)'; x.fillRect(px, py, tw + fh, fh * 1.5);
+      x.fillStyle = '#fff'; x.textBaseline = 'middle'; x.fillText(label, px + fh * 0.5, py + fh * 0.75);
+      x.strokeStyle = '#333'; x.strokeRect(px + 0.5, py + 0.5, w - 1, h - 1);
+    });
+    sheets.push({ data: cv.toDataURL('image/jpeg', 0.72).split(',')[1], mediaType: 'image/jpeg', times: times.slice(i, i + per) });
+  }
+  return sheets;
+}
+const fmtClock = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+async function scanHighlights(c, panel){
+  const msg = panel.querySelector('[data-aimsg]'), btn = panel.querySelector('[data-scan]');
+  const hint = panel.querySelector('[data-hint]').value.trim(), target = +panel.querySelector('[data-target]').value;
+  lastHint = hint; try{ localStorage.setItem('rb_hint', hint); }catch(e){}
+  btn.disabled = true; msg.className = 'msg';
+  try{
+    const N = c.duration > 300 ? 96 : c.duration > 90 ? 72 : 48;
+    const step = Math.max(1, c.duration / N);
+    const times = []; for(let t = step / 2; t < c.duration - 0.5; t += step) times.push(Math.round(t * 10) / 10);
+    msg.textContent = 'Grabbing frames…';
+    const { frames, w, h } = await grabFrames(c, times, 320, (i, n) => { msg.textContent = `Grabbing frames ${i}/${n}…`; });
+    c.aiFrames = frames.map((f, i) => ({ t: times[i], url: f.toDataURL('image/jpeg', 0.6) }));
+    msg.textContent = `Asking Claude to look at ${frames.length} frames…`;
+    const sheets = makeSheets(frames, times, w, h);
+    const r = await fetch(AI_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: localStorage.getItem(TOKEN_KEY), action: 'highlights', sheets, hint, duration: c.duration, target }) });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.error || ('HTTP ' + r.status));
+    if(!d.segments || !d.segments.length) throw new Error('Claude did not find anything it liked — try a different description, or trim by hand.');
+    c.aiSugs = d.segments.map(sg => ({ ...sg, on: true }));
+    msg.textContent = (d.note ? d.note + ' ' : '') + 'Untick any you don\'t want, then add.';
+    renderSuggestions(c, panel);
+  } catch(err){
+    msg.className = 'msg err'; msg.textContent = 'Scan failed: ' + (err.message || err);
+  } finally { btn.disabled = false; }
+}
+
+function renderSuggestions(c, panel){
+  const box = panel.querySelector('[data-sugs]'); box.innerHTML = '';
+  if(!c.aiSugs || !c.aiSugs.length) return;
+  const thumb = t => { const f = (c.aiFrames || []).reduce((best, x) => Math.abs(x.t - t) < Math.abs(best.t - t) ? x : best, { t: -1e9, url: '' }); return f.url; };
+  c.aiSugs.forEach((sg, i) => {
+    const row = document.createElement('label'); row.className = 'sug';
+    row.innerHTML = `<input type="checkbox" ${sg.on ? 'checked' : ''}><img src="${thumb(sg.start)}" alt=""><div class="l"><div class="t">${fmtClock(sg.start)} – ${fmtClock(sg.end)} · ${fmtSec(sg.end - sg.start)}</div><div>${escapeHtml(sg.label)}</div></div>`;
+    row.querySelector('input').onchange = (e) => { sg.on = e.target.checked; upd(); };
+    box.appendChild(row);
+  });
+  const add = document.createElement('button'); add.type = 'button'; add.className = 'go'; box.appendChild(add);
+  const upd = () => { const n = c.aiSugs.filter(s => s.on).length; add.textContent = n ? `Add ${n} clip${n > 1 ? 's' : ''} and drop the long one` : 'Nothing selected'; add.disabled = !n; };
+  upd();
+  add.onclick = () => {
+    const idx = clips.indexOf(c); if(idx < 0) return;
+    const pieces = c.aiSugs.filter(s => s.on).map(sg => ({ ...c, id: idCounter++, trimStart: sg.start, trimEnd: sg.end, open: false, aiOpen: false, aiSugs: null, aiFrames: null, label: sg.label }));
+    clips.splice(idx, 1, ...pieces);
+    renderClips();
+  };
+}
+
+/* ═══════════════════ CLAUDE: WRITE THE CAPTION + POSTS ═══════════════════ */
+$('writeBtn').addEventListener('click', writeCopy);
+$('aboutText').addEventListener('keydown', e => { if(e.key === 'Enter') writeCopy(); });
+async function writeCopy(){
+  const about = $('aboutText').value.trim(), msg = $('writeMsg'), btn = $('writeBtn');
+  if(!about){ msg.textContent = 'Say what the video is about first.'; return; }
+  btn.disabled = true; msg.textContent = 'Writing…';
+  try{
+    const r = await fetch(AI_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: localStorage.getItem(TOKEN_KEY), action: 'copy', about }) });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.error || ('HTTP ' + r.status));
+    if(d.caption) $('captionText').value = d.caption;
+    const posts = $('posts'); posts.innerHTML = '';
+    [['Instagram / TikTok', d.instagram], ['Facebook', d.facebook], ['Google Business Profile', d.gbp]].forEach(([name, text]) => {
+      if(!text) return;
+      const el = document.createElement('div'); el.className = 'post';
+      el.innerHTML = `<div class="h"><span>${name}</span><button type="button">Copy</button></div><pre></pre>`;
+      el.querySelector('pre').textContent = text;
+      el.querySelector('button').onclick = async (e) => { try{ await navigator.clipboard.writeText(text); e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy', 1500); }catch(err){ e.target.textContent = 'Select & copy'; } };
+      posts.appendChild(el);
+    });
+    posts.classList.add('open');
+    msg.textContent = 'Caption filled in above. Post text below — copy it when you post.';
+  } catch(err){ msg.textContent = 'Failed: ' + (err.message || err); }
+  finally{ btn.disabled = false; }
 }
 
 /* ═══════════════════ VOICE RECORDING ═══════════════════ */
