@@ -1181,6 +1181,7 @@
       Manual Entry
       <button class="modal-close" onclick="closeManualEntry()">×</button>
     </div>
+    <p id="manualHint" hidden style="color:var(--amber); font-size:13px; line-height:1.4; margin:-4px 0 14px; padding:10px 12px; background:var(--amber-dim); border-left:3px solid var(--amber); border-radius:2px;"></p>
     <div class="modal-row">
       <label>Year</label>
       <input type="number" id="mYear" min="1990" max="2030" placeholder="2023">
@@ -2405,6 +2406,47 @@ function closeCamera() {
   document.getElementById('camInput').value = '';
 }
 
+// Resize a data-URL image on a canvas. Returns a JPEG data URL, or the input
+// untouched if anything goes wrong (old browser, decode failure, etc.).
+function downscaleForScan(dataUrl, maxSide, quality) {
+  return new Promise((resolve) => {
+    try {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const w = img.naturalWidth, h = img.naturalHeight;
+          const scale = Math.min(1, maxSide / Math.max(w, h));
+          if (scale === 1 && dataUrl.length < 1500000) return resolve(dataUrl); // already small
+          const c = document.createElement('canvas');
+          c.width = Math.round(w * scale); c.height = Math.round(h * scale);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          const out = c.toDataURL('image/jpeg', quality);
+          resolve(out && out.length > 100 ? out : dataUrl);
+        } catch (e) { resolve(dataUrl); }
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    } catch (e) { resolve(dataUrl); }
+  });
+}
+
+// fetch that retries on network failure or 5xx. Bad shop Wi-Fi is the #1 cause
+// of "Load failed" / "Failed to fetch" in the bay; one retry clears most of it.
+async function fetchWithRetry(url, init, tries) {
+  let lastErr;
+  for (let i = 0; i < (tries || 2); i++) {
+    try {
+      const r = await fetch(url, init);
+      if (r.status >= 500 && i < tries - 1) { lastErr = new Error('server ' + r.status); await new Promise(res => setTimeout(res, 800)); continue; }
+      return r;
+    } catch (e) {
+      lastErr = e;
+      await new Promise(res => setTimeout(res, 800));
+    }
+  }
+  throw lastErr || new Error('network error');
+}
+
 async function handleCamCapture(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -2412,23 +2454,30 @@ async function handleCamCapture(event) {
   const preview = document.getElementById('camPreview');
   const reader = new FileReader();
   reader.onload = async (e) => {
-    const dataUrl = e.target.result;
+    const rawDataUrl = e.target.result;
+
+    // Shrink before upload. Phone captures run 3–8 MB; the vision API caps images
+    // at 5 MB and shop Wi-Fi / cell chokes on a multi-MB JSON upload (Safari
+    // reports that as "Load failed"). 1600 px longest side is plenty for a door
+    // label. Also bakes in EXIF rotation. Falls back to the original on any error.
+    const dataUrl = await downscaleForScan(rawDataUrl, 1600, 0.85);
     preview.innerHTML = `<img src="${dataUrl}">`;
 
-    // Extract base64
     const base64 = dataUrl.split(',')[1];
-    const mediaType = file.type || 'image/jpeg';
+    const mediaType = dataUrl.startsWith('data:image/jpeg') ? 'image/jpeg' : (file.type || 'image/jpeg');
 
     closeCamera();
     showLoading('Reading VIN…');
 
     try {
-      const r = await fetch('/vin-scan', {
+      const r = await fetchWithRetry('/vin-scan', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ imageData: base64, mediaType }),
-      });
-      const d = await r.json();
+      }, 2);
+      let d;
+      try { d = await r.json(); } catch (e) { throw new Error('scan server returned ' + r.status + ' (not JSON)'); }
+      if (d.error) throw new Error(d.error);
 
       if (!d.vin) {
         hideLoading();
@@ -2453,17 +2502,26 @@ async function handleCamCapture(event) {
 async function processVIN(vin) {
   showLoading('Decoding VIN…');
 
+  // Step 1: NHTSA decode from the phone (free, public, CORS-enabled), one retry.
+  // If the phone can't reach NHTSA at all, /vin-decode retries it from Cloudflare.
+  let nhtsa = null;
   try {
-    // Step 1: NHTSA decode (free, public, CORS-enabled)
-    const nhtsaRes = await fetch(
-      `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/${encodeURIComponent(vin)}?format=json`
+    const nhtsaRes = await fetchWithRetry(
+      `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/${encodeURIComponent(vin)}?format=json`,
+      undefined, 2
     );
-    const nhtsa = await nhtsaRes.json();
-    const vehicle = extractVehicleFromNHTSA(nhtsa, vin);
+    nhtsa = await nhtsaRes.json();
+  } catch (err) {
+    nhtsa = null;
+  }
 
-    if (!vehicle.make || !vehicle.model) {
-      hideLoading();
-      toast('VIN decode incomplete — try manual entry', 'error');
+  try {
+    const vehicle = nhtsa ? extractVehicleFromNHTSA(nhtsa, vin) : { vin, make: '', model: '', year: null, trim: '' };
+
+    if (!nhtsa || !vehicle.make || !vehicle.model) {
+      // Either NHTSA was unreachable from the phone, or it answered without make/model
+      // (Canadian-market VINs — Toyota Canada Sienna 5TD?SKFC… — do this). Don't bail.
+      await fallbackDecode(vin, nhtsa, vehicle, !nhtsa);
       return;
     }
 
@@ -2472,6 +2530,81 @@ async function processVIN(vin) {
     hideLoading();
     toast('Decode failed: ' + err.message, 'error');
   }
+}
+
+// Real VIN carried into Manual Entry when the NHTSA decode was incomplete, so the
+// scan log / notes / recents keep the VIN instead of a MANUAL-<ts> placeholder.
+let pendingScanVin = null;
+
+function nhtsaField(data, name) {
+  const row = (data && data.Results || []).find(r => r.Variable === name);
+  return row && row.Value ? row.Value : '';
+}
+
+async function fallbackDecode(vin, nhtsa, partial, nhtsaUnreachable) {
+  showLoading(nhtsaUnreachable ? 'NHTSA unreachable — retrying via server…' : 'NHTSA incomplete — identifying…');
+
+  let fb = { ok: false };
+  try {
+    const r = await fetchWithRetry('/vin-decode', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        vin,
+        // Empty when NHTSA was unreachable from the phone → /vin-decode calls NHTSA itself.
+        nhtsa: nhtsa ? {
+          year: partial.year,
+          manufacturer: nhtsaField(nhtsa, 'Manufacturer Name'),
+          series: nhtsaField(nhtsa, 'Series'),
+          plant: nhtsaField(nhtsa, 'Plant City'),
+          vehicleType: nhtsaField(nhtsa, 'Vehicle Type'),
+          drive: nhtsaField(nhtsa, 'Drive Type'),
+          fuel: nhtsaField(nhtsa, 'Fuel Type - Primary'),
+          electrification: nhtsaField(nhtsa, 'Electrification Level'),
+        } : {},
+      }),
+    }, 2);
+    fb = await r.json();
+  } catch (e) {
+    fb = { ok: false, error: e.message };
+  }
+
+  // Server-side NHTSA got a full answer (phone just couldn't reach NHTSA) → same as a
+  // normal decode, no confirm needed.
+  if (fb.source === 'nhtsa' && fb.make && fb.model) {
+    await loadSpecsForVehicle(vin, { vin, make: fb.make, model: fb.model, year: fb.year || null, trim: fb.trim || '' });
+    return;
+  }
+
+  hideLoading();
+
+  // Otherwise ALWAYS confirm with the tech before specs load: a wrong model would feed
+  // the torque cascade. They're standing at the vehicle — one glance, one tap.
+  pendingScanVin = vin;
+  document.getElementById('mYear').value  = fb.year  || partial.year  || '';
+  document.getElementById('mMake').value  = fb.make  || partial.make  || '';
+  document.getElementById('mModel').value = fb.model || partial.model || '';
+  document.getElementById('mTrim').value  = fb.trim  || partial.trim  || '';
+
+  const hint = document.getElementById('manualHint');
+  if (hint) {
+    const yr = fb.year || partial.year || '';
+    if (fb.source === 'table') {
+      hint.textContent = `NHTSA has no model for this Canadian VIN. Matched a known pattern — confirm it's a ${yr} ${fb.make} ${fb.model}, then Look Up.`;
+    } else if (fb.source === 'ai') {
+      hint.textContent = `NHTSA has no model for this VIN. AI identified it (${fb.confidence} confidence) — check against the vehicle, fix if wrong, then Look Up.`;
+    } else if (nhtsaUnreachable) {
+      hint.textContent = 'Couldn\'t reach the VIN decoder (network). Enter year / make / model from the vehicle and tap Look Up — the VIN stays attached.' + (fb.error ? ' (' + fb.error + ')' : '');
+    } else {
+      hint.textContent = 'NHTSA has no make/model for this VIN. Enter it from the vehicle and tap Look Up — the VIN stays attached.';
+    }
+    hint.hidden = false;
+  }
+
+  document.getElementById('manualModal').hidden = false;
+  const modelEl = document.getElementById('mModel');
+  if (!modelEl.value) setTimeout(() => modelEl.focus(), 50);
+  toast('NHTSA decode incomplete — confirm vehicle', 'info');
 }
 
 function extractVehicleFromNHTSA(data, vin) {
@@ -2621,7 +2754,11 @@ function setTVStatus(online) {
 /* ═══════════════════════════════════════════════════════════════
    MANUAL ENTRY
    ═══════════════════════════════════════════════════════════════ */
-function openManualEntry() { document.getElementById('manualModal').hidden = false; }
+function openManualEntry() {
+  pendingScanVin = null;
+  const h = document.getElementById('manualHint'); if (h) h.hidden = true;
+  document.getElementById('manualModal').hidden = false;
+}
 function closeManualEntry() { document.getElementById('manualModal').hidden = true; }
 
 async function submitManualEntry() {
@@ -2633,8 +2770,10 @@ async function submitManualEntry() {
   if (!year || !make || !model) { toast('Year, make, and model required', 'error'); return; }
 
   closeManualEntry();
-  const vehicle = { year, make: titleCase(make), model, trim, vin: null };
-  await loadSpecsForVehicle('MANUAL-' + Date.now(), vehicle);
+  const vin = pendingScanVin;   // real VIN if we got here from an incomplete scan decode
+  pendingScanVin = null;
+  const vehicle = { year, make: titleCase(make), model, trim, vin: vin || null };
+  await loadSpecsForVehicle(vin || ('MANUAL-' + Date.now()), vehicle);
 }
 
 /* ═══════════════════════════════════════════════════════════════
