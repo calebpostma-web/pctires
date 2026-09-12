@@ -410,6 +410,16 @@ function clipDur(c){ // effective seconds after trim
   return Math.max(0.5, e - s);
 }
 
+// Android/Chrome hands the page a reference to the picked file, not the bytes. That reference goes stale
+// when the file lives in the cloud and isn't downloaded, when the picker's permission is revoked, or simply
+// when the tab has been sitting open for a long time — reading it then throws NotReadableError. Check for it
+// up front so a dead file is caught when it is added, not after the user waits through a build.
+async function canReadFile(file){
+  try{ await file.slice(0, 2048).arrayBuffer(); return true; }
+  catch(e){ return false; }
+}
+const UNREADABLE = 'Android can no longer read this file. Remove it (✕) and add it again. If it keeps happening, the video is probably stored in the cloud — open it in the Photos/Gallery app first so it downloads to the phone.';
+
 function probeVideoEl(url){
   return new Promise((resolve) => {
     const v = document.createElement('video');
@@ -462,6 +472,7 @@ setupDrop(dropClips, clipInput, async (files) => {
     } else if(isVideoFile(f)){
       const c = { kind: 'video', file: f, url: URL.createObjectURL(f), id: idCounter++, duration: NaN, w:0, h:0, hasAudio: null, trimStart: 0, trimEnd: NaN, open: false };
       clips.push(c); renderClips();
+      if(!(await canReadFile(f))){ c.bad = true; c.badMsg = UNREADABLE; renderClips(); continue; }
       const m = await probeVideoEl(c.url);
       Object.assign(c, m);
       if(isFinite(c.duration)) c.trimEnd = c.duration;
@@ -481,10 +492,16 @@ function renderClips(){
       thumb = c.url ? `<img src="${c.url}" alt="">` : `<div class="thumb-ph">${c.bad ? '⚠︎' : '…'}</div>`;
       const opts = [2,3,4,5,6,8,10].map(s => `<option value="${s}" ${s===c.duration?'selected':''}>${s}s</option>`).join('');
       info = c.bad
-        ? `<span class="bad">Can't read this photo — try saving it as JPEG</span>`
+        ? `<span class="bad">${escapeHtml(c.badMsg || "Can't read this photo — try saving it as JPEG")}</span>`
         : `<span>Photo · show for</span><select class="secs" data-secs>${opts}</select><button type="button" class="mini ${c.kb?'on':''}" data-kb>${c.kb ? '✓ Slow zoom' : 'Slow zoom'}</button>`;
     } else {
       thumb = `<video src="${c.url}" muted playsinline preload="metadata"></video>`;
+      if(c.bad){
+        box.innerHTML = `<div class="clip-row">${thumb}<div class="meta"><div class="name">${i+1}. ${escapeHtml(c.file.name)}</div><div class="info"><span class="bad">${escapeHtml(c.badMsg || 'Could not read this file.')}</span></div></div><div class="btns"><button class="iconbtn danger" data-act="del" aria-label="Remove">✕</button></div></div>`;
+        box.querySelector('[data-act=del]').onclick = () => { if(c.url) URL.revokeObjectURL(c.url); clips.splice(i,1); renderClips(); };
+        clipList.appendChild(box);
+        return;
+      }
       const trimmed = isFinite(c.duration) && (c.trimStart > 0.05 || c.trimEnd < c.duration - 0.05);
       info = `<span>${fmtMB(c.file.size)}</span>` +
         (isFinite(c.duration) ? `<span class="${trimmed?'trimmed':''}">${trimmed ? '✂ ' + fmtT(c.trimStart) + '–' + fmtT(c.trimEnd) + ' (' + fmtSec(d) + ')' : fmtSec(c.duration)}</span>` : '') +
@@ -1013,6 +1030,7 @@ async function build(forceST){
       await ffmpeg.createDir(dir);
       await ffmpeg.mount('WORKERFS', { files: [c.file] }, dir);
       mounted.push(dir);
+      if(!(await canReadFile(c.file))) throw new Error(`Clip ${i+1} (${c.file.name}): ${UNREADABLE}`);
       let name = `${dir}/${c.file.name}`;
       let p = await probeInFFmpeg(name);
       if(!p.hasVideo && c.file.size < 400*1048576){
@@ -1199,6 +1217,13 @@ async function build(forceST){
       for(const f of written){ try{ await ffmpeg.deleteFile(f); }catch(e){} }
       releaseWakeLock(); building = false;
       return build(true);
+    }
+    if(/could not be read|NotReadableError|permission problems|can no longer read/i.test(msg)){
+      setStatus(/can no longer read/.test(msg) ? msg : UNREADABLE, true);   // already plain English if it names the clip
+      log('ERROR: ' + msg);
+      resetFFmpeg();
+      releaseWakeLock(); $('keepOpen').style.display = 'none'; building = false; renderClips();
+      return;
     }
     const oom = /memory|allocat|abort|RuntimeError/i.test(msg);
     setStatus((oom ? 'Ran out of memory. Trim clips, use fewer of them, or build on the laptop. ' : 'Something went wrong. ') + msg, true);
