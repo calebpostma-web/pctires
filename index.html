@@ -1751,6 +1751,7 @@ function getRebateForBrand(brand) {
           <option value="price-desc">Price: High → Low</option>
           <option value="brand">Brand A → Z</option>
           <option value="name">Name A → Z</option>
+          <option value="warranty-desc">Warranty: High → Low</option>
         </select>
         <button class="refine-clear" onclick="clearRefinements()">✕ Clear</button>
       </div>
@@ -2972,6 +2973,7 @@ function normaliseTire(product, inventory) {
     treadwear: sp.treadwear || sp.treadWear || sp.treadwearRating || '',
     traction: sp.traction || sp.tractionRating || '',
     temperature: sp.temperature || sp.temperatureRating || '',
+    warranty: parseInt(sp.warrantyMileage, 10) || 0,
     map, imageUrl: product.productImageUrl || null,
     description: product.description || product.productDescription || '',
     features: Array.isArray(product.features) ? product.features : (Array.isArray(product.bulletPoints) ? product.bulletPoints : []),
@@ -3313,6 +3315,7 @@ function applyRefinements() {
   if (sort === 'price-desc') tires = [...tires].sort((a, b) => retailPrice(b) - retailPrice(a));
   if (sort === 'brand')      tires = [...tires].sort((a, b) => a.brand.localeCompare(b.brand));
   if (sort === 'name')       tires = [...tires].sort((a, b) => a.name.localeCompare(b.name));
+  if (sort === 'warranty-desc') tires = [...tires].sort((a, b) => (b.warranty || 0) - (a.warranty || 0));
 
   filteredTires = tires;
   document.getElementById('tireCount').textContent = filteredTires.length;
@@ -3449,6 +3452,7 @@ function buildRecCard(t, tier) {
   const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
   const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
   const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} mail-in rebate</span>` : '';
+  const warrantyBadge = t.warranty ? `<span class="warranty-badge on-card" style="display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;margin-top:6px">🛡️ ${t.warranty.toLocaleString()} km warranty</span>` : '';
   const effectiveNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:4px">Effective after rebate: ~$${Math.max(0, shown - rebate.amount / 4).toFixed(2)}/tire</div>` : '';
   return `
   <div class="rec-card ${cls}" style="animation-delay:.05s;cursor:pointer" onclick="openTireDetail('${t.itemNumber}')">
@@ -3458,7 +3462,7 @@ function buildRecCard(t, tier) {
     <div class="tc-name">${t.name}</div>
     <div class="tc-size">${t.size}</div>
     <div class="rec-why">${why}</div>
-    <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}${rebateBadge}</div>
+    <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}${rebateBadge}${warrantyBadge}</div>
     <div class="tc-specs">
       <div><div class="spec-label">Speed Rating</div><div class="spec-value">${t.speed||'—'}</div></div>
       <div><div class="spec-label">Load Index</div><div class="spec-value">${t.loadIndex||'—'}</div></div>
@@ -3520,13 +3524,14 @@ function renderTires() {
     const dimStyle = recIds.has(t.itemNumber) ? 'opacity:.55' : '';
     const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
     const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} rebate</span>` : '';
+    const warrantyBadge = t.warranty ? `<span class="warranty-badge on-card" style="display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;margin-top:6px">🛡️ ${t.warranty.toLocaleString()} km warranty</span>` : '';
     return `
     <div class="tire-card" style="animation-delay:${Math.min(i,8)*0.055}s;${dimStyle}" onclick="openTireDetail('${t.itemNumber}')">
       <div class="tc-top"><div class="tc-brand">${t.brand}</div><span class="stock-pill ${stockClass}">${stockLabel}</span></div>
       ${t.imageUrl ? `<div style="text-align:center;margin-bottom:10px"><img src="${t.imageUrl}" alt="${t.name}" style="height:80px;object-fit:contain;opacity:.9"></div>` : ''}
       <div class="tc-name">${t.name}</div>
       <div class="tc-size">${t.size}</div>
-      <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}${rebateBadge}</div>
+      <div class="tc-tags">${tags.slice(0,3).map((tg,j)=>`<span class="tag${j===0?' best':''}">${tg}</span>`).join('')}${rebateBadge}${warrantyBadge}</div>
       <div class="tc-specs">
         <div><div class="spec-label">Speed Rating</div><div class="spec-value">${t.speed||'—'}</div></div>
         <div><div class="spec-label">Load Index</div><div class="spec-value">${t.loadIndex||'—'}</div></div>
@@ -6573,6 +6578,13 @@ function specExplain(label, value) {
         : 'Standard tire — needs spare or roadside help if flat';
     case 'EV Compatible':
       return v === 'Yes' ? 'Built for EV weight, with quieter cabin noise' : null;
+    case 'Warranty': {
+      if (v === 'No mileage warranty') return 'No manufacturer treadlife warranty — common on winter, performance, and budget tires';
+      const wk = parseInt(String(v).replace(/[^0-9]/g, ''), 10) || 0;
+      if (wk >= 100000) return 'Long treadlife warranty — backed for high mileage against premature wear';
+      if (wk > 0) return 'Manufacturer treadlife warranty — km covered against premature tread wear (conditions apply)';
+      return null;
+    }
     case 'Treadwear': {
       const tw = parseInt(v, 10);
       if (!tw) return null;
@@ -7001,6 +7013,7 @@ function openTireDetail(itemNumber) {
     ['Season', t.season], ['Speed Rating', t.speed || '—'],
     ['Load Index', t.loadIndex || '—'], ['Service Type', t.serviceType || '—'],
     ['Run-Flat', t.runFlat ? 'Yes' : 'No'], ['EV Compatible', t.evCompat ? 'Yes' : 'No'],
+    ['Warranty', t.warranty ? t.warranty.toLocaleString() + ' km' : 'No mileage warranty'],
     ...(t.treadwear   ? [['Treadwear', t.treadwear]]     : []),
     ...(t.traction    ? [['Traction', t.traction]]        : []),
     ...(t.temperature ? [['Temperature', t.temperature]]  : []),
