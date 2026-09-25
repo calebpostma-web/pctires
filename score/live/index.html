@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VB Live">
+<meta name="theme-color" content="#1d5fb4">
+<title>Live Volleyball Scoreboard | PC Tires</title>
+<meta name="description" content="Free live volleyball scoreboard. One person keeps score, everyone else watches in real time. By PC Tires.">
+<style>
+  :root{
+    --home: #1d5fb4;
+    --home-dark: #133f7a;
+    --away: #c0392b;
+    --away-dark: #8c291d;
+    --bg: #111;
+    --panel: #1c1c1e;
+    --text: #fff;
+    --dim: rgba(255,255,255,0.65);
+    --gold: #ffe600;
+    --green: #27ae60;
+  }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+  html, body{
+    margin:0; padding:0; height:100%; width:100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  .view{ display:none; height:100vh; width:100%; }
+  .view.active{ display:flex; flex-direction:column; }
+
+  /* ================= LOBBY ================= */
+  #lobby{
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    overflow: hidden;
+  }
+  #lobby .header{
+    background: var(--home);
+    padding: 16px 18px 14px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  #lobby .header h1{
+    margin:0; font-size:20px; font-weight:800; letter-spacing:0.02em;
+  }
+  #lobby .header .sub{
+    font-size:12px; color: rgba(255,255,255,0.75); margin-top:2px;
+  }
+  #newGameBtn{
+    background: #fff; color: var(--home); border:none;
+    padding: 10px 16px; border-radius:10px; font-size:15px; font-weight:800;
+  }
+  #newGameBtn:active{ background:#e0e6ee; }
+  #gamesScroll{
+    flex:1; overflow-y:auto; -webkit-overflow-scrolling: touch;
+    padding: 12px;
+  }
+  .game-card{
+    background: var(--panel);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display:flex; flex-direction:column; gap:8px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .game-card:active{ background:#2c2c2e; }
+  .game-card .code{
+    font-family: SF Mono, ui-monospace, Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    color: var(--dim); text-transform: uppercase;
+  }
+  .game-card .teams{ display:flex; align-items:center; gap:10px; font-size: 17px; font-weight:700; }
+  .game-card .teams .vs{ color: var(--dim); font-weight:500; font-size: 13px; }
+  .game-card .scores{ display:flex; gap:12px; align-items:baseline; }
+  .game-card .score{ font-size: 34px; font-weight:800; font-variant-numeric: tabular-nums; }
+  .game-card .score.home{ color: #6db1ff; }
+  .game-card .score.away{ color: #ff8a7a; }
+  .game-card .dash{ color: var(--dim); font-size: 24px; }
+  .game-card .meta{ display:flex; gap:10px; flex-wrap:wrap; font-size: 12px; color: var(--dim); }
+  .game-card .meta .badge{
+    background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 8px;
+  }
+  .game-card .meta .badge.no-keeper{ background: rgba(255,230,0,0.15); color: var(--gold); }
+  .game-card .meta .badge.live{ background: rgba(39,174,96,0.2); color: #4be07a; }
+  .game-card .meta .badge.over{ background: rgba(255,255,255,0.15); color: #fff; }
+
+  .empty{
+    padding: 60px 30px; text-align:center; color: var(--dim); font-size: 15px; line-height:1.5;
+  }
+  .empty .big{ font-size: 22px; color: #fff; font-weight: 700; margin-bottom: 8px; }
+
+  #lobbyFooter{
+    padding: 10px 16px 14px;
+    text-align:center;
+    font-size: 11px;
+    color: var(--dim);
+    background: #000;
+  }
+  #lobbyFooter a{ color: var(--dim); text-decoration:none; }
+  #lobbyFooter .brand{ color: #fff; font-weight:700; }
+
+  /* ================= GAME ================= */
+  #game{
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .half{
+    flex: 1; position: relative;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    color: var(--text);
+    transition: filter 0.08s ease;
+  }
+  .half.tappable{ cursor: pointer; }
+  .half.tappable:active{ filter: brightness(1.3); }
+  #half-home{ background: var(--home); }
+  #half-away{ background: var(--away); }
+  .team-name{
+    font-size: 6.5vw;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display:flex; align-items:center; gap:10px;
+    opacity: 0.95;
+    pointer-events: none;
+  }
+  .serve-dot{
+    width: 14px; height:14px; border-radius:50%;
+    background: var(--gold);
+    box-shadow: 0 0 8px 2px rgba(255,230,0,0.8);
+    display:none;
+  }
+  .serving .serve-dot{ display:inline-block; }
+  .score{
+    font-size: 28vh;
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+  .set-wins{ font-size: 4.5vw; opacity: 0.8; margin-top: 4px; pointer-events: none; }
+
+  #midbar{
+    display:flex; align-items:center; gap:8px;
+    background: #000;
+    padding: 8px 10px;
+    z-index: 5;
+    min-height: 46px;
+  }
+  #midbar .setscore{
+    color: var(--dim); font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
+    margin-right: auto; padding-left: 4px;
+    display:flex; flex-direction:column; gap:2px;
+  }
+  #midbar .setscore .code{ font-size: 10px; font-family: SF Mono, ui-monospace, Menlo, monospace; letter-spacing: 0.15em; }
+  .ctrlbtn{
+    background: #262626; color: #fff; border: none;
+    border-radius: 10px; padding: 7px 12px;
+    font-size: 13px; font-weight: 600;
+    display:flex; align-items:center; gap:5px;
+  }
+  .ctrlbtn:active{ background:#3a3a3a; }
+  .ctrlbtn.primary{ background: var(--gold); color: #111; }
+  .ctrlbtn.primary:active{ background: #d9c500; }
+  .ctrlbtn.danger{ background: var(--away); color:#fff; }
+  .ctrlbtn:disabled{ opacity: 0.4; }
+
+  /* Role banner */
+  #roleBanner{
+    position: absolute; top: env(safe-area-inset-top, 0px); left: 0; right: 0;
+    padding: 8px 14px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-size: 13px; font-weight: 600;
+    z-index: 10;
+    color: #111;
+  }
+  #roleBanner.watcher{ background: rgba(0,0,0,0.55); color: #fff; }
+  #roleBanner.scorekeeper{ background: var(--gold); color: #111; }
+  #roleBanner.claim{ background: var(--gold); color: #111; }
+  #roleBanner .claimBtn{
+    background: #111; color: var(--gold); border: none;
+    padding: 5px 12px; border-radius: 8px; font-weight:700; font-size: 12px;
+  }
+  #roleBanner .closeRole{
+    background: transparent; color: inherit; border:none; font-size:16px; opacity: 0.6;
+    padding: 2px 6px;
+  }
+
+  /* Modal / overlay */
+  .overlay{
+    position:fixed; inset:0; background: rgba(0,0,0,0.75);
+    display:none; align-items:center; justify-content:center; z-index: 50;
+    padding: 20px;
+  }
+  .overlay.show{ display:flex; }
+  .modal{
+    background: var(--panel); color:#fff; border-radius:16px;
+    width: 100%; max-width: 380px;
+    padding: 20px; max-height: 85vh; overflow-y:auto;
+  }
+  .modal h2{ margin:0 0 14px 0; font-size:20px; }
+  .field{ margin-bottom: 12px; }
+  .field label{ display:block; font-size:12px; color:#9a9a9e; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.04em; }
+  .field input, .field select{
+    width:100%; padding:10px 12px; border-radius:8px; border:1px solid #444;
+    background:#2c2c2e; color:#fff; font-size:16px;
+  }
+  .row2{ display:flex; gap:10px; }
+  .row2 .field{ flex:1; }
+  .actions{ display:flex; gap:10px; margin-top: 16px; }
+  .actions button{
+    flex:1; padding: 12px; border-radius:10px; border:none; font-size:15px; font-weight:700;
+  }
+  .btn-primary{ background: var(--home); color:#fff; }
+  .btn-secondary{ background:#3a3a3c; color:#fff; }
+  .btn-danger{ background: var(--away); color:#fff; }
+  #inSettingsRelease{ background: #444; color:#fff; width:100%; margin-top:8px; padding:11px; border-radius:10px; border:none; font-size:13px; font-weight:700; }
+  #inSettingsReset{ background: var(--away); color:#fff; width:100%; margin-top:8px; padding:11px; border-radius:10px; border:none; font-size:13px; font-weight:700; }
+
+  /* Toast */
+  #toast{
+    position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%);
+    background: #000; color:#fff; padding: 10px 16px; border-radius: 10px;
+    font-size: 14px; opacity: 0; transition: opacity 0.2s;
+    z-index: 100; pointer-events: none; max-width: 90%;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  #toast.show{ opacity: 1; }
+
+  /* Win banner */
+  #winBanner{
+    position:fixed; inset:0; background: rgba(0,0,0,0.88);
+    display:none; align-items:center; justify-content:center; z-index:60;
+    flex-direction:column; color:#fff; text-align:center; padding:20px;
+  }
+  #winBanner.show{ display:flex; }
+  #winBanner .big{ font-size: 40px; font-weight:800; margin-bottom:10px; }
+  #winBanner .sub{ font-size:17px; color:#ccc; margin-bottom:24px; }
+  #winBanner button{
+    background: var(--home); color:#fff; border:none; padding:14px 26px; border-radius:12px; font-size:16px; font-weight:700;
+  }
+
+  #connLost{
+    position: fixed; top: 60px; left: 12px; right: 12px;
+    background: var(--away); color:#fff; padding:10px 14px; border-radius: 10px;
+    font-size: 13px; text-align:center; z-index: 80;
+    display: none;
+  }
+  #connLost.show{ display: block; }
+
+  a{ color: inherit; }
+</style>
+</head>
+<body>
+
+<!-- ============ LOBBY ============ -->
+<div id="lobby" class="view">
+  <div class="header">
+    <div>
+      <h1>Live Volleyball</h1>
+      <div class="sub">Score together, watch together</div>
+    </div>
+    <button id="newGameBtn">+ New</button>
+  </div>
+  <div id="gamesScroll">
+    <div id="gamesList"></div>
+    <div class="empty" id="emptyState" style="display:none;">
+      <div class="big">No games in progress</div>
+      Tap <b>+ New</b> to start one.<br>
+      Anyone at your gym with this link can join and watch.
+    </div>
+  </div>
+  <div id="lobbyFooter">
+    Free live scoreboard by <span class="brand">pctires.ca</span> &middot;
+    <a href="/score/">Offline version</a>
+  </div>
+</div>
+
+<!-- ============ GAME ============ -->
+<div id="game" class="view">
+  <div id="roleBanner"></div>
+  <div id="connLost">Reconnecting to live game&hellip;</div>
+
+  <div class="half" id="half-home">
+    <div class="team-name"><span class="serve-dot"></span><span id="homeNameLbl">HOME</span></div>
+    <div class="score" id="homeScore">0</div>
+    <div class="set-wins" id="homeSets">Sets: 0</div>
+  </div>
+
+  <div id="midbar">
+    <div class="setscore">
+      <div id="setScoreLbl">Set 1</div>
+      <div class="code" id="codeLbl">&mdash;</div>
+    </div>
+    <button class="ctrlbtn" id="lobbyBtn">&larr; Lobby</button>
+    <button class="ctrlbtn" id="undoBtn">&#x27f2; Undo</button>
+    <button class="ctrlbtn" id="settingsBtn">&#x2699;</button>
+  </div>
+
+  <div class="half" id="half-away">
+    <div class="team-name"><span class="serve-dot"></span><span id="awayNameLbl">AWAY</span></div>
+    <div class="score" id="awayScore">0</div>
+    <div class="set-wins" id="awaySets">Sets: 0</div>
+  </div>
+</div>
+
+<!-- ============ NEW GAME MODAL ============ -->
+<div class="overlay" id="newGameOverlay">
+  <div class="modal">
+    <h2>Start a New Game</h2>
+    <div class="row2">
+      <div class="field">
+        <label>Home team (optional)</label>
+        <input id="newHomeName" maxlength="12" autocapitalize="characters" placeholder="HOME">
+      </div>
+      <div class="field">
+        <label>Away team (optional)</label>
+        <input id="newAwayName" maxlength="12" autocapitalize="characters" placeholder="AWAY">
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn-secondary" id="newGameCancel">Cancel</button>
+      <button class="btn-primary" id="newGameStart">Start</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SETTINGS MODAL ============ -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal">
+    <h2>Match Settings</h2>
+    <div id="settingsNotKeeper" style="display:none; color:#ffe600; font-size:13px; margin-bottom:10px;">
+      You're watching this game. Only the scorekeeper can change settings.
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Home team</label>
+        <input id="setHomeName" maxlength="12" autocapitalize="characters">
+      </div>
+      <div class="field">
+        <label>Away team</label>
+        <input id="setAwayName" maxlength="12" autocapitalize="characters">
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Match format</label>
+        <select id="setFormat">
+          <option value="1">Single set</option>
+          <option value="3">Best of 3</option>
+          <option value="5">Best of 5</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Point cap</label>
+        <select id="setCap">
+          <option value="21">21</option>
+          <option value="25">25</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Currently serving</label>
+      <select id="setServer">
+        <option value="home">Home</option>
+        <option value="away">Away</option>
+      </select>
+    </div>
+    <div class="actions">
+      <button class="btn-secondary" id="settingsCancel">Close</button>
+      <button class="btn-primary" id="settingsSave">Save</button>
+    </div>
+    <button id="inSettingsRelease" style="display:none;">Release scorekeeper role</button>
+    <button id="inSettingsReset" style="display:none;">Reset entire match</button>
+  </div>
+</div>
+
+<!-- ============ WIN BANNER ============ -->
+<div id="winBanner">
+  <div class="big" id="winBig"></div>
+  <div class="sub" id="winSub"></div>
+  <button id="winDismiss">OK</button>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div id="toast"></div>
+
+<script>
+(function(){
+  // ---------- Session ----------
+  var sessionId;
+  try {
+    sessionId = localStorage.getItem('vb_live_sid');
+  } catch(e){}
+  if (!sessionId) {
+    sessionId = 'sid_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    try { localStorage.setItem('vb_live_sid', sessionId); } catch(e){}
+  }
+
+  // ---------- State ----------
+  var currentGame = null;
+  var youAreScorekeeper = false;
+  var lobbyPollTimer = null;
+  var gamePollTimer = null;
+  var heartbeatTimer = null;
+  var actionPending = false;
+  var lastActionAt = 0;
+  var lastServerScoreState = ''; // to detect changes for win-banner
+  var connErrors = 0;
+  var lastGoodFetch = Date.now();
+
+  // ---------- DOM refs ----------
+  var lobbyView = document.getElementById('lobby');
+  var gameView = document.getElementById('game');
+  var gamesList = document.getElementById('gamesList');
+  var emptyState = document.getElementById('emptyState');
+  var newGameBtn = document.getElementById('newGameBtn');
+  var newGameOverlay = document.getElementById('newGameOverlay');
+  var newGameStart = document.getElementById('newGameStart');
+  var newGameCancel = document.getElementById('newGameCancel');
+  var newHomeName = document.getElementById('newHomeName');
+  var newAwayName = document.getElementById('newAwayName');
+
+  var homeHalf = document.getElementById('half-home');
+  var awayHalf = document.getElementById('half-away');
+  var homeScoreEl = document.getElementById('homeScore');
+  var awayScoreEl = document.getElementById('awayScore');
+  var homeNameLbl = document.getElementById('homeNameLbl');
+  var awayNameLbl = document.getElementById('awayNameLbl');
+  var homeSetsEl = document.getElementById('homeSets');
+  var awaySetsEl = document.getElementById('awaySets');
+  var setScoreLbl = document.getElementById('setScoreLbl');
+  var codeLbl = document.getElementById('codeLbl');
+  var undoBtn = document.getElementById('undoBtn');
+  var settingsBtn = document.getElementById('settingsBtn');
+  var lobbyBtn = document.getElementById('lobbyBtn');
+  var roleBanner = document.getElementById('roleBanner');
+  var connLost = document.getElementById('connLost');
+
+  var settingsOverlay = document.getElementById('settingsOverlay');
+  var setHomeName = document.getElementById('setHomeName');
+  var setAwayName = document.getElementById('setAwayName');
+  var setFormat = document.getElementById('setFormat');
+  var setCap = document.getElementById('setCap');
+  var setServer = document.getElementById('setServer');
+  var settingsSave = document.getElementById('settingsSave');
+  var settingsCancel = document.getElementById('settingsCancel');
+  var settingsNotKeeper = document.getElementById('settingsNotKeeper');
+  var inSettingsRelease = document.getElementById('inSettingsRelease');
+  var inSettingsReset = document.getElementById('inSettingsReset');
+
+  var winBanner = document.getElementById('winBanner');
+  var winBig = document.getElementById('winBig');
+  var winSub = document.getElementById('winSub');
+  var winDismiss = document.getElementById('winDismiss');
+  var toastEl = document.getElementById('toast');
+
+  // ---------- Utilities ----------
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ toastEl.classList.remove('show'); }, 1600);
+  }
+  function api(path, opts) {
+    opts = opts || {};
+    if (opts.body && typeof opts.body !== 'string') {
+      opts.body = JSON.stringify(opts.body);
+      opts.headers = Object.assign({ 'content-type': 'application/json' }, opts.headers || {});
+    }
+    return fetch(path, opts).then(function(r){
+      return r.json().then(function(data){
+        return { ok: r.ok, status: r.status, data: data };
+      }).catch(function(){
+        return { ok: r.ok, status: r.status, data: {} };
+      });
+    });
+  }
+  function getGameCode() {
+    var p = new URLSearchParams(location.search);
+    return p.get('g');
+  }
+  function setUrl(code) {
+    var u = new URL(location.href);
+    if (code) u.searchParams.set('g', code);
+    else u.searchParams.delete('g');
+    history.pushState({}, '', u.pathname + (u.search || ''));
+  }
+
+  // ---------- Router ----------
+  function render() {
+    var code = getGameCode();
+    if (code) enterGame(code);
+    else enterLobby();
+  }
+  window.addEventListener('popstate', render);
+
+  // ---------- Lobby ----------
+  function enterLobby() {
+    stopGame();
+    lobbyView.classList.add('active');
+    gameView.classList.remove('active');
+    currentGame = null;
+    youAreScorekeeper = false;
+    pollLobby();
+    if (lobbyPollTimer) clearInterval(lobbyPollTimer);
+    lobbyPollTimer = setInterval(pollLobby, 3000);
+  }
+  function stopLobby() {
+    if (lobbyPollTimer) { clearInterval(lobbyPollTimer); lobbyPollTimer = null; }
+  }
+  function pollLobby() {
+    api('/live/api/games').then(function(res){
+      if (!res.ok) return;
+      renderGames(res.data.games || []);
+    }).catch(function(){});
+  }
+  function renderGames(games) {
+    if (!games.length) {
+      gamesList.innerHTML = '';
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+    var html = '';
+    for (var i = 0; i < games.length; i++) {
+      var g = games[i];
+      var badges = '';
+      if (g.matchOver) badges += '<span class="badge over">FINAL</span>';
+      else if (g.hasScorekeeper) badges += '<span class="badge live">LIVE</span>';
+      else badges += '<span class="badge no-keeper">No scorekeeper</span>';
+      html +=
+        '<div class="game-card" data-code="' + g.gameId + '">' +
+          '<div class="code">Game ' + g.gameId + '</div>' +
+          '<div class="teams"><span>' + escapeHtml(g.homeName) + '</span><span class="vs">vs</span><span>' + escapeHtml(g.awayName) + '</span></div>' +
+          '<div class="scores">' +
+            '<span class="score home">' + g.homeScore + '</span>' +
+            '<span class="dash">&ndash;</span>' +
+            '<span class="score away">' + g.awayScore + '</span>' +
+          '</div>' +
+          '<div class="meta">' +
+            '<span class="badge">Set ' + g.setNumber + '</span>' +
+            '<span class="badge">Sets ' + g.homeSets + '&ndash;' + g.awaySets + '</span>' +
+            badges +
+          '</div>' +
+        '</div>';
+    }
+    gamesList.innerHTML = html;
+    var cards = gamesList.querySelectorAll('.game-card');
+    for (var j = 0; j < cards.length; j++) {
+      (function(el){
+        el.addEventListener('click', function(){ setUrl(el.dataset.code); render(); });
+      })(cards[j]);
+    }
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+
+  newGameBtn.addEventListener('click', function(){
+    newHomeName.value = '';
+    newAwayName.value = '';
+    newGameOverlay.classList.add('show');
+    setTimeout(function(){ newHomeName.focus(); }, 100);
+  });
+  newGameCancel.addEventListener('click', function(){ newGameOverlay.classList.remove('show'); });
+  newGameStart.addEventListener('click', function(){
+    if (newGameStart.disabled) return;
+    newGameStart.disabled = true;
+    newGameStart.textContent = 'Starting...';
+    api('/live/api/games', {
+      method: 'POST',
+      body: { homeName: newHomeName.value, awayName: newAwayName.value }
+    }).then(function(res){
+      newGameStart.disabled = false;
+      newGameStart.textContent = 'Start';
+      if (res.ok && res.data.gameId) {
+        newGameOverlay.classList.remove('show');
+        setUrl(res.data.gameId);
+        // Pre-flag that WE created this so we auto-claim
+        try { sessionStorage.setItem('vb_just_created', res.data.gameId); } catch(e){}
+        render();
+      } else {
+        toast(res.data.error || 'Could not start game');
+      }
+    });
+  });
+
+  // ---------- Game ----------
+  function enterGame(code) {
+    stopLobby();
+    gameView.classList.add('active');
+    lobbyView.classList.remove('active');
+    codeLbl.textContent = 'Game ' + code;
+    youAreScorekeeper = false;
+    lastServerScoreState = '';
+    connErrors = 0;
+    connLost.classList.remove('show');
+    updateRoleBanner();
+    fetchGame(code, true);
+    if (gamePollTimer) clearInterval(gamePollTimer);
+    gamePollTimer = setInterval(function(){ fetchGame(code, false); }, 1000);
+  }
+  function stopGame() {
+    if (gamePollTimer) { clearInterval(gamePollTimer); gamePollTimer = null; }
+    if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
+    winBanner.classList.remove('show');
+    settingsOverlay.classList.remove('show');
+  }
+
+  function fetchGame(code, isFirst) {
+    api('/live/api/game/' + code).then(function(res){
+      if (!res.ok) {
+        if (res.status === 404) {
+          toast('Game not found or expired');
+          setUrl(null); render(); return;
+        }
+        connErrors++;
+        if (connErrors >= 3) connLost.classList.add('show');
+        return;
+      }
+      connErrors = 0;
+      connLost.classList.remove('show');
+      lastGoodFetch = Date.now();
+      currentGame = res.data.game;
+      if (isFirst) {
+        // If we just created it, auto-claim
+        var justCreated = null;
+        try { justCreated = sessionStorage.getItem('vb_just_created'); } catch(e){}
+        if (justCreated === code) {
+          try { sessionStorage.removeItem('vb_just_created'); } catch(e){}
+          if (!currentGame.hasScorekeeper) {
+            claimScorekeeper();
+          }
+        }
+      }
+      renderGame();
+    }).catch(function(){
+      connErrors++;
+      if (connErrors >= 3) connLost.classList.add('show');
+    });
+  }
+
+  function renderGame() {
+    if (!currentGame) return;
+    var s = currentGame;
+    homeNameLbl.textContent = s.homeName;
+    awayNameLbl.textContent = s.awayName;
+    homeScoreEl.textContent = s.homeScore;
+    awayScoreEl.textContent = s.awayScore;
+    homeSetsEl.textContent = 'Sets: ' + s.homeSets;
+    awaySetsEl.textContent = 'Sets: ' + s.awaySets;
+    setScoreLbl.textContent = 'Set ' + s.setNumber + ' \u00b7 to ' + currentCap(s);
+    homeHalf.classList.toggle('serving', s.server === 'home');
+    awayHalf.classList.toggle('serving', s.server === 'away');
+    homeHalf.classList.toggle('tappable', youAreScorekeeper && !s.matchOver);
+    awayHalf.classList.toggle('tappable', youAreScorekeeper && !s.matchOver);
+    undoBtn.style.visibility = (youAreScorekeeper && s.history && s.history.length) ? 'visible' : 'hidden';
+    updateRoleBanner();
+
+    // Win banner (only trigger on transitions)
+    var sig = s.setNumber + ':' + s.homeSets + ':' + s.awaySets + ':' + (s.matchOver ? 'M' : 'P');
+    if (lastServerScoreState && sig !== lastServerScoreState) {
+      // Something set-level changed
+      var prev = lastServerScoreState.split(':');
+      var prevSets = { setNumber: +prev[0], homeSets: +prev[1], awaySets: +prev[2], matchOver: prev[3] === 'M' };
+      if (s.matchOver && !prevSets.matchOver) {
+        var winnerName = s.homeSets > s.awaySets ? s.homeName : s.awayName;
+        showBanner(winnerName + ' win the match!', s.homeName + ' ' + s.homeSets + ' \u2013 ' + s.awaySets + ' ' + s.awayName);
+      } else if ((s.homeSets > prevSets.homeSets || s.awaySets > prevSets.awaySets) && !s.matchOver) {
+        var setWinner = s.homeSets > prevSets.homeSets ? s.homeName : s.awayName;
+        // Show only briefly for watchers
+        showBanner(setWinner + ' win set ' + prevSets.setNumber + '!', 'Set score ' + s.homeSets + ' \u2013 ' + s.awaySets);
+      }
+    }
+    lastServerScoreState = sig;
+  }
+
+  function currentCap(s) {
+    var needed = Math.ceil(s.format / 2);
+    var isDecider = s.format > 1 && s.homeSets === needed - 1 && s.awaySets === needed - 1;
+    return isDecider ? 15 : s.cap;
+  }
+
+  function showBanner(bigText, subText) {
+    winBig.textContent = bigText;
+    winSub.textContent = subText;
+    winBanner.classList.add('show');
+  }
+  winDismiss.addEventListener('click', function(){ winBanner.classList.remove('show'); });
+
+  function updateRoleBanner() {
+    if (!currentGame) { roleBanner.style.display = 'none'; return; }
+    roleBanner.style.display = 'flex';
+    roleBanner.className = '';
+    if (youAreScorekeeper) {
+      roleBanner.classList.add('scorekeeper');
+      roleBanner.innerHTML = '<span>&#x2731; You are the scorekeeper &mdash; tap halves to score</span>';
+    } else if (!currentGame.hasScorekeeper) {
+      roleBanner.classList.add('claim');
+      roleBanner.innerHTML = '<span>No scorekeeper &mdash; anyone can take control</span><button class="claimBtn" id="claimBtnInline">Take control</button>';
+      var b = document.getElementById('claimBtnInline');
+      if (b) b.addEventListener('click', claimScorekeeper);
+    } else {
+      roleBanner.classList.add('watcher');
+      roleBanner.innerHTML = '<span>Watching &mdash; scorekeeper is running the game</span>';
+    }
+  }
+
+  // ---------- Actions ----------
+  function claimScorekeeper() {
+    var code = getGameCode();
+    if (!code) return;
+    api('/live/api/game/' + code + '/claim', {
+      method: 'POST', body: { sessionId: sessionId }
+    }).then(function(res){
+      if (res.ok && res.data.youAreScorekeeper) {
+        youAreScorekeeper = true;
+        currentGame = res.data.game;
+        startHeartbeat();
+        renderGame();
+        toast('You are the scorekeeper');
+      } else {
+        toast(res.data.error || 'Could not take control');
+        if (res.data.game) { currentGame = res.data.game; renderGame(); }
+      }
+    });
+  }
+  function releaseScorekeeper(silent) {
+    var code = getGameCode();
+    if (!code || !youAreScorekeeper) return Promise.resolve();
+    return api('/live/api/game/' + code + '/release', {
+      method: 'POST', body: { sessionId: sessionId }
+    }).then(function(){
+      youAreScorekeeper = false;
+      if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
+      updateRoleBanner();
+      if (!silent) toast('You released the scorekeeper role');
+    });
+  }
+  function startHeartbeat() {
+    if (heartbeatTimer) clearInterval(heartbeatTimer);
+    heartbeatTimer = setInterval(sendHeartbeat, 30000);
+  }
+  function sendHeartbeat() {
+    var code = getGameCode();
+    if (!code || !youAreScorekeeper) return;
+    api('/live/api/game/' + code + '/heartbeat', {
+      method: 'POST', body: { sessionId: sessionId }
+    }).then(function(res){
+      if (res.status === 403) {
+        // We got kicked off
+        youAreScorekeeper = false;
+        if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
+        toast('Scorekeeper role released');
+        updateRoleBanner();
+      }
+    });
+  }
+
+  function sendAction(action) {
+    if (!youAreScorekeeper) {
+      toast('Only the scorekeeper can score. Tap "Take control" first.');
+      return;
+    }
+    if (actionPending) return;
+    var now = Date.now();
+    if (now - lastActionAt < 150) return; // simple debounce
+    lastActionAt = now;
+    var code = getGameCode();
+    actionPending = true;
+    // Optimistic hint (server confirms)
+    api('/live/api/game/' + code + '/action', {
+      method: 'POST', body: { sessionId: sessionId, action: action }
+    }).then(function(res){
+      actionPending = false;
+      if (res.ok && res.data.game) {
+        currentGame = res.data.game;
+        renderGame();
+      } else if (res.status === 403) {
+        youAreScorekeeper = false;
+        toast('You are no longer the scorekeeper');
+        updateRoleBanner();
+      } else {
+        toast(res.data.error || 'Action failed');
+      }
+    }).catch(function(){
+      actionPending = false;
+      toast('Connection lost');
+    });
+  }
+
+  homeHalf.addEventListener('click', function(){ sendAction({ type: 'point', team: 'home' }); });
+  awayHalf.addEventListener('click', function(){ sendAction({ type: 'point', team: 'away' }); });
+  undoBtn.addEventListener('click', function(e){ e.stopPropagation(); sendAction({ type: 'undo' }); });
+
+  lobbyBtn.addEventListener('click', function(){
+    // Ask before leaving if scorekeeper
+    if (youAreScorekeeper) {
+      if (!confirm('You are the scorekeeper. Leave and release control?')) return;
+      releaseScorekeeper(true).then(function(){
+        setUrl(null); render();
+      });
+    } else {
+      setUrl(null); render();
+    }
+  });
+
+  // Settings modal
+  settingsBtn.addEventListener('click', function(){
+    if (!currentGame) return;
+    setHomeName.value = currentGame.homeName;
+    setAwayName.value = currentGame.awayName;
+    setFormat.value = String(currentGame.format);
+    setCap.value = String(currentGame.cap);
+    setServer.value = currentGame.server;
+    settingsNotKeeper.style.display = youAreScorekeeper ? 'none' : 'block';
+    var inputs = settingsOverlay.querySelectorAll('input, select');
+    for (var i = 0; i < inputs.length; i++) inputs[i].disabled = !youAreScorekeeper;
+    settingsSave.style.display = youAreScorekeeper ? 'block' : 'none';
+    inSettingsRelease.style.display = youAreScorekeeper ? 'block' : 'none';
+    inSettingsReset.style.display = youAreScorekeeper ? 'block' : 'none';
+    settingsOverlay.classList.add('show');
+  });
+  settingsCancel.addEventListener('click', function(){ settingsOverlay.classList.remove('show'); });
+  settingsSave.addEventListener('click', function(){
+    sendAction({
+      type: 'settings',
+      homeName: setHomeName.value,
+      awayName: setAwayName.value,
+      format: parseInt(setFormat.value, 10),
+      cap: parseInt(setCap.value, 10),
+      server: setServer.value
+    });
+    settingsOverlay.classList.remove('show');
+  });
+  inSettingsRelease.addEventListener('click', function(){
+    if (confirm('Release scorekeeper role? Someone else will be able to take control.')) {
+      releaseScorekeeper(false);
+      settingsOverlay.classList.remove('show');
+    }
+  });
+  inSettingsReset.addEventListener('click', function(){
+    if (confirm('Reset entire match to 0-0?')) {
+      sendAction({ type: 'reset' });
+      settingsOverlay.classList.remove('show');
+    }
+  });
+
+  // Prevent zoom / rubber-band
+  document.addEventListener('touchmove', function(e){
+    // Allow scrolling inside lobby games list
+    if (e.target.closest('#gamesScroll')) return;
+    if (e.target.closest('.modal')) return;
+    e.preventDefault();
+  }, { passive:false });
+  document.addEventListener('dblclick', function(e){ e.preventDefault(); });
+
+  // Kick off
+  render();
+})();
+</script>
+</body>
+</html>
