@@ -1019,8 +1019,8 @@ async function build(forceST){
         await ffmpeg.writeFile(name, new Uint8Array(await p.blob.arrayBuffer()));
         written.push(name);
         meta.push({ name, kind: 'image', hasAudio: false, duration: dur, kb: !!c.kb });
-        if(c.kb) args.push('-threads', 'DEC', '-itsoffset', `OFF${i}`, '-framerate', '30', '-i', name);                                  // single frame; zoompan makes the motion
-        else     args.push('-threads', 'DEC', '-itsoffset', `OFF${i}`, '-loop', '1', '-framerate', '30', '-t', dur.toFixed(3), '-i', name);
+        if(c.kb) args.push('-threads', 'DEC', '-framerate', '30', '-i', name);                                  // single frame; zoompan makes the motion
+        else     args.push('-threads', 'DEC', '-loop', '1', '-framerate', '30', '-t', dur.toFixed(3), '-i', name);
         log(`clip${i}: photo ${p.w}×${p.h}, ${dur}s${c.kb ? ', slow zoom' : ''}`);
         continue;
       }
@@ -1049,7 +1049,7 @@ async function build(forceST){
       const dur = Math.max(0.5, end - start);
       meta.push({ name, kind: 'video', hasAudio: p.hasAudio, audioIdx: p.audioIdx, hdr: p.hdr, duration: dur });
       if(start > 0.01 || end < fullDur - 0.01) args.push('-ss', start.toFixed(3), '-t', dur.toFixed(3));
-      args.push('-threads', 'DEC', '-itsoffset', `OFF${i}`, '-i', name);
+      args.push('-threads', 'DEC', '-i', name);
       log(`clip${i}: ${dur.toFixed(2)}s${start ? ' from ' + start.toFixed(1) + 's' : ''}, audio=${p.hasAudio}${p.hdr ? ', HDR ' + p.hdr + ' → SDR' : ''}`);
     }
     const n = items.length;
@@ -1059,11 +1059,11 @@ async function build(forceST){
     if(transition === 'dissolve' && n > 1 && meta.some(m => m.duration < XFADE * 2 + 0.2)){ transition = 'fade'; log('a clip is too short for a dissolve — using fade to black'); }
     if(n === 1) transition = 'none';
     const totalDur = meta.reduce((s, m) => s + m.duration, 0) - (transition === 'dissolve' ? (n - 1) * XFADE : 0);
-    // MEMORY: ffmpeg reads every input in timestamp order, so with all clips starting at t=0 it decodes and
-    // buffers frames from ALL of them at once (7 clips × a few seconds × 720p = gigabytes → OOM in the engine).
-    // Shifting each input's timestamps to where it sits on the output timeline makes ffmpeg read it only when
-    // needed; the filter chains reset the timestamps back to 0 (setpts) so xfade/concat see what they expect.
-    { let off = 0; for(let k = 0; k < n; k++){ for(let a = 0; a < args.length; a++) if(args[a] === `OFF${k}`) args[a] = off.toFixed(3); off += meta[k].duration - (transition === 'dissolve' ? XFADE : 0); } }
+    // NOTE — do NOT add `-itsoffset` here. Shifting each input onto its place in the output timeline looks
+    // like a tidy way to stop ffmpeg buffering every clip at once, but combined with the input-side `-t`
+    // (our trim) it makes ffmpeg stop reading each input early, and the AUDIO of every clip after the first
+    // silently disappears. Verified against native ffmpeg: identical graph, audio correct without the offset
+    // and dead from ~3 s in with it. Memory is handled by picking the growable engine for big jobs instead.
 
     // ── video chain per segment ──
     const filters = [];
