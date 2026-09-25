@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Volleyball">
+<meta name="theme-color" content="#1d5fb4">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<title>Volleyball Scoreboard</title>
+<style>
+  :root{
+    --home: #1d5fb4;
+    --home-dark: #133f7a;
+    --away: #c0392b;
+    --away-dark: #8c291d;
+    --bg: #111;
+    --text: #fff;
+    --dim: rgba(255,255,255,0.65);
+  }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+  html, body{
+    margin:0; padding:0; height:100%; width:100%;
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  #app{
+    display:flex; flex-direction:column;
+    height:100vh; width:100%;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .half{
+    flex: 1;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    position:relative;
+    color: var(--text);
+    transition: filter 0.08s ease;
+    cursor: pointer;
+  }
+  .half:active{ filter: brightness(1.3); }
+  #home{ background: var(--home); }
+  #away{ background: var(--away); }
+  .team-name{
+    font-size: 7vw;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display:flex; align-items:center; gap:10px;
+    opacity: 0.95;
+    pointer-events: none;
+  }
+  .serve-dot{
+    width: 16px; height:16px; border-radius:50%;
+    background: #ffe600;
+    box-shadow: 0 0 8px 2px rgba(255,230,0,0.8);
+    display:none;
+  }
+  .serving .serve-dot{ display:inline-block; }
+  .score{
+    font-size: 30vh;
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+  .set-wins{
+    font-size: 5vw;
+    opacity: 0.8;
+    margin-top: 4px;
+    pointer-events: none;
+  }
+  #midbar{
+    display:flex; align-items:center; justify-content:center; gap:14px;
+    background: #000;
+    padding: 8px 10px;
+    z-index: 5;
+  }
+  #midbar .setscore{
+    color: var(--dim);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-right: auto;
+    padding-left: 6px;
+  }
+  .ctrlbtn{
+    background: #262626;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 15px;
+    font-weight: 600;
+    display:flex; align-items:center; gap:6px;
+  }
+  .ctrlbtn:active{ background:#3a3a3a; }
+  #settingsBtn{ margin-right: 6px; }
+
+  #overlay{
+    position:fixed; inset:0; background: rgba(0,0,0,0.75);
+    display:none; align-items:center; justify-content:center; z-index: 50;
+    padding: 20px;
+  }
+  #overlay.show{ display:flex; }
+  #modal{
+    background:#1c1c1e; color:#fff; border-radius:16px;
+    width: 100%; max-width: 380px;
+    padding: 20px; max-height: 85vh; overflow-y:auto;
+  }
+  #modal h2{ margin:0 0 14px 0; font-size:20px; }
+  .field{ margin-bottom: 14px; }
+  .field label{ display:block; font-size:13px; color:#9a9a9e; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em; }
+  .field input, .field select{
+    width:100%; padding:10px 12px; border-radius:8px; border:1px solid #444;
+    background:#2c2c2e; color:#fff; font-size:16px;
+  }
+  .row2{ display:flex; gap:10px; }
+  .row2 .field{ flex:1; }
+  #modal .actions{ display:flex; gap:10px; margin-top: 18px; }
+  #modal .actions button{
+    flex:1; padding: 12px; border-radius:10px; border:none; font-size:15px; font-weight:700;
+  }
+  #saveBtn{ background: #1d5fb4; color:#fff; }
+  #closeModalBtn{ background:#3a3a3c; color:#fff; }
+  #dangerBtn{ background: #c0392b; color:#fff; width:100%; margin-top:10px; padding:12px; border-radius:10px; border:none; font-size:14px; font-weight:700; }
+
+  #winBanner{
+    position:fixed; inset:0; background: rgba(0,0,0,0.85);
+    display:none; align-items:center; justify-content:center; z-index:60;
+    flex-direction:column; color:#fff; text-align:center; padding:20px;
+  }
+  #winBanner.show{ display:flex; }
+  #winBanner .big{ font-size: 42px; font-weight:800; margin-bottom:10px; }
+  #winBanner .sub{ font-size:18px; color:#ccc; margin-bottom:24px; }
+  #winBanner button{
+    background:#1d5fb4; color:#fff; border:none; padding:14px 26px; border-radius:12px; font-size:17px; font-weight:700;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="half" id="home">
+    <div class="team-name"><span class="serve-dot"></span><span id="homeNameLbl">HOME</span></div>
+    <div class="score" id="homeScore">0</div>
+    <div class="set-wins" id="homeSets">Sets won: 0</div>
+  </div>
+
+  <div id="midbar">
+    <div class="setscore" id="setScoreLbl">Set 1</div>
+    <button class="ctrlbtn" id="undoBtn">⟲ Undo</button>
+    <button class="ctrlbtn" id="settingsBtn">⚙ Settings</button>
+  </div>
+
+  <div class="half" id="away">
+    <div class="team-name"><span class="serve-dot"></span><span id="awayNameLbl">UA</span></div>
+    <div class="score" id="awayScore">0</div>
+    <div class="set-wins" id="awaySets">Sets won: 0</div>
+  </div>
+</div>
+
+<div id="overlay">
+  <div id="modal">
+    <h2>Match Settings</h2>
+    <div class="row2">
+      <div class="field">
+        <label>Home team name</label>
+        <input id="homeNameInput" maxlength="12" type="text" autocapitalize="characters">
+      </div>
+      <div class="field">
+        <label>Away team name</label>
+        <input id="awayNameInput" maxlength="12" type="text" autocapitalize="characters">
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Match format</label>
+        <select id="formatInput">
+          <option value="1">Single set</option>
+          <option value="3">Best of 3</option>
+          <option value="5">Best of 5</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Points to win a set</label>
+        <select id="capInput">
+          <option value="21">21</option>
+          <option value="25" selected>25</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Who's serving right now?</label>
+      <select id="serverInput">
+        <option value="home">Home</option>
+        <option value="away">Away</option>
+      </select>
+    </div>
+    <div class="actions">
+      <button id="closeModalBtn">Cancel</button>
+      <button id="saveBtn">Save</button>
+    </div>
+    <button id="dangerBtn">Reset entire match</button>
+  </div>
+</div>
+
+<div id="winBanner">
+  <div class="big" id="winBig"></div>
+  <div class="sub" id="winSub"></div>
+  <button id="winNextBtn">Next set</button>
+</div>
+
+<script>
+// Register service worker so app works fully offline after first load
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(err){
+      console.log('SW registration failed:', err);
+    });
+  });
+}
+
+(function(){
+  var STORAGE_KEY = 'vb_scoreboard_state_v1';
+
+  var defaultState = {
+    homeName: 'HOME',
+    awayName: 'UA',
+    homeScore: 0,
+    awayScore: 0,
+    homeSets: 0,
+    awaySets: 0,
+    setNumber: 1,
+    format: 5,
+    cap: 25,
+    server: 'home',
+    history: [],
+    matchOver: false
+  };
+
+  var state = load();
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return JSON.parse(JSON.stringify(defaultState));
+      var parsed = JSON.parse(raw);
+      return Object.assign(JSON.parse(JSON.stringify(defaultState)), parsed);
+    }catch(e){
+      return JSON.parse(JSON.stringify(defaultState));
+    }
+  }
+
+  function save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  var homeEl = document.getElementById('home');
+  var awayEl = document.getElementById('away');
+  var homeScoreEl = document.getElementById('homeScore');
+  var awayScoreEl = document.getElementById('awayScore');
+  var homeNameLbl = document.getElementById('homeNameLbl');
+  var awayNameLbl = document.getElementById('awayNameLbl');
+  var homeSetsEl = document.getElementById('homeSets');
+  var awaySetsEl = document.getElementById('awaySets');
+  var setScoreLbl = document.getElementById('setScoreLbl');
+  var undoBtn = document.getElementById('undoBtn');
+  var settingsBtn = document.getElementById('settingsBtn');
+
+  var overlay = document.getElementById('overlay');
+  var homeNameInput = document.getElementById('homeNameInput');
+  var awayNameInput = document.getElementById('awayNameInput');
+  var formatInput = document.getElementById('formatInput');
+  var capInput = document.getElementById('capInput');
+  var serverInput = document.getElementById('serverInput');
+  var saveBtn = document.getElementById('saveBtn');
+  var closeModalBtn = document.getElementById('closeModalBtn');
+  var dangerBtn = document.getElementById('dangerBtn');
+
+  var winBanner = document.getElementById('winBanner');
+  var winBig = document.getElementById('winBig');
+  var winSub = document.getElementById('winSub');
+  var winNextBtn = document.getElementById('winNextBtn');
+
+  function setsNeededToWinMatch(){
+    return Math.ceil(state.format / 2);
+  }
+
+  function currentCap(){
+    var needed = setsNeededToWinMatch();
+    var isDecider = state.format > 1 && (state.homeSets === needed - 1) && (state.awaySets === needed - 1);
+    return isDecider ? 15 : state.cap;
+  }
+
+  function render(){
+    homeNameLbl.textContent = state.homeName;
+    awayNameLbl.textContent = state.awayName;
+    homeScoreEl.textContent = state.homeScore;
+    awayScoreEl.textContent = state.awayScore;
+    homeSetsEl.textContent = 'Sets won: ' + state.homeSets;
+    awaySetsEl.textContent = 'Sets won: ' + state.awaySets;
+    setScoreLbl.textContent = 'Set ' + state.setNumber + ' \u00b7 to ' + currentCap();
+    homeEl.classList.toggle('serving', state.server === 'home');
+    awayEl.classList.toggle('serving', state.server === 'away');
+    undoBtn.style.visibility = state.history.length ? 'visible' : 'hidden';
+  }
+
+  function point(team){
+    if(state.matchOver) return;
+    if(team === 'home'){ state.homeScore++; } else { state.awayScore++; }
+    state.server = team;
+    state.history.push(team);
+    checkSetWin();
+    save();
+    render();
+  }
+
+  function undo(){
+    if(!state.history.length) return;
+    var last = state.history.pop();
+    if(last === 'home'){ state.homeScore = Math.max(0, state.homeScore - 1); }
+    else { state.awayScore = Math.max(0, state.awayScore - 1); }
+    if(state.history.length){ state.server = state.history[state.history.length - 1]; }
+    save();
+    render();
+  }
+
+  function checkSetWin(){
+    var cap = currentCap();
+    var h = state.homeScore, a = state.awayScore;
+    var winner = null;
+    if(h >= cap && (h - a) >= 2) winner = 'home';
+    if(a >= cap && (a - h) >= 2) winner = 'away';
+    if(!winner) return;
+
+    if(winner === 'home') state.homeSets++; else state.awaySets++;
+
+    var needed = setsNeededToWinMatch();
+    var matchWinnerName = null;
+    if(state.homeSets >= needed) matchWinnerName = state.homeName;
+    if(state.awaySets >= needed) matchWinnerName = state.awayName;
+
+    if(matchWinnerName){
+      state.matchOver = true;
+      showWin(matchWinnerName + ' win the match!', state.homeName + ' ' + state.homeSets + ' – ' + state.awaySets + ' ' + state.awayName, true);
+    } else {
+      var winnerName = winner === 'home' ? state.homeName : state.awayName;
+      showWin(winnerName + ' win set ' + state.setNumber + '!', state.homeName + ' ' + state.homeScore + ' – ' + state.awayScore + ' ' + state.awayName, false);
+    }
+  }
+
+  function showWin(bigText, subText, isMatchOver){
+    winBig.textContent = bigText;
+    winSub.textContent = subText;
+    winNextBtn.textContent = isMatchOver ? 'Start new match' : 'Next set';
+    winBanner.classList.add('show');
+    winNextBtn.onclick = function(){
+      winBanner.classList.remove('show');
+      if(isMatchOver){
+        resetMatch();
+      } else {
+        var loserServes = state.homeScore > state.awayScore ? 'away' : 'home';
+        state.setNumber++;
+        state.homeScore = 0;
+        state.awayScore = 0;
+        state.history = [];
+        state.server = loserServes;
+        save();
+        render();
+      }
+    };
+  }
+
+  function resetMatch(){
+    state.homeScore = 0;
+    state.awayScore = 0;
+    state.homeSets = 0;
+    state.awaySets = 0;
+    state.setNumber = 1;
+    state.history = [];
+    state.matchOver = false;
+    state.server = 'home';
+    save();
+    render();
+  }
+
+  homeEl.addEventListener('click', function(){ point('home'); });
+  awayEl.addEventListener('click', function(){ point('away'); });
+  undoBtn.addEventListener('click', function(e){ e.stopPropagation(); undo(); });
+
+  settingsBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    homeNameInput.value = state.homeName;
+    awayNameInput.value = state.awayName;
+    formatInput.value = String(state.format);
+    capInput.value = String(state.cap);
+    serverInput.value = state.server;
+    overlay.classList.add('show');
+  });
+
+  closeModalBtn.addEventListener('click', function(){ overlay.classList.remove('show'); });
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.classList.remove('show'); });
+
+  saveBtn.addEventListener('click', function(){
+    state.homeName = (homeNameInput.value || 'HOME').trim().toUpperCase().slice(0,12);
+    state.awayName = (awayNameInput.value || 'AWAY').trim().toUpperCase().slice(0,12);
+    state.format = parseInt(formatInput.value, 10);
+    state.cap = parseInt(capInput.value, 10);
+    state.server = serverInput.value;
+    overlay.classList.remove('show');
+    save();
+    render();
+  });
+
+  dangerBtn.addEventListener('click', function(){
+    if(confirm('Reset the entire match? This clears both teams\' scores and set wins.')){
+      overlay.classList.remove('show');
+      resetMatch();
+    }
+  });
+
+  document.addEventListener('touchmove', function(e){ e.preventDefault(); }, { passive:false });
+  document.addEventListener('dblclick', function(e){ e.preventDefault(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
