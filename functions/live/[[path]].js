@@ -58,6 +58,8 @@ function defaultGame(code, homeName, awayName) {
     server: 'home',
     history: [],
     matchOver: false,
+    pendingSetWinner: null,   // 'home' | 'away' | null. When set, scoring is frozen
+                              // until 'nextSet' (or 'reset' or manual -) clears it.
     scorekeeperSessionId: null,
     scorekeeperLastSeen: 0,
     createdAt: now,
@@ -90,6 +92,8 @@ async function loadGame(env, code) {
 }
 
 function checkSetWin(s) {
+  // Idempotent: does nothing if a set is already awarded and awaiting nextSet
+  if (s.pendingSetWinner) return;
   const needed = Math.ceil(s.format / 2);
   const isDecider = s.format > 1 && s.homeSets === needed - 1 && s.awaySets === needed - 1;
   const cap = isDecider ? 15 : s.cap;
@@ -99,13 +103,38 @@ function checkSetWin(s) {
   if (!winner) return;
   if (winner === 'home') s.homeSets++;
   else s.awaySets++;
+  s.pendingSetWinner = winner;
   if (s.homeSets >= needed || s.awaySets >= needed) s.matchOver = true;
+}
+
+// If a set was awarded but a subsequent undo/subtract removed the winning
+// condition, roll the set back so play can continue.
+function revertPendingIfNoLongerWon(s) {
+  if (!s.pendingSetWinner) return;
+  const needed = Math.ceil(s.format / 2);
+  const isDecider = s.format > 1 && s.homeSets === needed && s.awaySets === needed - 1
+                                || s.format > 1 && s.awaySets === needed && s.homeSets === needed - 1;
+  // Recompute the cap using pre-award set counts
+  const preHomeSets = s.pendingSetWinner === 'home' ? s.homeSets - 1 : s.homeSets;
+  const preAwaySets = s.pendingSetWinner === 'away' ? s.awaySets - 1 : s.awaySets;
+  const wasDecider = s.format > 1 && preHomeSets === needed - 1 && preAwaySets === needed - 1;
+  const cap = wasDecider ? 15 : s.cap;
+  const stillWon =
+    (s.pendingSetWinner === 'home' && s.homeScore >= cap && s.homeScore - s.awayScore >= 2) ||
+    (s.pendingSetWinner === 'away' && s.awayScore >= cap && s.awayScore - s.homeScore >= 2);
+  if (!stillWon) {
+    if (s.pendingSetWinner === 'home') s.homeSets = Math.max(0, s.homeSets - 1);
+    else s.awaySets = Math.max(0, s.awaySets - 1);
+    s.pendingSetWinner = null;
+    s.matchOver = false;
+  }
 }
 
 function applyAction(s, action) {
   switch (action.type) {
     case 'point': {
       if (s.matchOver) return;
+      if (s.pendingSetWinner) return; // set decided; wait for nextSet
       if (action.team === 'home') s.homeScore++;
       else if (action.team === 'away') s.awayScore++;
       else return;
@@ -120,6 +149,8 @@ function applyAction(s, action) {
       if (last === 'home') s.homeScore = Math.max(0, s.homeScore - 1);
       else s.awayScore = Math.max(0, s.awayScore - 1);
       if (s.history.length) s.server = s.history[s.history.length - 1];
+      // If undoing invalidates the pending set win, roll it back
+      revertPendingIfNoLongerWon(s);
       break;
     }
     case 'subtract': {
@@ -139,6 +170,8 @@ function applyAction(s, action) {
         return;
       }
       if (s.history.length) s.server = s.history[s.history.length - 1];
+      // If -1 pulled us out of the win condition, roll back the awarded set
+      revertPendingIfNoLongerWon(s);
       break;
     }
     case 'settings': {
@@ -156,12 +189,16 @@ function applyAction(s, action) {
       break;
     }
     case 'nextSet': {
+      // Only advances if a set was actually won; ignored otherwise
+      if (!s.pendingSetWinner) return;
+      if (s.matchOver) return;
       const loserServes = s.homeScore > s.awayScore ? 'away' : 'home';
       s.setNumber++;
       s.homeScore = 0;
       s.awayScore = 0;
       s.history = [];
       s.server = loserServes;
+      s.pendingSetWinner = null;
       break;
     }
     case 'reset': {
@@ -172,6 +209,7 @@ function applyAction(s, action) {
       s.setNumber = 1;
       s.history = [];
       s.matchOver = false;
+      s.pendingSetWinner = null;
       s.server = 'home';
       break;
     }
@@ -228,6 +266,7 @@ export async function onRequest(context) {
         setNumber: g.setNumber,
         hasScorekeeper: !canClaim(g),
         matchOver: g.matchOver,
+        pendingSetWinner: g.pendingSetWinner || null,
         updatedAt: g.updatedAt
       });
     }
