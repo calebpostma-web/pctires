@@ -185,11 +185,25 @@
     min-height: 46px;
   }
   #midbar .setscore{
-    color: var(--dim); font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
     margin-right: auto; padding-left: 4px;
     display:flex; flex-direction:column; gap:2px;
   }
-  #midbar .setscore .code{ font-size: 10px; font-family: SF Mono, ui-monospace, Menlo, monospace; letter-spacing: 0.15em; }
+  #midbar .setscore .setlabel{
+    color: var(--gold);
+    font-size: 18px; font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  #midbar .setscore .setlabel .cap{
+    color: var(--dim);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    margin-left: 4px;
+  }
+  #midbar .setscore.decided .setlabel{ color: var(--gold); }
+  #midbar .setscore .code{ font-size: 10px; font-family: SF Mono, ui-monospace, Menlo, monospace; letter-spacing: 0.15em; color: var(--dim); margin-top: 2px; }
   .ctrlbtn{
     background: #262626; color: #fff; border: none;
     border-radius: 10px; padding: 7px 12px;
@@ -275,8 +289,16 @@
   #winBanner.show{ display:flex; }
   #winBanner .big{ font-size: 40px; font-weight:800; margin-bottom:10px; }
   #winBanner .sub{ font-size:17px; color:#ccc; margin-bottom:24px; }
+  #winBanner .btnrow{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
   #winBanner button{
-    background: var(--home); color:#fff; border:none; padding:14px 26px; border-radius:12px; font-size:16px; font-weight:700;
+    background: var(--gold); color:#111; border:none; padding:14px 26px; border-radius:12px;
+    font-size:16px; font-weight:800; letter-spacing:0.02em;
+  }
+  #winBanner button.secondary{
+    background: #3a3a3c; color:#fff;
+  }
+  #winBanner .watcher-note{
+    margin-top: 14px; font-size: 13px; color: rgba(255,255,255,0.5); font-style: italic;
   }
 
   #connLost{
@@ -343,8 +365,8 @@
   </div>
 
   <div id="midbar">
-    <div class="setscore">
-      <div id="setScoreLbl">Set 1</div>
+    <div class="setscore" id="setScoreBox">
+      <div class="setlabel" id="setScoreLbl">SET 1<span class="cap">to 25</span></div>
       <div class="code" id="codeLbl">&mdash;</div>
     </div>
     <button class="ctrlbtn" id="lobbyBtn">&larr; Lobby</button>
@@ -438,13 +460,20 @@
 <div id="winBanner">
   <div class="big" id="winBig"></div>
   <div class="sub" id="winSub"></div>
-  <button id="winDismiss">OK</button>
+  <div class="btnrow">
+    <button id="winNextBtn" style="display:none;">Start next set</button>
+    <button id="winNewMatchBtn" style="display:none;">Start new match</button>
+    <button id="winDismiss" class="secondary">Dismiss</button>
+  </div>
+  <div class="watcher-note" id="winWatcherNote" style="display:none;">
+    Waiting for scorekeeper to start the next set&hellip;
+  </div>
 </div>
 
 <!-- ============ TOAST ============ -->
 <div id="toast"></div>
 
-<div id="versionTag">v2.2</div>
+<div id="versionTag">v2.3</div>
 
 <script>
 (function(){
@@ -515,6 +544,10 @@
   var winBig = document.getElementById('winBig');
   var winSub = document.getElementById('winSub');
   var winDismiss = document.getElementById('winDismiss');
+  var winNextBtn = document.getElementById('winNextBtn');
+  var winNewMatchBtn = document.getElementById('winNewMatchBtn');
+  var winWatcherNote = document.getElementById('winWatcherNote');
+  var setScoreBox = document.getElementById('setScoreBox');
   var toastEl = document.getElementById('toast');
 
   // ---------- Utilities ----------
@@ -722,36 +755,54 @@
   function renderGame() {
     if (!currentGame) return;
     var s = currentGame;
+    var setFrozen = !!s.pendingSetWinner || !!s.matchOver;
+
     homeNameLbl.textContent = s.homeName;
     awayNameLbl.textContent = s.awayName;
     homeScoreEl.textContent = s.homeScore;
     awayScoreEl.textContent = s.awayScore;
     homeSetsEl.textContent = 'Sets: ' + s.homeSets;
     awaySetsEl.textContent = 'Sets: ' + s.awaySets;
-    setScoreLbl.textContent = 'Set ' + s.setNumber + ' \u00b7 to ' + currentCap(s);
+
+    // Big prominent set indicator in the mid-bar.
+    // When a set is decided but not yet started, show WHO WON.
+    if (s.matchOver) {
+      setScoreLbl.innerHTML = 'MATCH<span class="cap">final ' + s.homeSets + '\u2013' + s.awaySets + '</span>';
+      setScoreBox.classList.add('decided');
+    } else if (s.pendingSetWinner) {
+      var winName = s.pendingSetWinner === 'home' ? s.homeName : s.awayName;
+      setScoreLbl.innerHTML = 'SET ' + s.setNumber + ' \u2192 ' + escapeHtml(winName) +
+        '<span class="cap">tap Next Set</span>';
+      setScoreBox.classList.add('decided');
+    } else {
+      setScoreLbl.innerHTML = 'SET ' + s.setNumber + '<span class="cap">to ' + currentCap(s) + '</span>';
+      setScoreBox.classList.remove('decided');
+    }
+
     homeHalf.classList.toggle('serving', s.server === 'home');
     awayHalf.classList.toggle('serving', s.server === 'away');
-    homeHalf.classList.toggle('tappable', youAreScorekeeper && !s.matchOver);
-    awayHalf.classList.toggle('tappable', youAreScorekeeper && !s.matchOver);
+    // Tap-halves only for scorekeeper AND only when the set is live
+    homeHalf.classList.toggle('tappable', youAreScorekeeper && !setFrozen);
+    awayHalf.classList.toggle('tappable', youAreScorekeeper && !setFrozen);
     undoBtn.style.visibility = (youAreScorekeeper && s.history && s.history.length) ? 'visible' : 'hidden';
     updateRoleBanner();
 
-    // Win banner (only trigger on transitions)
-    var sig = s.setNumber + ':' + s.homeSets + ':' + s.awaySets + ':' + (s.matchOver ? 'M' : 'P');
-    if (lastServerScoreState && sig !== lastServerScoreState) {
-      // Something set-level changed
-      var prev = lastServerScoreState.split(':');
-      var prevSets = { setNumber: +prev[0], homeSets: +prev[1], awaySets: +prev[2], matchOver: prev[3] === 'M' };
-      if (s.matchOver && !prevSets.matchOver) {
-        var winnerName = s.homeSets > s.awaySets ? s.homeName : s.awayName;
-        showBanner(winnerName + ' win the match!', s.homeName + ' ' + s.homeSets + ' \u2013 ' + s.awaySets + ' ' + s.awayName);
-      } else if ((s.homeSets > prevSets.homeSets || s.awaySets > prevSets.awaySets) && !s.matchOver) {
-        var setWinner = s.homeSets > prevSets.homeSets ? s.homeName : s.awayName;
-        // Show only briefly for watchers
-        showBanner(setWinner + ' win set ' + prevSets.setNumber + '!', 'Set score ' + s.homeSets + ' \u2013 ' + s.awaySets);
+    // Win banner logic \u2014 driven by pendingSetWinner / matchOver, not sig diffs.
+    // This makes the banner also appear on late-joining watchers.
+    if (s.matchOver) {
+      var matchWinnerName = s.homeSets > s.awaySets ? s.homeName : s.awayName;
+      showMatchBanner(matchWinnerName + ' win the match!',
+        s.homeName + ' ' + s.homeSets + ' \u2013 ' + s.awaySets + ' ' + s.awayName);
+    } else if (s.pendingSetWinner) {
+      var setWinnerName = s.pendingSetWinner === 'home' ? s.homeName : s.awayName;
+      showSetBanner(setWinnerName + ' win set ' + s.setNumber + '!',
+        s.homeName + ' ' + s.homeScore + ' \u2013 ' + s.awayScore + ' ' + s.awayName);
+    } else {
+      // Live play \u2014 hide the banner automatically if it's showing stale
+      if (winBanner.classList.contains('show') && !winBanner.dataset.manualDismissible) {
+        winBanner.classList.remove('show');
       }
     }
-    lastServerScoreState = sig;
   }
 
   function currentCap(s) {
@@ -760,12 +811,44 @@
     return isDecider ? 15 : s.cap;
   }
 
-  function showBanner(bigText, subText) {
+  function showSetBanner(bigText, subText) {
     winBig.textContent = bigText;
     winSub.textContent = subText;
+    // Only scorekeeper sees the "Start next set" button; everyone else waits
+    winNextBtn.style.display  = youAreScorekeeper ? 'inline-block' : 'none';
+    winNewMatchBtn.style.display = 'none';
+    winWatcherNote.style.display = youAreScorekeeper ? 'none' : 'block';
+    winWatcherNote.textContent = 'Waiting for scorekeeper to start the next set…';
     winBanner.classList.add('show');
+    delete winBanner.dataset.manualDismissible;
   }
-  winDismiss.addEventListener('click', function(){ winBanner.classList.remove('show'); });
+  function showMatchBanner(bigText, subText) {
+    winBig.textContent = bigText;
+    winSub.textContent = subText;
+    winNextBtn.style.display = 'none';
+    winNewMatchBtn.style.display = youAreScorekeeper ? 'inline-block' : 'none';
+    winWatcherNote.style.display = 'none';
+    winBanner.classList.add('show');
+    delete winBanner.dataset.manualDismissible;
+  }
+
+  winDismiss.addEventListener('click', function(){
+    winBanner.classList.remove('show');
+    // Mark manual dismiss so we don't re-open on next poll — user can re-open by
+    // triggering something (rare); we don't remember dismissal past a set/match change.
+    winBanner.dataset.manualDismissible = '1';
+  });
+  winNextBtn.addEventListener('click', function(){
+    if (!youAreScorekeeper) return;
+    sendAction({ type: 'nextSet' });
+    // Banner will auto-hide on next poll when pendingSetWinner clears
+  });
+  winNewMatchBtn.addEventListener('click', function(){
+    if (!youAreScorekeeper) return;
+    if (confirm('Start a new match? This clears the score.')) {
+      sendAction({ type: 'reset' });
+    }
+  });
 
   function updateRoleBanner() {
     if (!currentGame) { roleBanner.style.display = 'none'; return; }
