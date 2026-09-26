@@ -122,6 +122,25 @@ function applyAction(s, action) {
       if (s.history.length) s.server = s.history[s.history.length - 1];
       break;
     }
+    case 'subtract': {
+      // Manual -1 for a specific team. Removes the most recent occurrence
+      // of that team from history to keep the record consistent.
+      if (action.team === 'home' && s.homeScore > 0) {
+        s.homeScore--;
+        for (let i = s.history.length - 1; i >= 0; i--) {
+          if (s.history[i] === 'home') { s.history.splice(i, 1); break; }
+        }
+      } else if (action.team === 'away' && s.awayScore > 0) {
+        s.awayScore--;
+        for (let j = s.history.length - 1; j >= 0; j--) {
+          if (s.history[j] === 'away') { s.history.splice(j, 1); break; }
+        }
+      } else {
+        return;
+      }
+      if (s.history.length) s.server = s.history[s.history.length - 1];
+      break;
+    }
     case 'settings': {
       if (action.homeName !== undefined) s.homeName = cleanName(action.homeName, 'HOME');
       if (action.awayName !== undefined) s.awayName = cleanName(action.awayName, 'AWAY');
