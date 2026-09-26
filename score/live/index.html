@@ -144,6 +144,26 @@
   }
   .set-wins{ font-size: 4.5vw; opacity: 0.8; margin-top: 4px; pointer-events: none; }
 
+  .score-adjust{
+    display: none;
+    gap: 14px;
+    margin: 10px 0 4px;
+    z-index: 4;
+  }
+  .half.tappable .score-adjust{ display: flex; }
+  .adj-btn{
+    background: rgba(0,0,0,0.28);
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.35);
+    width: 60px; height: 48px;
+    border-radius: 12px;
+    font-size: 24px; font-weight: 800; line-height: 1;
+    font-family: inherit;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .adj-btn:active{ background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.6); }
+  .adj-btn.minus{ padding-bottom: 3px; }
+
   #midbar{
     display:flex; align-items:center; gap:8px;
     background: #000;
@@ -288,6 +308,10 @@
   <div class="half" id="half-home">
     <div class="team-name"><span class="serve-dot"></span><span id="homeNameLbl">HOME</span></div>
     <div class="score" id="homeScore">0</div>
+    <div class="score-adjust">
+      <button class="adj-btn minus" data-adj="home-minus" aria-label="Home minus one">&minus;</button>
+      <button class="adj-btn" data-adj="home-plus" aria-label="Home plus one">+</button>
+    </div>
     <div class="set-wins" id="homeSets">Sets: 0</div>
   </div>
 
@@ -304,6 +328,10 @@
   <div class="half" id="half-away">
     <div class="team-name"><span class="serve-dot"></span><span id="awayNameLbl">AWAY</span></div>
     <div class="score" id="awayScore">0</div>
+    <div class="score-adjust">
+      <button class="adj-btn minus" data-adj="away-minus" aria-label="Away minus one">&minus;</button>
+      <button class="adj-btn" data-adj="away-plus" aria-label="Away plus one">+</button>
+    </div>
     <div class="set-wins" id="awaySets">Sets: 0</div>
   </div>
 </div>
@@ -403,6 +431,7 @@
 
   // ---------- State ----------
   var currentGame = null;
+  var localVersion = 0;      // Latest updatedAt we've accepted (guards against stale KV reads)
   var youAreScorekeeper = false;
   var lobbyPollTimer = null;
   var gamePollTimer = null;
@@ -465,6 +494,19 @@
     toastEl.classList.add('show');
     clearTimeout(toast._t);
     toast._t = setTimeout(function(){ toastEl.classList.remove('show'); }, 1600);
+  }
+  // Applies a game state from the server, guarding against stale KV reads.
+  // Cloudflare KV has eventual consistency (up to 60s), so polls can return
+  // older state than we've already accepted. We reject anything older than
+  // what we've already seen, based on updatedAt.
+  function applyServerGame(newGame) {
+    if (!newGame) return false;
+    var v = newGame.updatedAt || 0;
+    if (v < localVersion) return false; // stale
+    localVersion = v;
+    currentGame = newGame;
+    renderGame();
+    return true;
   }
   function api(path, opts) {
     opts = opts || {};
@@ -602,6 +644,8 @@
     lastServerScoreState = '';
     connErrors = 0;
     connLost.classList.remove('show');
+    currentGame = null;
+    localVersion = 0;
     updateRoleBanner();
     fetchGame(code, true);
     if (gamePollTimer) clearInterval(gamePollTimer);
@@ -628,19 +672,18 @@
       connErrors = 0;
       connLost.classList.remove('show');
       lastGoodFetch = Date.now();
-      currentGame = res.data.game;
+      var accepted = applyServerGame(res.data.game);
       if (isFirst) {
         // If we just created it, auto-claim
         var justCreated = null;
         try { justCreated = sessionStorage.getItem('vb_just_created'); } catch(e){}
         if (justCreated === code) {
           try { sessionStorage.removeItem('vb_just_created'); } catch(e){}
-          if (!currentGame.hasScorekeeper) {
+          if (currentGame && !currentGame.hasScorekeeper) {
             claimScorekeeper();
           }
         }
       }
-      renderGame();
     }).catch(function(){
       connErrors++;
       if (connErrors >= 3) connLost.classList.add('show');
@@ -722,13 +765,12 @@
     }).then(function(res){
       if (res.ok && res.data.youAreScorekeeper) {
         youAreScorekeeper = true;
-        currentGame = res.data.game;
+        applyServerGame(res.data.game);
         startHeartbeat();
-        renderGame();
         toast('You are the scorekeeper');
       } else {
         toast(res.data.error || 'Could not take control');
-        if (res.data.game) { currentGame = res.data.game; renderGame(); }
+        if (res.data.game) applyServerGame(res.data.game);
       }
     });
   }
@@ -781,8 +823,7 @@
     }).then(function(res){
       actionPending = false;
       if (res.ok && res.data.game) {
-        currentGame = res.data.game;
-        renderGame();
+        applyServerGame(res.data.game);
       } else if (res.status === 403) {
         youAreScorekeeper = false;
         toast('You are no longer the scorekeeper');
@@ -799,6 +840,21 @@
   homeHalf.addEventListener('click', function(){ sendAction({ type: 'point', team: 'home' }); });
   awayHalf.addEventListener('click', function(){ sendAction({ type: 'point', team: 'away' }); });
   undoBtn.addEventListener('click', function(e){ e.stopPropagation(); sendAction({ type: 'undo' }); });
+
+  // +/- adjust buttons on each half
+  var adjBtns = document.querySelectorAll('.adj-btn');
+  for (var ai = 0; ai < adjBtns.length; ai++) {
+    (function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation(); // don't also fire the half's click
+        var adj = btn.dataset.adj;
+        if (adj === 'home-plus')  sendAction({ type: 'point',    team: 'home' });
+        if (adj === 'home-minus') sendAction({ type: 'subtract', team: 'home' });
+        if (adj === 'away-plus')  sendAction({ type: 'point',    team: 'away' });
+        if (adj === 'away-minus') sendAction({ type: 'subtract', team: 'away' });
+      });
+    })(adjBtns[ai]);
+  }
 
   lobbyBtn.addEventListener('click', function(){
     // Ask before leaving if scorekeeper
