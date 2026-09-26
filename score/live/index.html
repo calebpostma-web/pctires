@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="VB Live">
@@ -31,7 +34,7 @@
     overflow: hidden;
     overscroll-behavior: none;
   }
-  .view{ display:none; height:100vh; width:100%; }
+  .view{ display:none; height:100vh; height:100dvh; width:100%; }
   .view.active{ display:flex; flex-direction:column; }
 
   /* ================= LOBBY ================= */
@@ -136,7 +139,9 @@
   }
   .serving .serve-dot{ display:inline-block; }
   .score{
-    font-size: 28vh;
+    /* min(vh, vw): scales down on narrow screens so a 2-digit score plus
+       side buttons always fits without wrapping or clipping. */
+    font-size: min(22vh, 32vw);
     font-weight: 800;
     line-height: 1;
     font-variant-numeric: tabular-nums;
@@ -144,24 +149,32 @@
   }
   .set-wins{ font-size: 4.5vw; opacity: 0.8; margin-top: 4px; pointer-events: none; }
 
-  .score-adjust{
-    display: none;
-    gap: 14px;
-    margin: 10px 0 4px;
-    z-index: 4;
+  /* Horizontal score row: [ minus ] [ big number ] [ plus ]
+     Buttons flank the number so they never get clipped by the browser toolbar. */
+  .score-row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3vw;
+    width: 100%;
+    padding: 0 4vw;
+    box-sizing: border-box;
   }
-  .half.tappable .score-adjust{ display: flex; }
+  .score-row .score{ flex: 0 1 auto; }
   .adj-btn{
+    display: none;
     background: rgba(0,0,0,0.28);
     color: #fff;
-    border: 2px solid rgba(255,255,255,0.35);
-    width: 60px; height: 48px;
-    border-radius: 12px;
-    font-size: 24px; font-weight: 800; line-height: 1;
+    border: 2px solid rgba(255,255,255,0.4);
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    font-size: 28px; font-weight: 800; line-height: 1;
     font-family: inherit;
-    display:flex; align-items:center; justify-content:center;
+    align-items: center; justify-content: center;
+    flex: 0 0 auto;
   }
-  .adj-btn:active{ background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.6); }
+  .half.tappable .adj-btn{ display: flex; }
+  .adj-btn:active{ background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.7); }
   .adj-btn.minus{ padding-bottom: 3px; }
 
   #midbar{
@@ -191,13 +204,15 @@
 
   /* Role banner */
   #roleBanner{
-    position: absolute; top: env(safe-area-inset-top, 0px); left: 0; right: 0;
+    /* In normal flow at the top of #game so it can't overlap the score halves */
     padding: 8px 14px;
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     font-size: 13px; font-weight: 600;
     z-index: 10;
     color: #111;
+    flex-shrink: 0;
   }
+  #roleBanner:empty{ display: none; }
   #roleBanner.watcher{ background: rgba(0,0,0,0.55); color: #fff; }
   #roleBanner.scorekeeper{ background: var(--gold); color: #111; }
   #roleBanner.claim{ background: var(--gold); color: #111; }
@@ -273,6 +288,18 @@
   #connLost.show{ display: block; }
 
   a{ color: inherit; }
+
+  #versionTag{
+    position: fixed;
+    bottom: 3px;
+    left: 6px;
+    font-size: 9px;
+    font-family: SF Mono, ui-monospace, Menlo, monospace;
+    color: rgba(255,255,255,0.35);
+    pointer-events: none;
+    z-index: 200;
+    letter-spacing: 0.05em;
+  }
 </style>
 </head>
 <body>
@@ -307,9 +334,9 @@
 
   <div class="half" id="half-home">
     <div class="team-name"><span class="serve-dot"></span><span id="homeNameLbl">HOME</span></div>
-    <div class="score" id="homeScore">0</div>
-    <div class="score-adjust">
+    <div class="score-row">
       <button class="adj-btn minus" data-adj="home-minus" aria-label="Home minus one">&minus;</button>
+      <div class="score" id="homeScore">0</div>
       <button class="adj-btn" data-adj="home-plus" aria-label="Home plus one">+</button>
     </div>
     <div class="set-wins" id="homeSets">Sets: 0</div>
@@ -327,9 +354,9 @@
 
   <div class="half" id="half-away">
     <div class="team-name"><span class="serve-dot"></span><span id="awayNameLbl">AWAY</span></div>
-    <div class="score" id="awayScore">0</div>
-    <div class="score-adjust">
+    <div class="score-row">
       <button class="adj-btn minus" data-adj="away-minus" aria-label="Away minus one">&minus;</button>
+      <div class="score" id="awayScore">0</div>
       <button class="adj-btn" data-adj="away-plus" aria-label="Away plus one">+</button>
     </div>
     <div class="set-wins" id="awaySets">Sets: 0</div>
@@ -417,6 +444,8 @@
 <!-- ============ TOAST ============ -->
 <div id="toast"></div>
 
+<div id="versionTag">v2.2</div>
+
 <script>
 (function(){
   // ---------- Session ----------
@@ -501,7 +530,7 @@
   // what we've already seen, based on updatedAt.
   function applyServerGame(newGame) {
     if (!newGame) return false;
-    var v = newGame.updatedAt || 0;
+    var v = Number(newGame.updatedAt) || 0;
     if (v < localVersion) return false; // stale
     localVersion = v;
     currentGame = newGame;
