@@ -1,7 +1,7 @@
 // Volleyball Scoreboard Service Worker
 // Caches everything on install so the app runs 100% offline forever after first load.
 
-const CACHE_NAME = 'vb-scoreboard-v1';
+const CACHE_NAME = 'vb-scoreboard-v2';
 const ASSETS = [
   './',
   './index.html',
