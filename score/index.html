@@ -20,6 +20,8 @@
     --bg: #111;
     --text: #fff;
     --dim: rgba(255,255,255,0.65);
+    --gold: #ffe600;
+    --pct-yellow: #f5c518;
   }
   *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
   html, body{
@@ -31,7 +33,7 @@
   }
   #app{
     display:flex; flex-direction:column;
-    height:100vh; width:100%;
+    height:100vh; height:100dvh; width:100%;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
@@ -42,12 +44,13 @@
     color: var(--text);
     transition: filter 0.08s ease;
     cursor: pointer;
+    padding: 8px;
   }
   .half:active{ filter: brightness(1.3); }
   #home{ background: var(--home); }
   #away{ background: var(--away); }
   .team-name{
-    font-size: 7vw;
+    font-size: 6.5vw;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -56,52 +59,89 @@
     pointer-events: none;
   }
   .serve-dot{
-    width: 16px; height:16px; border-radius:50%;
-    background: #ffe600;
+    width: 14px; height:14px; border-radius:50%;
+    background: var(--gold);
     box-shadow: 0 0 8px 2px rgba(255,230,0,0.8);
     display:none;
   }
   .serving .serve-dot{ display:inline-block; }
+
+  .score-row{
+    display: flex; align-items: center; justify-content: center;
+    gap: 3vw; width: 100%; padding: 0 4vw;
+    box-sizing: border-box;
+  }
   .score{
-    font-size: 30vh;
+    font-size: min(22vh, 32vw);
     font-weight: 800;
     line-height: 1;
     font-variant-numeric: tabular-nums;
     pointer-events: none;
+    flex: 0 1 auto;
   }
+  .adj-btn{
+    background: rgba(0,0,0,0.28);
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.4);
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    font-size: 28px; font-weight: 800; line-height: 1;
+    font-family: inherit;
+    display: flex; align-items: center; justify-content: center;
+    flex: 0 0 auto;
+  }
+  .adj-btn:active{ background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.7); }
+  .adj-btn.minus{ padding-bottom: 3px; }
+
   .set-wins{
-    font-size: 5vw;
+    font-size: 4.5vw;
     opacity: 0.8;
     margin-top: 4px;
     pointer-events: none;
   }
   #midbar{
-    display:flex; align-items:center; justify-content:center; gap:14px;
+    display:flex; align-items:center; gap:8px;
     background: #000;
     padding: 8px 10px;
     z-index: 5;
+    min-height: 50px;
   }
   #midbar .setscore{
-    color: var(--dim);
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    color: var(--gold);
+    font-size: 16px; font-weight: 800;
+    letter-spacing: 0.08em;
     margin-right: auto;
-    padding-left: 6px;
+    padding-left: 4px;
+    text-transform: uppercase;
+    display:flex; flex-direction:column; gap:2px;
+  }
+  #midbar .setscore .cap{
+    color: var(--dim);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: none;
   }
   .ctrlbtn{
     background: #262626;
     color: #fff;
     border: none;
     border-radius: 10px;
-    padding: 8px 14px;
-    font-size: 15px;
+    padding: 8px 12px;
+    font-size: 14px;
     font-weight: 600;
-    display:flex; align-items:center; gap:6px;
+    display:flex; align-items:center; gap:5px;
+    font-family: inherit;
   }
   .ctrlbtn:active{ background:#3a3a3a; }
-  #settingsBtn{ margin-right: 6px; }
+  #saveBtn-mid{
+    background: var(--pct-yellow);
+    color: #111;
+    font-weight: 800;
+  }
+  #saveBtn-mid:active{ background:#d4a800; }
 
+  /* Settings overlay */
   #overlay{
     position:fixed; inset:0; background: rgba(0,0,0,0.75);
     display:none; align-items:center; justify-content:center; z-index: 50;
@@ -119,17 +159,20 @@
   .field input, .field select{
     width:100%; padding:10px 12px; border-radius:8px; border:1px solid #444;
     background:#2c2c2e; color:#fff; font-size:16px;
+    font-family: inherit;
   }
   .row2{ display:flex; gap:10px; }
   .row2 .field{ flex:1; }
   #modal .actions{ display:flex; gap:10px; margin-top: 18px; }
   #modal .actions button{
     flex:1; padding: 12px; border-radius:10px; border:none; font-size:15px; font-weight:700;
+    font-family: inherit;
   }
   #saveBtn{ background: #1d5fb4; color:#fff; }
   #closeModalBtn{ background:#3a3a3c; color:#fff; }
-  #dangerBtn{ background: #c0392b; color:#fff; width:100%; margin-top:10px; padding:12px; border-radius:10px; border:none; font-size:14px; font-weight:700; }
+  #dangerBtn{ background: #c0392b; color:#fff; width:100%; margin-top:10px; padding:12px; border-radius:10px; border:none; font-size:14px; font-weight:700; font-family: inherit; }
 
+  /* Win banner */
   #winBanner{
     position:fixed; inset:0; background: rgba(0,0,0,0.85);
     display:none; align-items:center; justify-content:center; z-index:60;
@@ -139,7 +182,196 @@
   #winBanner .big{ font-size: 42px; font-weight:800; margin-bottom:10px; }
   #winBanner .sub{ font-size:18px; color:#ccc; margin-bottom:24px; }
   #winBanner button{
-    background:#1d5fb4; color:#fff; border:none; padding:14px 26px; border-radius:12px; font-size:17px; font-weight:700;
+    background: var(--gold); color:#111; border:none; padding:14px 26px; border-radius:12px;
+    font-size:17px; font-weight:800; font-family: inherit;
+  }
+
+  /* ============ WELCOME OVERLAY (first-visit) ============ */
+  #welcome{
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.88);
+    display: none; z-index: 200;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  #welcome.show{ display: flex; }
+  #welcomeCard{
+    background: #1c1c1e;
+    border-radius: 20px;
+    padding: 24px 22px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    border: 2px solid var(--gold);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  }
+  #welcomeCard .emoji{ font-size: 48px; margin-bottom: 6px; }
+  #welcomeCard h1{
+    font-size: 24px; margin: 0 0 4px 0; color: #fff;
+    letter-spacing: 0.02em;
+  }
+  #welcomeCard .sub{
+    font-size: 14px; color: var(--dim); margin-bottom: 20px;
+  }
+  .tap-row{
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; margin: 10px 0;
+    border-radius: 12px;
+    text-align: left;
+  }
+  .tap-row.blue{ background: rgba(29,95,180,0.25); border: 1px solid rgba(109,177,255,0.4); }
+  .tap-row.red{ background: rgba(192,57,43,0.25); border: 1px solid rgba(255,138,122,0.4); }
+  .tap-row .big-arrow{
+    font-size: 36px; font-weight: 900; line-height: 1;
+    width: 40px; text-align: center;
+  }
+  .tap-row.blue .big-arrow{ color: #6db1ff; }
+  .tap-row.red .big-arrow{ color: #ff8a7a; }
+  .tap-row .desc{ flex: 1; }
+  .tap-row .desc .top{
+    font-size: 15px; font-weight: 800; color: #fff;
+    letter-spacing: 0.02em;
+  }
+  .tap-row .desc .bot{
+    font-size: 12px; color: var(--dim); margin-top: 2px;
+  }
+  #welcomeStart{
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    padding: 16px;
+    background: var(--gold);
+    color: #111;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    font-family: inherit;
+  }
+  #welcomeStart:active{ background: #d4c000; }
+  #welcomeHelp{
+    display: block;
+    margin: 10px auto 0;
+    background: transparent;
+    color: var(--dim);
+    border: none;
+    font-size: 12px;
+    font-family: inherit;
+    text-decoration: underline;
+    padding: 4px 10px;
+  }
+
+  /* ============ INSTALL GUIDE MODAL ============ */
+  #installOverlay{
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.88);
+    display: none; z-index: 150;
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  #installOverlay.show{ display: flex; }
+  #installCard{
+    background: #1c1c1e;
+    border-radius: 20px;
+    padding: 22px 22px 18px;
+    width: 100%;
+    max-width: 400px;
+    max-height: 92vh;
+    overflow-y: auto;
+    color: #fff;
+  }
+  #installCard h2{
+    font-size: 22px; margin: 0 0 6px 0;
+    color: var(--gold);
+  }
+  #installCard .lead{
+    font-size: 14px; color: var(--dim); margin-bottom: 14px;
+    line-height: 1.45;
+  }
+  .step{
+    display: flex; align-items: flex-start; gap: 12px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    background: #2a2a2c;
+    border-radius: 10px;
+  }
+  .step .num{
+    background: var(--gold);
+    color: #111;
+    width: 28px; height: 28px; min-width: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 15px;
+  }
+  .step .body{ font-size: 14px; line-height: 1.45; }
+  .step .body b{ color: #fff; }
+  .step .icon-ex{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; vertical-align: middle;
+    background: #444; border-radius: 4px; margin: 0 2px;
+    font-size: 14px;
+  }
+  .svg-demo{
+    display: block; margin: 10px auto;
+    background: #0a0a0a;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  #installCloseBtn{
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 13px;
+    background: #3a3a3c;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+  }
+  .inapp-warning{
+    background: rgba(192,57,43,0.2);
+    border: 1px solid rgba(192,57,43,0.5);
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #fff;
+  }
+  .inapp-warning b{ color: #ff8a7a; }
+  .platform-tabs{
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    background: #2a2a2c;
+    padding: 4px;
+    border-radius: 10px;
+  }
+  .platform-tab{
+    flex: 1;
+    padding: 8px 10px;
+    background: transparent;
+    border: none;
+    color: var(--dim);
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 7px;
+    font-family: inherit;
+  }
+  .platform-tab.active{
+    background: var(--gold);
+    color: #111;
+  }
+
+  #brandFooter{
+    position: fixed; bottom: 2px; right: 6px;
+    font-size: 9px; color: rgba(255,255,255,0.35);
+    pointer-events: none; z-index: 3;
+    font-weight: 600; letter-spacing: 0.05em;
+    font-family: inherit;
   }
 </style>
 </head>
@@ -148,23 +380,36 @@
 <div id="app">
   <div class="half" id="home">
     <div class="team-name"><span class="serve-dot"></span><span id="homeNameLbl">HOME</span></div>
-    <div class="score" id="homeScore">0</div>
+    <div class="score-row">
+      <button class="adj-btn minus" data-adj="home-minus" aria-label="Home minus one">&minus;</button>
+      <div class="score" id="homeScore">0</div>
+      <button class="adj-btn" data-adj="home-plus" aria-label="Home plus one">+</button>
+    </div>
     <div class="set-wins" id="homeSets">Sets won: 0</div>
   </div>
 
   <div id="midbar">
-    <div class="setscore" id="setScoreLbl">Set 1</div>
-    <button class="ctrlbtn" id="undoBtn">⟲ Undo</button>
-    <button class="ctrlbtn" id="settingsBtn">⚙ Settings</button>
+    <div class="setscore">
+      <div id="setScoreLbl">SET 1</div>
+      <div class="cap" id="setCapLbl">to 25</div>
+    </div>
+    <button class="ctrlbtn" id="undoBtn">&#x27f2; Undo</button>
+    <button class="ctrlbtn" id="saveBtn-mid" aria-label="Save app for later">📱 Save</button>
+    <button class="ctrlbtn" id="settingsBtn" aria-label="Settings">&#x2699;</button>
   </div>
 
   <div class="half" id="away">
-    <div class="team-name"><span class="serve-dot"></span><span id="awayNameLbl">UA</span></div>
-    <div class="score" id="awayScore">0</div>
+    <div class="team-name"><span class="serve-dot"></span><span id="awayNameLbl">AWAY</span></div>
+    <div class="score-row">
+      <button class="adj-btn minus" data-adj="away-minus" aria-label="Away minus one">&minus;</button>
+      <div class="score" id="awayScore">0</div>
+      <button class="adj-btn" data-adj="away-plus" aria-label="Away plus one">+</button>
+    </div>
     <div class="set-wins" id="awaySets">Sets won: 0</div>
   </div>
 </div>
 
+<!-- ============ SETTINGS MODAL ============ -->
 <div id="overlay">
   <div id="modal">
     <h2>Match Settings</h2>
@@ -210,11 +455,60 @@
   </div>
 </div>
 
+<!-- ============ WIN BANNER ============ -->
 <div id="winBanner">
   <div class="big" id="winBig"></div>
   <div class="sub" id="winSub"></div>
   <button id="winNextBtn">Next set</button>
 </div>
+
+<!-- ============ WELCOME OVERLAY (first-visit) ============ -->
+<div id="welcome">
+  <div id="welcomeCard">
+    <div class="emoji">🏐</div>
+    <h1>Volleyball Scoreboard</h1>
+    <div class="sub">Keep score, see it from across the gym</div>
+
+    <div class="tap-row blue">
+      <div class="big-arrow">↑</div>
+      <div class="desc">
+        <div class="top">Tap the BLUE top</div>
+        <div class="bot">Every time your team scores</div>
+      </div>
+    </div>
+
+    <div class="tap-row red">
+      <div class="big-arrow">↓</div>
+      <div class="desc">
+        <div class="top">Tap the RED bottom</div>
+        <div class="bot">Every time the other team scores</div>
+      </div>
+    </div>
+
+    <button id="welcomeStart">Got it &mdash; let's play</button>
+    <button id="welcomeHelp">Show me how to save it to my phone</button>
+  </div>
+</div>
+
+<!-- ============ INSTALL GUIDE MODAL ============ -->
+<div id="installOverlay">
+  <div id="installCard">
+    <h2>Save it to your phone</h2>
+    <div class="lead">So it opens like an app, works at the gym with no signal, and remembers your scores.</div>
+
+    <div class="platform-tabs" id="platformTabs">
+      <button class="platform-tab" data-platform="ios">iPhone</button>
+      <button class="platform-tab" data-platform="android">Android</button>
+      <button class="platform-tab" data-platform="desktop">Computer</button>
+    </div>
+
+    <div id="installContent"><!-- filled by JS --></div>
+
+    <button id="installCloseBtn">Close</button>
+  </div>
+</div>
+
+<div id="brandFooter">pctires.ca</div>
 
 <script>
 // Register service worker so app works fully offline after first load
@@ -228,10 +522,11 @@ if ('serviceWorker' in navigator) {
 
 (function(){
   var STORAGE_KEY = 'vb_scoreboard_state_v1';
+  var WELCOME_KEY = 'vb_welcome_seen_v2';
 
   var defaultState = {
     homeName: 'HOME',
-    awayName: 'UA',
+    awayName: 'AWAY',
     homeScore: 0,
     awayScore: 0,
     homeSets: 0,
@@ -261,6 +556,7 @@ if ('serviceWorker' in navigator) {
     try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
   }
 
+  // ------------- DOM refs -------------
   var homeEl = document.getElementById('home');
   var awayEl = document.getElementById('away');
   var homeScoreEl = document.getElementById('homeScore');
@@ -270,8 +566,11 @@ if ('serviceWorker' in navigator) {
   var homeSetsEl = document.getElementById('homeSets');
   var awaySetsEl = document.getElementById('awaySets');
   var setScoreLbl = document.getElementById('setScoreLbl');
+  var setCapLbl = document.getElementById('setCapLbl');
   var undoBtn = document.getElementById('undoBtn');
   var settingsBtn = document.getElementById('settingsBtn');
+  var saveBtnMid = document.getElementById('saveBtn-mid');
+  var brandFooter = document.getElementById('brandFooter');
 
   var overlay = document.getElementById('overlay');
   var homeNameInput = document.getElementById('homeNameInput');
@@ -288,9 +587,17 @@ if ('serviceWorker' in navigator) {
   var winSub = document.getElementById('winSub');
   var winNextBtn = document.getElementById('winNextBtn');
 
-  function setsNeededToWinMatch(){
-    return Math.ceil(state.format / 2);
-  }
+  var welcomeEl = document.getElementById('welcome');
+  var welcomeStartBtn = document.getElementById('welcomeStart');
+  var welcomeHelpBtn = document.getElementById('welcomeHelp');
+
+  var installOverlay = document.getElementById('installOverlay');
+  var installCloseBtn = document.getElementById('installCloseBtn');
+  var installContent = document.getElementById('installContent');
+  var platformTabs = document.getElementById('platformTabs');
+
+  // ------------- Scoring logic -------------
+  function setsNeededToWinMatch(){ return Math.ceil(state.format / 2); }
 
   function currentCap(){
     var needed = setsNeededToWinMatch();
@@ -305,7 +612,8 @@ if ('serviceWorker' in navigator) {
     awayScoreEl.textContent = state.awayScore;
     homeSetsEl.textContent = 'Sets won: ' + state.homeSets;
     awaySetsEl.textContent = 'Sets won: ' + state.awaySets;
-    setScoreLbl.textContent = 'Set ' + state.setNumber + ' \u00b7 to ' + currentCap();
+    setScoreLbl.textContent = 'SET ' + state.setNumber;
+    setCapLbl.textContent = 'to ' + currentCap();
     homeEl.classList.toggle('serving', state.server === 'home');
     awayEl.classList.toggle('serving', state.server === 'away');
     undoBtn.style.visibility = state.history.length ? 'visible' : 'hidden';
@@ -317,6 +625,25 @@ if ('serviceWorker' in navigator) {
     state.server = team;
     state.history.push(team);
     checkSetWin();
+    save();
+    render();
+  }
+
+  function subtract(team){
+    if(team === 'home' && state.homeScore > 0){
+      state.homeScore--;
+      for(var i = state.history.length - 1; i >= 0; i--){
+        if(state.history[i] === 'home'){ state.history.splice(i, 1); break; }
+      }
+    } else if(team === 'away' && state.awayScore > 0){
+      state.awayScore--;
+      for(var j = state.history.length - 1; j >= 0; j--){
+        if(state.history[j] === 'away'){ state.history.splice(j, 1); break; }
+      }
+    } else {
+      return;
+    }
+    if(state.history.length){ state.server = state.history[state.history.length - 1]; }
     save();
     render();
   }
@@ -390,10 +717,35 @@ if ('serviceWorker' in navigator) {
     render();
   }
 
-  homeEl.addEventListener('click', function(){ point('home'); });
-  awayEl.addEventListener('click', function(){ point('away'); });
+  // ------------- Score tap handlers -------------
+  homeEl.addEventListener('click', function(e){
+    // Ignore if the user tapped an adjust button; those have their own handlers
+    if(e.target && e.target.classList && e.target.classList.contains('adj-btn')) return;
+    point('home');
+  });
+  awayEl.addEventListener('click', function(e){
+    if(e.target && e.target.classList && e.target.classList.contains('adj-btn')) return;
+    point('away');
+  });
+
+  // +/- adjust buttons
+  var adjBtns = document.querySelectorAll('.adj-btn');
+  for(var ai = 0; ai < adjBtns.length; ai++){
+    (function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var adj = btn.dataset.adj;
+        if(adj === 'home-plus')  point('home');
+        if(adj === 'home-minus') subtract('home');
+        if(adj === 'away-plus')  point('away');
+        if(adj === 'away-minus') subtract('away');
+      });
+    })(adjBtns[ai]);
+  }
+
   undoBtn.addEventListener('click', function(e){ e.stopPropagation(); undo(); });
 
+  // ------------- Settings modal -------------
   settingsBtn.addEventListener('click', function(e){
     e.stopPropagation();
     homeNameInput.value = state.homeName;
@@ -425,8 +777,133 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  document.addEventListener('touchmove', function(e){ e.preventDefault(); }, { passive:false });
+  // ------------- Prevent zoom / scroll quirks -------------
+  document.addEventListener('touchmove', function(e){
+    if(e.target.closest('#modal, #welcomeCard, #installCard')) return;
+    e.preventDefault();
+  }, { passive:false });
   document.addEventListener('dblclick', function(e){ e.preventDefault(); });
+
+  // ============== INSTALL GUIDE ==============
+
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  var isAndroid = /Android/i.test(ua);
+  // Detect popular in-app browsers where "Add to Home Screen" isn't available.
+  var isInApp = /FBAN|FBAV|Instagram|Line|WhatsApp|Snapchat|Twitter|LinkedInApp|Pinterest/i.test(ua);
+
+  var isStandalone = (window.navigator.standalone === true) ||
+                     window.matchMedia('(display-mode: standalone)').matches;
+
+  // Hide the save button and footer when running as an installed app.
+  if (isStandalone) {
+    saveBtnMid.style.display = 'none';
+    brandFooter.style.display = 'none';
+  }
+
+  function iosGuide(){
+    return (
+      (isInApp ? '<div class="inapp-warning">' +
+          '<b>You\'re inside an app\'s browser.</b><br>' +
+          'To save this scoreboard, first tap <b>&#x22EF;</b> or the menu, then <b>Open in Safari</b>. ' +
+          'The steps below only work in Safari.' +
+       '</div>' : '') +
+      '<div class="step"><div class="num">1</div>' +
+        '<div class="body">Make sure you\'re in <b>Safari</b> (the compass icon). It won\'t work in other apps.</div>' +
+      '</div>' +
+      '<div class="step"><div class="num">2</div>' +
+        '<div class="body">Tap the <b>Share</b> button at the bottom &mdash; it looks like a square with an arrow pointing up <span class="icon-ex">&#x2191;</span></div>' +
+      '</div>' +
+      '<div class="step"><div class="num">3</div>' +
+        '<div class="body">Scroll down the list and tap <b>Add to Home Screen</b>.</div>' +
+      '</div>' +
+      '<div class="step"><div class="num">4</div>' +
+        '<div class="body">Tap <b>Add</b> in the top right. Done! Look for the volleyball icon on your home screen.</div>' +
+      '</div>'
+    );
+  }
+
+  function androidGuide(){
+    return (
+      (isInApp ? '<div class="inapp-warning">' +
+          '<b>You\'re inside an app\'s browser.</b><br>' +
+          'To save this scoreboard, tap the menu <b>&#x22EE;</b> and choose <b>Open in Chrome</b>. ' +
+          'The steps below work in Chrome.' +
+       '</div>' : '') +
+      '<div class="step"><div class="num">1</div>' +
+        '<div class="body">Make sure you\'re in <b>Chrome</b>.</div>' +
+      '</div>' +
+      '<div class="step"><div class="num">2</div>' +
+        '<div class="body">Tap the menu button <b>&#x22EE;</b> in the top right corner.</div>' +
+      '</div>' +
+      '<div class="step"><div class="num">3</div>' +
+        '<div class="body">Tap <b>Install app</b> or <b>Add to Home screen</b>.</div>' +
+      '</div>' +
+      '<div class="step"><div class="num">4</div>' +
+        '<div class="body">Tap <b>Install</b>. The volleyball icon shows up on your home screen like any other app.</div>' +
+      '</div>'
+    );
+  }
+
+  function desktopGuide(){
+    return (
+      '<div class="lead" style="margin-bottom:0;">' +
+      'The scoreboard is designed for a phone &mdash; grab your phone, open the camera at this QR, or just text the link to yourself: ' +
+      '<b>pctires.ca/score</b>' +
+      '</div>'
+    );
+  }
+
+  function fillPlatform(platform){
+    if(platform === 'ios') installContent.innerHTML = iosGuide();
+    else if(platform === 'android') installContent.innerHTML = androidGuide();
+    else installContent.innerHTML = desktopGuide();
+    var tabs = platformTabs.querySelectorAll('.platform-tab');
+    for(var i = 0; i < tabs.length; i++){
+      tabs[i].classList.toggle('active', tabs[i].dataset.platform === platform);
+    }
+  }
+
+  function openInstall(){
+    var defaultPlat = isIOS ? 'ios' : (isAndroid ? 'android' : 'desktop');
+    fillPlatform(defaultPlat);
+    installOverlay.classList.add('show');
+  }
+
+  var ptabs = platformTabs.querySelectorAll('.platform-tab');
+  for(var ti = 0; ti < ptabs.length; ti++){
+    (function(t){
+      t.addEventListener('click', function(){ fillPlatform(t.dataset.platform); });
+    })(ptabs[ti]);
+  }
+  installCloseBtn.addEventListener('click', function(){ installOverlay.classList.remove('show'); });
+  installOverlay.addEventListener('click', function(e){ if(e.target === installOverlay) installOverlay.classList.remove('show'); });
+
+  saveBtnMid.addEventListener('click', openInstall);
+
+  // ============== WELCOME OVERLAY ==============
+
+  function hasSeenWelcome(){
+    try { return localStorage.getItem(WELCOME_KEY) === '1'; } catch(e){ return false; }
+  }
+  function markWelcomeSeen(){
+    try { localStorage.setItem(WELCOME_KEY, '1'); } catch(e){}
+  }
+
+  welcomeStartBtn.addEventListener('click', function(){
+    welcomeEl.classList.remove('show');
+    markWelcomeSeen();
+  });
+  welcomeHelpBtn.addEventListener('click', function(){
+    welcomeEl.classList.remove('show');
+    markWelcomeSeen();
+    openInstall();
+  });
+
+  // Show welcome only on first visit AND only when not running as installed app
+  if(!hasSeenWelcome() && !isStandalone){
+    welcomeEl.classList.add('show');
+  }
 
   render();
 })();
