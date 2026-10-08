@@ -324,8 +324,82 @@ function buildCustomerEmail(order, tdgOrder) {
 </html>`;
 }
 
+// ─── Stripe processing fee ─────────────────────────────────────────────────────
+// What Stripe actually kept on this payment, read from the charge's balance
+// transaction. Affirm costs about double a card, so the internal email shows it
+// and nets it out of the margin. If Stripe has not posted the balance transaction
+// yet (or the lookup fails) we fall back to a published-rate ESTIMATE, labelled
+// as such. Never throws: a fee lookup must not be able to block an order email.
+const FEE_ESTIMATE = {
+  affirm:  { pct: 0.06,  fixed: 0.30 },   // Stripe Canada standard Affirm rate (Oct 2026)
+  default: { pct: 0.029, fixed: 0.30 },   // Stripe Canada domestic card
+};
+const FEE_LABELS = { card: 'Card', affirm: 'Affirm', klarna: 'Klarna', afterpay_clearpay: 'Afterpay', link: 'Link' };
+
+async function stripeGet(path, secret) {
+  const res = await fetch('https://api.stripe.com/v1/' + path, {
+    headers: { Authorization: 'Bearer ' + secret },
+  });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+async function getStripeFee(order, env) {
+  try {
+    const piId = order && order.paymentIntentId && String(order.paymentIntentId).trim();
+    if (!piId) return { none: true };   // owner no-charge order: e-transfer / cash / pay on pickup
+
+    const labelType = /affirm/i.test(String(order.paymentMethod || '')) ? 'affirm' : 'card';
+    const secret = env && env.STRIPE_SECRET;
+    let type = null;
+
+    if (secret) {
+      const piPath = 'payment_intents/' + encodeURIComponent(piId);
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const pi = await stripeGet(piPath + '?expand[]=latest_charge.balance_transaction', secret)
+                  || await stripeGet(piPath, secret);
+          let charge = null;
+          if (pi && pi.latest_charge && typeof pi.latest_charge === 'object') charge = pi.latest_charge;
+          else if (pi && pi.charges && pi.charges.data && pi.charges.data[0]) charge = pi.charges.data[0];
+          const chargeId = charge ? charge.id : (pi && typeof pi.latest_charge === 'string' ? pi.latest_charge : null);
+          const hasBt = c => !!(c && c.balance_transaction && typeof c.balance_transaction === 'object');
+          if (chargeId && !hasBt(charge)) {
+            charge = await stripeGet('charges/' + encodeURIComponent(chargeId) + '?expand[]=balance_transaction', secret) || charge;
+          }
+          if (charge && charge.payment_method_details && charge.payment_method_details.type) {
+            type = charge.payment_method_details.type;
+          }
+          if (hasBt(charge)) {
+            const bt = charge.balance_transaction;
+            if (typeof bt.fee === 'number' && typeof bt.amount === 'number') {
+              return { actual: true, fee: bt.fee / 100, charged: bt.amount / 100, type: type || labelType };
+            }
+          }
+        } catch (e) { console.error('Stripe fee lookup error:', e); }
+        // Balance transaction can lag the payment by a moment — one short retry.
+        if (attempt === 0) await new Promise(r => setTimeout(r, 1200));
+      }
+    }
+
+    const estType = type || labelType;
+    const rate = FEE_ESTIMATE[estType] || FEE_ESTIMATE.default;
+    const charged = Number(order.depositPaid) > 0 ? Number(order.depositPaid) : Number(order.total || 0);
+    if (!(charged > 0)) return null;
+    return {
+      actual: false,
+      fee: Math.round((charged * rate.pct + rate.fixed) * 100) / 100,
+      charged,
+      type: estType,
+    };
+  } catch (e) {
+    console.error('getStripeFee error:', e);
+    return null;
+  }
+}
+
 // ─── Internal notification email ───────────────────────────────────────────────
-function buildInternalEmail(order, tdgOrder, tdgError) {
+function buildInternalEmail(order, tdgOrder, tdgError, feeInfo) {
   const tdgRef = extractTDGRef(tdgOrder) || 'NOT FOUND';
   const tdgStatus = tdgError
     ? `FAILED &mdash; TDG order did not go through: ${JSON.stringify(tdgError)}`
@@ -345,9 +419,6 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
     orderNum: t.orderNumber || '-',
     ref:      t.reference || '-',
   } : null;
-
-  const margin = (cost && order.total) ? (Number(order.total) - cost.total) : null;
-  const marginPct = (margin !== null && order.total) ? Math.round((margin / Number(order.total)) * 100) : null;
 
   const money = n => `$${Number(n).toFixed(2)}`;
 
@@ -413,6 +484,37 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
                        + Number(order.installTotal || 0)
                        + Number(order.addonTotal || 0)
                        - Number(order.discount || 0);
+
+  // ── Margin, HST excluded on both sides ──────────────────────────────────
+  // HST collected from the customer is remitted and HST paid to TDG comes back
+  // as an ITC, so neither is margin. Pre-tax margin = pre-tax revenue minus
+  // TDG subtotal + shipping + fees. Net margin then takes off the Stripe fee.
+  const costPreTax   = cost ? (cost.subtotal + cost.shipping + cost.fees) : null;
+  const margin       = (cost && preTaxSubtotal > 0) ? (preTaxSubtotal - costPreTax) : null;
+  const pctOfRevenue = n => (preTaxSubtotal > 0 ? Math.round((n / preTaxSubtotal) * 100) : null);
+  const marginPct    = margin !== null ? pctOfRevenue(margin) : null;
+
+  const hasFee    = !!(feeInfo && !feeInfo.none && typeof feeInfo.fee === 'number');
+  const noStripe  = !!(feeInfo && feeInfo.none);
+  const feeAmt    = hasFee ? feeInfo.fee : 0;
+  const feeMethod = hasFee ? (FEE_LABELS[feeInfo.type] || feeInfo.type || 'Card') : '';
+  const feeRate   = (hasFee && feeInfo.charged > 0) ? ((feeAmt / feeInfo.charged) * 100).toFixed(1) + '%' : '';
+  const feeLabel  = hasFee
+    ? `Stripe fee &mdash; ${feeMethod}${feeRate ? ` (${feeRate})` : ''}${feeInfo.actual ? '' : ' <span style="color:#a16207;font-weight:700">EST.</span>'}`
+    : 'Stripe fee';
+  const feeValue  = hasFee ? `-${money(feeAmt)}` : (noStripe ? '$0.00 (no Stripe payment)' : 'unknown &mdash; check Stripe');
+  const netMargin    = (margin !== null && (hasFee || noStripe)) ? (margin - feeAmt) : null;
+  const netMarginPct = netMargin !== null ? pctOfRevenue(netMargin) : null;
+  const netColor     = (netMargin !== null && netMargin < 0) ? '#b91c1c' : '#15803d';
+  const isDeposit    = Number(order.depositPaid) > 0;
+
+  const marginNote = 'Pre-tax margin = customer subtotal before tax &minus; TDG subtotal, shipping and fees. HST is left out on both sides: what the customer paid is remitted and what TDG charged comes back as an ITC. '
+    + (hasFee
+        ? (feeInfo.actual
+            ? `Stripe fee is the actual fee Stripe kept on the ${money(feeInfo.charged)} charged.`
+            : `Stripe fee is an ESTIMATE on the ${money(feeInfo.charged)} charged (Stripe had not posted the actual fee yet) &mdash; confirm in the Stripe dashboard.`)
+        : (noStripe ? 'No Stripe payment on this order, so no processing fee.' : 'Stripe fee could not be read, so net margin is not shown.'))
+    + (isDeposit && hasFee ? ' The fee so far covers the deposit only; a balance paid by card will add another fee.' : '');
 
   // ── Tax line: 13% HST normally, 5% GST on a verified status exemption ────
   const isStatusExempt = order.statusExempt === true || order.statusExempt === 'true';
@@ -524,11 +626,19 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
         <td style="padding:9px 0 0;text-align:right;color:#111111;font-weight:800;font-size:15px">${money(cost.total)} ${cost.currency}</td>
       </tr>
       ${margin !== null ? `<tr>
-        <td style="padding:5px 0 0;color:#15803d;font-weight:700;font-size:14px">Gross Margin</td>
-        <td style="padding:5px 0 0;text-align:right;color:#15803d;font-weight:800;font-size:17px">${money(margin)}${marginPct !== null ? ` <span style="color:#555;font-weight:500;font-size:12px">(${marginPct}%)</span>` : ''}</td>
-      </tr>` : ''}
+        <td style="padding:9px 0 0;color:#111111;font-weight:700;font-size:13px">Pre-tax margin</td>
+        <td style="padding:9px 0 0;text-align:right;color:#111111;font-weight:700;font-size:14px">${money(margin)}${marginPct !== null ? ` <span style="color:#555;font-weight:500;font-size:12px">(${marginPct}%)</span>` : ''}</td>
+      </tr>
+      <tr>
+        <td style="padding:5px 0 0;color:#555555;font-size:13px">${feeLabel}</td>
+        <td style="padding:5px 0 0;text-align:right;color:${hasFee ? '#b91c1c' : '#555555'};font-size:13px;font-weight:600">${feeValue}</td>
+      </tr>
+      ${netMargin !== null ? `<tr style="border-top:1px solid #cccccc">
+        <td style="padding:7px 0 0;color:${netColor};font-weight:700;font-size:14px">Net Margin</td>
+        <td style="padding:7px 0 0;text-align:right;color:${netColor};font-weight:800;font-size:17px">${money(netMargin)}${netMarginPct !== null ? ` <span style="color:#555;font-weight:500;font-size:12px">(${netMarginPct}%)</span>` : ''}</td>
+      </tr>` : ''}` : ''}
     </table>
-    <div style="font-size:11px;color:#555555;margin-top:8px;line-height:1.4">Margin = Customer Total &minus; TDG Total. Both include tax and fees. Net margin after tax reconciliation will differ.</div>
+    ${margin !== null ? `<div style="font-size:11px;color:#555555;margin-top:8px;line-height:1.4">${marginNote}</div>` : ''}
   </div>` : ''}
 
   <!-- Install + source -->
@@ -537,6 +647,7 @@ function buildInternalEmail(order, tdgOrder, tdgError) {
     <table style="border-collapse:collapse;width:100%">
       <tr><td style="${rowLbl}">Install</td><td style="${rowVal}">${order.appointmentDate ? `${order.appointmentDate} at ${order.appointmentTime} &mdash; ${order.serviceName}` : 'Not booked'}</td></tr>
       <tr><td style="${rowLbl}">Payment</td><td style="${rowVal}">${order.paymentMethod || 'Card'}</td></tr>
+      ${(margin === null && hasFee) ? `<tr><td style="${rowLbl}">${feeLabel}</td><td style="${rowVal}">${feeValue}</td></tr>` : ''}
       <tr><td style="${rowLbl}">Search Method</td><td style="${rowVal}">${order.searchMethod || '-'}</td></tr>
       <tr><td style="${rowLbl}">CASL Opt-in</td><td style="${rowVal}">${order.caslOptIn ? 'Yes' : 'No'}</td></tr>
     </table>
@@ -622,12 +733,15 @@ export async function processOrder(order, env) {
     } catch (e) { console.error('Customer email error:', e); }
   }
 
-  // 3. Internal notification
+  // 3. Internal notification (with the Stripe fee on this payment, so the
+  //    margin shown is net of processing). Looked up here, after the TDG order
+  //    and customer email, to give Stripe time to post the balance transaction.
+  const feeInfo = await getStripeFee(order, env);
   try {
     await sendEmail(RESEND_API_KEY, {
       to: NOTIFY_EMAILS,
       subject: `🛞 New Order ${order.orderNumber}${order.depositPaid > 0 ? ' [DEPOSIT - BALANCE OWING]' : ''}${tdgError ? ' ⚠️ TDG FAILED' : ''} — ${order.customerName}`,
-      html: buildInternalEmail(order, tdgOrder, tdgError),
+      html: buildInternalEmail(order, tdgOrder, tdgError, feeInfo),
     });
   } catch (e) { console.error('Internal email error:', e); }
 
@@ -643,4 +757,4 @@ export async function processOrder(order, env) {
   return result;
 }
 
-export { md5, computeOrderHash, placeTDGOrder, extractTDGRef, buildCustomerEmail, buildInternalEmail, sendEmail };
+export { md5, computeOrderHash, placeTDGOrder, extractTDGRef, buildCustomerEmail, buildInternalEmail, sendEmail, getStripeFee };
