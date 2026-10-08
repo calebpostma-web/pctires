@@ -5836,6 +5836,16 @@ function ymdKey(d) {
 }
 function isHoliday(d) { return SHOP_HOLIDAYS.has(ymdKey(d)); }
 
+// Days with no appointments available. Not bookable in either calendar.
+// TDG still ships on them, so they still count toward tire-arrival lead time;
+// the earliest install date is simply pushed to the next day we are open.
+// Delete dates from this list once they have passed.
+const SHOP_CLOSED_DATES = new Set([
+  '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16', '2026-10-17', '2026-10-19',
+]);
+function isShopClosed(d) { return SHOP_CLOSED_DATES.has(ymdKey(d)); }
+let _earliestBumpedByClosure = false;
+
 function addBusinessDays(date, n) {
   const d = new Date(date);
   let added = 0;
@@ -5861,7 +5871,14 @@ function getEarliestInstallDate() {
     while (startFrom.getDay() === 0 || startFrom.getDay() === 6 || isHoliday(startFrom));
   }
   const leadDays = cartFullyLocal() ? LOCAL_LEAD_BUSINESS_DAYS : NONLOCAL_LEAD_BUSINESS_DAYS;
-  return addBusinessDays(startFrom, leadDays);
+  const earliest = addBusinessDays(startFrom, leadDays);
+  // If that lands on a blocked day, move to the next bookable day.
+  _earliestBumpedByClosure = false;
+  for (let guard = 0; guard < 90 && (isShopClosed(earliest) || earliest.getDay() === 0 || isHoliday(earliest)); guard++) {
+    if (isShopClosed(earliest)) _earliestBumpedByClosure = true;
+    earliest.setDate(earliest.getDate() + 1);
+  }
+  return earliest;
 }
 
 function getSlotsForDuration(duration) {
@@ -5900,7 +5917,7 @@ function buildCal() {
   let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
   for (let d = 1; d <= days; d++) {
-    const dt = new Date(calY, calMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt);
+    const dt = new Date(calY, calMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt) || isShopClosed(dt);
     const dateStr = `${MONTHS[calMo]} ${d}, ${calY}`, isSel = selDate === dateStr;
     html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="pickDate('${dateStr}')"`:''}>${d}</div>`;
   }
@@ -5913,7 +5930,9 @@ function buildCal() {
     const h12 = FIRST_DAY_EARLIEST_HOUR > 12 ? FIRST_DAY_EARLIEST_HOUR - 12 : FIRST_DAY_EARLIEST_HOUR;
     const ampm = FIRST_DAY_EARLIEST_HOUR >= 12 ? 'PM' : 'AM';
     const _localFlag = cartFullyLocal();
-    const _reason = _localFlag
+    const _reason = _earliestBumpedByClosure
+      ? 'our next available install date'
+      : _localFlag
       ? 'shipping from our local London warehouse'
       : 'one or more items ship from outside London (one extra business day for the transfer)';
     leadNote.innerHTML = '<b>Earliest install: ' + earliest + '</b> &mdash; ' + _reason + '. First-day slots start at ' + h12 + ':00 ' + ampm + '.';
@@ -7336,7 +7355,7 @@ function buildSvcCal() {
   let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
   for (let d = 1; d <= days; d++) {
-    const dt = new Date(svcCalY, svcCalMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt);
+    const dt = new Date(svcCalY, svcCalMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt) || isShopClosed(dt);
     const dateStr = `${MONTHS[svcCalMo]} ${d}, ${svcCalY}`, isSel = svcSelDate === dateStr;
     html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="svcPickDate('${dateStr}')"`:''}>${d}</div>`;
   }
