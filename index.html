@@ -1337,48 +1337,111 @@ function dismissPromoBar(){
 <div class="trust-bar">
   <div class="trust-chip"><span class="tc-icon">🔧</span><span><strong>From $25/tire</strong> Local Install</span></div>
   <div class="trust-chip"><span class="tc-icon">📍</span><span><strong>Chatham-Kent</strong> Based</span></div>
-  <div class="trust-chip"><span class="tc-icon">💰</span><span>Rebates up to <strong>$180</strong></span></div>
+  <div class="trust-chip" id="rebateChip"><span class="tc-icon">💳</span><span><strong>Pay over time</strong> with Affirm</span></div>
   <div class="trust-chip"><span class="tc-icon">🔒</span><span><strong>Secure</strong> Stripe Checkout</span></div>
 </div>
 <script>
-// ── REBATE DATA — UPDATE THIS SECTION EACH SEASON ──────────────────────────
-const REBATES = [
-  { brand:'BFGoodrich',   amount:100, type:'up to', expires:'May 29, 2026',  url:'https://www.bfgoodrichtires.ca/en/rebates.html' },
-  { brand:'Bridgestone',  amount:100, type:'up to', expires:'May 30, 2026',  url:'https://www.bridgestonetire.ca/en-ca/promotions' },
-  { brand:'Continental',  amount:110, type:'up to', expires:'May 31, 2026',  url:'https://www.continental-tires.com/car/promotions/canada' },
-  { brand:'Dunlop',       amount:200, type:'get a', expires:'May 31, 2026',  url:'https://www.dunloptires.ca/en-ca/promotions' },
-  { brand:'Falken',       amount:80,  type:'up to', expires:'May 31, 2026',  url:'https://www.falkentire.com/en-CA/rebates' },
-  { brand:'Firestone',    amount:80,  type:'up to', expires:'May 30, 2026',  url:'https://www.firestonetire.ca/en-ca/promotions' },
-  { brand:'General Tire', amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.generaltire.ca/en-ca/promotions' },
-  { brand:'Hankook',      amount:100, type:'get a', expires:'Jun 30, 2026',  url:'https://www.hankooktire.com/ca/en/campaign/promotions.html' },
-  { brand:'Kumho',        amount:60,  type:'get a', expires:'Jun 15, 2026',  url:'https://www.kumhotire.ca/en/promotion' },
-  { brand:'Laufenn',      amount:40,  type:'get a', expires:'Jun 30, 2026',  url:'https://www.laufenn.com/promotion' },
-  { brand:'Michelin',     amount:100, type:'get a', expires:'May 29, 2026',  url:'https://www.michelin.ca/en/promotions/' },
-  { brand:'Nexen',        amount:80,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nexentire.ca/promotion' },
-  { brand:'Nitto',        amount:70,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nittotire.com/rebates' },
-  { brand:'Pirelli',      amount:100, type:'up to', expires:'May 8, 2026',   url:'https://www.pirelli.com/tyres/en-ca/car/promotions' },
-  { brand:'Toyo',         amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.toyotires.ca/promotions/' },
-  { brand:'Uniroyal',     amount:50,  type:'get a', expires:'May 29, 2026',  url:'https://www.uniroyaltire.ca/en-ca/promotions' },
-  { brand:'Yokohama',     amount:125, type:'up to', expires:'May 31, 2026',  url:'https://www.yokohamatire.ca/en-ca/promotions' },
+// ── REBATES — FALL 2026, PER TIRE MODEL ─────────────────────────────────────
+// Manufacturer rebates on a set of 4, paid to the customer as a prepaid card.
+// Each program switches itself on and off by date, so nothing stale can show.
+// To update next season: replace the programs below (dates, tiers, links).
+// tiers = [amount, pattern tested against the tire's model name]; first match wins;
+// amount 0 = excluded model. Sources and notes: claude/rebate-audit-2026-10-10.md.
+function _rebateRim(size) { const m = String(size || '').toUpperCase().match(/R(\d{2})(?!\d)/); return m ? parseInt(m[1], 10) : 0; }
+const REBATE_PROGRAMS = [
+  { brand:'Michelin',    match:/^michelin$/i,          start:'2026-09-21', end:'2026-12-18', max:100, url:'https://www.michelin.ca/en/promotions-and-rebates/auto-winter-promotion-2026',
+    tiers:[[100,/./]] },
+  { brand:'BFGoodrich',  match:/^bf ?goodrich$/i,      start:'2026-09-21', end:'2026-12-18', max:100, url:'https://promotion.bfgoodrich.ca/fall-promotion',
+    tiers:[[100,/ko ?3|ko ?2|trail.?terrain|hd.?terrain|km ?3/i],[70,/./]] },
+  { brand:'Uniroyal',    match:/^uniroyal$/i,          start:'2026-09-21', end:'2026-12-18', max:40,  url:'https://promotion.uniroyal.ca/fall-promotion',
+    tiers:[[40,/./]] },
+  { brand:'Bridgestone', match:/^bridgestone$/i,       start:'2026-09-15', end:'2026-12-07', max:100, url:'https://bridgestonerewards.com/',
+    note:'Tires must be installed by Dec 7 and the claim filed online by Dec 17.',
+    tiers:[[100,/blizzak|turanza|ultra ?weather|weather ?peak|drive ?guard ?plus|alenza ?prestige|dueler ?a\/?t ?ascent/i],[70,/ecopia|potenza/i]] },
+  { brand:'Firestone',   match:/^firestone$/i,         start:'2026-09-15', end:'2026-12-07', max:70,  url:'https://firestonerewards.com/',
+    note:'Tires must be installed by Dec 7 and the claim filed online by Dec 17.',
+    tiers:[[0,/potenza|dueler/i],[60,/firehawk/i],[70,/winterforce|weather ?grip|affinity ?as|all ?season|destination/i]] },
+  { brand:'Continental', match:/^continental$/i,       start:'2026-09-14', end:'2026-12-06', max:110, url:'https://continentaltirerewards.ca/',
+    tiers:[[0,/ultimate ?contact|\bcst\b|scontact/i],[110,/secure ?contact/i],[100,/winter ?contact ?ts ?8(30|50|60|70)|ts ?8(30|50|60|70) ?[ps]|viking ?contact ?[78]|ice ?contact ?xtrm|terrain ?contact ?a\/?t ?2/i],[60,/./]] },
+  { brand:'General',     match:/^general( tire)?$/i,   start:'2026-09-14', end:'2026-12-06', max:50,  url:'https://generaltirerewards.ca/',
+    tiers:[[0,/evertrek ?gt/i],[50,/./]] },
+  { brand:'Pirelli',     match:/^pirelli$/i,           start:'2026-09-14', end:'2026-12-06', max:110, url:'https://promo.pirelli.com/tyres/en-CA/car',
+    tiers:[[t => _rebateRim(t.size) >= 19 ? 110 : (_rebateRim(t.size) ? 90 : 0), /ice ?friction/i],
+           [t => _rebateRim(t.size) >= 19 ? 100 : (_rebateRim(t.size) ? 70 : 0), /wtc ?2|cinturato ?winter ?2|weather ?active|scorpion ?ice|scorpion.?winter|all ?terrain ?plus|scorpion ?xt|p.?zero.?winter|sotto ?zero|snow ?control/i]] },
+  { brand:'Toyo',        match:/^toyo( tires?)?$/i,    start:'2026-09-12', end:'2026-12-19', max:100, url:'https://toyorebate.ca/',
+    tiers:[[100,/gsi ?-?6/i],[50,/cargo/i],[80,/celsius ?(ii|2|sport)|open ?country ?(a\/?t ?(iii|3)|c\/?t|m\/?t|r\/?t|h\/?t ?(ii|2)|q\/?t)/i],[70,/g3.?ice/i],[50,/wlt ?1|proxes ?s\/?t ?(iii|3)|proxes ?sport ?a\/?s ?\+|extensa ?(hp|a\/?s) ?(ii|2)/i]] },
+  { brand:'Nitto',       match:/^nitto$/i,             start:'2026-09-12', end:'2026-12-19', max:70,  url:'https://nittorebate.ca/',
+    tiers:[[70,/dura ?grappler|exo ?grappler|mud ?grappler|nomad ?grappler|recon ?grappler|ridge ?grappler|terra ?grappler ?g3|trail ?grappler/i],[60,/motivo ?365|neo ?gen|nt.?420.?v|sn ?3\b/i]] },
+  { brand:'Yokohama',    match:/^yokohama$/i,          start:'2026-10-01', end:'2026-12-15', max:100, url:'https://yokohamatirerebates.ca/',
+    tiers:[[100,/v90[56]/i],[90,/g018|g017|a\/?t ?-?xd/i],[70,/ig ?53|g075|ig ?51|\b51v|g061|cv ?4s|g058|g057|x.?cv|ascend ?(gt|lx)/i]] },
+  { brand:'Hankook',     match:/^hankook$/i,           start:'2026-09-01', end:'2026-12-31', max:100, url:'https://hankookcanadapromotions.com/',
+    tiers:[[100,/ion.*i\*?cept|i\*?cept ?evo ?[34]|i\*?cept ?iz ?3|i\*? ?p(ike|eak) ?(rs ?2|x\b|rw ?11|lt\b|lv\b)|weatherflex/i]] },
+  { brand:'Laufenn',     match:/^laufenn$/i,           start:'2026-09-01', end:'2026-12-31', max:40,  url:'https://hankookcanadapromotions.com/',
+    tiers:[[40,/i ?fit ?ice|g ?fit ?4s/i]] },
+  { brand:'Nexen',       match:/^nexen$/i,             start:'2026-09-01', end:'2026-12-31', max:80,  url:'https://nexentirepromo.ca/',
+    tiers:[[t => /R1[56]C/i.test(String(t.size || '').replace(/\s+/g, '')) ? 0 : 80, /winguard ?ice ?3/i],[60,/win ?spike ?3|winguard ?sport ?2|winguard ?ice ?plus|n.?blue ?4 ?season ?2|roadian ?atx|roadian ?htx ?2/i]] },
+  { brand:'Kumho',       match:/^kumho$/i,             start:'2026-10-01', end:'2026-12-31', max:60,  url:'https://kumhotirerebates.com/',
+    tiers:[[60,/wp ?72|ws ?71|wi ?31 ?\+|ws ?31|cw ?11|ha ?32/i]] },
+  { brand:'Falken',      match:/^falken$/i,            start:'2026-10-01', end:'2026-12-15', max:80,  url:'https://srnarebate.com/home',
+    tiers:[[80,/aklimate|eurowinter ?hs ?01|ht ?0?2\b/i],[70,/espia ?epz ?(ii|2)|wildpeak ?a\/?t ?trail|winterpeak ?f.?ice/i],[60,/wildpeak ?a\/?t ?4 ?w/i]] },
+  { brand:'Dunlop',      match:/^dunlop$/i,            start:'2026-10-01', end:'2026-12-15', max:80,  url:'https://srnarebate.com/home',
+    tiers:[[80,/winter ?maxx ?(wm ?0?2|2\b|sj ?8)/i]] },
 ];
+function _rebateToday() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function _rebateDate(iso) { const p = iso.split('-').map(Number); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][p[1] - 1] + ' ' + p[2] + ', ' + p[0]; }
+function _rebateActive(p) { const t = _rebateToday(); return t >= p.start && t <= p.end; }
+// Rebate for one tire ({brand, name, size}), or null. Amount is for a set of 4.
+function getRebateForTire(t) {
+  if (!t || !t.brand || t.itemType === 'wheel') return null;
+  const name = String(t.name || '');
+  if (/\b(utv|sxs|nhs|spare)\b/i.test(name)) return null;
+  const p = REBATE_PROGRAMS.find(function (p) { return p.match.test(String(t.brand).trim()); });
+  if (!p || !_rebateActive(p)) return null;
+  let amount = 0;
+  for (const tier of p.tiers) { if (tier[1].test(name)) { amount = typeof tier[0] === 'function' ? tier[0](t) : tier[0]; break; } }
+  if (!amount) return null;
+  return { brand: p.brand, amount: amount, type: 'get a', expires: _rebateDate(p.end), url: p.url, note: p.note || '' };
+}
+// Rebates on an order: only lines of 4 or more qualify. One entry per brand + amount.
+function rebatesForItems(items) {
+  const out = [], seen = {};
+  (items || []).forEach(function (it) {
+    if (!(Number(it.qty) >= 4)) return;
+    const r = getRebateForTire(it); if (!r) return;
+    const k = r.brand + '|' + r.amount; if (seen[k]) return; seen[k] = 1; out.push(r);
+  });
+  return out;
+}
+// Brand-level list of programs running today — used only by the top ticker and the trust chip.
+const REBATES = REBATE_PROGRAMS.filter(_rebateActive).map(function (p) {
+  const flat = p.tiers.length === 1 && p.tiers[0][0] === p.max;
+  return { brand: p.brand, amount: p.max, type: flat ? '' : 'up to', expires: _rebateDate(p.end), url: p.url };
+});
 // ── END REBATE DATA ─────────────────────────────────────────────────────────
 
 function buildTicker() {
   const ticker = document.getElementById('rebateTicker');
-  if (!ticker || !REBATES.length) return;
+  if (!ticker) return;
+  if (!REBATES.length) {
+    // No live rebates: keep the top bar (the page layout is built around it) with shop messages instead.
+    const msgs = ['🔧 Local install from $25/tire', '📍 Chatham-Kent based · Pain Court', '💳 Pay over time with Affirm', '📞 Call or text 519-397-4686', '🔒 Secure Stripe checkout'];
+    let one = ''; for (let i = 0; i < 4; i++) one += msgs.map(m => `<span class="rebate-ticker-item">${m}</span>`).join('');
+    ticker.innerHTML = `<div class="rebate-ticker-inner">${one}${one}</div>`;
+    return;
+  }
   // Double the items so the loop is seamless
   const items = [...REBATES, ...REBATES].map(r =>
-    `<span class="rebate-ticker-item">💰 <strong>${r.brand}</strong> — ${r.type} $${r.amount} rebate <span class="rebate-ticker-sep">·</span> expires ${r.expires}</span>`
+    `<span class="rebate-ticker-item">💰 <strong>${r.brand}</strong> — ${r.type} $${r.amount} back on 4 select tires <span class="rebate-ticker-sep">·</span> buy by ${r.expires}</span>`
   ).join('');
   ticker.innerHTML = `<div class="rebate-ticker-inner">${items}</div>`;
 }
 buildTicker();
 
-function getRebateForBrand(brand) {
-  if (!brand) return null;
-  const b = brand.toLowerCase();
-  return REBATES.find(r => b.includes(r.brand.toLowerCase()) || r.brand.toLowerCase().includes(b)) || null;
-}
+// Trust chip: show the rebate ceiling only while a program is running.
+(function () {
+  const chip = document.getElementById('rebateChip');
+  if (chip && REBATES.length) chip.innerHTML = '<span class="tc-icon">💰</span><span>Rebates up to <strong>$' + Math.max.apply(null, REBATES.map(r => r.amount)) + '</strong></span>';
+})();
 </script>
 
 <!-- NAV -->
@@ -2547,7 +2610,7 @@ function getRebateForBrand(brand) {
         <div id="confRebates" style="display:none;margin-top:14px;padding:14px 16px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:2px">
           <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:10px">💰 Manufacturer Rebates Available</div>
           <div id="confRebateList" style="font-size:13px;color:var(--light);line-height:1.8"></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:8px">Rebates are mail-in — apply directly with each manufacturer using the links above. Instructions also sent to your email.</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px">Rebates are paid by the manufacturer as a prepaid card. Claim online with the link above once your tires are installed. You'll need a copy of your invoice; we'll give you one at installation.</div>
         </div>
         <button class="btn-primary" style="width:100%;margin-top:14px" onclick="closeCheckout();closeCart()">Continue Shopping</button>
       </div>
@@ -3450,10 +3513,10 @@ function buildRecCard(t, tier) {
   const memberBadge = priceBadgeHTML(t);
   const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
   const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
-  const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
-  const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} mail-in rebate</span>` : '';
+  const rebate = typeof getRebateForTire === 'function' ? getRebateForTire(t) : null;
+  const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} rebate on 4</span>` : '';
   const warrantyBadge = t.warranty ? `<span class="warranty-badge on-card" style="display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;margin-top:6px">🛡️ ${t.warranty.toLocaleString()} km warranty</span>` : '';
-  const effectiveNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:4px">Effective after rebate: ~$${Math.max(0, shown - rebate.amount / 4).toFixed(2)}/tire</div>` : '';
+  const effectiveNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:4px">After rebate on a set of 4: ~$${Math.max(0, shown - rebate.amount / 4).toFixed(2)}/tire</div>` : '';
   return `
   <div class="rec-card ${cls}" style="animation-delay:.05s;cursor:pointer" onclick="openTireDetail('${t.itemNumber}')">
     <div class="rec-badge ${cls}">${label}</div>
@@ -3522,8 +3585,8 @@ function renderTires() {
     const msrpNote = t.msrp > retail && retail > 0 ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:2px">MSRP $${t.msrp.toFixed(2)}</div>` : '';
     const tags = [t.season]; if (t.runFlat) tags.push('Run-Flat'); if (t.evCompat) tags.push('EV');
     const dimStyle = recIds.has(t.itemNumber) ? 'opacity:.55' : '';
-    const rebate = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
-    const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} rebate</span>` : '';
+    const rebate = typeof getRebateForTire === 'function' ? getRebateForTire(t) : null;
+    const rebateBadge = rebate ? `<span class="rebate-badge on-card">💰 $${rebate.amount} rebate on 4</span>` : '';
     const warrantyBadge = t.warranty ? `<span class="warranty-badge on-card" style="display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;margin-top:6px">🛡️ ${t.warranty.toLocaleString()} km warranty</span>` : '';
     return `
     <div class="tire-card" style="animation-delay:${Math.min(i,8)*0.055}s;${dimStyle}" onclick="openTireDetail('${t.itemNumber}')">
@@ -3540,7 +3603,7 @@ function renderTires() {
       </div>
       <div class="tc-foot">
         <div>${shown > 0 ? `${memberBadge}<div class="tc-price"><sup>$</sup>${Math.floor(shown)}<span style="font-size:13px;font-weight:400;color:var(--muted)">.${(shown%1).toFixed(2).slice(2)}</span></div>${msrpNote}` : `<div style="font-size:18px;font-weight:700;color:var(--yellow)">Call for price</div>`}
-          <div class="price-each">per tire · HST extra${rebate ? ` · <span style="color:var(--yellow)">+$${rebate.amount} rebate</span>` : ''}</div>
+          <div class="price-each">per tire · HST extra${rebate ? ` · <span style="color:var(--yellow)">$${rebate.amount} rebate on a set of 4</span>` : ''}</div>
           <div style="margin-top:5px;font-size:11px;font-weight:600;color:var(--yellow);letter-spacing:.2px">💳 Monthly payments available</div>
         </div>
         <button class="add-btn" onclick="event.stopPropagation();addToCart('${t.itemNumber}','tire')" ${t.stock==='out' && !isOwner()?'disabled style="opacity:.4;cursor:not-allowed"':''}>
@@ -4649,8 +4712,8 @@ function renderCart() {
   }
   body.innerHTML = cart.map(item => {
     const icon = item.itemType === 'wheel' ? (item.category === 'steel' ? '⚙️' : '💿') : '🔵';
-    const rebate = item.itemType !== 'wheel' && typeof getRebateForBrand === 'function' ? getRebateForBrand(item.brand) : null;
-    const rebateNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:3px">💰 $${rebate.amount} mail-in rebate available — <a href="${rebate.url}" target="_blank" style="color:var(--yellow);text-decoration:none">apply here →</a></div>` : '';
+    const rebate = item.itemType !== 'wheel' && item.qty >= 4 && typeof getRebateForTire === 'function' ? getRebateForTire(item) : null;
+    const rebateNote = rebate ? `<div style="font-size:11px;color:var(--green);margin-top:3px">💰 $${rebate.amount} manufacturer rebate on this set of 4 (buy by ${rebate.expires}) — <a href="${rebate.url}" target="_blank" rel="noopener" style="color:var(--yellow);text-decoration:none">claim here →</a></div>` : '';
     const commercial = isCommercialTire(item);
     const oversize   = isOversizeTire(item);
     let memberNote = '';
@@ -5426,6 +5489,7 @@ function buildThankYouParams(orderId) {
   const firstName = ((document.getElementById('fName')?.value) || '').trim();
   const grandTotal = payableGrandTotal();
   const brandsList = [...new Set(cart.map(c => c.brand).filter(Boolean))].join(',');
+  const rebateList = (typeof rebatesForItems === 'function' ? rebatesForItems(cart) : []).map(r => r.brand + '~' + r.amount).join(';');
   const vehicleStr = [lastSearchVehicle?.year, lastSearchVehicle?.make, lastSearchVehicle?.model, lastSearchVehicle?.trim].filter(Boolean).join(' ');
   const params = new URLSearchParams({
     order: orderId,
@@ -5433,6 +5497,7 @@ function buildThankYouParams(orderId) {
     first: firstName,
     email: email,
     brands: brandsList,
+    rb: rebateList,
   });
   if (vehicleStr) params.set('vehicle', vehicleStr);
   if (selDate)    params.set('date', selDate);
@@ -5696,26 +5761,19 @@ async function finishOrder() {
   // Capture redirect data BEFORE clearing cart
   const _firstName  = ((document.getElementById('fName')?.value) || name.split(' ')[0] || '').trim();
   const _brandsList = [...new Set((orderPayload.tires || []).map(t => t.brand).filter(Boolean))].join(',');
+  const _rebateList = (typeof rebatesForItems === 'function' ? rebatesForItems(orderPayload.tires) : []).map(r => r.brand + '~' + r.amount).join(';');
 
   cart = []; tdgQuote = null; selectedAddons = new Set(); appliedPromo = null; window._quoteFinalTotal = null; window._quoteLocked = false; window._quoteFastLane = false; window._quoteCustomerName = ''; window._quoteCustomerPhone = ''; window._activeQuoteCode = null; try { document.body.classList.remove('qlocked'); } catch(e) {} updBadge();
   if (btn) btn.classList.remove('ld');
 
   // Show rebate reminders on confirm screen (kept as a graceful fallback
   // in case the redirect to /thank-you fails)
-  const rebatesInOrder = [];
-  const seenBrands = new Set();
-  (orderPayload.tires || []).forEach(t => {
-    const r = typeof getRebateForBrand === 'function' ? getRebateForBrand(t.brand) : null;
-    if (r && !seenBrands.has(r.brand)) {
-      rebatesInOrder.push(r);
-      seenBrands.add(r.brand);
-    }
-  });
+  const rebatesInOrder = typeof rebatesForItems === 'function' ? rebatesForItems(orderPayload.tires) : [];
   const rebateBox = document.getElementById('confRebates');
   const rebateList = document.getElementById('confRebateList');
   if (rebatesInOrder.length && rebateBox && rebateList) {
     rebateList.innerHTML = rebatesInOrder.map(r =>
-      `<div>• <strong>${r.brand}</strong> — ${r.type} $${r.amount} rebate · expires ${r.expires} · <a href="${r.url}" target="_blank" style="color:var(--yellow);text-decoration:none">Apply here →</a></div>`
+      `<div>• <strong>${r.brand}</strong> — $${r.amount} prepaid card on your set of 4 · <a href="${r.url}" target="_blank" rel="noopener" style="color:var(--yellow);text-decoration:none">Claim here →</a>${r.note ? `<div style="font-size:11px;color:var(--muted);margin-left:12px">${r.note}</div>` : ''}</div>`
     ).join('');
     rebateBox.style.display = 'block';
   }
@@ -5736,6 +5794,7 @@ async function finishOrder() {
       first: _firstName,
       email: email,
       brands: _brandsList,
+      rb: _rebateList,
     });
     if (vehicleStr) params.set('vehicle', vehicleStr);
     if (selDate)    params.set('date', selDate);
