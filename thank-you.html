@@ -230,7 +230,7 @@ footer a:hover{color:var(--yellow)}
   <!-- REBATES SECTION -->
   <div class="rebates-section" id="rebatesBox" style="display:none">
     <h3>💰 Manufacturer Rebates Available</h3>
-    <div class="rebate-note">Your tires qualify for these mail-in rebates. Apply directly with each manufacturer using the links below — instructions are also in your confirmation email.</div>
+    <div class="rebate-note">Your tires qualify for a manufacturer rebate, paid to you as a prepaid card. Claim online with the link below once your tires are installed. You'll need a copy of your invoice; we'll give you one at installation.</div>
     <div id="rebatesList"></div>
   </div>
 
@@ -355,48 +355,46 @@ footer a:hover{color:var(--yellow)}
     }
   }
 
-  // ─── REBATES (synced with index.html — update both files seasonally) ───
-  var REBATES = [
-    { brand:'BFGoodrich',   amount:100, type:'up to', expires:'May 29, 2026',  url:'https://www.bfgoodrichtires.ca/en/rebates.html' },
-    { brand:'Bridgestone',  amount:100, type:'up to', expires:'May 30, 2026',  url:'https://www.bridgestonetire.ca/en-ca/promotions' },
-    { brand:'Continental',  amount:110, type:'up to', expires:'May 31, 2026',  url:'https://www.continental-tires.com/car/promotions/canada' },
-    { brand:'Dunlop',       amount:200, type:'get a', expires:'May 31, 2026',  url:'https://www.dunloptires.ca/en-ca/promotions' },
-    { brand:'Falken',       amount:80,  type:'up to', expires:'May 31, 2026',  url:'https://www.falkentire.com/en-CA/rebates' },
-    { brand:'Firestone',    amount:80,  type:'up to', expires:'May 30, 2026',  url:'https://www.firestonetire.ca/en-ca/promotions' },
-    { brand:'General Tire', amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.generaltire.ca/en-ca/promotions' },
-    { brand:'Hankook',      amount:100, type:'get a', expires:'Jun 30, 2026',  url:'https://www.hankooktire.com/ca/en/campaign/promotions.html' },
-    { brand:'Kumho',        amount:60,  type:'get a', expires:'Jun 15, 2026',  url:'https://www.kumhotire.ca/en/promotion' },
-    { brand:'Laufenn',      amount:40,  type:'get a', expires:'Jun 30, 2026',  url:'https://www.laufenn.com/promotion' },
-    { brand:'Michelin',     amount:100, type:'get a', expires:'May 29, 2026',  url:'https://www.michelin.ca/en/promotions/' },
-    { brand:'Nexen',        amount:80,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nexentire.ca/promotion' },
-    { brand:'Nitto',        amount:70,  type:'up to', expires:'Jun 30, 2026',  url:'https://www.nittotire.com/rebates' },
-    { brand:'Pirelli',      amount:100, type:'up to', expires:'May 8, 2026',   url:'https://www.pirelli.com/tyres/en-ca/car/promotions' },
-    { brand:'Toyo',         amount:100, type:'up to', expires:'May 31, 2026',  url:'https://www.toyotires.ca/promotions/' },
-    { brand:'Uniroyal',     amount:50,  type:'get a', expires:'May 29, 2026',  url:'https://www.uniroyaltire.ca/en-ca/promotions' },
-    { brand:'Yokohama',     amount:125, type:'up to', expires:'May 31, 2026',  url:'https://www.yokohamatire.ca/en-ca/promotions' },
-  ];
-
-  if (brands.length) {
-    var seen = {};
-    var matched = [];
-    brands.forEach(function(b){
-      var found = REBATES.find(function(r){
-        return r.brand.toLowerCase() === b.toLowerCase();
-      });
-      if (found && !seen[found.brand]) {
-        seen[found.brand] = true;
-        matched.push(found);
-      }
-    });
-    if (matched.length) {
-      var html = matched.map(function(r){
-        return '<div class="rebate-item"><strong>' + escapeHTML(r.brand) + '</strong> — ' +
-               escapeHTML(r.type) + ' $' + r.amount + ' rebate · expires ' + escapeHTML(r.expires) +
-               ' · <a href="' + escapeHTML(r.url) + '" target="_blank" rel="noopener">Apply here →</a></div>';
-      }).join('');
-      document.getElementById('rebatesList').innerHTML = html;
-      document.getElementById('rebatesBox').style.display = 'block';
-    }
+  // ─── REBATES (fall 2026) ───
+  // index.html works out which tires on the order qualify (per model, set of 4) and
+  // passes them here as ?rb=Brand~amount;Brand~amount. This table only supplies the
+  // claim link and dates, and doubles as an allow-list. Update with index.html each season.
+  var REBATE_INFO = {
+    'Michelin':    { end:'2026-12-18', url:'https://www.michelin.ca/en/promotions-and-rebates/auto-winter-promotion-2026' },
+    'BFGoodrich':  { end:'2026-12-18', url:'https://promotion.bfgoodrich.ca/fall-promotion' },
+    'Uniroyal':    { end:'2026-12-18', url:'https://promotion.uniroyal.ca/fall-promotion' },
+    'Bridgestone': { end:'2026-12-07', url:'https://bridgestonerewards.com/', note:'Tires must be installed by Dec 7 and the claim filed online by Dec 17.' },
+    'Firestone':   { end:'2026-12-07', url:'https://firestonerewards.com/', note:'Tires must be installed by Dec 7 and the claim filed online by Dec 17.' },
+    'Continental': { end:'2026-12-06', url:'https://continentaltirerewards.ca/' },
+    'General':     { end:'2026-12-06', url:'https://generaltirerewards.ca/' },
+    'Pirelli':     { end:'2026-12-06', url:'https://promo.pirelli.com/tyres/en-CA/car' },
+    'Toyo':        { end:'2026-12-19', url:'https://toyorebate.ca/' },
+    'Nitto':       { end:'2026-12-19', url:'https://nittorebate.ca/' },
+    'Yokohama':    { end:'2026-12-15', url:'https://yokohamatirerebates.ca/' },
+    'Hankook':     { end:'2026-12-31', url:'https://hankookcanadapromotions.com/' },
+    'Laufenn':     { end:'2026-12-31', url:'https://hankookcanadapromotions.com/' },
+    'Nexen':       { end:'2026-12-31', url:'https://nexentirepromo.ca/' },
+    'Kumho':       { end:'2026-12-31', url:'https://kumhotirerebates.com/' },
+    'Falken':      { end:'2026-12-15', url:'https://srnarebate.com/home' },
+    'Dunlop':      { end:'2026-12-15', url:'https://srnarebate.com/home' }
+  };
+  var rbRaw = (getParam('rb') || '').split(';').map(function(x){return x.trim();}).filter(Boolean);
+  var rbToday = (function(){ var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); })();
+  var matched = [];
+  rbRaw.forEach(function(x){
+    var parts = x.split('~'), b = parts[0], amt = parseInt(parts[1], 10);
+    var info = Object.prototype.hasOwnProperty.call(REBATE_INFO, b) ? REBATE_INFO[b] : null;
+    if (!info || !(amt > 0 && amt <= 200) || rbToday > info.end) return;
+    matched.push({ brand: b, amount: amt, url: info.url, note: info.note || '' });
+  });
+  if (matched.length) {
+    var html = matched.map(function(r){
+      return '<div class="rebate-item"><strong>' + escapeHTML(r.brand) + '</strong> — $' + r.amount +
+             ' prepaid card on your set of 4 · <a href="' + escapeHTML(r.url) + '" target="_blank" rel="noopener">Claim here →</a>' +
+             (r.note ? '<div style="font-size:12px;color:var(--muted);margin-top:4px">' + escapeHTML(r.note) + '</div>' : '') + '</div>';
+    }).join('');
+    document.getElementById('rebatesList').innerHTML = html;
+    document.getElementById('rebatesBox').style.display = 'block';
   }
 
   // ─────────────────────────────────────────────────────────────────
