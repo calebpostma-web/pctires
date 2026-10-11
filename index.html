@@ -2584,6 +2584,17 @@ buildTicker();
             <button type="button" id="spm-cash"      onclick="setStaffPay('cash')">Cash</button>
             <button type="button" id="spm-pickup"    onclick="setStaffPay('pickup')">Pay on pickup</button>
           </div>
+          <div id="staffRecvWrap" style="display:none;margin-top:10px">
+            <div style="font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Amount received so far</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <button type="button" id="srv-deposit" onclick="setStaffRecv('deposit')">$50 deposit</button>
+              <button type="button" id="srv-full"    onclick="setStaffRecv('full')">Paid in full</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:var(--muted)">
+              <span>Other amount $</span>
+              <input type="number" id="srv-other" min="0" step="0.01" inputmode="decimal" oninput="setStaffRecv('other')" style="width:110px;padding:7px 8px;background:var(--raised);border:1px solid var(--border);border-radius:2px;color:var(--white);font-size:13px">
+            </div>
+          </div>
           <div id="staffPayNote" style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic"></div>
         </div>
         <div id="payChoice" style="display:none;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
@@ -5334,26 +5345,71 @@ var DEPOSIT_AMOUNT = 50;
 var DEPOSIT_MIN_ORDER = 100;
 window._payMode = 'full';
 window._staffPay = 'card';   // 'card' | 'etransfer' | 'cash' | 'pickup' — owner phone orders only
+window._staffRecv = '';      // e-transfer / cash only: '' (not chosen) | 'deposit' | 'full' | 'other'
 
 // True when the owner has chosen a non-card method → no Stripe charge is taken.
 function staffNoCharge() {
   return staffPhoneOrder && window._staffPay && window._staffPay !== 'card';
 }
+// How much the owner has ALREADY received on a no-charge phone order.
+// pickup = 0. E-transfer / cash = the $50 deposit, the full total, or a typed amount.
+// Returns null when e-transfer / cash is picked but the amount has not been chosen yet.
+function staffReceivedAmount(grandTotal) {
+  if (!staffNoCharge()) return null;
+  if (window._staffPay === 'pickup') return 0;
+  if (window._staffRecv === 'full') return grandTotal;
+  if (window._staffRecv === 'deposit') return Math.min(DEPOSIT_AMOUNT, grandTotal);
+  if (window._staffRecv === 'other') {
+    var el = document.getElementById('srv-other');
+    var v = el ? parseFloat(el.value) : NaN;
+    if (!isFinite(v) || v <= 0) return null;
+    return Math.min(Math.round(v * 100) / 100, grandTotal);
+  }
+  return null;
+}
+// Deposit / balance / status fields sent with the order (emails + order log).
+// Card orders: unchanged — a deposit is whatever Stripe charged below the total.
+// Owner no-charge orders: from the amount the owner says was received.
+function payDepositFields(grandTotal) {
+  if (staffNoCharge()) {
+    var recv = staffReceivedAmount(grandTotal);
+    if (recv === null) recv = grandTotal;
+    var due = Math.round((grandTotal - recv) * 100) / 100;
+    if (due < 0.005) return { depositPaid: 0, balanceDue: 0, paymentStatus: 'PAID' };
+    if (recv > 0)    return { depositPaid: recv, balanceDue: due, paymentStatus: 'DEPOSIT' };
+    return { depositPaid: 0, balanceDue: due, paymentStatus: 'OWING' };
+  }
+  var part = !!(window._lastChargedAmount && window._lastChargedAmount < grandTotal);
+  return {
+    depositPaid: part ? window._lastChargedAmount : 0,
+    balanceDue:  part ? Math.round((grandTotal - window._lastChargedAmount) * 100) / 100 : 0,
+  };
+}
+function staffTotalSafe() { try { return payableGrandTotal(); } catch (e) { return 0; } }
 // Label for the internal order log / email when the owner takes payment off-site.
 function staffPayMethodLabel() {
   if (staffPhoneOrder) {
+    var f = (window._staffPay === 'etransfer' || window._staffPay === 'cash') ? payDepositFields(staffTotalSafe()) : null;
+    var dep = (f && f.paymentStatus === 'DEPOSIT') ? ' — $' + f.depositPaid.toFixed(2) + ' deposit received' : '';
     switch (window._staffPay) {
-      case 'etransfer': return 'E-transfer (received)';
-      case 'cash':      return 'Cash';
+      case 'etransfer': return dep ? 'E-transfer' + dep : 'E-transfer (received)';
+      case 'cash':      return dep ? 'Cash' + dep : 'Cash';
       case 'pickup':    return 'Unpaid — Pay on pickup';
     }
   }
   return 'Card';
 }
 function staffPayLabel() {
+  var how = (window._staffPay === 'etransfer') ? 'E-transfer' : 'Cash';
+  if (window._staffPay === 'etransfer' || window._staffPay === 'cash') {
+    var recv = staffReceivedAmount(staffTotalSafe());
+    if (recv === null) return 'Choose amount received ↑';
+    var f = payDepositFields(staffTotalSafe());
+    return f.paymentStatus === 'DEPOSIT'
+      ? 'Place Order — $' + f.depositPaid.toFixed(2) + ' ' + how + ' Deposit ✓'
+      : 'Place Order — ' + how + ' Paid in Full ✓';
+  }
   switch (window._staffPay) {
-    case 'etransfer': return 'Place Order — E-transfer ✓';
-    case 'cash':      return 'Place Order — Cash ✓';
     case 'pickup':    return 'Place Order — Pay on Pickup';
     default:          return (window._payMode === 'deposit') ? 'Pay $' + DEPOSIT_AMOUNT + ' Deposit' : (typeof nLabels !== 'undefined' ? nLabels[4] : 'Pay Securely 🔒');
   }
@@ -5375,7 +5431,48 @@ function renderStaffPay() {
   } else {
     wrap.style.display = 'none';
     window._staffPay = 'card';
+    window._staffRecv = '';
   }
+}
+// Owner picks how much has been received on an e-transfer / cash phone order.
+function setStaffRecv(kind) {
+  window._staffRecv = kind;
+  var other = document.getElementById('srv-other');
+  if (other && kind !== 'other') other.value = '';
+  refreshStaffPayUi();
+}
+function refreshStaffPayUi() {
+  var method = window._staffPay;
+  var needsAmt = (method === 'etransfer' || method === 'cash');
+  var rw = document.getElementById('staffRecvWrap');
+  if (rw) rw.style.display = (staffPhoneOrder && needsAmt) ? 'block' : 'none';
+  var bd = document.getElementById('srv-deposit'), bf = document.getElementById('srv-full');
+  if (bd) { bd.textContent = '$' + DEPOSIT_AMOUNT + ' deposit'; styleStaffPayBtn(bd, window._staffRecv === 'deposit'); }
+  if (bf) styleStaffPayBtn(bf, window._staffRecv === 'full');
+  var total = staffTotalSafe();
+  var how = (method === 'etransfer') ? 'e-transfer' : 'cash';
+  var spn = document.getElementById('staffPayNote');
+  if (spn) {
+    spn.style.color = '';
+    var txt = '';
+    if (method === 'pickup') {
+      txt = 'No payment taken. The customer email will show the full $' + total.toFixed(2) + ' as due on pickup. Tagged UNPAID.';
+    } else if (needsAmt) {
+      var recv = staffReceivedAmount(total);
+      if (recv === null) {
+        txt = 'Pick what you have received so far: the $' + DEPOSIT_AMOUNT + ' deposit, the full amount, or type another amount.';
+      } else {
+        var f = payDepositFields(total);
+        var first = (method === 'etransfer') ? 'Confirm the e-transfer is in your account BEFORE placing. ' : 'Cash collected. ';
+        txt = (f.paymentStatus === 'DEPOSIT')
+          ? first + 'The customer email will show $' + f.depositPaid.toFixed(2) + ' received by ' + how + ' and $' + f.balanceDue.toFixed(2) + ' balance due. Tagged DEPOSIT.'
+          : first + 'Tagged PAID in full by ' + how + '.';
+      }
+    }
+    spn.textContent = txt;
+  }
+  var nb = document.getElementById('nextBtn');
+  if (nb && !window._paymentInFlight) nb.textContent = staffPayLabel();
 }
 function setStaffPay(method) {
   window._staffPay = method;
@@ -5393,15 +5490,7 @@ function setStaffPay(method) {
   if (fnote) fnote.style.display = noCharge ? 'none' : '';
   if (pc) pc.style.display = noCharge ? 'none' : (depositEligible() ? 'grid' : 'none');
   if (noCharge) window._payMode = 'full';
-  var spn = document.getElementById('staffPayNote');
-  if (spn) {
-    spn.textContent =
-      method === 'etransfer' ? 'Confirm the e-transfer is in your account BEFORE placing. Tagged PAID — E-transfer.' :
-      method === 'cash'      ? 'Cash collected in shop. Tagged PAID — Cash.' :
-      method === 'pickup'    ? 'No payment taken — balance owing, collect on pickup. Tagged UNPAID.' : '';
-  }
-  var nb = document.getElementById('nextBtn');
-  if (nb && !window._paymentInFlight) nb.textContent = staffPayLabel();
+  refreshStaffPayUi();
 }
 function depositEligible() {
   try { return payableGrandTotal() >= DEPOSIT_MIN_ORDER; } catch (e) { return false; }
@@ -5477,8 +5566,7 @@ function collectOrderPayload() {
     addonTotal: addonAmt,
     tax: t.tax,
     total: grandTotal,
-    depositPaid: (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? window._lastChargedAmount : 0,
-    balanceDue: (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? Math.round((grandTotal - window._lastChargedAmount) * 100) / 100 : 0,
+    ...payDepositFields(grandTotal),
   };
 }
 
@@ -5510,11 +5598,17 @@ function buildThankYouParams(orderId) {
 // place the TDG order and log it, tagged with the chosen method.
 async function placeStaffOrder() {
   if (window._paymentInFlight) return;
+  const errEl = document.getElementById('stripeError');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  // E-transfer / cash: the owner must say how much was received (deposit or full)
+  // so the emails never call a $50 deposit "paid in full".
+  if ((window._staffPay === 'etransfer' || window._staffPay === 'cash') && staffReceivedAmount(staffTotalSafe()) === null) {
+    if (errEl) { errEl.textContent = 'Choose the amount received first: $' + DEPOSIT_AMOUNT + ' deposit, paid in full, or another amount.'; errEl.style.display = 'block'; }
+    return;
+  }
   window._paymentInFlight = true;
   const btn = document.getElementById('nextBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Placing order…'; btn.classList.add('ld'); }
-  const errEl = document.getElementById('stripeError');
-  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
   try {
     window._stripePaymentIntentId = '';   // no charge → no PaymentIntent
     window._lastChargedAmount = null;
@@ -5523,6 +5617,8 @@ async function placeStaffOrder() {
     await finishOrder();                   // places TDG + logs + emails, advances to confirm
     window._pendingOrderId = null;
     window._staffPay = 'card';             // reset for the next order
+    window._staffRecv = '';
+    var _so = document.getElementById('srv-other'); if (_so) _so.value = '';
   } catch (e) {
     if (errEl) { errEl.textContent = (e && e.message) || 'Could not place order.'; errEl.style.display = 'block'; }
     if (btn) { btn.disabled = false; btn.textContent = staffPayLabel(); }
@@ -5685,7 +5781,7 @@ async function finishOrder() {
     <div class="cd-row"><span class="cd-label">Items</span><span class="cd-val">${cart.map(c=>`${c.qty}× ${c.brand} ${c.name}`).join(', ')}</span></div>
     ${addonAmt > 0 ? `<div class="cd-row"><span class="cd-label">Add-ons</span><span class="cd-val">${addonNames}</span></div>` : ''}
     ${staffNoCharge()
-        ? `<div class="cd-row"><span class="cd-label">Order Total</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Payment</span><span class="cd-val">${staffPayMethodLabel()}</span></div>`
+        ? `<div class="cd-row"><span class="cd-label">Order Total</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Payment</span><span class="cd-val">${staffPayMethodLabel()}</span></div>${payDepositFields(grandTotal).balanceDue > 0 ? `<div class="cd-row"><span class="cd-label">Balance Owing</span><span class="cd-val y">$${payDepositFields(grandTotal).balanceDue.toFixed(2)} CAD</span></div>` : ''}`
         : (window._lastChargedAmount && window._lastChargedAmount < grandTotal)
         ? `<div class="cd-row"><span class="cd-label">Order Total</span><span class="cd-val">$${grandTotal.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Deposit Paid</span><span class="cd-val y">$${window._lastChargedAmount.toFixed(2)} CAD</span></div><div class="cd-row"><span class="cd-label">Balance at Install</span><span class="cd-val">$${(grandTotal - window._lastChargedAmount).toFixed(2)} CAD (e-transfer, card, or cash)</span></div>`
         : `<div class="cd-row"><span class="cd-label">Total Charged</span><span class="cd-val y">$${grandTotal.toFixed(2)} CAD</span></div>`}
@@ -5702,7 +5798,7 @@ async function finishOrder() {
   orderPayload.ownerToken = staffPhoneOrder ? (window._ownerToken || '') : '';
   // Paid / owing status for the dispatch board.
   const _payStatus = staffNoCharge()
-      ? (window._staffPay === 'pickup' ? 'OWING' : 'PAID')
+      ? payDepositFields(grandTotal).paymentStatus
       : (window._lastChargedAmount && window._lastChargedAmount < grandTotal) ? 'DEPOSIT'
       : 'PAID';
 
