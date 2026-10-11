@@ -186,8 +186,66 @@ const SHOP_MAPS_URL = 'https://maps.app.goo.gl/DPeffYusxUSSRs9c8';
 const SHOP_STREET   = '7144 Grande River Line';
 const SHOP_CITY     = 'Pain Court, ON N0P 1Z0';
 
+// ─── Payment state ─────────────────────────────────────────────────────────────
+// One place that decides what the emails say about money, so a phone order that
+// has not been paid (or only has a deposit on it) is never called "charged".
+//   OWING   — nothing received (owner "Pay on pickup" phone order)
+//   DEPOSIT — part received (card deposit via Stripe, or e-transfer / cash deposit)
+//   PAID    — paid in full
+// OWING is only possible on an order with no Stripe payment behind it. Orders that
+// arrive without paymentStatus (webhook / older clients) behave exactly as before.
+function payState(order) {
+  const total  = Number(order.total) || 0;
+  const dep    = Number(order.depositPaid) || 0;
+  const method = String(order.paymentMethod || 'Card');
+  const status = String(order.paymentStatus || '').toUpperCase();
+  const noStripe = !(order.paymentIntentId && String(order.paymentIntentId).trim());
+  const via = /e-?transfer/i.test(method) ? 'E-transfer'
+            : /cash/i.test(method)        ? 'Cash'
+            : /affirm/i.test(method)      ? 'Affirm'
+            : 'Card';
+  const offline = via === 'E-transfer' || via === 'Cash';
+  if (noStripe && (status === 'OWING' || /unpaid|pay on pickup/i.test(method))) {
+    return { state: 'OWING', paid: 0, due: total, via: '', offline: true };
+  }
+  if (dep > 0 && dep < total) {
+    const due = Number(order.balanceDue) > 0 ? Number(order.balanceDue) : Math.round((total - dep) * 100) / 100;
+    return { state: 'DEPOSIT', paid: dep, due, via, offline };
+  }
+  return { state: 'PAID', paid: total, due: 0, via, offline };
+}
+
+function orderSubjectFlag(order) {
+  const ps = payState(order);
+  return ps.state === 'DEPOSIT' ? ' [DEPOSIT - BALANCE OWING]'
+       : ps.state === 'OWING'   ? ' [UNPAID - COLLECT AT PICKUP]'
+       : '';
+}
+
 function buildCustomerEmail(order, tdgOrder) {
   const tdgRef = extractTDGRef(tdgOrder);
+  const ps = payState(order);
+  const dueWhen = order.appointmentDate ? 'at Installation' : 'at Installation / Pickup';
+  const cur = order.currency || 'CAD';
+  const c2 = n => '$' + (Number(n) || 0).toFixed(2) + ' ' + cur;
+  const totalLabel = ps.state === 'PAID'
+    ? (ps.offline ? `Total Paid (${ps.via})` : 'Total Charged')
+    : 'Order Total';
+  const payRows = ps.state === 'OWING' ? `<tr>
+          <td style="padding:8px 0 0;font-weight:800;font-size:15px;color:#f5c518">Amount Due ${dueWhen}</td>
+          <td style="padding:8px 0 0;text-align:right;font-weight:900;font-size:18px;color:#f5c518">${c2(ps.due)}</td>
+        </tr>
+        <tr><td colspan="2" style="padding:6px 0 0;font-size:12px;color:#888">No payment has been taken yet. Pay by e-transfer, card, or cash when you come in.</td></tr>`
+    : ps.state === 'DEPOSIT' ? `<tr>
+          <td style="padding:6px 0 0;font-weight:700;font-size:14px;color:#22c55e">${ps.offline ? `Deposit Received (${ps.via})` : 'Deposit Paid Today'}</td>
+          <td style="padding:6px 0 0;text-align:right;font-weight:800;font-size:15px;color:#22c55e">${c2(ps.paid)}</td>
+        </tr>
+        <tr>
+          <td style="padding:4px 0 0;font-weight:700;font-size:14px;color:#fff">Balance Due ${dueWhen}</td>
+          <td style="padding:4px 0 0;text-align:right;font-weight:800;font-size:15px;color:#f5c518">${c2(ps.due)}</td>
+        </tr>
+        <tr><td colspan="2" style="padding:6px 0 0;font-size:12px;color:#888">Pay the balance by e-transfer, card, or cash when your tires are installed.</td></tr>`
+    : '';
   const itemsHtml = (order.tires || [])
     .map(t => `<tr>
       <td style="padding:8px 12px;border-bottom:1px solid #2a2a2a">${t.qty}× ${t.brand} ${t.name}</td>
@@ -271,18 +329,10 @@ function buildCustomerEmail(order, tdgOrder) {
           <td style="padding:4px 0;text-align:right;color:#e0e0e0">$${order.tax?.toFixed(2)}</td>
         </tr>
         <tr style="border-top:1px solid #2a2a2a">
-          <td style="padding:10px 0 4px;font-weight:700;font-size:15px;color:#fff">${order.depositPaid > 0 ? 'Order Total' : 'Total Charged'}</td>
-          <td style="padding:10px 0 4px;text-align:right;font-weight:900;font-size:18px;color:#f5c518">$${order.total?.toFixed(2)} CAD</td>
+          <td style="padding:10px 0 4px;font-weight:700;font-size:15px;color:#fff">${totalLabel}</td>
+          <td style="padding:10px 0 4px;text-align:right;font-weight:900;font-size:18px;color:${ps.state === 'OWING' ? '#fff' : '#f5c518'}">$${order.total?.toFixed(2)} CAD</td>
         </tr>
-        ${order.depositPaid > 0 ? `<tr>
-          <td style="padding:6px 0 0;font-weight:700;font-size:14px;color:#22c55e">Deposit Paid Today</td>
-          <td style="padding:6px 0 0;text-align:right;font-weight:800;font-size:15px;color:#22c55e">$${Number(order.depositPaid).toFixed(2)} CAD</td>
-        </tr>
-        <tr>
-          <td style="padding:4px 0 0;font-weight:700;font-size:14px;color:#fff">Balance Due at Installation</td>
-          <td style="padding:4px 0 0;text-align:right;font-weight:800;font-size:15px;color:#f5c518">$${Number(order.balanceDue).toFixed(2)} CAD</td>
-        </tr>
-        <tr><td colspan="2" style="padding:6px 0 0;font-size:12px;color:#888">Pay the balance by e-transfer, card, or cash when your tires are installed.</td></tr>` : ''}
+        ${payRows}
       </table>
     </div>
 
@@ -506,7 +556,8 @@ function buildInternalEmail(order, tdgOrder, tdgError, feeInfo) {
   const netMargin    = (margin !== null && (hasFee || noStripe)) ? (margin - feeAmt) : null;
   const netMarginPct = netMargin !== null ? pctOfRevenue(netMargin) : null;
   const netColor     = (netMargin !== null && netMargin < 0) ? '#b91c1c' : '#15803d';
-  const isDeposit    = Number(order.depositPaid) > 0;
+  const ps           = payState(order);
+  const isDeposit    = ps.state === 'DEPOSIT';
 
   const marginNote = 'Pre-tax margin = customer subtotal before tax &minus; TDG subtotal, shipping and fees. HST is left out on both sides: what the customer paid is remitted and what TDG charged comes back as an ITC. '
     + (hasFee
@@ -596,16 +647,20 @@ function buildInternalEmail(order, tdgOrder, tdgError, feeInfo) {
       </tr>
       <tr><td style="${rowLbl}">${taxLabel}</td><td style="${rowVal}">${money(order.tax || 0)}</td></tr>
       <tr style="border-top:2px solid #111111">
-        <td style="padding:9px 0 0;color:#111111;font-weight:700;font-size:14px">${order.depositPaid > 0 ? 'Order Total' : 'Total Charged'}</td>
+        <td style="padding:9px 0 0;color:#111111;font-weight:700;font-size:14px">${ps.state !== 'PAID' ? 'Order Total' : (ps.offline ? `Total Paid (${ps.via})` : 'Total Charged')}</td>
         <td style="padding:9px 0 0;text-align:right;color:#111111;font-weight:800;font-size:17px">${money(order.total || 0)} ${order.currency || 'CAD'}</td>
       </tr>
-      ${order.depositPaid > 0 ? `<tr>
-        <td style="padding:5px 0 0;color:#15803d;font-weight:700;font-size:13px">Deposit Paid (Stripe)</td>
-        <td style="padding:5px 0 0;text-align:right;color:#15803d;font-weight:800;font-size:15px">${money(order.depositPaid)}</td>
+      ${ps.state === 'DEPOSIT' ? `<tr>
+        <td style="padding:5px 0 0;color:#15803d;font-weight:700;font-size:13px">Deposit ${ps.offline ? `Received (${ps.via})` : 'Paid (Stripe)'}</td>
+        <td style="padding:5px 0 0;text-align:right;color:#15803d;font-weight:800;font-size:15px">${money(ps.paid)}</td>
       </tr>
       <tr>
         <td style="padding:5px 0 0;color:#b91c1c;font-weight:800;font-size:14px">BALANCE OWING AT INSTALL</td>
-        <td style="padding:5px 0 0;text-align:right;color:#b91c1c;font-weight:900;font-size:17px">${money(order.balanceDue)}</td>
+        <td style="padding:5px 0 0;text-align:right;color:#b91c1c;font-weight:900;font-size:17px">${money(ps.due)}</td>
+      </tr>` : ''}
+      ${ps.state === 'OWING' ? `<tr>
+        <td style="padding:5px 0 0;color:#b91c1c;font-weight:800;font-size:14px">UNPAID &mdash; COLLECT AT PICKUP</td>
+        <td style="padding:5px 0 0;text-align:right;color:#b91c1c;font-weight:900;font-size:17px">${money(ps.due)}</td>
       </tr>` : ''}
     </table>
   </div>
@@ -740,7 +795,7 @@ export async function processOrder(order, env) {
   try {
     await sendEmail(RESEND_API_KEY, {
       to: NOTIFY_EMAILS,
-      subject: `🛞 New Order ${order.orderNumber}${order.depositPaid > 0 ? ' [DEPOSIT - BALANCE OWING]' : ''}${tdgError ? ' ⚠️ TDG FAILED' : ''} — ${order.customerName}`,
+      subject: `🛞 New Order ${order.orderNumber}${orderSubjectFlag(order)}${tdgError ? ' ⚠️ TDG FAILED' : ''} — ${order.customerName}`,
       html: buildInternalEmail(order, tdgOrder, tdgError, feeInfo),
     });
   } catch (e) { console.error('Internal email error:', e); }
@@ -757,4 +812,4 @@ export async function processOrder(order, env) {
   return result;
 }
 
-export { md5, computeOrderHash, placeTDGOrder, extractTDGRef, buildCustomerEmail, buildInternalEmail, sendEmail, getStripeFee };
+export { md5, computeOrderHash, placeTDGOrder, extractTDGRef, buildCustomerEmail, buildInternalEmail, sendEmail, getStripeFee, payState, orderSubjectFlag };
