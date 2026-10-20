@@ -3079,11 +3079,21 @@ function normaliseWheel(product, inventory) {
     diameter:    parseFloat(sp.diameter || (sp.size ? sp.size.toString().split(/[x×]/)[0] : 0) || 0),
     width:       parseFloat(sp.width || 0),
     offset:      parseFloat(sp.offset || 0),
-    hubBore:     parseFloat(sp.hubBore || sp.hub_bore || 0),
+    hubBore:     parseFloat(sp.centerbore || sp.centreBore || sp.centerBore || sp.hubBore || sp.hub_bore || 0),
+    lugSeat:     sp.lugSeat || '',
     price: cost, msrp, map, imageUrl: product.productImageUrl || null,
     stock: locs.length === 0 ? 'out' : (totalQty === 0 ? 'out' : (totalQty <= 4 ? 'low' : 'in')),
     qtyAvailable: totalQty, locations: locs,
   };
+}
+
+// One-line fitment spec for a wheel: 17x7.5 ET40 · 5x114.3 · CB 64.1mm
+function wheelSpecLine(w) {
+  if (!w || !w.diameter) return '';
+  const parts = [w.diameter + (w.width ? 'x' + w.width : '') + '"' + (w.offset ? ' ET' + w.offset : '')];
+  if (w.boltPattern) parts.push(w.boltPattern);
+  if (w.hubBore) parts.push('CB ' + w.hubBore + 'mm');
+  return parts.join(' \u00b7 ');
 }
 
 // ─────────────────────────────────────────────────
@@ -3703,8 +3713,8 @@ function renderWheels() {
       <span class="wc-finish-badge ${w.category === 'alloy' ? 'alloy' : ''}">${w.category === 'alloy' ? 'Alloy' : 'Steel'} · ${w.finish}</span>
       <div class="tc-specs">
         <div><div class="spec-label">Bolt Pattern</div><div class="spec-value">${w.boltPattern||'—'}</div></div>
-        <div><div class="spec-label">Diameter</div><div class="spec-value">${w.diameter ? w.diameter+'"' : '—'}</div></div>
-        <div><div class="spec-label">Width</div><div class="spec-value">${w.width ? w.width+'"' : '—'}</div></div>
+        <div><div class="spec-label">Size</div><div class="spec-value">${w.diameter ? w.diameter + (w.width ? 'x'+w.width : '') + '"' : '—'}</div></div>
+        <div style="position:relative"><div class="spec-label">Centrebore <span class="offset-info" title="Centrebore (hub bore) is the hole in the middle of the wheel, in millimetres. It must be equal to or larger than your vehicle's hub — too small and the wheel will not sit on the hub at all. Hub-centric rings can fill a gap if the wheel bore is larger.">&#9432;</span></div><div class="spec-value">${w.hubBore ? w.hubBore+'mm' : '—'}</div></div>
         <div style="position:relative"><div class="spec-label">Offset <span class="offset-info" title="Offset (ET) measures how far the wheel's mounting surface sits from the centerline, in millimeters. Positive ET = wheel sits further in. Negative ET = wheel pokes out more. Matching your vehicle's OEM offset is the safest bet for proper clearance and handling.">&#9432;</span></div><div class="spec-value">${w.offset ? 'ET'+w.offset : '—'}</div></div>
       </div>
       <div class="tc-foot">
@@ -4739,7 +4749,7 @@ function renderCart() {
       <div class="ci-info">
         <div class="ci-brand">${item.brand}</div>
         <div class="ci-name">${item.name}</div>
-        <div class="ci-size">${item.size || (item.diameter ? item.diameter+'" · '+item.boltPattern : '')}</div>
+        <div class="ci-size">${item.size || wheelSpecLine(item)}</div>
         ${item.install && item.itemType !== 'wheel' && !commercial && !oversize ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
         ${commercial
           ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">🚛 <strong style="color:var(--light)">Commercial size</strong> — sell-only, no in-shop install. We'll source &amp; ship or arrange pickup.</div>`
@@ -5553,7 +5563,7 @@ function collectOrderPayload() {
     vin,
     vehicleYear, vehicleMake, vehicleModel, vehicleTrim,
     searchMethod: (lastSearchMethod || 'unknown') + (staffPhoneOrder ? ' [PHONE ORDER]' : ''),
-    tires: cart.map(c => ({ tdgId: c.tdgId, qty: c.qty, brand: c.brand, name: c.name, size: c.size || c.diameter + '"', price: c.price })),
+    tires: cart.map(c => ({ tdgId: c.tdgId, qty: c.qty, brand: c.brand, name: c.name, size: c.size || wheelSpecLine(c) || (c.diameter + '"'), price: c.price })),
     addons: addonNames,
     installation: !!selectedService,
     appointmentDate: selDate || '',
@@ -7314,7 +7324,7 @@ function openCartImage(itemNumber){
   var img=document.getElementById('cartImgFull');
   var cap=document.getElementById('cartImgCap');
   var title=((item.brand||'')+' '+(item.name||'')).trim();
-  var size=item.size || (item.diameter ? (item.diameter+'\" - '+(item.boltPattern||'')) : '');
+  var size=item.size || wheelSpecLine(item);
   if(cap){ cap.innerHTML='<div>'+escapeHtml(title)+'</div>'+(size?'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted);font-weight:400;margin-top:4px">'+escapeHtml(size)+'</div>':''); }
   if(img){
     img.style.display='';
