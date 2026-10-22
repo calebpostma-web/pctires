@@ -248,10 +248,41 @@ function buildCustomerEmail(order, tdgOrder) {
     : '';
   const itemsHtml = (order.tires || [])
     .map(t => `<tr>
-      <td style="padding:8px 12px;border-bottom:1px solid #2a2a2a">${t.qty}× ${t.brand} ${t.name}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;text-align:right">${t.size || (t.diameter + '"')}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;text-align:right">$${(t.price * t.qty).toFixed(2)}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid #2a2a2a;vertical-align:top">${t.qty}× ${t.brand} ${t.name}
+        <div style="font-size:12px;color:#888;margin-top:3px">${t.size || (t.diameter + '"')} · $${Number(t.price || 0).toFixed(2)} each</div></td>
+      <td style="padding:10px 12px;border-bottom:1px solid #2a2a2a;text-align:right;vertical-align:top;white-space:nowrap">$${(Number(t.price || 0) * Number(t.qty || 0)).toFixed(2)}</td>
     </tr>`).join('');
+
+  // ── Invoice breakdown (rebate claims need tires + installation shown separately) ──
+  // Lines: Tires, Installation, Add-ons, Discount, [Shipping], Subtotal, tax, Total.
+  // Subtotal is taken as total - tax so the invoice always adds up to what was charged;
+  // anything left over after the listed lines (TDG shipping) gets its own row.
+  const m2 = n => '$' + (Number(n) || 0).toFixed(2);
+  const tiresAmt   = Number(order.subtotal || 0);
+  const installAmt = Number(order.installTotal || 0);
+  const addonAmt   = Number(order.addonTotal || 0);
+  const discAmt    = Number(order.discount || 0);
+  const taxAmt     = Number(order.tax || 0);
+  const preTax     = Math.round((Number(order.total || 0) - taxAmt) * 100) / 100;
+  const otherAmt   = Math.round((preTax - (tiresAmt + installAmt + addonAmt - discAmt)) * 100) / 100;
+  const isTire     = t => /R\s?\d{2}/i.test(String(t.size || ''));
+  const nTires     = (order.tires || []).filter(isTire).length;
+  const goodsLabel = nTires === (order.tires || []).length ? 'Tires' : (nTires === 0 ? 'Wheels' : 'Tires &amp; Wheels');
+  const custExempt = order.statusExempt === true || order.statusExempt === 'true';
+  const custTaxLbl = custExempt ? 'GST (5%) &mdash; status exempt' : `HST (${order.taxRatePct || '13'}%)`;
+  const installRow = installAmt > 0
+    ? `<tr><td style="padding:4px 0;color:#888;font-size:13px">Installation${order.serviceName ? ` &mdash; ${order.serviceName}` : ''}</td><td style="padding:4px 0;text-align:right;color:#e0e0e0">${m2(installAmt)}</td></tr>`
+    : (order.installation === true || order.installation === 'true' || order.appointmentDate)
+      ? `<tr><td style="padding:4px 0;color:#888;font-size:13px">Installation${order.serviceName ? ` &mdash; ${order.serviceName}` : ''}</td><td style="padding:4px 0;text-align:right;color:#e0e0e0">Included</td></tr>`
+      : '';
+
+  // Invoice date in shop time
+  let invDate = '';
+  try {
+    const d = order.orderDate ? new Date(order.orderDate) : new Date();
+    const v = !isNaN(d.getTime()) ? d : new Date();
+    invDate = v.toLocaleDateString('en-CA', { timeZone: 'America/Toronto', year: 'numeric', month: 'long', day: 'numeric' });
+  } catch (e) { invDate = new Date().toISOString().slice(0, 10); }
 
   const installLine = order.appointmentDate
     ? `${order.serviceName || 'Installation'} · ${order.appointmentDate} at ${order.appointmentTime}`
@@ -283,6 +314,14 @@ function buildCustomerEmail(order, tdgOrder) {
           <td style="padding:6px 0;color:#888;font-size:13px">Order #</td>
           <td style="padding:6px 0;text-align:right;color:#f5c518;font-weight:700;font-family:monospace">${order.orderNumber}</td>
         </tr>
+        <tr>
+          <td style="padding:6px 0;color:#888;font-size:13px">Date</td>
+          <td style="padding:6px 0;text-align:right;color:#e0e0e0">${invDate}</td>
+        </tr>
+        ${order.customerName ? `<tr>
+          <td style="padding:6px 0;color:#888;font-size:13px">Customer</td>
+          <td style="padding:6px 0;text-align:right;color:#e0e0e0">${order.customerName}</td>
+        </tr>` : ''}
         ${tdgRef ? `<tr>
           <td style="padding:6px 0;color:#888;font-size:13px">TDG Reference</td>
           <td style="padding:6px 0;text-align:right;color:#e0e0e0;font-family:monospace;font-size:13px">${tdgRef}</td>
@@ -301,8 +340,7 @@ function buildCustomerEmail(order, tdgOrder) {
         <thead>
           <tr style="background:#1d1d1d">
             <th style="padding:8px 12px;text-align:left;font-size:12px;color:#888;font-weight:600">Product</th>
-            <th style="padding:8px 12px;text-align:right;font-size:12px;color:#888;font-weight:600">Size</th>
-            <th style="padding:8px 12px;text-align:right;font-size:12px;color:#888;font-weight:600">Price</th>
+            <th style="padding:8px 12px;text-align:right;font-size:12px;color:#888;font-weight:600">Amount</th>
           </tr>
         </thead>
         <tbody>${itemsHtml}</tbody>
@@ -313,24 +351,33 @@ function buildCustomerEmail(order, tdgOrder) {
     <div style="background:#161616;border:1px solid #2a2a2a;border-radius:4px;padding:20px 32px;margin-bottom:16px">
       <table style="width:100%;border-collapse:collapse">
         <tr>
-          <td style="padding:4px 0;color:#888;font-size:13px">Subtotal</td>
-          <td style="padding:4px 0;text-align:right;color:#e0e0e0">$${order.subtotal?.toFixed(2)}</td>
+          <td style="padding:4px 0;color:#888;font-size:13px">${goodsLabel}</td>
+          <td style="padding:4px 0;text-align:right;color:#e0e0e0">${m2(tiresAmt)}</td>
         </tr>
-        ${order.discount && Number(order.discount) > 0 ? `<tr>
+        ${installRow}
+        ${addonAmt > 0 ? `<tr>
+          <td style="padding:4px 0;color:#888;font-size:13px">Add-ons${order.addons ? ` &mdash; ${order.addons}` : ''}</td>
+          <td style="padding:4px 0;text-align:right;color:#e0e0e0">${m2(addonAmt)}</td>
+        </tr>` : ''}
+        ${discAmt > 0 ? `<tr>
           <td style="padding:4px 0;color:#22c55e;font-size:13px">Discount${order.discountCode ? ` (${order.discountCode})` : ''}</td>
-          <td style="padding:4px 0;text-align:right;color:#22c55e">-$${Number(order.discount).toFixed(2)}</td>
+          <td style="padding:4px 0;text-align:right;color:#22c55e">-${m2(discAmt)}</td>
         </tr>` : ''}
-        ${order.addonTotal > 0 ? `<tr>
-          <td style="padding:4px 0;color:#888;font-size:13px">Add-ons</td>
-          <td style="padding:4px 0;text-align:right;color:#e0e0e0">$${order.addonTotal?.toFixed(2)}</td>
+        ${otherAmt >= 0.01 ? `<tr>
+          <td style="padding:4px 0;color:#888;font-size:13px">Shipping</td>
+          <td style="padding:4px 0;text-align:right;color:#e0e0e0">${m2(otherAmt)}</td>
         </tr>` : ''}
+        <tr style="border-top:1px solid #2a2a2a">
+          <td style="padding:8px 0 4px;color:#e0e0e0;font-size:13px;font-weight:700">Subtotal</td>
+          <td style="padding:8px 0 4px;text-align:right;color:#e0e0e0;font-weight:700">${m2(preTax)}</td>
+        </tr>
         <tr>
-          <td style="padding:4px 0;color:#888;font-size:13px">HST (13%)</td>
-          <td style="padding:4px 0;text-align:right;color:#e0e0e0">$${order.tax?.toFixed(2)}</td>
+          <td style="padding:4px 0;color:#888;font-size:13px">${custTaxLbl}</td>
+          <td style="padding:4px 0;text-align:right;color:#e0e0e0">${m2(taxAmt)}</td>
         </tr>
         <tr style="border-top:1px solid #2a2a2a">
           <td style="padding:10px 0 4px;font-weight:700;font-size:15px;color:#fff">${totalLabel}</td>
-          <td style="padding:10px 0 4px;text-align:right;font-weight:900;font-size:18px;color:${ps.state === 'OWING' ? '#fff' : '#f5c518'}">$${order.total?.toFixed(2)} CAD</td>
+          <td style="padding:10px 0 4px;text-align:right;font-weight:900;font-size:18px;color:${ps.state === 'OWING' ? '#fff' : '#f5c518'}">${m2(order.total)} ${cur}</td>
         </tr>
         ${payRows}
       </table>
@@ -355,17 +402,16 @@ function buildCustomerEmail(order, tdgOrder) {
     <!-- What's next -->
     <div style="background:#161616;border:1px solid #2a2a2a;border-radius:4px;padding:20px 32px;margin-bottom:24px">
       <div style="font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:12px">What Happens Next</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="font-size:13px;color:#e0e0e0">📦 <strong>Your tires are being ordered</strong> from our supplier and will arrive at our shop within 1–3 business days.</div>
-        <div style="font-size:13px;color:#e0e0e0">📱 <strong>We'll call or text you</strong> at ${order.customerPhone || 'the number provided'} when your tires arrive to confirm your install appointment.</div>
-        <div style="font-size:13px;color:#e0e0e0">🔧 <strong>Installation takes about 60 minutes.</strong> We mount, balance, reset TPMS, and dispose of your old tires.</div>
-      </div>
+      <div style="font-size:14px;line-height:1.5;color:#e0e0e0;margin:0 0 12px">📦 <strong>Your tires are being ordered</strong> from our supplier and will arrive at our shop within 1–3 business days.</div>
+      <div style="font-size:14px;line-height:1.5;color:#e0e0e0;margin:0 0 12px">📱 <strong>We'll call or text you</strong> at ${order.customerPhone || 'the number provided'} when your tires arrive to confirm your install appointment.</div>
+      <div style="font-size:14px;line-height:1.5;color:#e0e0e0;margin:0">🔧 <strong>Installation takes about 60 minutes.</strong> We mount, balance, reset TPMS, and dispose of your old tires.</div>
     </div>
 
     <!-- Footer -->
     <div style="text-align:center;font-size:12px;color:#555;line-height:1.8">
       <div><a href="${SHOP_MAPS_URL}" style="color:#888;text-decoration:none">PC Tires · ${SHOP_STREET}, ${SHOP_CITY}</a></div>
       <div>📞 519-397-4686 · orders@pctires.ca · pctires.ca</div>
+      <div>HST # 743657553 RT0001</div>
       <div style="margin-top:8px">Questions? Just reply to this email or give us a call.</div>
     </div>
 
