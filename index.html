@@ -5097,12 +5097,13 @@ function prevStep() {
 function skipInstall() { step = 3; updSteps(); }
 
 // ── ADD-ONS ──────────────────────────────────────
+// hidden: true = not offered yet; kept here so it can be switched back on by deleting the flag.
 const ADDONS = [
-  { id:'nitrogen',  icon:'💨', name:'Nitrogen Fill',          price:19.99, unit:'per tire', desc:'More stable pressure. Better in extreme cold.', vehicleSpecific: false },
-  { id:'hazard',    icon:'🛡️', name:'Road Hazard Protection', price:24.99, unit:'per tire', desc:'Free repair or replacement if you get a flat.', vehicleSpecific: false },
-  { id:'storage',   icon:'📦', name:'Seasonal Tire Storage',  price:49.99, unit:'per set',  desc:'We store your off-season tires until next swap.', vehicleSpecific: false },
+  { id:'nitrogen',  icon:'💨', name:'Nitrogen Fill',          price:19.99, unit:'per tire', desc:'More stable pressure. Better in extreme cold.', vehicleSpecific: false, hidden: true },
+  { id:'hazard',    icon:'🛡️', name:'Road Hazard Protection', price:24.99, unit:'per tire', desc:'Free repair or replacement if you get a flat.', vehicleSpecific: false, hidden: true },
+  { id:'storage',   icon:'📦', name:'Seasonal Tire Storage',  price:65.00, unit:'season',   desc:'We store your off-season tires until next swap.', vehicleSpecific: false },
   { id:'wipers',    icon:'🌧️', name:'Front Wiper Blades',     price:41.98, unit:'pair',     desc:'Two new all-season beam blades, sized to your vehicle and installed while you\'re in.', vehicleSpecific: false },
-  { id:'cabin',     icon:'🌬️', name:'Cabin Air Filter',       price:39.99, unit:'flat',     desc:'Breathe cleaner air. Takes 10 min to swap.', vehicleSpecific: true },
+  { id:'cabin',     icon:'🌬️', name:'Cabin Air Filter',       price:39.99, unit:'flat',     desc:'Breathe cleaner air. Takes 10 min to swap.', vehicleSpecific: true, hidden: true },
   { id:'torque',    icon:'✅', name:'Torque Re-check',         price:0,     unit:'free',     desc:'50–100 km after install. Included, no charge.', vehicleSpecific: false },
 ];
 let selectedAddons = new Set();
@@ -5116,7 +5117,7 @@ function buildAddonGrid() {
   const hasVehicle = lastSearchMethod === 'vin' || lastSearchMethod === 'vehicle';
   const vehicleName = lastSearchVehicle ? `${lastSearchVehicle.year} ${lastSearchVehicle.make} ${lastSearchVehicle.model}` : null;
 
-  grid.innerHTML = ADDONS.map(a => {
+  grid.innerHTML = ADDONS.filter(a => !a.hidden).map(a => {
     const sel = selectedAddons.has(a.id);
     const locked = a.vehicleSpecific && !hasVehicle;
     const priceStr = a.price === 0
