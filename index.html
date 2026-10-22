@@ -5101,7 +5101,7 @@ const ADDONS = [
   { id:'nitrogen',  icon:'💨', name:'Nitrogen Fill',          price:19.99, unit:'per tire', desc:'More stable pressure. Better in extreme cold.', vehicleSpecific: false },
   { id:'hazard',    icon:'🛡️', name:'Road Hazard Protection', price:24.99, unit:'per tire', desc:'Free repair or replacement if you get a flat.', vehicleSpecific: false },
   { id:'storage',   icon:'📦', name:'Seasonal Tire Storage',  price:49.99, unit:'per set',  desc:'We store your off-season tires until next swap.', vehicleSpecific: false },
-  { id:'wipers',    icon:'🌧️', name:'Wiper Blade Replacement',price:29.99, unit:'flat',     desc:'New blades installed while you\'re in for service.', vehicleSpecific: true },
+  { id:'wipers',    icon:'🌧️', name:'Front Wiper Blades',     price:41.98, unit:'pair',     desc:'Two new all-season beam blades, sized to your vehicle and installed while you\'re in.', vehicleSpecific: false },
   { id:'cabin',     icon:'🌬️', name:'Cabin Air Filter',       price:39.99, unit:'flat',     desc:'Breathe cleaner air. Takes 10 min to swap.', vehicleSpecific: true },
   { id:'torque',    icon:'✅', name:'Torque Re-check',         price:0,     unit:'free',     desc:'50–100 km after install. Included, no charge.', vehicleSpecific: false },
 ];
@@ -5167,7 +5167,7 @@ function payableGrandTotal() {
   if (typeof window._quoteFinalTotal === 'number' && window._quoteFinalTotal > 0) return window._quoteFinalTotal;
   const t = getTotals();
   const addonAmt = (typeof getAddonTotal === 'function') ? getAddonTotal() : 0;
-  return t.total + addonAmt;
+  return t.total + addonAmt * 1.13;   // add-ons are HST-able
 }
 
 async function buildPaymentSummary() {
@@ -5199,7 +5199,7 @@ async function buildPaymentSummary() {
     <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
     ${instTotal > 0 ? `<div class="ptrow"><span>Installation</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
     ${addonLines}
-    <div class="ptrow"><span>Tax (HST 13%)</span><span>$${(grandTotal * 0.13 / 1.13).toFixed(2)}</span></div>
+    <div class="ptrow"><span>Tax (HST 13%)</span><span>$${(t.tax + addonAmt * 0.13).toFixed(2)}</span></div>
     <div class="ptrow bold"><span>${window._payMode === 'deposit' ? 'Order Total' : 'Total Due Today'}</span><span>$${grandTotal.toFixed(2)}</span></div>${depositRowsHtml(grandTotal)}
   `;
 }
@@ -5574,7 +5574,7 @@ function collectOrderPayload() {
     discount: t.discount || 0,
     discountCode: appliedPromo ? appliedPromo.code : '',
     addonTotal: addonAmt,
-    tax: t.tax,
+    tax: t.tax + addonAmt * 0.13,
     total: grandTotal,
     ...payDepositFields(grandTotal),
   };
@@ -5853,7 +5853,7 @@ async function finishOrder() {
         discount: (t.discount || 0).toFixed(2),
         discountCode: appliedPromo ? appliedPromo.code : '',
         addonTotal: addonAmt.toFixed(2),
-        tax: t.tax.toFixed(2),
+        tax: (t.tax + addonAmt * 0.13).toFixed(2),
         total: grandTotal.toFixed(2),
         installationService: selectedService?.label || 'Not booked',
         appointmentDate: selDate || '',
