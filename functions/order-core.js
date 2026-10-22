@@ -270,10 +270,14 @@ function buildCustomerEmail(order, tdgOrder) {
   const goodsLabel = nTires === (order.tires || []).length ? 'Tires' : (nTires === 0 ? 'Wheels' : 'Tires &amp; Wheels');
   const custExempt = order.statusExempt === true || order.statusExempt === 'true';
   const custTaxLbl = custExempt ? 'GST (5%) &mdash; status exempt' : `HST (${order.taxRatePct || '13'}%)`;
+  const tireQty    = (order.tires || []).reduce((n, t) => n + Number(t.qty || 0), 0);
+  const instLabel  = (nTires === (order.tires || []).length && tireQty > 0)
+    ? `Installation &mdash; ${tireQty} tire${tireQty === 1 ? '' : 's'}`
+    : `Installation${order.serviceName ? ` &mdash; ${order.serviceName}` : ''}`;
   const installRow = installAmt > 0
-    ? `<tr><td style="padding:4px 0;color:#888;font-size:13px">Installation${order.serviceName ? ` &mdash; ${order.serviceName}` : ''}</td><td style="padding:4px 0;text-align:right;color:#e0e0e0">${m2(installAmt)}</td></tr>`
+    ? `<tr><td style="padding:4px 0;color:#888;font-size:13px">${instLabel}</td><td style="padding:4px 0;text-align:right;color:#e0e0e0">${m2(installAmt)}</td></tr>`
     : (order.installation === true || order.installation === 'true' || order.appointmentDate)
-      ? `<tr><td style="padding:4px 0;color:#888;font-size:13px">Installation${order.serviceName ? ` &mdash; ${order.serviceName}` : ''}</td><td style="padding:4px 0;text-align:right;color:#e0e0e0">Included</td></tr>`
+      ? `<tr><td style="padding:4px 0;color:#888;font-size:13px">${instLabel}</td><td style="padding:4px 0;text-align:right;color:#e0e0e0">Included</td></tr>`
       : '';
 
   // Invoice date in shop time
@@ -285,13 +289,14 @@ function buildCustomerEmail(order, tdgOrder) {
   } catch (e) { invDate = new Date().toISOString().slice(0, 10); }
 
   const installLine = order.appointmentDate
-    ? `${order.serviceName || 'Installation'} · ${order.appointmentDate} at ${order.appointmentTime}`
+    ? `${order.serviceName || 'Installation'} · ${order.appointmentDate}${order.appointmentTime ? ` at ${order.appointmentTime}` : ''}`
     : 'Not booked — we\'ll contact you to arrange';
 
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#0e0e0e;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#e0e0e0">
+  <div style="background:#0e0e0e;color:#e0e0e0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">
   <div style="max-width:600px;margin:0 auto;padding:32px 16px">
 
     <!-- Header -->
@@ -415,6 +420,7 @@ function buildCustomerEmail(order, tdgOrder) {
       <div style="margin-top:8px">Questions? Just reply to this email or give us a call.</div>
     </div>
 
+  </div>
   </div>
 </body>
 </html>`;
