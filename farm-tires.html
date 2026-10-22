@@ -232,7 +232,13 @@ body { background:var(--black); color:var(--white); font-family:'Barlow',sans-se
 
     <div class="filter-bar">
       <input type="text" id="fSearch" placeholder="Search size or keyword…" autocomplete="off">
-      <select id="fBrand"><option value="">All brands</option></select>
+      <select id="fType" aria-label="Product type">
+        <option value="tires">Farm &amp; industrial tires</option>
+        <option value="farm">Farm tires only</option>
+        <option value="industrial">Industrial / loader / R-4</option>
+        <option value="tube">Tubes, flaps &amp; valves</option>
+      </select>
+      <select id="fBrand" aria-label="Brand"><option value="">All brands</option></select>
       <select id="fSort">
         <option value="price-asc">Price: Low to High</option>
         <option value="price-desc">Price: High to Low</option>
@@ -320,6 +326,7 @@ body { background:var(--black); color:var(--white); font-family:'Barlow',sans-se
 //  CONFIG
 // ─────────────────────────────────────────────────────────────────
 const PAGE_CATEGORY = 'farm';
+const PAGE_CATEGORIES = ['farm', 'industrial', 'tube'];   // farm page also carries R-4/industrial and ag tubes
 const PAGE_LABEL = 'Farm Tire';
 const BATCH = 30;
 
@@ -334,8 +341,8 @@ let quoteProduct = null;
 fetch('/odessa-catalog.json')
   .then(r => r.json())
   .then(d => {
-    ALL = d.products.filter(p => p.category === PAGE_CATEGORY);
-    document.getElementById('statCount').textContent = ALL.length;
+    ALL = d.products.filter(p => PAGE_CATEGORIES.includes(p.category));
+    document.getElementById('statCount').textContent = ALL.filter(p => p.category !== 'tube').length;
     initBrands();
     applyFilters();
   })
@@ -367,7 +374,7 @@ function stockInfo(s) {
   return { cls:'call', label:'Call for Availability', inStock:false };
 }
 
-function sizeOf(desc) { return desc.split(' ')[0]; }
+function sizeOf(desc) { const t = desc.split(' ')[0]; return /\d/.test(t) ? t : desc.split(',')[0].slice(0, 28); }
 
 // --- Tread-pattern image: one reference image per tread, not per SKU ---
 var TREAD_IMG = {
@@ -425,6 +432,7 @@ function initBrands() {
 function applyFilters() {
   const q = document.getElementById('fSearch').value.trim().toUpperCase();
   const brand = document.getElementById('fBrand').value;
+  const type = document.getElementById('fType').value;
   const stockOnly = document.getElementById('fStock').checked;
   const sort = document.getElementById('fSort').value;
 
@@ -432,6 +440,7 @@ function applyFilters() {
   const qDigits = q.replace(/[^0-9]/g,'');
 
   FILTERED = ALL.filter(p => {
+    if (type === 'tires' ? p.category === 'tube' : p.category !== type) return false;
     if (brand && p.brand !== brand) return false;
     if (stockOnly && !stockInfo(p.stock).inStock) return false;
     if (q) {
@@ -461,7 +470,7 @@ function renderMore() {
   shown += slice.length;
 
   document.getElementById('resultNote').textContent =
-    FILTERED.length ? 'Showing ' + shown + ' of ' + FILTERED.length + ' tires' : '';
+    FILTERED.length ? 'Showing ' + shown + ' of ' + FILTERED.length + (document.getElementById('fType').value === 'tube' ? ' items' : ' tires') : '';
   document.getElementById('emptyMsg').style.display = FILTERED.length ? 'none' : 'block';
   document.getElementById('showMore').style.display = shown < FILTERED.length ? 'inline-block' : 'none';
 }
@@ -478,7 +487,7 @@ function card(p) {
     '<div class="brand">' + esc(p.brand) + '</div>' +
     '<div><span class="badge ' + st.cls + '">' + st.label + '</span></div>' +
     (price
-      ? '<div class="price">$' + price + ' <span class="ea">/ tire</span></div>'
+      ? '<div class="price">$' + price + ' <span class="ea">/ ' + (p.category === 'tube' ? 'each' : 'tire') + '</span></div>'
       : '<div class="price" style="font-size:20px">Call for Price</div>') +
     '<div class="code">#' + esc(p.code) + '</div>' +
     '<div class="actions">' +
@@ -500,6 +509,7 @@ document.querySelectorAll('.ex-chip').forEach(ch => ch.addEventListener('click',
 }));
 document.getElementById('fSearch').addEventListener('input', applyFilters);
 document.getElementById('fBrand').addEventListener('change', applyFilters);
+document.getElementById('fType').addEventListener('change', applyFilters);
 document.getElementById('fSort').addEventListener('change', applyFilters);
 document.getElementById('fStock').addEventListener('change', applyFilters);
 document.getElementById('showMore').addEventListener('click', renderMore);
