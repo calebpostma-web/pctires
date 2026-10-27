@@ -304,6 +304,17 @@ function renderProduct(row, meta, origin) {
       price: price ? price.amount : '',
       itemCondition: 'https://schema.org/NewCondition',
       availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      // Matches /returns: 30 days, unmounted, customer pays return shipping, 15% restocking fee.
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'CA',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 30,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+        restockingFee: 15,
+        merchantReturnLink: 'https://pctires.ca/returns',
+      },
       seller: {
         '@type': 'AutoPartsStore',
         '@id': 'https://pctires.ca/#business',
