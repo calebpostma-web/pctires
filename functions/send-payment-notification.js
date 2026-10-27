@@ -99,6 +99,7 @@ function buildInternalEmail(p) {
   <div class="body">
     <div class="alert">&#x1F4B0; ${esc(p.customerName) || 'A customer'} paid $${esc(amt)}${p.statusExempt === true ? ' via /statuspay &mdash; STATUS CARD, 5% GST.' : ' via /pay.'}</div>
     <table>
+      <tr><td>Date paid</td><td>${esc(new Date().toLocaleString('en-CA', { timeZone: 'America/Toronto', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' }))}</td></tr>
       <tr><td>Amount</td><td><span class="amount">$${esc(amt)} ${esc(p.currency || 'CAD')}</span></td></tr>
       ${p.invoiceNumber ? `<tr><td>Invoice #</td><td>${esc(p.invoiceNumber)}</td></tr>` : ''}
       <tr><td>Description</td><td>${esc(p.description) || '&mdash;'}</td></tr>
@@ -121,7 +122,7 @@ function buildInternalEmail(p) {
 function buildCustomerReceipt(p) {
   const amt = Number(p.amount).toFixed(2);
   const firstName = (p.customerName || '').split(' ')[0] || 'there';
-  const dateStr = new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+  const dateStr = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Toronto', year: 'numeric', month: 'long', day: 'numeric' });
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
