@@ -3023,12 +3023,35 @@ const now = new Date(); calY = now.getFullYear(); calMo = now.getMonth();
 // ─────────────────────────────────────────────────
 //  TIRE NORMALISATION
 // ─────────────────────────────────────────────────
+// Units TDG can actually ship: qtyAvailable summed across locations, skipping any
+// location TDG flags unavailable (availability 100). Drives the stock label, the
+// cart cap and the pay-time recheck so all three agree.
+function usableQty(locs) {
+  return (locs || []).reduce(function (s, l) {
+    if (!l || Number(l.availability) === 100) return s;
+    return s + (Number(l.qtyAvailable) || 0);
+  }, 0);
+}
+// Most of this item a customer may put in the cart. Owner is exempt (can order in).
+function stockCap(item) {
+  if (!item || (typeof isOwner === 'function' && isOwner())) return Infinity;
+  var q = item.qtyAvailable;
+  return (typeof q === 'number' && isFinite(q) && q >= 0) ? q : Infinity;
+}
+function stockNoteHtml(item) {
+  var cap = stockCap(item);
+  if (!(item && item.qty > cap)) return '';
+  var msg = cap > 0
+    ? '\u26A0 Only ' + cap + ' available at our supplier right now \u2014 reduce to ' + cap + ' or call 519-397-4686.'
+    : '\u26A0 No longer in stock at our supplier \u2014 remove it or call 519-397-4686.';
+  return '<div style="font-size:11px;color:var(--red);margin-top:4px;font-weight:600;line-height:1.4">' + msg + '</div>';
+}
 function normaliseTire(product, inventory) {
   const sp = product.specifications || {};
   const inv = inventory || {};
   const locs = inv.locations || [];
   const bestAvail = locs.length ? Math.min(...locs.map(l => l.availability)) : 100;
-  const totalQty = locs.reduce((s, l) => s + (l.qtyAvailable || 0), 0);
+  const totalQty = usableQty(locs);
   const seasonRaw = (sp.season || TDG.SEASON_LABEL[sp.tireSeason] || '').toLowerCase();
   let type = 'allseason';
   if (seasonRaw.includes('winter')) type = 'winter';
@@ -3064,7 +3087,7 @@ function normaliseWheel(product, inventory) {
   const inv = inventory || {};
   const locs = inv.locations || [];
   const bestAvail = locs.length ? Math.min(...locs.map(l => l.availability)) : 100;
-  const totalQty  = locs.reduce((s, l) => s + (l.qtyAvailable || 0), 0);
+  const totalQty  = usableQty(locs);
   const cost = inv.pricing?.price ?? product.pricing?.price ?? 0;
   const msrp = inv.pricing?.msrp  ?? product.pricing?.msrp  ?? cost;
   const map  = inv.pricing?.map   ?? product.pricing?.map   ?? null;
@@ -4646,13 +4669,20 @@ function addToCart(itemNumber, itemType) {
 
   const ex = cart.find(c => c.itemNumber === itemNumber);
   const priceToCharge = displayedPrice(item);
-  if (ex) ex.qty++;
+  // Stock cap: a customer can never have more in the cart than TDG can ship (owner exempt).
+  const cap = stockCap(item);
+  if (cap <= 0) { showToast(item.brand + ' ' + item.name, 'Out of stock at our supplier \u2014 call 519-397-4686 and we\'ll find you a set.'); return; }
+  if (ex) {
+    if (ex.qty >= cap) { showToast(item.brand + ' ' + item.name, 'Only ' + cap + ' available \u2014 you already have ' + ex.qty + ' in your cart.'); return; }
+    ex.qty++;
+    ex.qtyAvailable = item.qtyAvailable;
+  }
   // Commercial truck tires (17.5/19.5/22.5/24.5 rims) are sell-only — we don't install them
-  else cart.push({ ...item, price: priceToCharge, retailEach: retailPrice(item), discEligible: discountEligible(item), qty: itemType === 'wheel' ? 4 : 4, install: !isCommercialTire(item), itemType: itemType || 'tire' });
+  else cart.push({ ...item, price: priceToCharge, retailEach: retailPrice(item), discEligible: discountEligible(item), qty: Math.min(4, cap), install: !isCommercialTire(item), itemType: itemType || 'tire' });
   updBadge();
-  const qty = ex ? ex.qty : 4;
-  const label = itemType === 'wheel' ? 'wheels' : 'tires';
-  showToast(item.brand + ' ' + item.name, `${qty} ${label} added to your cart`);
+  const qty = ex ? ex.qty : Math.min(4, cap);
+  const label = itemType === 'wheel' ? (qty === 1 ? 'wheel' : 'wheels') : (qty === 1 ? 'tire' : 'tires');
+  showToast(item.brand + ' ' + item.name, (!ex && cap < 4) ? `Only ${cap} in stock \u2014 ${qty} ${label} added to your cart` : `${qty} ${label} added to your cart`);
 }
 
 function quoteLockBlocked() {
@@ -4677,6 +4707,7 @@ function pickOnlyThis(itemNumber) {
 function chgQty(itemNumber, d) {
   if (quoteLockBlocked()) return;
   const item = cart.find(c => c.itemNumber === itemNumber); if (!item) return;
+  if (d > 0 && item.qty + d > stockCap(item)) { showToast(item.brand + ' ' + item.name, 'Only ' + stockCap(item) + ' available at our supplier right now.'); return; }
   item.qty += d; if (item.qty <= 0) { removeFromCart(itemNumber); return; } saveCartToStorage(); renderCart();
 }
 // Detect commercial truck tire by size: old-style single-width (11R22.5) or any 17.5/19.5/22.5/24.5 rim
@@ -4765,7 +4796,7 @@ function renderCart() {
                   </select>
                   <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4">TPMS: screw-in sensors can transfer to new wheels; rubber snap-in stems need new sensors — we confirm &amp; program at the shop.</div>
                 </div>`)}
-        ${rebateNote}${memberNote}
+        ${rebateNote}${memberNote}${stockNoteHtml(item)}
       </div>
       <div class="ci-right">
         <div class="qty-row">
@@ -5038,6 +5069,13 @@ function openCheckout() {
   }
   updSteps();
   document.getElementById('checkoutOverlay').classList.add('show');
+  // Recheck stock the moment checkout opens, so a short cart bounces back to the
+  // cart (with the line warning) before the customer fills anything in.
+  verifyCartStock().then(function (msg) {
+    if (!msg) return;
+    closeCheckout(); openCart();
+    try { showToast('Stock changed', 'Our supplier has fewer than your cart asks for \u2014 see the note in your cart.'); } catch (e) {}
+  }).catch(function () {});
 }
 function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('show'); }
 
@@ -5171,12 +5209,72 @@ function payableGrandTotal() {
   return t.total + addonAmt * 1.13;   // add-ons are HST-able
 }
 
+// Live stock recheck against TDG. Search results and saved carts can be hours or
+// days old, and other dealers buy from the same pool. Returns a customer-facing
+// message when the cart wants more than TDG can ship, else null. Queried per item
+// type (same as quote loading). A TDG/network failure fails OPEN for that group.
+async function verifyCartStock() {
+  if (typeof isOwner === 'function' && isOwner()) return null;
+  var items = (cart || []).filter(function (c) { return c && c.itemNumber; });
+  if (!items.length) return null;
+  var groups = {};
+  items.forEach(function (c) { var g = c.itemType === 'wheel' ? 'wheel' : 'tire'; (groups[g] = groups[g] || []).push(c); });
+  var short = [];
+  for (var g in groups) {
+    var list = null;
+    try {
+      var res = await tdgFetch('inventory', { itemnumbers: groups[g].map(function (c) { return c.itemNumber; }) });
+      list = Array.isArray(res) ? res : (res && (res.data || res.products || res.items || res.results));
+    } catch (e) { console.warn('Stock recheck skipped (' + g + '):', e && e.message); }
+    if (!Array.isArray(list) || !list.length) continue;
+    var inv = {};
+    list.forEach(function (i) { if (i && i.itemNumber) inv[i.itemNumber] = i; });
+    groups[g].forEach(function (c) {
+      var avail = inv[c.itemNumber] ? usableQty(inv[c.itemNumber].locations) : 0;
+      c.qtyAvailable = avail;
+      if (c.qty > avail) short.push(((c.brand || '') + ' ' + (c.name || '') + (c.size ? ' ' + c.size : '')).trim() + (avail > 0 ? ': only ' + avail + ' left (your cart has ' + c.qty + ')' : ': now out of stock'));
+    });
+  }
+  try { saveCartToStorage(); } catch (e) {}
+  if (!short.length) return null;
+  return 'Stock just changed at our supplier. ' + short.join('; ') + '. Adjust your cart, or call 519-397-4686 and we\'ll find you another set.';
+}
+
+// Promo codes flagged depositOnly (Postma H&C): card may only pay the $50 deposit;
+// the balance is e-transfer at install. Reads the LIVE PROMO_CODES def, not the
+// copy saved in localStorage, so an old saved cart can't dodge the rule.
+function promoDepositOnly() {
+  try {
+    if (!appliedPromo || !appliedPromo.code || typeof PROMO_CODES === 'undefined') return false;
+    var key = String(appliedPromo.code).toUpperCase(), def = null;
+    for (var k in PROMO_CODES) { if (k.toUpperCase() === key) { def = PROMO_CODES[k]; break; } }
+    if (!def || !def.depositOnly) return false;
+    if (typeof staffNoCharge === 'function' && staffNoCharge()) return false;
+    return depositEligible();
+  } catch (e) { return false; }
+}
+function applyDepositOnlyUi() {
+  var forced = promoDepositOnly();
+  if (forced) window._payMode = 'deposit';
+  var f = document.getElementById('payOptFull'), pc = document.getElementById('payChoice'), d = document.getElementById('payOptDeposit');
+  if (f) f.style.display = forced ? 'none' : '';
+  if (pc) pc.style.gridTemplateColumns = forced ? '1fr' : '1fr 1fr';
+  var sub = d ? d.children[1] : null;
+  if (sub) {
+    if (!sub.hasAttribute('data-orig')) sub.setAttribute('data-orig', sub.textContent);
+    sub.textContent = forced
+      ? 'Your Postma H&C pricing is paid as a $50 card deposit today to order your tires. The balance is paid by e-transfer at installation.'
+      : sub.getAttribute('data-orig');
+  }
+}
+
 async function buildPaymentSummary() {
   const box = document.getElementById('payBox'); if (!box) return;
   renderStaffPay();
   var _pc = document.getElementById('payChoice');
   if (_pc) { _pc.style.display = staffNoCharge() ? 'none' : (depositEligible() ? 'grid' : 'none'); }
   if (!depositEligible()) { window._payMode = 'full'; }
+  applyDepositOnlyUi();
   payModeStyles();
   var _nb = document.getElementById('nextBtn');
   if (_nb && !window._paymentInFlight && !staffNoCharge() && window._payMode === 'deposit') { _nb.textContent = 'Pay $' + DEPOSIT_AMOUNT + ' Deposit'; }
@@ -5515,6 +5613,7 @@ function payModeStyles() {
   d.style.background  = (window._payMode === 'deposit') ? 'rgba(245,197,24,0.08)' : 'var(--raised)';
 }
 function setPayMode(m) {
+  if (promoDepositOnly()) m = 'deposit';
   window._payMode = (m === 'deposit' && depositEligible()) ? 'deposit' : 'full';
   payModeStyles();
   try { buildPaymentSummary(); } catch (e) {}
@@ -5527,7 +5626,7 @@ function setPayMode(m) {
 function depositRowsHtml(g) {
   if (window._payMode !== 'deposit' || !depositEligible()) return '';
   return '<div class="ptrow" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)"><span>Due today (deposit)</span><span style="color:var(--yellow);font-weight:800">$' + DEPOSIT_AMOUNT.toFixed(2) + '</span></div>'
-       + '<div class="ptrow"><span>Balance at installation (e-transfer, card, or cash)</span><span>$' + (g - DEPOSIT_AMOUNT).toFixed(2) + '</span></div>';
+       + '<div class="ptrow"><span>Balance at installation (' + (promoDepositOnly() ? 'e-transfer' : 'e-transfer, card, or cash') + ')</span><span>$' + (g - DEPOSIT_AMOUNT).toFixed(2) + '</span></div>';
 }
 function getOrCreateOrderId() {
   if (!window._pendingOrderId) {
@@ -5574,6 +5673,7 @@ function collectOrderPayload() {
     installTotal: t.inst,
     discount: t.discount || 0,
     discountCode: appliedPromo ? appliedPromo.code : '',
+    balanceBy: promoDepositOnly() ? 'e-transfer' : '',
     addonTotal: addonAmt,
     tax: t.tax + addonAmt * 0.13,
     total: grandTotal,
@@ -5662,6 +5762,8 @@ async function processPayment() {
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
 
   try {
+    // Deposit-only promo (Postma H&C): the card covers the $50 deposit, never the full order.
+    if (promoDepositOnly()) window._payMode = 'deposit';
     const grandTotal = payableGrandTotal();
     const chargeTotal = (window._payMode === 'deposit' && depositEligible()) ? DEPOSIT_AMOUNT : grandTotal;
     window._lastChargedAmount = chargeTotal;
@@ -5676,6 +5778,10 @@ async function processPayment() {
     try { stripeElems.update({ amount: amountCents }); } catch(e) {}
     const submitRes = await stripeElems.submit();
     if (submitRes.error) throw new Error(submitRes.error.message);
+
+    // Live stock recheck before any PaymentIntent exists: if TDG is short, nothing is charged.
+    const stockMsg = await verifyCartStock();
+    if (stockMsg) throw new Error(stockMsg);
 
     // Build the full order NOW so create-pi can stash it server-side. Required for
     // Affirm, where the browser redirects away before finishOrder could ever run.
