@@ -244,7 +244,7 @@ function buildCustomerEmail(order, tdgOrder) {
           <td style="padding:4px 0 0;font-weight:700;font-size:14px;color:#fff">Balance Due ${dueWhen}</td>
           <td style="padding:4px 0 0;text-align:right;font-weight:800;font-size:15px;color:#f5c518">${c2(ps.due)}</td>
         </tr>
-        <tr><td colspan="2" style="padding:6px 0 0;font-size:12px;color:#888">Pay the balance by e-transfer, card, or cash when your tires are installed.</td></tr>`
+        <tr><td colspan="2" style="padding:6px 0 0;font-size:12px;color:#888">Pay the balance by ${order.balanceBy === 'e-transfer' ? 'e-transfer' : 'e-transfer, card, or cash'} when your tires are installed.</td></tr>`
     : '';
   const itemsHtml = (order.tires || [])
     .map(t => `<tr>
@@ -707,7 +707,7 @@ function buildInternalEmail(order, tdgOrder, tdgError, feeInfo) {
         <td style="padding:5px 0 0;text-align:right;color:#15803d;font-weight:800;font-size:15px">${money(ps.paid)}</td>
       </tr>
       <tr>
-        <td style="padding:5px 0 0;color:#b91c1c;font-weight:800;font-size:14px">BALANCE OWING AT INSTALL</td>
+        <td style="padding:5px 0 0;color:#b91c1c;font-weight:800;font-size:14px">BALANCE OWING AT INSTALL${order.balanceBy === 'e-transfer' ? ' (E-TRANSFER ONLY)' : ''}</td>
         <td style="padding:5px 0 0;text-align:right;color:#b91c1c;font-weight:900;font-size:17px">${money(ps.due)}</td>
       </tr>` : ''}
       ${ps.state === 'OWING' ? `<tr>
