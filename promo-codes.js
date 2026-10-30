@@ -16,6 +16,7 @@
 //    label    → what the customer sees (e.g. "15% Off Summer Sale")
 //    expires  → 'YYYY-MM-DD' — code stops working after this date
 //    minCart  → minimum subtotal in $ to qualify (e.g. 400)
+//    depositOnly → true = card can only pay the $50 deposit; balance by e-transfer
 //
 //  ⚠ CODES DO NOT RESPECT THE MARGIN FLOOR (as of Aug 14 2026).
 //  calculatePromoDiscount() in index.html recomputes 'markup' and 'net_target'
@@ -43,7 +44,9 @@ const PROMO_CODES = {
   // Postma H&C stays at 1.1 by Caleb's call — they know it's a good deal and it
   // has moved them up into better tires. It nets slightly negative on 53 Antares
   // SKUs (cost under \$94); accepted, since they don't buy budget.
-  'POSTMAH&C':   { type: 'markup', value: 1.1, label: 'Postma H&C' },
+  // depositOnly (Oct 29 2026): Stripe's ~3% on a full order at 1.1 wiped out the
+  // margin (Chris Bond, 4 tires, ~$25 net). Card pays the $50 deposit only.
+  'POSTMAH&C':   { type: 'markup', value: 1.1, label: 'Postma H&C', depositOnly: true },
   // EZRA2026 removed Aug 14 2026 — no longer needed.
 
   // ── Promo / marketing codes ──
