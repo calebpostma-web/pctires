@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Take Payment">
+<title>Take Payment · PC Tires</title>
+<link rel="icon" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/favicon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0a0a0a;--card:#161616;--raised:#1d1d1d;--border:#2a2a2a;--muted:#8a8a8a;--light:#cfcfcf;--white:#f4f4f4;--yellow:#f5c518;--green:#22c55e;--red:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-size:16px;line-height:1.5;min-height:100vh;padding:0 16px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:16px}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:3px}
+.logo span{color:var(--yellow)}
+.badge{font-size:11px;font-weight:800;letter-spacing:1px;padding:4px 8px;border-radius:3px;text-transform:uppercase}
+.badge.test{background:#78350f;color:#fde68a}.badge.live{background:#14532d;color:#bbf7d0}
+.wrap{max-width:520px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--border);border-top:3px solid var(--yellow);border-radius:4px;padding:18px;margin-bottom:16px}
+h2{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;letter-spacing:.5px;margin-bottom:4px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td{padding:5px 0;vertical-align:top}td.r{text-align:right;white-space:nowrap;font-weight:600;padding-left:10px}
+tr.tot td{border-top:1px solid var(--border);padding-top:8px;font-weight:800}
+tr.paid td{color:var(--green)}
+.due{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 4px;padding-top:12px;border-top:2px solid var(--white)}
+.due .l{font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.5px}
+.due .a{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--yellow)}
+.due.zero .a{color:var(--green)}
+.note{font-size:13px;color:var(--muted);margin-top:6px}
+.note.warn{color:#fbbf24;font-weight:600}
+label{display:block;font-size:13px;font-weight:700;color:var(--light);margin:12px 0 5px}
+input{width:100%;padding:13px 12px;background:var(--raised);border:1px solid var(--border);border-radius:3px;color:var(--white);font-size:17px;font-family:inherit}
+input:focus{outline:none;border-color:var(--yellow)}
+.calc{font-size:14px;color:var(--light);margin-top:10px}
+.btn{display:block;width:100%;padding:16px;margin-top:14px;border:0;border-radius:4px;font-family:inherit;font-size:18px;font-weight:800;cursor:pointer;background:var(--yellow);color:#111}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--light);font-size:15px;padding:12px}
+.btn.red{background:transparent;border:1px solid var(--red);color:var(--red);font-size:15px;padding:12px}
+.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#fca5a5;padding:10px 12px;border-radius:3px;font-size:14px;margin-top:12px}
+.hide{display:none!important}
+details summary{cursor:pointer;font-weight:800;font-size:15px;list-style:none}
+details summary::-webkit-details-marker{display:none}
+.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+.row .d{color:var(--muted);font-size:12px}
+.row button{background:transparent;border:1px solid var(--border);color:var(--light);border-radius:3px;padding:6px 10px;font-family:inherit;font-weight:700;cursor:pointer;white-space:nowrap}
+#overlay{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}
+.ov{width:100%;max-width:440px;text-align:center}
+.ov .amt{font-family:'Barlow Condensed',sans-serif;font-size:56px;font-weight:900;color:var(--yellow);line-height:1.1}
+.ov .msg{font-size:19px;font-weight:700;margin:10px 0 4px}
+.ov .det{color:var(--muted);font-size:14px}
+.spin{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--yellow);border-radius:50%;margin:0 auto 16px;animation:s 1s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+.big{font-size:64px;line-height:1;margin-bottom:6px}
+.ov.ok .msg{color:var(--green)}.ov.bad .msg{color:var(--red)}
+.sim{margin-top:18px;padding-top:14px;border-top:1px dashed #78350f}
+.sim .t{font-size:11px;font-weight:800;letter-spacing:1px;color:#fbbf24;text-transform:uppercase;margin-bottom:8px}
+.sim button{margin:4px;padding:9px 12px;border-radius:3px;border:1px solid #78350f;background:#1c1206;color:#fde68a;font-family:inherit;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="logo"><span>PC</span> TIRES</div><span id="mode" class="badge hide"></span></div>
+
+  <!-- Order from the email link -->
+  <div id="orderCard" class="card hide">
+    <h2 id="oTitle">Order</h2>
+    <div class="sub" id="oSub"></div>
+    <table id="oLines"></table>
+    <div class="due" id="oDueBox"><span class="l" id="oDueLbl">Balance owing</span><span class="a" id="oDue"></span></div>
+    <div class="note warn hide" id="oDebitOnly">Debit only on this order (discount pricing). The reader will refuse credit cards.</div>
+    <button class="btn" id="oSend">Send to reader</button>
+    <div class="err hide" id="oErr"></div>
+  </div>
+
+  <!-- Walk-in -->
+  <div class="card" id="walkCard">
+    <h2>Walk-in payment</h2>
+    <div class="sub">Repairs, swaps, TPMS, anything without an order email.</div>
+    <div id="loginBox" class="hide">
+      <label for="pw">Owner password</label>
+      <input id="pw" type="password" autocomplete="current-password">
+      <button class="btn" id="loginBtn">Log in</button>
+      <div class="note">You stay logged in on this device for 30 days.</div>
+    </div>
+    <div id="walkForm" class="hide">
+      <label for="wDesc">What is it for?</label>
+      <input id="wDesc" maxlength="200" placeholder="e.g. Flat repair, rear left">
+      <label for="wPre">Price before HST</label>
+      <input id="wPre" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00">
+      <div class="calc" id="wCalc">HST $0.00 · Total $0.00</div>
+      <label for="wName">Customer name <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+      <input id="wName" maxlength="100" autocomplete="off">
+      <label for="wEmail">Email for receipt <span style="font-weight:400;color:var(--muted)">(blank = shop inbox)</span></label>
+      <input id="wEmail" type="email" maxlength="200" autocomplete="off">
+      <button class="btn" id="wSend" disabled>Send to reader</button>
+    </div>
+    <div class="err hide" id="wErr"></div>
+  </div>
+
+  <!-- Refunds -->
+  <div class="card hide" id="refCard">
+    <details id="refDet">
+      <summary>Refunds ▾</summary>
+      <div class="note">Recent reader payments. Debit refunds need the customer's card on the reader; credit refunds go straight back to the card.</div>
+      <div id="refList" style="margin-top:8px"></div>
+      <div class="err hide" id="rErr"></div>
+    </details>
+  </div>
+  <div style="text-align:center;margin-top:10px"><a href="#" id="logout" class="hide" style="color:var(--muted);font-size:13px">Log out of this device</a></div>
+</div>
+
+<div id="overlay" class="hide"><div class="ov" id="ov"></div></div>
+
+<script>
+(function () {
+  'use strict';
+  var qs = new URLSearchParams(location.search);
+  var O = qs.get('o') || '', T = qs.get('t') || '';
+  var MODE = 'test';
+  var owner = '';
+  try { owner = localStorage.getItem('pc_owner_token') || ''; } catch (e) {}
+  var $ = function (id) { return document.getElementById(id); };
+  var money = function (n) { return '$' + Number(n || 0).toFixed(2); };
+  var round2 = function (n) { return Math.round(Number(n || 0) * 100) / 100; };
+  function show(el, on) { el.classList.toggle('hide', !on); }
+  function err(el, msg) { el.textContent = msg || ''; show(el, !!msg); }
+
+  function api(action, extra) {
+    var body = Object.assign({ action: action, o: O, t: T, ownerToken: owner }, extra || {});
+    return fetch('/terminal', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().catch(function () { return { error: 'Server error (' + r.status + ')' }; }); })
+      .catch(function () { return { error: 'No connection. Check the phone has internet.' }; });
+  }
+
+  // ── Overlay (payment in progress) ─────────────────────────────────────────
+  var ov = $('ov'), overlay = $('overlay');
+  function el(tag, cls, text) { var x = document.createElement(tag); if (cls) x.className = cls; if (text != null) x.textContent = text; return x; }
+  function btn(text, cls, fn) { var b = el('button', 'btn ' + (cls || ''), text); b.onclick = fn; return b; }
+  function openOv(nodes, cls) { ov.className = 'ov ' + (cls || ''); ov.innerHTML = ''; nodes.forEach(function (n) { if (n) ov.appendChild(n); }); show(overlay, true); }
+  function closeOv() { show(overlay, false); ov.innerHTML = ''; }
+  function simButtons() {
+    if (MODE !== 'test') return null;
+    var box = el('div', 'sim'); box.appendChild(el('div', 't', 'Test mode — fake a card'));
+    [['Debit ✓', 'debit'], ['Credit ✓', 'credit'], ['Decline ✗', 'decline']].forEach(function (p) {
+      var b = el('button', '', p[0]); b.onclick = function () { api('simulate', { outcome: p[1] }); }; box.appendChild(b);
+    });
+    return box;
+  }
+
+  var poll = null;
+  function stopPoll() { if (poll) { clearTimeout(poll); poll = null; } }
+
+  // Runs one payment on the reader: send → wait → approved / declined.
+  function runPayment(sendExtra, onDone) {
+    stopPoll();
+    openOv([el('div', 'spin'), el('div', 'msg', 'Sending to reader…')]);
+    api('charge', sendExtra).then(function (r) {
+      if (r.error) { if (r.needLogin) logout(); return failOv(r.error, function () { runPayment(sendExtra, onDone); }); }
+      waitFor(r.pi, r.amount, sendExtra, onDone);
+    });
+  }
+  function waitFor(pi, amount, sendExtra, onDone) {
+    var started = Date.now();
+    var cancelBtn = btn('Cancel payment', 'red', function () {
+      stopPoll(); cancelBtn.disabled = true;
+      api('cancel', { pi: pi }).then(function (r) { if (r.error) return failOv(r.error); closeOv(); onDone && onDone(); });
+    });
+    openOv([el('div', 'amt', money(amount)), el('div', 'spin'), el('div', 'msg', 'On the reader — customer taps or inserts'),
+      el('div', 'det', 'Debit: insert the card for amounts over $250.'), cancelBtn, simButtons()]);
+    (function tick() {
+      api('status', { pi: pi }).then(function (r) {
+        if (r.state === 'succeeded') return okOv(amount, r, onDone);
+        if (r.state === 'failed') return failOv(r.message || 'Payment did not go through.', function () { runPayment(sendExtra, onDone); }, pi);
+        if (r.state === 'canceled' || r.state === 'idle') return failOv('The payment was cancelled on the reader.', function () { runPayment(sendExtra, onDone); });
+        if (Date.now() - started > 180000) {
+          return openOv([el('div', 'msg', 'Still waiting…'), el('div', 'det', 'Check the reader.'),
+            btn('Check again', '', function () { waitFor(pi, amount, sendExtra, onDone); }), cancelBtn]);
+        }
+        poll = setTimeout(tick, 1500);
+      });
+    })();
+  }
+  function okOv(amount, r, onDone) {
+    stopPoll();
+    var rc = r.receipt || {};
+    openOv([el('div', 'big', '✓'), el('div', 'amt', money(amount)), el('div', 'msg', 'Approved'),
+      el('div', 'det', (r.label || '') + (rc.to ? ' · receipt emailed to ' + rc.to : '')),
+      btn('Done', '', function () { closeOv(); onDone && onDone(); })], 'ok');
+  }
+  function failOv(msg, retry, pi) {
+    stopPoll();
+    openOv([el('div', 'big', '✗'), el('div', 'msg', 'Not approved'), el('div', 'det', msg),
+      retry ? btn('Try again', '', retry) : null,
+      btn('Close', 'ghost', function () { if (pi) api('cancel', { pi: pi }); closeOv(); })], 'bad');
+  }
+
+  // ── Order view ────────────────────────────────────────────────────────────
+  function addRow(tbl, l, v, cls) {
+    var tr = el('tr', cls || ''); tr.appendChild(el('td', '', l)); tr.appendChild(el('td', 'r', v)); tbl.appendChild(tr);
+  }
+  function loadOrder() {
+    show($('orderCard'), true);
+    $('oSub').textContent = 'Loading…';
+    api('order').then(function (r) {
+      if (r.error) { $('oSub').textContent = ''; err($('oErr'), r.error); show($('oSend'), false); show($('oDueBox'), false); return; }
+      var o = r.order;
+      $('oTitle').textContent = 'Order ' + o.number;
+      $('oSub').textContent = [o.customerName, o.vehicle].filter(Boolean).join(' · ');
+      var t = $('oLines'); t.innerHTML = '';
+      var pre = 0;
+      o.lines.forEach(function (x) { pre += x.amount; addRow(t, x.label, (x.amount < 0 ? '-' : '') + money(Math.abs(x.amount))); });
+      addRow(t, o.taxLabel, money(o.tax));
+      addRow(t, 'Total', money(o.total), 'tot');
+      if (o.priorPaid > 0) addRow(t, (o.priorState === 'DEPOSIT' ? 'Deposit' : 'Paid') + ' (' + (o.priorVia || 'Card') + ')', '-' + money(o.priorPaid), 'paid');
+      (o.pays || []).forEach(function (p) { addRow(t, p.label, (p.amount < 0 ? '+' : '-') + money(Math.abs(p.amount)), p.amount < 0 ? '' : 'paid'); });
+      $('oDue').textContent = money(o.due);
+      var paid = o.due <= 0;
+      $('oDueBox').classList.toggle('zero', paid);
+      $('oDueLbl').textContent = paid ? 'Paid in full' : 'Balance owing';
+      show($('oDebitOnly'), !!o.debitOnly && !paid);
+      show($('oSend'), !paid);
+      $('oSend').textContent = 'Send ' + money(o.due) + ' to reader';
+      err($('oErr'), '');
+    });
+  }
+  $('oSend').onclick = function () { runPayment({}, loadOrder); };
+
+  // ── Walk-in ───────────────────────────────────────────────────────────────
+  function walkCalc() {
+    var pre = round2($('wPre').value), hst = round2(pre * 0.13), tot = round2(pre + hst);
+    $('wCalc').textContent = 'HST ' + money(hst) + ' · Total ' + money(tot);
+    $('wSend').textContent = tot > 0 ? 'Send ' + money(tot) + ' to reader' : 'Send to reader';
+    $('wSend').disabled = !(pre >= 1 && $('wDesc').value.trim());
+  }
+  ['wPre', 'wDesc'].forEach(function (id) { $(id).addEventListener('input', walkCalc); });
+  $('wSend').onclick = function () {
+    err($('wErr'), '');
+    runPayment({ o: '', t: '', desc: $('wDesc').value.trim(), preTax: round2($('wPre').value), name: $('wName').value.trim(), email: $('wEmail').value.trim() },
+      function () { ['wDesc', 'wPre', 'wName', 'wEmail'].forEach(function (id) { $(id).value = ''; }); walkCalc(); loadRecent(); });
+  };
+
+  // ── Login ─────────────────────────────────────────────────────────────────
+  function setLoggedIn(on) {
+    show($('loginBox'), !on); show($('walkForm'), on); show($('refCard'), on); show($('logout'), on);
+    if (on) loadRecent();
+  }
+  function logout() {
+    owner = ''; try { localStorage.removeItem('pc_owner_token'); sessionStorage.removeItem('pc_owner_token'); } catch (e) {}
+    setLoggedIn(false);
+  }
+  $('loginBtn').onclick = function () {
+    err($('wErr'), '');
+    fetch('/owner-auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: $('pw').value }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) return err($('wErr'), d.error || 'Incorrect password');
+        owner = d.token; try { localStorage.setItem('pc_owner_token', owner); } catch (e) {}
+        $('pw').value = ''; setLoggedIn(true);
+      }).catch(function () { err($('wErr'), 'No connection.'); });
+  };
+  $('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('loginBtn').click(); });
+  $('logout').onclick = function (e) { e.preventDefault(); logout(); };
+
+  // ── Refunds ───────────────────────────────────────────────────────────────
+  function loadRecent() {
+    api('recent').then(function (r) {
+      var list = $('refList'); list.innerHTML = '';
+      if (r.error) { if (r.needLogin) return logout(); return err($('rErr'), r.error); }
+      if (!r.rows.length) { list.appendChild(el('div', 'note', 'No reader payments yet.')); return; }
+      r.rows.forEach(function (x) {
+        var row = el('div', 'row'), left = el('div');
+        left.appendChild(el('div', '', money(x.amount) + ' · ' + x.label));
+        left.appendChild(el('div', 'd', x.desc + ' · ' + new Date(x.created * 1000).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+          + (x.refunded > 0 ? ' · refunded ' + money(x.refunded) : '')));
+        row.appendChild(left);
+        var left$ = round2(x.amount - x.refunded);
+        if (left$ > 0) { var b = el('button', '', 'Refund'); b.onclick = function () { startRefund(x, left$); }; row.appendChild(b); }
+        list.appendChild(row);
+      });
+    });
+  }
+  function startRefund(x, max) {
+    var a = prompt('Refund how much? (up to ' + money(max) + ')', max.toFixed(2));
+    if (a == null) return;
+    var amt = round2(a);
+    if (!(amt > 0) || amt > max) return alert('Enter an amount between $0.01 and ' + money(max) + '.');
+    if (!confirm('Refund ' + money(amt) + ' to ' + x.label + '?')) return;
+    openOv([el('div', 'spin'), el('div', 'msg', 'Starting refund…')]);
+    api('refund', { pi: x.pi, amount: amt }).then(function (r) {
+      if (r.error) return failOv(r.error);
+      if (r.state === 'succeeded') return refundDone(amt, 'Back on the card in a few business days.');
+      var started = Date.now();
+      openOv([el('div', 'amt', money(amt)), el('div', 'spin'), el('div', 'msg', 'Debit refund — customer inserts their card'),
+        el('div', 'det', 'Interac refunds need the same debit card on the reader.'),
+        btn('Cancel', 'red', function () { stopPoll(); api('cancel', { pi: x.pi }).then(closeOv); }), simButtons()]);
+      (function tick() {
+        api('refund_status', { pi: x.pi }).then(function (s) {
+          if (s.state === 'succeeded') return refundDone(amt, 'Refunded to the debit card.');
+          if (s.state === 'failed') return failOv(s.message);
+          if (s.state === 'idle' || Date.now() - started > 180000) return failOv('The refund was cancelled or timed out on the reader.');
+          poll = setTimeout(tick, 1500);
+        });
+      })();
+    });
+  }
+  function refundDone(amt, det) {
+    stopPoll();
+    openOv([el('div', 'big', '✓'), el('div', 'amt', money(amt)), el('div', 'msg', 'Refunded'), el('div', 'det', det),
+      btn('Done', '', function () { closeOv(); loadRecent(); if (O) loadOrder(); })], 'ok');
+  }
+
+  // ── Start ─────────────────────────────────────────────────────────────────
+  api('config').then(function (r) {
+    MODE = r.mode || 'test';
+    var m = $('mode'); m.textContent = MODE === 'live' ? 'Live' : 'Test mode'; m.className = 'badge ' + MODE; show(m, true);
+  });
+  if (O && T) loadOrder();
+  setLoggedIn(!!owner);
+  walkCalc();
+})();
+</script>
+</body>
+</html>
