@@ -19,6 +19,7 @@
  */
 
 import { findLug } from './tech-lugnut-db.js';
+import { prepareReaderLink } from './reader-core.js';
 
 const TDG_API_BASE        = 'https://www.tdgaccess.ca/api';
 const TDG_SHIPPING_METHOD = '5E47CBB0A4659509A3DF1D4BA96E2FFB|29667'; // TDG Delivery
@@ -501,7 +502,7 @@ async function getStripeFee(order, env) {
 }
 
 // ─── Internal notification email ───────────────────────────────────────────────
-function buildInternalEmail(order, tdgOrder, tdgError, feeInfo) {
+function buildInternalEmail(order, tdgOrder, tdgError, feeInfo, readerLink) {
   const tdgRef = extractTDGRef(tdgOrder) || 'NOT FOUND';
   const tdgStatus = tdgError
     ? `FAILED &mdash; TDG order did not go through: ${JSON.stringify(tdgError)}`
@@ -717,6 +718,8 @@ function buildInternalEmail(order, tdgOrder, tdgError, feeInfo) {
     </table>
   </div>
 
+  ${readerLink ? readerLink.html : ''}
+
   ${cost ? `
   <!-- PC Tires cost (TDG) -->
   <div style="${cardStyle}">
@@ -844,11 +847,13 @@ export async function processOrder(order, env) {
   //    margin shown is net of processing). Looked up here, after the TDG order
   //    and customer email, to give Stripe time to post the balance transaction.
   const feeInfo = await getStripeFee(order, env);
+  // Card reader: "Take payment at reader" button for anything still owing.
+  const readerLink = await prepareReaderLink(order, env, payState(order));
   try {
     await sendEmail(RESEND_API_KEY, {
       to: NOTIFY_EMAILS,
       subject: `🛞 New Order ${order.orderNumber}${orderSubjectFlag(order)}${tdgError ? ' ⚠️ TDG FAILED' : ''} — ${order.customerName}`,
-      html: buildInternalEmail(order, tdgOrder, tdgError, feeInfo),
+      html: buildInternalEmail(order, tdgOrder, tdgError, feeInfo, readerLink),
     });
   } catch (e) { console.error('Internal email error:', e); }
 
