@@ -75,6 +75,7 @@ details summary::-webkit-details-marker{display:none}
     <div class="due" id="oDueBox"><span class="l" id="oDueLbl">Balance owing</span><span class="a" id="oDue"></span></div>
     <div class="note warn hide" id="oDebitOnly">Debit only on this order (discount pricing). The reader will refuse credit cards.</div>
     <button class="btn" id="oSend">Send to reader</button>
+    <button class="btn ghost" id="oOther">Paid another way (e-transfer / cash)</button>
     <div class="err hide" id="oErr"></div>
   </div>
 
@@ -99,6 +100,7 @@ details summary::-webkit-details-marker{display:none}
       <label for="wEmail">Email for receipt <span style="font-weight:400;color:var(--muted)">(blank = shop inbox)</span></label>
       <input id="wEmail" type="email" maxlength="200" autocomplete="off">
       <button class="btn" id="wSend" disabled>Send to reader</button>
+      <button class="btn ghost" id="wOther" disabled>Paid another way (e-transfer / cash)</button>
     </div>
     <div class="err hide" id="wErr"></div>
   </div>
@@ -189,8 +191,8 @@ details summary::-webkit-details-marker{display:none}
   function okOv(amount, r, onDone) {
     stopPoll();
     var rc = r.receipt || {};
-    openOv([el('div', 'big', '✓'), el('div', 'amt', money(amount)), el('div', 'msg', 'Approved'),
-      el('div', 'det', (r.label || '') + (rc.to ? ' · receipt emailed to ' + rc.to : '')),
+    openOv([el('div', 'big', '✓'), el('div', 'amt', money(amount)), el('div', 'msg', r.state === 'succeeded' && r.manual ? 'Recorded' : 'Approved'),
+      el('div', 'det', [r.label, r.invoice ? (r.invoice === 'TEST' ? 'test — no invoice number' : 'Invoice #' + r.invoice) : '', rc.to ? 'receipt emailed to ' + rc.to : ''].filter(Boolean).join(' · ')),
       btn('Done', '', function () { closeOv(); onDone && onDone(); })], 'ok');
   }
   function failOv(msg, retry, pi) {
@@ -208,10 +210,10 @@ details summary::-webkit-details-marker{display:none}
     show($('orderCard'), true);
     $('oSub').textContent = 'Loading…';
     api('order').then(function (r) {
-      if (r.error) { $('oSub').textContent = ''; err($('oErr'), r.error); show($('oSend'), false); show($('oDueBox'), false); return; }
+      if (r.error) { $('oSub').textContent = ''; err($('oErr'), r.error); show($('oSend'), false); show($('oOther'), false); show($('oDueBox'), false); return; }
       var o = r.order;
       $('oTitle').textContent = 'Order ' + o.number;
-      $('oSub').textContent = [o.customerName, o.vehicle].filter(Boolean).join(' · ');
+      $('oSub').textContent = [o.invoice ? 'Invoice #' + o.invoice : '', o.customerName, o.vehicle].filter(Boolean).join(' · ');
       var t = $('oLines'); t.innerHTML = '';
       var pre = 0;
       o.lines.forEach(function (x) { pre += x.amount; addRow(t, x.label, (x.amount < 0 ? '-' : '') + money(Math.abs(x.amount))); });
@@ -225,11 +227,41 @@ details summary::-webkit-details-marker{display:none}
       $('oDueLbl').textContent = paid ? 'Paid in full' : 'Balance owing';
       show($('oDebitOnly'), !!o.debitOnly && !paid);
       show($('oSend'), !paid);
+      show($('oOther'), !paid);
+      window._orderDue = o.due;
       $('oSend').textContent = 'Send ' + money(o.due) + ' to reader';
       err($('oErr'), '');
     });
   }
   $('oSend').onclick = function () { runPayment({}, loadOrder); };
+  $('oOther').onclick = function () {
+    if (!owner) { err($('oErr'), 'Log in below first (owner password) to record an e-transfer or cash payment.'); $('loginBox').scrollIntoView({ behavior: 'smooth' }); return; }
+    payOther(window._orderDue, {}, loadOrder);
+  };
+
+  // ── Paid another way (e-transfer / cash) ──────────────────────────────────
+  function newRid() { return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10); }
+  function payOther(amount, extra, onDone) {
+    stopPoll();
+    var rid = newRid();
+    function pick(method, name) {
+      openOv([el('div', 'amt', money(amount)), el('div', 'msg', 'Mark as paid by ' + name + '?'),
+        el('div', 'det', method === 'etransfer' ? 'Only once the e-transfer has landed.' : 'Only once the cash is in hand.'),
+        btn('Yes — paid by ' + name, '', function () {
+          openOv([el('div', 'spin'), el('div', 'msg', 'Recording…')]);
+          api('paid_other', Object.assign({}, extra, { method: method, rid: rid })).then(function (r) {
+            if (r.error) { if (r.needLogin) logout(); return failOv(r.error); }
+            r.manual = true;
+            okOv(r.amount, r, onDone);
+          });
+        }),
+        btn('Back', 'ghost', function () { payOther(amount, extra, onDone); })]);
+    }
+    openOv([el('div', 'amt', money(amount)), el('div', 'msg', 'How was it paid?'),
+      btn('E-transfer', '', function () { pick('etransfer', 'e-transfer'); }),
+      btn('Cash', '', function () { pick('cash', 'cash'); }),
+      btn('Cancel', 'ghost', closeOv)]);
+  }
 
   // ── Walk-in ───────────────────────────────────────────────────────────────
   function walkCalc() {
@@ -237,8 +269,15 @@ details summary::-webkit-details-marker{display:none}
     $('wCalc').textContent = 'HST ' + money(hst) + ' · Total ' + money(tot);
     $('wSend').textContent = tot > 0 ? 'Send ' + money(tot) + ' to reader' : 'Send to reader';
     $('wSend').disabled = !(pre >= 1 && $('wDesc').value.trim());
+    $('wOther').disabled = $('wSend').disabled;
   }
   ['wPre', 'wDesc'].forEach(function (id) { $(id).addEventListener('input', walkCalc); });
+  function walkReset() { ['wDesc', 'wPre', 'wName', 'wEmail'].forEach(function (id) { $(id).value = ''; }); walkCalc(); loadRecent(); }
+  $('wOther').onclick = function () {
+    err($('wErr'), '');
+    var pre = round2($('wPre').value);
+    payOther(round2(pre + round2(pre * 0.13)), { o: '', t: '', desc: $('wDesc').value.trim(), preTax: pre, name: $('wName').value.trim(), email: $('wEmail').value.trim() }, walkReset);
+  };
   $('wSend').onclick = function () {
     err($('wErr'), '');
     runPayment({ o: '', t: '', desc: $('wDesc').value.trim(), preTax: round2($('wPre').value), name: $('wName').value.trim(), email: $('wEmail').value.trim() },
