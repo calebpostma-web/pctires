@@ -2247,6 +2247,7 @@ buildTicker();
       <div class="sum-row"><span>Subtotal</span><span id="sumSub">$0.00</span></div>
       <div class="sum-row" id="sumDiscRow" style="display:none;color:var(--green)"><span id="sumDiscLabel">Discount</span><span id="sumDisc">$0.00</span></div>
       <div class="sum-row"><span>Installation</span><span id="sumInst">—</span></div>
+      <div class="sum-row" id="sumAccRow" style="display:none"><span>TPMS &amp; lug nuts</span><span id="sumAcc">$0.00</span></div>
       <div class="sum-row"><span>Tax (13% HST)</span><span id="sumTax">$0.00</span></div>
       <div class="sum-row total"><span>Total</span><span id="sumTotal">$0.00</span></div>
       <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout →</button>
@@ -2689,6 +2690,8 @@ const TDG = {
   INSTALL_MAX_WIDTH:    14.5,   // max NOMINAL section width (in); actuals run ~1" over
   WHEEL_MOUNT:     25,   // per wheel: mount & balance new tires onto new wheels
   WHEEL_REMOUNT:   40,   // per wheel: dismount existing tires, remount & balance on new wheels
+  TPMS_SENSOR:     59.99, // per wheel: new TPMS sensor, installed + programmed (shop stock, not TDG)
+  LUG_NUT:         4.99,  // per nut: new lug nut (shop stock, not TDG); count = lugs per wheel x wheels
   MARKUP:          1.35,
   MEMBER_DISCOUNT: 0.10,
   MIN_MARGIN:      25,   // minimum dollars kept per tire/wheel, survives member discount (was 20 → 25 Aug 8 2026)
@@ -4609,6 +4612,95 @@ function installPriceEach(item){
   return TDG.INSTALL_PRICE;
 }
 
+// -- Wheel accessories (TPMS sensors, lug nuts) + single-charge install --------
+// Accessories ride on the wheel cart line (c.tpms: true|false|null, c.lugs: bool),
+// are shop stock (never sent to TDG), and flow to checkout/order/invoice through
+// the add-on total so every downstream email, invoice and reader line picks them up.
+function wheelLugCount(w) {
+  const m = String((w && w.boltPattern) || '').match(/^\s*(\d+)\s*[^\d.]/);
+  const n = m ? parseInt(m[1], 10) : 0;
+  return (n >= 3 && n <= 10) ? n : 5;
+}
+function quoteOverrideActive() {
+  return typeof window._quoteFinalTotal === 'number' && window._quoteFinalTotal > 0;
+}
+function wheelAccLines() {
+  const out = [];
+  cart.forEach(c => {
+    if (c.itemType !== 'wheel') return;
+    if (c.install && c.tpms === true) out.push({ label: c.qty + '× TPMS sensor (new, programmed)', amount: Math.round(TDG.TPMS_SENSOR * c.qty * 100) / 100 });
+    if (c.lugs) { const n = wheelLugCount(c) * c.qty; out.push({ label: n + '× lug nut (new)', amount: Math.round(TDG.LUG_NUT * n * 100) / 100 }); }
+  });
+  return out;
+}
+// All-in quotes already include whatever Caleb priced in, so nothing is added on top.
+function wheelAccTotal() {
+  if (quoteOverrideActive()) return 0;
+  return wheelAccLines().reduce((s, l) => s + l.amount, 0);
+}
+function tpmsUnanswered() {
+  return cart.some(c => c.itemType === 'wheel' && c.install && c.tpms !== true && c.tpms !== false);
+}
+// Tires going onto new wheels are mounted by the wheel's mount & balance charge,
+// so they carry no separate tire install (charge once, not twice).
+function wheelMountQty() {
+  return cart.filter(c => c.itemType === 'wheel' && c.install && !c.remount).reduce((s, c) => s + c.qty, 0);
+}
+function tireInstallCovered(item) {
+  return !!item && item.itemType !== 'wheel' && wheelMountQty() > 0;
+}
+function cartInstallTotal() {
+  let covered = wheelMountQty();
+  let total = 0;
+  cart.forEach(c => {
+    if (!c.install) return;
+    const each = installPriceEach(c);
+    let q = c.qty;
+    if (c.itemType !== 'wheel' && covered > 0 && each > 0) { const k = Math.min(q, covered); covered -= k; q -= k; }
+    total += each * q;
+  });
+  return total;
+}
+function setWheelTpms(itemNumber, val) {
+  if (quoteLockBlocked()) return;
+  const item = cart.find(c => c.itemNumber === itemNumber && c.itemType === 'wheel');
+  if (!item) return;
+  item.tpms = !!val;
+  saveCartToStorage();
+  renderCart();
+}
+function togWheelLugs(itemNumber) {
+  if (quoteLockBlocked()) return;
+  const item = cart.find(c => c.itemNumber === itemNumber && c.itemType === 'wheel');
+  if (!item) return;
+  item.lugs = !item.lugs;
+  saveCartToStorage();
+  renderCart();
+}
+function allAddonNames() {
+  const names = ADDONS.filter(a => selectedAddons.has(a.id)).map(a => a.name)
+    .concat(wheelAccLines().map(l => l.label));
+  return names.join(', ') || 'None';
+}
+function wheelAccHtml(item) {
+  const lugN = wheelLugCount(item) * item.qty;
+  let h = '';
+  if (item.install) {
+    const yes = item.tpms === true, no = item.tpms === false, unset = !yes && !no;
+    const btn = (on, val, label, sub) => `<button type="button" onclick="setWheelTpms('${item.itemNumber}',${val})" style="flex:1;text-align:left;background:${on ? 'var(--yellow-dim)' : 'var(--raised)'};border:1px solid ${on ? 'var(--yellow)' : 'var(--border)'};border-radius:2px;padding:7px 8px;color:var(--white);font-family:Barlow,sans-serif;font-size:12px;cursor:pointer;line-height:1.3">${on ? '✓ ' : ''}<b>${label}</b><br><span style="color:var(--muted);font-size:10.5px">${sub}</span></button>`;
+    h += `<div class="wheel-tpms" data-unset="${unset ? 1 : 0}" style="margin-top:8px;padding:8px;border:1px solid ${unset ? 'var(--yellow)' : 'var(--border)'};border-radius:2px;cursor:default">
+      <div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:2px">Tire pressure sensors (TPMS)</div>
+      <div style="font-size:10.5px;color:var(--muted);line-height:1.4;margin-bottom:6px">New wheels need their own sensors, or your dash tire-pressure warning light will stay on.${unset ? ' <b style="color:var(--yellow)">Please choose one.</b>' : ''}</div>
+      <div style="display:flex;gap:6px">
+        ${btn(yes, 'true', 'Add sensors', '+$' + TDG.TPMS_SENSOR.toFixed(2) + '/wheel, installed &amp; programmed')}
+        ${btn(no, 'false', 'No sensors', 'Moving my own sensors, or OK with the light on')}
+      </div>
+    </div>`;
+  }
+  h += `<label style="display:flex;align-items:flex-start;gap:6px;margin-top:8px;cursor:pointer;font-size:12px;color:var(--light)"><input type="checkbox" ${item.lugs ? 'checked' : ''} onchange="togWheelLugs('${item.itemNumber}')" style="margin-top:2px"><span>Add new lug nuts <b>+$${(TDG.LUG_NUT * lugN).toFixed(2)}</b> <span style="color:var(--muted)">(${lugN} × $${TDG.LUG_NUT.toFixed(2)})</span><br><span style="color:var(--muted);font-size:10.5px">Steel and aftermarket wheels often need different nuts than your factory ones.</span></span></label>`;
+  return h;
+}
+
 function addToCart(itemNumber, itemType) {
   const pool = itemType === 'wheel' ? allWheels : allTires;
   const item = pool.find(t => t.itemNumber === itemNumber);
@@ -4787,14 +4879,14 @@ function renderCart() {
           : oversize
           ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">🛻 <strong style="color:var(--light)">Oversize</strong> — beyond our mounting equipment, so we sell these but can't install them in-shop. Call <a href="tel:5193974686" style="color:var(--yellow)">519-397-4686</a> and we'll help you sort out install.</div>`
           : (item.itemType !== 'wheel'
-              ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')"><span>Add installation <b>+$${installPriceEach(item)}/tire</b></span></label>`
+              ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')">${tireInstallCovered(item) ? '<span>Installation <b>included with wheel mount &amp; balance</b></span>' : `<span>Add installation <b>+$${installPriceEach(item)}/tire</b></span>`}</label>`
               : `<div class="inst-toggle" style="display:block">
                   <select onchange="setWheelInst('${item.itemNumber}', this.value)" style="width:100%;background:var(--raised);color:var(--white);border:1px solid var(--border);border-radius:2px;padding:7px 8px;font-family:Barlow,sans-serif;font-size:12.5px">
                     <option value="none" ${!item.install ? 'selected' : ''}>No installation — wheels only</option>
                     <option value="mount" ${item.install && !item.remount ? 'selected' : ''}>Mount &amp; balance my new tires (+$${TDG.WHEEL_MOUNT}/wheel)</option>
                     <option value="remount" ${item.install && item.remount ? 'selected' : ''}>Remount my existing tires (+$${TDG.WHEEL_REMOUNT}/wheel)</option>
                   </select>
-                  <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4">TPMS: screw-in sensors can transfer to new wheels; rubber snap-in stems need new sensors — we confirm &amp; program at the shop.</div>
+                  ${wheelAccHtml(item)}
                 </div>`)}
         ${rebateNote}${memberNote}${stockNoteHtml(item)}
       </div>
@@ -4846,7 +4938,7 @@ function getTotals() {
     return { sub: preTax, inst: 0, ship: 0, tax: tax, total: ft, discount: 0, override: true };
   }
   repriceCart();
-  const baseInst = cart.reduce((s, c) => s + (c.install ? installPriceEach(c) * c.qty : 0), 0);
+  const baseInst = cartInstallTotal();
   let sub;
   if (tdgQuote) { sub = tdgQuote.subtotal; }
   else { sub = cart.reduce((s, c) => s + c.price * c.qty, 0); }
@@ -4861,8 +4953,11 @@ function updTotals() {
   const t = getTotals();
   document.getElementById('sumSub').textContent   = `$${t.sub.toFixed(2)}`;
   document.getElementById('sumInst').textContent  = t.inst > 0 ? `$${t.inst.toFixed(2)}` : '—';
-  document.getElementById('sumTax').textContent   = `$${t.tax.toFixed(2)}`;
-  document.getElementById('sumTotal').textContent = `$${t.total.toFixed(2)}`;
+  const acc = (typeof wheelAccTotal === 'function') ? wheelAccTotal() : 0;
+  const accRow = document.getElementById('sumAccRow');
+  if (accRow) { accRow.style.display = acc > 0 ? 'flex' : 'none'; document.getElementById('sumAcc').textContent = `$${acc.toFixed(2)}`; }
+  document.getElementById('sumTax').textContent   = `$${(t.tax + acc * 0.13).toFixed(2)}`;
+  document.getElementById('sumTotal').textContent = `$${(t.total + acc * 1.13).toFixed(2)}`;
   const discRow = document.getElementById('sumDiscRow');
   const discEl  = document.getElementById('sumDisc');
   const discLbl = document.getElementById('sumDiscLabel');
@@ -5059,6 +5154,12 @@ function closeCart() { document.getElementById('cartOverlay').classList.remove('
 //  CHECKOUT
 // ─────────────────────────────────────────────────
 function openCheckout() {
+  if (!quoteOverrideActive() && tpmsUnanswered()) {
+    openCart();
+    try { showToast('One quick question', 'Let us know if you want tire pressure sensors in your new wheels.'); } catch (e) {}
+    try { const el = document.querySelector('.wheel-tpms[data-unset="1"]'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+    return;
+  }
   closeCart(); step = 1; selectedAddons = new Set(); _calAutoPickPending = true;
   // Fast-lane: pre-fill name/phone the customer already gave Caleb on the phone.
   if (window._quoteFastLane) {
@@ -5198,7 +5299,7 @@ function updateAddonTotal() {
   <div style="font-size:11px;color:var(--muted);margin-top:4px">${added.map(a=>a.name).join(' · ')}</div>`;
 }
 
-function getAddonTotal() { return ADDONS.filter(a => selectedAddons.has(a.id)).reduce((s,a) => s + a.price, 0); }
+function getAddonTotal() { return ADDONS.filter(a => selectedAddons.has(a.id)).reduce((s,a) => s + a.price, 0) + (typeof wheelAccTotal === 'function' ? wheelAccTotal() : 0); }
 
 // Single source of truth for the amount charged. An all-in quote override is
 // authoritative: add-ons are NOT added on top of a fixed quoted price.
@@ -5289,9 +5390,9 @@ async function buildPaymentSummary() {
     `;
     return;
   }
-  const instTotal = cart.reduce((s, c) => s + (c.install ? installPriceEach(c) * c.qty : 0), 0);
+  const instTotal = cartInstallTotal();
   const addonAmt = getAddonTotal();
-  const addonLines = ADDONS.filter(a => selectedAddons.has(a.id))
+  const addonLines = wheelAccLines().map(l => `<div class="ptrow"><span>${l.label}</span><span>$${l.amount.toFixed(2)}</span></div>`).join('') + ADDONS.filter(a => selectedAddons.has(a.id))
     .map(a => `<div class="ptrow"><span>${a.name}</span><span>${a.price === 0 ? '<span style="color:var(--green)">FREE</span>' : '$' + a.price.toFixed(2)}</span></div>`)
     .join('');
   box.innerHTML = `
@@ -5647,7 +5748,7 @@ function collectOrderPayload() {
   const phone = document.getElementById('phone')?.value || '';
   const caslOptIn = document.getElementById('caslOptIn')?.checked || false;
   const orderId = window._pendingOrderId || getOrCreateOrderId();
-  const addonNames = ADDONS.filter(a => selectedAddons.has(a.id)).map(a => a.name).join(', ') || 'None';
+  const addonNames = allAddonNames();
   const vin = lastSearchVehicle?.vin || '';
   const vehicleYear = lastSearchVehicle?.year || '';
   const vehicleMake = lastSearchVehicle?.make || '';
@@ -5880,7 +5981,7 @@ async function finishOrder() {
   const orderId = window._pendingOrderId || ('PCT-' + Math.random().toString(36).substr(2,6).toUpperCase());
   const svcLabel = selectedService ? selectedService.label : 'Not booked';
   const instLine = selectedService ? `${svcLabel} · ${selDate} at ${selTime}` : 'Not booked — arrange separately';
-  const addonNames = ADDONS.filter(a => selectedAddons.has(a.id)).map(a => a.name).join(', ') || 'None';
+  const addonNames = allAddonNames();
 
   // Vehicle info from search
   const vin = lastSearchVehicle?.vin || '';
@@ -8103,6 +8204,8 @@ async function createQuoteLink() {
     qty: c.qty,
     install: !!c.install,
     itemType: c.itemType || 'tire',
+    tpms: (c.tpms === true || c.tpms === false) ? c.tpms : null,
+    lugs: !!c.lugs,
   }));
   try {
     const res = await fetch('/quote', {
@@ -8571,7 +8674,7 @@ async function fetchQuoteItems(quoteItems) {
         .forEach(p => {
           const wheel = normaliseWheel(p, invMap[p.itemNumber]);
           const q = quoteItems.find(x => x.itemNumber === wheel.itemNumber);
-          if (q) result.push(Object.assign({}, wheel, { price: retailPrice(wheel), qty: q.qty, install: !!q.install, itemType: 'wheel' }));
+          if (q) result.push(Object.assign({}, wheel, { price: retailPrice(wheel), qty: q.qty, install: !!q.install, itemType: 'wheel', tpms: (q.tpms === true || q.tpms === false) ? q.tpms : null, lugs: !!q.lugs }));
         });
     } catch(e) { console.warn('Quote wheel fetch failed:', e.message); }
   }
