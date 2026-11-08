@@ -18,6 +18,8 @@
  *      per-order links in the email. Changing it breaks links in old emails.
  */
 
+import { HST_NUMBER } from './invoice-core.js';
+
 export const SITE = 'https://pctires.ca';
 const ORDER_TTL = 365 * 24 * 3600;
 
@@ -64,6 +66,7 @@ export function orderSnapshot(order, ps) {
   const exempt = order.statusExempt === true || order.statusExempt === 'true';
   return {
     orderNumber: String(order.orderNumber || ''),
+    invoiceNumber: order.invoiceNumber ? String(order.invoiceNumber) : '',
     orderDate: order.orderDate || '',
     customerName: order.customerName || '',
     customerEmail: order.customerEmail || '',
@@ -176,9 +179,10 @@ export function buildReceiptEmail(r) {
   <div style="border-bottom:3px solid #111;padding-bottom:10px;margin-bottom:14px">
     <div style="font-size:22px;font-weight:900;letter-spacing:1px">PC TIRES</div>
     <div style="font-size:13px;color:#555">7144 Grande River Line, Pain Court, ON &middot; 519-397-4686 &middot; pctires.ca</div>
+    <div style="font-size:13px;color:#555">HST # ${HST_NUMBER}</div>
   </div>
-  <h2 style="margin:0 0 4px;font-size:20px">${esc(r.title)}</h2>
-  <div style="font-size:13px;color:#555;margin-bottom:14px">${esc(r.ref || '')}${r.date ? ' &middot; ' + esc(r.date) : ''}${r.customerName ? ' &middot; ' + esc(r.customerName) : ''}${r.vehicle ? ' &middot; ' + esc(r.vehicle) : ''}</div>
+  <h2 style="margin:0 0 4px;font-size:20px">${esc(r.title)}${r.invoice ? ' &mdash; Invoice #' + esc(r.invoice) : ''}</h2>
+  <div style="font-size:13px;color:#555;margin-bottom:14px">${[r.date, r.ref, r.customerName, r.vehicle].filter(Boolean).map(esc).join(' &middot; ')}</div>
   <table style="border-collapse:collapse;width:100%">
     ${lines}
     <tr style="border-top:1px solid #ccc"><td style="padding:8px 0 5px;font-weight:700;font-size:14px">Subtotal before tax</td><td style="padding:8px 0 5px;text-align:right;font-weight:700;font-size:14px">${money(r.subtotal)}</td></tr>
