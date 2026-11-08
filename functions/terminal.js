@@ -16,6 +16,12 @@
  *   recent   { ownerToken }        -> recent reader payments (for refunds)
  *   refund   { ownerToken, pi, amount? }  card: instant; debit: on the reader
  *   refund_status { ownerToken, pi }
+ *   paid_other { ownerToken, method: etransfer|cash, rid, (o,t) | (desc, preTax, name, email) }
+ *                                  balance / walk-in paid by e-transfer or cash (no reader)
+ *
+ * Invoice numbers (invoice-core.js, D1 INVOICE_DB): live mode only. Walk-ins get
+ * the next number when paid; order payments go on the order's invoice. Test mode
+ * never touches the invoice sequence (receipts show "TEST").
  *
  * Test vs live: TERMINAL_MODE=live uses STRIPE_SECRET (real money); anything
  * else uses STRIPE_SECRET_TEST and a simulated reader that is created on the
@@ -33,6 +39,7 @@ import { verifyOwnerToken } from './owner-token.js';
 import {
   verifyOrderLink, buildReceiptEmail, methodLabel, isInterac, orderLines, r2, money,
 } from './reader-core.js';
+import { issueInvoice, findInvoice, recordPayment } from './invoice-core.js';
 
 const SHOP_EMAIL = 'postmacontracting@gmail.com';
 const FROM_EMAIL = 'PC Tires <orders@pctires.ca>';
@@ -136,6 +143,90 @@ async function loadOrder(env, c, o) {
   return { snap, pays, paidHere, due: Math.max(0, r2(snap.due - paidHere)) };
 }
 
+// The order's invoice number. Orders placed before invoice numbering existed get
+// one the first time a payment is taken on them, saved back onto the order.
+async function ensureOrderInvoice(env, c, st) {
+  if (!c.live) return 'TEST';
+  const s = st.snap;
+  if (s.invoiceNumber) return s.invoiceNumber;
+  let inv = await findInvoice(env, 'order:' + s.orderNumber);
+  if (!inv) {
+    inv = await issueInvoice(env, {
+      ref: 'order:' + s.orderNumber, kind: 'order', orderNumber: s.orderNumber,
+      customer: s.customerName, email: s.customerEmail,
+      description: (s.tires || []).map((t) => `${t.qty}x ${t.brand} ${t.name} ${t.size}`).join('; ') || 'Tires and installation',
+      preTax: r2(s.subtotal + s.installTotal + s.addonTotal - s.discount), tax: s.tax, total: s.total,
+    });
+    if (inv) {
+      // Record what was paid before the reader existed (deposit / earlier payment).
+      if (s.priorPaid > 0) {
+        await recordPayment(env, { id: 'order:' + s.orderNumber + ':initial', invoice: inv, method: s.priorVia || 'Card', amount: s.priorPaid, at: s.orderDate || s.savedAt });
+      }
+    }
+  }
+  if (inv) {
+    s.invoiceNumber = inv;
+    await kvPut(env, 'rd:order:' + s.orderNumber, JSON.stringify(s), 365 * 24 * 3600);
+  }
+  return inv || '';
+}
+
+// Put the invoice number on the Stripe payment too, so payouts trace back to invoices.
+async function tagPi(c, piId, inv) {
+  if (!c.live || !inv || !piId) return;
+  await stripe(c, 'POST', 'payment_intents/' + piId, { metadata: { invoice: inv } }).catch(() => {});
+}
+
+function orderReceipt(st, extra) {
+  const s = st.snap;
+  const payments = [];
+  if (s.priorPaid > 0) {
+    payments.push({
+      label: (s.priorState === 'DEPOSIT' ? 'Deposit' : 'Paid') + ' (' + (s.priorVia || 'Card') + ')',
+      amount: s.priorPaid,
+      date: shopDate(s.orderDate || s.savedAt),
+    });
+  }
+  for (const p of st.pays) payments.push({ label: p.label, amount: p.amount, date: shopDate(p.at) });
+  return {
+    subject: `Receipt${extra.invoice && extra.invoice !== 'TEST' ? ' — Invoice #' + extra.invoice : ''} — ${s.orderNumber} · PC Tires`,
+    title: st.due > 0 ? 'Payment received' : 'Paid invoice',
+    invoice: extra.invoice,
+    ref: 'Order ' + s.orderNumber,
+    date: shopDate(extra.when || new Date()),
+    customerName: s.customerName,
+    vehicle: s.vehicle,
+    email: s.customerEmail,
+    lines: orderLines(s),
+    subtotal: r2(s.subtotal + s.installTotal + s.addonTotal - s.discount),
+    taxLabel: s.taxLabel,
+    tax: s.tax,
+    total: s.total,
+    payments,
+    balance: st.due,
+  };
+}
+
+function walkinReceipt(f) {
+  return {
+    subject: `Receipt${f.invoice && f.invoice !== 'TEST' ? ' — Invoice #' + f.invoice : ''} · PC Tires`,
+    title: 'Receipt',
+    invoice: f.invoice,
+    ref: '',
+    date: shopDate(f.when || new Date()),
+    customerName: f.name || '',
+    vehicle: '',
+    email: f.email || '',
+    lines: [{ label: f.desc || 'Service', amount: f.preTax }],
+    subtotal: f.preTax,
+    taxLabel: 'HST (13%)',
+    tax: f.hst,
+    total: f.total,
+    payments: [{ label: f.label, amount: f.total, date: shopDate(f.when || new Date()) }],
+    balance: 0,
+  };
+}
+
 // ─── Reader lookup ────────────────────────────────────────────────────────────
 async function createSimulatedReader(c) {
   const locs = await stripe(c, 'GET', 'terminal/locations', { limit: 10 });
@@ -230,6 +321,7 @@ async function finalizeSuccess(env, c, pi) {
   const md = pi.metadata || {};
   const when = new Date((pi.created || Date.now() / 1000) * 1000);
   let receipt = { sent: false, to: null };
+  let invoice = '';
 
   if (md.kind === 'order' && md.order) {
     const o = md.order;
@@ -237,56 +329,32 @@ async function finalizeSuccess(env, c, pi) {
     await kvDel(env, `rd:${c.mode}:pending:${o}`);
     const st = await loadOrder(env, c, o);
     if (st) {
-      const s = st.snap;
-      const payments = [];
-      if (s.priorPaid > 0) {
-        payments.push({
-          label: (s.priorState === 'DEPOSIT' ? 'Deposit' : 'Paid') + ' (' + (s.priorVia || 'Card') + ')',
-          amount: s.priorPaid,
-          date: shopDate(s.orderDate || s.savedAt),
-        });
+      invoice = await ensureOrderInvoice(env, c, st);
+      if (c.live && invoice) {
+        await recordPayment(env, { id: pi.id, invoice, method: label, amount, stripePi: pi.id, at: when.toISOString() });
+        await tagPi(c, pi.id, invoice);
       }
-      for (const p of st.pays) payments.push({ label: p.label, amount: p.amount, date: shopDate(p.at) });
-      const preTax = r2(s.subtotal + s.installTotal + s.addonTotal - s.discount);
-      receipt = await sendReceipt(env, c, pi, {
-        subject: `Receipt — ${s.orderNumber} · PC Tires`,
-        title: st.due > 0 ? 'Payment received' : 'Paid invoice',
-        ref: 'Order ' + s.orderNumber,
-        date: shopDate(when),
-        customerName: s.customerName,
-        vehicle: s.vehicle,
-        email: s.customerEmail,
-        lines: orderLines(s),
-        subtotal: preTax,
-        taxLabel: s.taxLabel,
-        tax: s.tax,
-        total: s.total,
-        payments,
-        balance: st.due,
-      });
+      receipt = await sendReceipt(env, c, pi, orderReceipt(st, { invoice, when }));
     }
   } else {
     await kvDel(env, `rd:${c.mode}:pending:walkin`);
     const preTax = r2(md.pre_tax);
     const hst = r2(md.hst);
-    receipt = await sendReceipt(env, c, pi, {
-      subject: 'Receipt · PC Tires',
-      title: 'Receipt',
-      ref: '',
-      date: shopDate(when),
-      customerName: md.customer || '',
-      vehicle: '',
-      email: md.email || '',
-      lines: [{ label: md.desc || 'Service', amount: preTax }],
-      subtotal: preTax,
-      taxLabel: 'HST (13%)',
-      tax: hst,
-      total: amount,
-      payments: [{ label, amount, date: shopDate(when) }],
-      balance: 0,
-    });
+    if (c.live) {
+      invoice = await issueInvoice(env, {
+        ref: 'walkin:' + pi.id, kind: 'walkin', customer: md.customer, email: md.email,
+        description: md.desc, preTax, tax: hst, total: amount,
+      }) || '';
+      if (invoice) {
+        await recordPayment(env, { id: pi.id, invoice, method: label, amount, stripePi: pi.id, at: when.toISOString() });
+        await tagPi(c, pi.id, invoice);
+      }
+    } else {
+      invoice = 'TEST';
+    }
+    receipt = await sendReceipt(env, c, pi, walkinReceipt({ invoice, when, name: md.customer, email: md.email, desc: md.desc, preTax, hst, total: amount, label }));
   }
-  return { label, amount, receipt };
+  return { label, amount, receipt, invoice };
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
@@ -327,6 +395,7 @@ async function actOrder(env, c, auth) {
     mode: c.mode,
     order: {
       number: s.orderNumber,
+      invoice: s.invoiceNumber || '',
       customerName: s.customerName,
       customerEmail: s.customerEmail,
       vehicle: s.vehicle,
@@ -505,6 +574,19 @@ async function recordRefund(env, c, pi) {
   }
 }
 
+// Refunds go in the invoice ledger as a negative payment on the same invoice.
+async function ledgerRefund(env, c, pi) {
+  if (!c.live) return;
+  const md = pi.metadata || {};
+  const chId = (pi.latest_charge && typeof pi.latest_charge === 'object') ? pi.latest_charge.id : pi.latest_charge;
+  if (!chId) return;
+  const ch = await stripe(c, 'GET', 'charges/' + chId);
+  const refunded = r2((ch.amount_refunded || 0) / 100);
+  if (!(refunded > 0)) return;
+  const inv = md.kind === 'order' ? await findInvoice(env, 'order:' + md.order) : await findInvoice(env, 'walkin:' + pi.id);
+  if (inv) await recordPayment(env, { id: 'refund:' + pi.id, invoice: inv, method: 'Refund — ' + methodLabel(ch), amount: -refunded, stripePi: pi.id });
+}
+
 async function actRefund(env, c, auth, body) {
   if (!auth.owner) return json({ error: 'Log in first.', needLogin: true }, 401);
   const piId = clean(body.pi, 80);
@@ -523,6 +605,7 @@ async function actRefund(env, c, auth, body) {
   }
   await stripe(c, 'POST', 'refunds', { payment_intent: pi.id, amount: cents });
   await recordRefund(env, c, pi);
+  await ledgerRefund(env, c, pi);
   return json({ state: 'succeeded', amount: r2(cents / 100) });
 }
 
@@ -533,11 +616,56 @@ async function actRefundStatus(env, c, auth, body) {
   if (!piAllowed(pi, auth)) return json({ error: 'Not allowed.' }, 403);
   const action = await readerAction(env, c);
   if (action && action.type === 'refund_payment' && action.refund_payment && action.refund_payment.payment_intent === pi.id) {
-    if (action.status === 'succeeded') { await recordRefund(env, c, pi); return json({ state: 'succeeded' }); }
+    if (action.status === 'succeeded') { await recordRefund(env, c, pi); await ledgerRefund(env, c, pi); return json({ state: 'succeeded' }); }
     if (action.status === 'failed') return json({ state: 'failed', message: action.failure_message || 'The refund did not go through.' });
     return json({ state: 'waiting' });
   }
   return json({ state: 'idle' });
+}
+
+// ─── Paid another way (e-transfer / cash) ─────────────────────────────────────
+// No reader involved. Owner login required (it marks money as received).
+// `rid` is a one-time id from the page, so a double tap records it once.
+async function actPaidOther(env, c, auth, body) {
+  if (!auth.owner) return json({ error: 'Log in on this device to record an e-transfer or cash payment.', needLogin: true }, 401);
+  const method = body.method === 'cash' ? 'cash' : body.method === 'etransfer' ? 'etransfer' : '';
+  if (!method) return json({ error: 'Choose e-transfer or cash.' }, 400);
+  const rid = clean(body.rid, 40);
+  if (!/^[A-Za-z0-9-]{8,40}$/.test(rid)) return json({ error: 'Invalid request. Refresh the page and try again.' }, 400);
+  const label = method === 'cash' ? 'Cash' : 'E-transfer';
+  const id = 'other:' + rid;
+  const when = new Date();
+
+  if (auth.order) {
+    await reconcilePending(env, c, auth.order);
+    const before = await loadOrder(env, c, auth.order);
+    if (!before) return json({ error: 'Order not found.' }, 404);
+    const already = before.pays.find((p) => p.id === id);
+    if (!already && before.due <= 0) return json({ error: 'This order is already paid in full.' }, 409);
+    const amount = already ? already.amount : before.due;
+    if (!already) await upsertPay(env, c, auth.order, { id, amount, label, at: when.toISOString() });
+    const st = await loadOrder(env, c, auth.order);
+    const invoice = await ensureOrderInvoice(env, c, st);
+    if (c.live && invoice) await recordPayment(env, { id, invoice, method: label, amount, at: when.toISOString() });
+    const receipt = await sendReceipt(env, c, { id }, orderReceipt(st, { invoice, when }));
+    return json({ state: 'succeeded', label, amount, invoice, receipt });
+  }
+
+  const desc = clean(body.desc, 200);
+  const preTax = r2(body.preTax);
+  if (!desc) return json({ error: 'Add a short description (what the payment is for).' }, 400);
+  if (!(preTax >= 1) || preTax > MAX_WALKIN) return json({ error: 'Enter a price before HST between $1 and $' + MAX_WALKIN + '.' }, 400);
+  const hst = r2(preTax * HST_RATE);
+  const total = r2(preTax + hst);
+  const name = clean(body.name, 100);
+  const email = clean(body.email, 200);
+  let invoice = 'TEST';
+  if (c.live) {
+    invoice = await issueInvoice(env, { ref: 'walkin:' + id, kind: 'walkin', customer: name, email, description: desc, preTax, tax: hst, total }) || '';
+    if (invoice) await recordPayment(env, { id, invoice, method: label, amount: total, at: when.toISOString() });
+  }
+  const receipt = await sendReceipt(env, c, { id }, walkinReceipt({ invoice, when, name, email, desc, preTax, hst, total, label }));
+  return json({ state: 'succeeded', label, amount: total, invoice, receipt, preTax, hst, total });
 }
 
 // ─── Entry ────────────────────────────────────────────────────────────────────
@@ -565,6 +693,7 @@ export async function onRequestPost(context) {
       case 'recent': return await actRecent(env, c, auth);
       case 'refund': return await actRefund(env, c, auth, body);
       case 'refund_status': return await actRefundStatus(env, c, auth, body);
+      case 'paid_other': return await actPaidOther(env, c, auth, body);
       default: return json({ error: 'Unknown action.' }, 400);
     }
   } catch (e) {
