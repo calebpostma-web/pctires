@@ -73,6 +73,10 @@ details summary::-webkit-details-marker{display:none}
     <div class="sub" id="oSub"></div>
     <table id="oLines"></table>
     <div class="due" id="oDueBox"><span class="l" id="oDueLbl">Balance owing</span><span class="a" id="oDue"></span></div>
+    <div id="oEmailBox">
+      <label for="oEmail">Email receipt to <span style="font-weight:400;color:var(--muted)">(change or add one; blank = shop inbox)</span></label>
+      <input id="oEmail" type="email" maxlength="200" autocomplete="off" inputmode="email">
+    </div>
     <div class="note warn hide" id="oDebitOnly">Debit only on this order (discount pricing). The reader will refuse credit cards.</div>
     <button class="btn" id="oSend">Send to reader</button>
     <button class="btn ghost" id="oOther">Paid another way (e-transfer / cash)</button>
@@ -210,7 +214,7 @@ details summary::-webkit-details-marker{display:none}
     show($('orderCard'), true);
     $('oSub').textContent = 'Loading…';
     api('order').then(function (r) {
-      if (r.error) { $('oSub').textContent = ''; err($('oErr'), r.error); show($('oSend'), false); show($('oOther'), false); show($('oDueBox'), false); return; }
+      if (r.error) { $('oSub').textContent = ''; err($('oErr'), r.error); show($('oSend'), false); show($('oOther'), false); show($('oEmailBox'), false); show($('oDueBox'), false); return; }
       var o = r.order;
       $('oTitle').textContent = 'Order ' + o.number;
       $('oSub').textContent = [o.invoice ? 'Invoice #' + o.invoice : '', o.customerName, o.vehicle].filter(Boolean).join(' · ');
@@ -228,15 +232,17 @@ details summary::-webkit-details-marker{display:none}
       show($('oDebitOnly'), !!o.debitOnly && !paid);
       show($('oSend'), !paid);
       show($('oOther'), !paid);
+      show($('oEmailBox'), !paid);
+      if (!paid && document.activeElement !== $('oEmail')) $('oEmail').value = o.customerEmail || '';
       window._orderDue = o.due;
       $('oSend').textContent = 'Send ' + money(o.due) + ' to reader';
       err($('oErr'), '');
     });
   }
-  $('oSend').onclick = function () { runPayment({}, loadOrder); };
+  $('oSend').onclick = function () { err($('oErr'), ''); runPayment({ email: $('oEmail').value.trim() }, loadOrder); };
   $('oOther').onclick = function () {
     if (!owner) { err($('oErr'), 'Log in below first (owner password) to record an e-transfer or cash payment.'); $('loginBox').scrollIntoView({ behavior: 'smooth' }); return; }
-    payOther(window._orderDue, {}, loadOrder);
+    payOther(window._orderDue, { email: $('oEmail').value.trim() }, loadOrder);
   };
 
   // ── Paid another way (e-transfer / cash) ──────────────────────────────────
