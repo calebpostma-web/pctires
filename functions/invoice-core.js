@@ -53,6 +53,15 @@ export async function issueInvoice(env, f) {
   }
 }
 
+// Customer gave a (new) email at the counter: keep the invoice record current.
+export async function setInvoiceEmail(env, ref, email) {
+  if (!env || !env.INVOICE_DB || !ref || !email) return false;
+  try {
+    await env.INVOICE_DB.prepare('UPDATE invoices SET email = ?2 WHERE ref = ?1').bind(String(ref), String(email).slice(0, 200)).run();
+    return true;
+  } catch (e) { return false; }
+}
+
 export async function findInvoice(env, ref) {
   if (!env || !env.INVOICE_DB || !ref) return null;
   try {
