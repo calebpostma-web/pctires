@@ -7400,9 +7400,19 @@ async function doLifestyleSearch() {
   setTimeout(() => smoothScroll('#catalog'), 300);
 }
 
-function openTireDetail(itemNumber) {
-  const t = [...allTires, ...(filteredTires || [])].find(x => x.itemNumber === itemNumber);
+function openTireDetail(itemNumber, fromCart) {
+  let t = [...allTires, ...(filteredTires || [])].find(x => x.itemNumber === itemNumber);
+  // Quote/cart view: the catalogue may be empty (customer opened a /q/ link), so fall
+  // back to the cart line, which carries the full normalised tire from TDG.
+  if (!t && fromCart) t = (cart || []).find(x => x.itemNumber === itemNumber && x.itemType !== 'wheel');
   if (!t) return;
+  // Opened from the cart: it's already in the cart and the cart owns the price
+  // (locked quotes, member pricing), so hide the price / add-to-cart block.
+  const tdOv = document.getElementById('tireDetailOverlay');
+  ['.td-price-row', '#tdAffirmMsg', '.td-actions', '#tdQty'].forEach(sel => {
+    const el = tdOv && tdOv.querySelector(sel);
+    if (el) el.style.display = fromCart ? 'none' : '';
+  });
   const retail = retailPrice(t), shown = displayedPrice(t);
 
   // Image
@@ -7513,12 +7523,24 @@ function cartIconHtml(item, icon){
   if(item && item.imageUrl){
     var alt = ((item.brand||'')+' '+(item.name||'')).replace(/"/g,'').replace(/</g,'');
     var num = String(item.itemNumber).replace(/'/g,'');
-    return '<div class="ci-icon has-img" onclick="openCartImage(\'' + num + '\')" title="View larger">'
+    return '<div class="ci-icon has-img" onclick="openCartItem(\'' + num + '\')" title="' + (item.itemType === 'wheel' ? 'View larger' : 'View tire details') + '">'
       + '<img src="' + item.imageUrl + '" alt="' + alt + '" onerror="cartImgFallback(this)">'
       + '<span class="ci-emoji" style="display:none">' + icon + '</span>'
       + '<span class="ci-zoom">&#128269;</span></div>';
   }
+  if(item && item.itemType !== 'wheel' && item.itemNumber){
+    var n2 = String(item.itemNumber).replace(/'/g,'');
+    return '<div class="ci-icon" style="cursor:pointer" onclick="openCartItem(\'' + n2 + '\')" title="View tire details">' + icon + '</div>';
+  }
   return '<div class="ci-icon">' + icon + '</div>';
+}
+// Cart thumbnail tap: tires open the same full detail modal as the catalogue
+// (specs, "What this tire is built for"); wheels keep the photo lightbox.
+function openCartItem(itemNumber){
+  var item=(cart||[]).find(function(c){return c.itemNumber===itemNumber;});
+  if(!item) return;
+  if(item.itemType !== 'wheel' && (item.season || item.speed || item.loadIndex)){ openTireDetail(itemNumber, true); return; }
+  openCartImage(itemNumber);
 }
 function cartImgFallback(img){
   img.style.display='none';
