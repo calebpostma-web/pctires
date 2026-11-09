@@ -20,6 +20,7 @@
 
 import { findLug } from './tech-lugnut-db.js';
 import { prepareReaderLink } from './reader-core.js';
+import { issueInvoice, recordPayment } from './invoice-core.js';
 
 const TDG_API_BASE        = 'https://www.tdgaccess.ca/api';
 const TDG_SHIPPING_METHOD = '5E47CBB0A4659509A3DF1D4BA96E2FFB|29667'; // TDG Delivery
@@ -320,6 +321,10 @@ function buildCustomerEmail(order, tdgOrder) {
           <td style="padding:6px 0;color:#888;font-size:13px">Order #</td>
           <td style="padding:6px 0;text-align:right;color:#f5c518;font-weight:700;font-family:monospace">${order.orderNumber}</td>
         </tr>
+        ${order.invoiceNumber ? `<tr>
+          <td style="padding:6px 0;color:#888;font-size:13px">Invoice #</td>
+          <td style="padding:6px 0;text-align:right;color:#f5c518;font-weight:700;font-family:monospace">${order.invoiceNumber}</td>
+        </tr>` : ''}
         <tr>
           <td style="padding:6px 0;color:#888;font-size:13px">Date</td>
           <td style="padding:6px 0;text-align:right;color:#e0e0e0">${invDate}</td>
@@ -659,7 +664,7 @@ function buildInternalEmail(order, tdgOrder, tdgError, feeInfo, readerLink) {
 <div style="max-width:640px;margin:0 auto">
 
   <div style="border-bottom:3px solid #111111;padding-bottom:10px;margin-bottom:14px">
-    <h2 style="color:#111111;margin:0 0 4px;font-size:21px;font-weight:800">New Order &mdash; ${order.orderNumber}</h2>
+    <h2 style="color:#111111;margin:0 0 4px;font-size:21px;font-weight:800">New Order &mdash; ${order.orderNumber}${order.invoiceNumber ? ` &middot; Invoice #${order.invoiceNumber}` : ' <span style="color:#b91c1c;font-size:13px">(NO INVOICE # &mdash; check INVOICE_DB binding)</span>'}</h2>
     <div style="font-size:13px;color:#333333;font-weight:600">${orderDateStr}</div>
     <div style="margin-top:5px;color:${tdgColor};font-size:13px;font-weight:600">${tdgStatus}</div>
   </div>
@@ -829,6 +834,24 @@ export async function processOrder(order, env) {
       console.error('TDG order error:', e);
     }
   }
+
+  // Sequential invoice number (CRA). Issued once per order; a re-run gets the same number.
+  try {
+    const ps0 = payState(order);
+    const inv = await issueInvoice(env, {
+      ref: 'order:' + order.orderNumber, kind: 'order', orderNumber: order.orderNumber,
+      customer: order.customerName, email: order.customerEmail,
+      description: (order.tires || []).map(t => `${t.qty}x ${t.brand} ${t.name} ${t.size || ''}`.trim()).join('; ') || 'Tires and installation',
+      preTax: Number(order.subtotal || 0) + Number(order.installTotal || 0) + Number(order.addonTotal || 0) - Number(order.discount || 0),
+      tax: order.tax, total: order.total,
+    });
+    if (inv) {
+      order.invoiceNumber = inv;
+      if (ps0.paid > 0) {
+        await recordPayment(env, { id: 'order:' + order.orderNumber + ':initial', invoice: inv, method: ps0.via || 'Card', amount: ps0.paid, stripePi: order.paymentIntentId || null });
+      }
+    }
+  } catch (e) { console.error('Invoice number error:', e); }
 
   const RESEND_API_KEY = env.RESEND_API_KEY;
 
