@@ -69,6 +69,9 @@ export async function onRequest(context) {
     // Tag the PI so the webhook can identify our orders and skip everything else.
     body.set('metadata[source]', 'pctires-web');
     if (orderNumber) body.set('metadata[orderNumber]', String(orderNumber));
+    // Pay links (/pay, /statuspay) send no order: tag them so the webhook
+    // numbers the invoice instead of hunting for an order that doesn't exist.
+    if (!order) body.set('metadata[kind]', 'paylink');
 
     // Affirm requires a shipping address on the PaymentIntent.
     const shipName = (order && order.customerName) ? String(order.customerName) : 'PC Tires Customer';
