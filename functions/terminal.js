@@ -39,7 +39,7 @@ import { verifyOwnerToken } from './owner-token.js';
 import {
   verifyOrderLink, buildReceiptEmail, methodLabel, isInterac, orderLines, r2, money,
 } from './reader-core.js';
-import { issueInvoice, findInvoice, recordPayment } from './invoice-core.js';
+import { issueInvoice, findInvoice, recordPayment, setInvoiceEmail } from './invoice-core.js';
 
 const SHOP_EMAIL = 'postmacontracting@gmail.com';
 const FROM_EMAIL = 'PC Tires <orders@pctires.ca>';
@@ -169,6 +169,22 @@ async function ensureOrderInvoice(env, c, st) {
     await kvPut(env, 'rd:order:' + s.orderNumber, JSON.stringify(s), 365 * 24 * 3600);
   }
   return inv || '';
+}
+
+// "Email receipt to" box on the order page. Blank = keep the order's email.
+// A new address is saved onto the order so every later receipt uses it.
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+async function applyReceiptEmail(env, c, st, raw) {
+  const email = clean(raw, 200);
+  if (!email) return null;
+  if (!EMAIL_RE.test(email)) return 'That email address doesn\'t look right. Fix it or clear the box.';
+  const s = st.snap;
+  if (email.toLowerCase() !== String(s.customerEmail || '').toLowerCase()) {
+    s.customerEmail = email;
+    await kvPut(env, 'rd:order:' + s.orderNumber, JSON.stringify(s), 365 * 24 * 3600);
+    if (c.live) await setInvoiceEmail(env, 'order:' + s.orderNumber, email);
+  }
+  return null;
 }
 
 // Put the invoice number on the Stripe payment too, so payouts trace back to invoices.
@@ -443,6 +459,8 @@ async function actCharge(env, c, auth, body) {
     const st = await loadOrder(env, c, auth.order);
     if (!st) return json({ error: 'Order not found.' }, 404);
     if (st.due <= 0) return json({ error: 'This order is already paid in full.' }, 409);
+    const emailErr = await applyReceiptEmail(env, c, st, body.email);
+    if (emailErr) return json({ error: emailErr }, 400);
     const s = st.snap;
     const out = await startOnReader(env, c, {
       amount: Math.round(st.due * 100),
@@ -468,6 +486,7 @@ async function actCharge(env, c, auth, body) {
   const total = r2(preTax + hst);
   const name = clean(body.name, 100);
   const email = clean(body.email, 200);
+  if (email && !EMAIL_RE.test(email)) return json({ error: 'That email address doesn\'t look right. Fix it or clear the box.' }, 400);
   const out = await startOnReader(env, c, {
     amount: Math.round(total * 100),
     currency: 'cad',
@@ -640,6 +659,8 @@ async function actPaidOther(env, c, auth, body) {
     await reconcilePending(env, c, auth.order);
     const before = await loadOrder(env, c, auth.order);
     if (!before) return json({ error: 'Order not found.' }, 404);
+    const emailErr = await applyReceiptEmail(env, c, before, body.email);
+    if (emailErr) return json({ error: emailErr }, 400);
     const already = before.pays.find((p) => p.id === id);
     if (!already && before.due <= 0) return json({ error: 'This order is already paid in full.' }, 409);
     const amount = already ? already.amount : before.due;
@@ -659,6 +680,7 @@ async function actPaidOther(env, c, auth, body) {
   const total = r2(preTax + hst);
   const name = clean(body.name, 100);
   const email = clean(body.email, 200);
+  if (email && !EMAIL_RE.test(email)) return json({ error: 'That email address doesn\'t look right. Fix it or clear the box.' }, 400);
   let invoice = 'TEST';
   if (c.live) {
     invoice = await issueInvoice(env, { ref: 'walkin:' + id, kind: 'walkin', customer: name, email, description: desc, preTax, tax: hst, total }) || '';
