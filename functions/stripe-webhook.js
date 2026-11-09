@@ -22,6 +22,7 @@
  */
 
 import { processOrder } from './order-core.js';
+import { invoiceForPayLink } from './invoice-core.js';
 
 // ─── Verify Stripe webhook signature (HMAC-SHA256 over `${t}.${rawBody}`) ──────
 async function verifyStripeSignature(rawBody, sigHeader, secret, toleranceSec = 300) {
@@ -116,6 +117,13 @@ export async function onRequest(context) {
   if (!pi || pi.metadata?.source !== 'pctires-web') {
     // Not one of our PaymentIntents — ignore.
     return new Response(JSON.stringify({ received: true, ignored: 'not-pctires' }), { status: 200 });
+  }
+
+  // Pay links have no order to place: just make sure the payment has an invoice
+  // number (in case the customer closed the page before the receipt step) and ack.
+  if (pi.metadata?.kind === 'paylink') {
+    try { await invoiceForPayLink(env, pi, {}); } catch (e) { console.error('paylink invoice', e); }
+    return new Response(JSON.stringify({ received: true, paylink: true }), { status: 200 });
   }
 
   // Pull the stashed order payload (written by create-pi.js at PI creation).
