@@ -10,6 +10,8 @@
  *   RESEND_API_KEY - re_...
  */
 
+import { invoiceForPayLink, HST_NUMBER } from './invoice-core.js';
+
 const FROM_EMAIL    = 'payments@pctires.ca';
 const NOTIFY_EMAILS = ['calebpostma@gmail.com', 'postmacontracting@gmail.com'];
 
@@ -101,7 +103,8 @@ function buildInternalEmail(p) {
     <table>
       <tr><td>Date paid</td><td>${esc(new Date().toLocaleString('en-CA', { timeZone: 'America/Toronto', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' }))}</td></tr>
       <tr><td>Amount</td><td><span class="amount">$${esc(amt)} ${esc(p.currency || 'CAD')}</span></td></tr>
-      ${p.invoiceNumber ? `<tr><td>Invoice #</td><td>${esc(p.invoiceNumber)}</td></tr>` : ''}
+      ${p.invoiceNumber ? `<tr><td>Invoice #</td><td>${esc(p.invoiceNumber)}</td></tr>` : '<tr><td>Invoice #</td><td style="color:#b91c1c">not assigned &mdash; check INVOICE_DB binding</td></tr>'}
+      ${p.reference ? `<tr><td>Reference</td><td>${esc(p.reference)}</td></tr>` : ''}
       <tr><td>Description</td><td>${esc(p.description) || '&mdash;'}</td></tr>
       <tr><td>Customer</td><td>${esc(p.customerName) || '&mdash;'}</td></tr>
       <tr><td>Email</td><td>${p.customerEmail ? `<a href="mailto:${esc(p.customerEmail)}">${esc(p.customerEmail)}</a>` : '&mdash;'}</td></tr>
@@ -156,7 +159,7 @@ function buildCustomerReceipt(p) {
           <td style="padding:8px 0;text-align:right;color:#e0e0e0;border-bottom:1px solid #2a2a2a">${esc(dateStr)}</td>
         </tr>
         ${p.invoiceNumber ? `<tr>
-          <td style="padding:8px 0;color:#888;font-size:13px;border-bottom:1px solid #2a2a2a">Reference</td>
+          <td style="padding:8px 0;color:#888;font-size:13px;border-bottom:1px solid #2a2a2a">Invoice #</td>
           <td style="padding:8px 0;text-align:right;color:#f5c518;font-family:monospace;font-weight:700;border-bottom:1px solid #2a2a2a">${esc(p.invoiceNumber)}</td>
         </tr>` : ''}
         ${p.description ? `<tr>
@@ -207,6 +210,8 @@ function buildCustomerReceipt(p) {
     <div style="text-align:center;font-size:12px;color:#555;line-height:1.8">
       <div>PC Tires &middot; 7144 Grande River Line, Pain Court, ON N0P 1Z0</div>
       <div>&#x1F4DE; 519-397-4686 &middot; payments@pctires.ca &middot; pctires.ca</div>
+      <div>HST # ${HST_NUMBER}</div>${p.reference ? `
+      <div>Reference: ${esc(p.reference)}</div>` : ''}
     </div>
 
   </div>
@@ -234,6 +239,28 @@ export async function onRequest(context) {
 
   try {
     const req = await request.json();
+
+    // Sequential invoice number, only for a payment Stripe confirms succeeded.
+    // Whatever the page sent as "invoice" becomes the reference.
+    req.reference = req.invoiceNumber || '';
+    req.invoiceNumber = '';
+    try {
+      if (req.paymentIntentId && env.STRIPE_SECRET) {
+        const pr = await fetch('https://api.stripe.com/v1/payment_intents/' + encodeURIComponent(req.paymentIntentId), {
+          headers: { Authorization: 'Bearer ' + env.STRIPE_SECRET },
+        });
+        const pi = pr.ok ? await pr.json() : null;
+        if (pi && pi.status === 'succeeded') {
+          const st = req.statusExempt === true;
+          const inv = await invoiceForPayLink(env, pi, {
+            orderNumber: req.orderNumber, statusExempt: st,
+            customerName: req.customerName, customerEmail: req.customerEmail, description: req.description,
+            preTax: st ? req.pretax : undefined, tax: st ? req.gst : undefined,
+          });
+          if (inv) req.invoiceNumber = inv;
+        }
+      }
+    } catch (e) { console.error('Pay link invoice number error:', e); }
     const { amount, customerName, customerEmail, invoiceNumber } = req;
 
     const resendKey = env.RESEND_API_KEY;
@@ -257,7 +284,7 @@ export async function onRequest(context) {
     // 2) Customer receipt (if valid email provided)
     let customerSent = false;
     if (customerEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
-      const customerSubject = `Payment Received${invoiceNumber ? ' - ' + invoiceNumber : ''} - PC Tires`;
+      const customerSubject = `Payment Received${invoiceNumber ? ' - Invoice #' + invoiceNumber : ''} - PC Tires`;
       const customerHtml = buildCustomerReceipt(req);
       sends.push(sendEmail(resendKey, {
         to: customerEmail, subject: customerSubject, html: customerHtml,
