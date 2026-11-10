@@ -168,6 +168,11 @@ details summary::-webkit-details-marker{display:none}
     openOv([el('div', 'spin'), el('div', 'msg', 'Sending to reader…')]);
     api('charge', sendExtra).then(function (r) {
       if (r.error) { if (r.needLogin) logout(); return failOv(r.error, function () { runPayment(sendExtra, onDone); }); }
+      if (r.recovered) {
+        var rv = r.recovered;
+        alert('Heads up: the previous walk-in (' + money(rv.amount) + (rv.desc ? ', ' + rv.desc : '') + ') had gone through on the reader but was never recorded. It is now recorded' + (rv.invoice && rv.invoice !== 'TEST' ? ' as Invoice #' + rv.invoice : '') + ' and its receipt sent. The new payment is on the reader now.');
+        loadRecent();
+      }
       waitFor(r.pi, r.amount, sendExtra, onDone);
     });
   }
@@ -175,7 +180,11 @@ details summary::-webkit-details-marker{display:none}
     var started = Date.now();
     var cancelBtn = btn('Cancel payment', 'red', function () {
       stopPoll(); cancelBtn.disabled = true;
-      api('cancel', { pi: pi }).then(function (r) { if (r.error) return failOv(r.error); closeOv(); onDone && onDone(); });
+      api('cancel', { pi: pi }).then(function (r) {
+        if (r.state === 'succeeded') { r.label = (r.label || '') + ' · it had already gone through'; return okOv(r.amount, r, onDone); }
+        if (r.error) return failOv(r.error);
+        closeOv(); onDone && onDone();
+      });
     });
     openOv([el('div', 'amt', money(amount)), el('div', 'spin'), el('div', 'msg', 'On the reader — customer taps or inserts'),
       el('div', 'det', 'Debit: insert the card for amounts over $250.'), cancelBtn, simButtons()]);
