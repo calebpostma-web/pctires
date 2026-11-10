@@ -15,7 +15,7 @@
  *   invoices(seq PK, ref UNIQUE, kind, created_at, order_number, customer, email,
  *            description, pre_tax, tax, total, status, note)
  *   payments(id PK, invoice_seq, at, method, amount, stripe_pi, note)
- * Numbers start at 1001. D1 runs one write at a time, so two sales in the same
+ * Numbers start at 5000 (kept clear of earlier invoice numbers). D1 runs one write at a time, so two sales in the same
  * second can never get the same number.
  *
  * If INVOICE_DB is not bound, every function returns null and callers carry on
@@ -33,7 +33,7 @@ export async function issueInvoice(env, f) {
     const db = env.INVOICE_DB;
     await db.prepare(
       `INSERT OR IGNORE INTO invoices (seq, ref, kind, created_at, order_number, customer, email, description, pre_tax, tax, total)
-       VALUES ((SELECT COALESCE(MAX(seq), 1000) + 1 FROM invoices), ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)`
+       VALUES ((SELECT COALESCE(MAX(seq), 4999) + 1 FROM invoices), ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)`
     ).bind(
       String(f.ref), String(f.kind || 'sale'), new Date().toISOString(),
       txt(f.orderNumber, 60), txt(f.customer, 120), txt(f.email, 200), txt(f.description, 500),
