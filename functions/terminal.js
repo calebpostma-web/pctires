@@ -431,26 +431,34 @@ async function actOrder(env, c, auth) {
 
 async function startOnReader(env, c, piParams, pendingRef, reuse) {
   let pi = null;
+  let recovered = null;
   // Re-use the PaymentIntent already out for this order/walk-in if it is still
   // collectable and for the same amount (e.g. "Try again" after a decline).
   const prevId = await kvGet(env, `rd:${c.mode}:pending:${pendingRef}`);
   if (prevId) {
     try {
-      const prev = await stripe(c, 'GET', 'payment_intents/' + prevId);
-      if (prev.status === 'succeeded') return { alreadyPaid: true };
+      const prev = await stripe(c, 'GET', 'payment_intents/' + prevId, { expand: ['latest_charge'] });
+      if (prev.status === 'succeeded') {
+        if (reuse) return { alreadyPaid: true };   // order: reconcilePending already recorded it
+        // Walk-in: the last one went through on the reader but the page never saw it
+        // finish. Record it now (invoice # + receipt) and start the new one.
+        const done = await finalizeSuccess(env, c, prev);
+        recovered = { amount: done.amount, label: done.label, invoice: done.invoice, desc: (prev.metadata && prev.metadata.desc) || '' };
+      } else {
       const collectable = ['requires_payment_method', 'requires_confirmation'].includes(prev.status);
       if (reuse && collectable && prev.amount === piParams.amount) {
         pi = prev;
       } else if (prev.status !== 'canceled') {
         await stripe(c, 'POST', 'payment_intents/' + prevId + '/cancel').catch(() => {});
       }
-    } catch (e) {}
+      }
+    } catch (e) { console.error('startOnReader previous PI', e); }
   }
   if (!pi) pi = await stripe(c, 'POST', 'payment_intents', piParams);
   await kvPut(env, `rd:${c.mode}:pending:${pendingRef}`, pi.id, 86400);
   const readerId = await withReader(env, c, (id) =>
     stripe(c, 'POST', `terminal/readers/${id}/process_payment_intent`, { payment_intent: pi.id }).then(() => id));
-  return { pi: pi.id, amount: r2(pi.amount / 100), reader: readerId };
+  return { pi: pi.id, amount: r2(pi.amount / 100), reader: readerId, recovered };
 }
 
 async function actCharge(env, c, auth, body) {
@@ -529,8 +537,10 @@ async function actStatus(env, c, auth, body) {
     return json({ state: 'waiting' });
   }
   if (pi.last_payment_error) return json({ state: 'failed', message: pi.last_payment_error.message || 'The payment did not go through.' });
-  // Reader moved on (cancelled on the device, or another payment started).
-  return json({ state: 'idle' });
+  // Couldn't see this payment on the reader (busy, another payment, or a hiccup
+  // reading it). The payment is still open, so keep waiting rather than calling it
+  // cancelled: a customer may be mid-PIN. Staff can always tap Cancel.
+  return json({ state: 'waiting', unseen: true });
 }
 
 async function actCancel(env, c, auth, body) {
@@ -538,7 +548,11 @@ async function actCancel(env, c, auth, body) {
   if (!piId) return json({ error: 'Missing payment.' }, 400);
   const pi = await stripe(c, 'GET', 'payment_intents/' + piId);
   if (!piAllowed(pi, auth)) return json({ error: 'Not allowed.' }, 403);
-  if (pi.status === 'succeeded') return json({ error: 'That payment already went through.' }, 409);
+  if (pi.status === 'succeeded') {
+    const full = await stripe(c, 'GET', 'payment_intents/' + piId, { expand: ['latest_charge'] });
+    const done = await finalizeSuccess(env, c, full);
+    return json({ state: 'succeeded', alreadyPaid: true, ...done });
+  }
   await withReader(env, c, (id) => stripe(c, 'POST', `terminal/readers/${id}/cancel_action`)).catch(() => {});
   if (pi.status !== 'canceled') await stripe(c, 'POST', 'payment_intents/' + piId + '/cancel').catch(() => {});
   const ref = pi.metadata.kind === 'order' ? pi.metadata.order : 'walkin';
