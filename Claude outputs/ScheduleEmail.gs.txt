@@ -1,0 +1,188 @@
+/**
+ * PC TIRES — TOMORROW'S SCHEDULE EMAIL
+ * ------------------------------------------------------------------
+ * Every evening at 7 PM, emails the next day's installs and service
+ * bookings from the PCTires Customer List sheet (Orders tab + Service
+ * Bookings tab, same data as the Dispatch board).
+ *
+ *  - Saturday evening is skipped (Sunday is closed).
+ *  - Sunday evening sends Monday's schedule.
+ *  - If nothing is booked, you still get a short "nothing booked" email,
+ *    so you know it ran. Set SEND_WHEN_EMPTY = false to turn that off.
+ *
+ * INSTALL (one time, ~3 minutes) — same Apps Script project as the
+ * order logger (Code.gs) and Dispatch. Don't edit those files.
+ *   1. Extensions -> Apps Script. Click + next to Files -> Script.
+ *      Name it "ScheduleEmail". Paste this whole file in. Save.
+ *   2. In the function dropdown pick  sendTomorrowScheduleNow  -> Run.
+ *      Approve the permission prompt (it needs "send email as you").
+ *      Check your inbox — that's tomorrow's schedule.
+ *   3. Pick  installScheduleEmailTrigger  -> Run. Done. It now runs
+ *      every evening on its own. Running it again won't double up.
+ *
+ * Uses helpers from the Dispatch file: parseApptDate, cellTimeStr,
+ * timeToMin, prettyTime, fmtPhone, payText.
+ * ------------------------------------------------------------------
+ */
+
+var SCHEDULE_EMAIL_TO   = 'calebpostma@gmail.com';   // comma-separate to add more
+var SCHEDULE_SHEET_ID   = '1fndqHWR16sAJFj7S4HZDQ9tw-_QObzvglzFORPfuomM';
+var SCHEDULE_TZ         = 'America/Toronto';
+var SCHEDULE_SEND_HOUR  = 19;      // 7 PM
+var SEND_WHEN_EMPTY     = true;
+
+// Run once to set up the nightly email. Safe to re-run.
+function installScheduleEmailTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'emailTomorrowSchedule') ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger('emailTomorrowSchedule')
+    .timeBased().everyDays(1).atHour(SCHEDULE_SEND_HOUR).inTimezone(SCHEDULE_TZ)
+    .create();
+}
+
+// Manual test: sends the next open day's schedule right now.
+function sendTomorrowScheduleNow() { emailTomorrowSchedule(true); }
+
+// Called by the nightly trigger.
+function emailTomorrowSchedule(force) {
+  var now = new Date();
+  var target = scheduleNextDay_(now);
+  if (!target) return;                       // Saturday night -> Sunday closed
+  var key = Utilities.formatDate(target, SCHEDULE_TZ, 'yyyy-MM-dd');
+
+  var ss = SpreadsheetApp.openById(SCHEDULE_SHEET_ID);
+  var jobs = scheduleJobsForDay_(ss, key);
+  if (!jobs.length && !SEND_WHEN_EMPTY && force !== true) return;
+
+  var dayLabel = Utilities.formatDate(target, SCHEDULE_TZ, 'EEEE, MMMM d');
+  var shortDay = Utilities.formatDate(target, SCHEDULE_TZ, 'EEE MMM d');
+  var subject = 'PC Tires — ' + shortDay + ': ' +
+    (jobs.length ? jobs.length + ' job' + (jobs.length === 1 ? '' : 's') : 'nothing booked');
+
+  MailApp.sendEmail({
+    to: SCHEDULE_EMAIL_TO,
+    subject: subject,
+    htmlBody: scheduleHtml_(dayLabel, jobs),
+    body: schedulePlain_(dayLabel, jobs),
+    name: 'PC Tires Schedule'
+  });
+}
+
+// Tomorrow, except: Saturday -> null (skip), so Sunday evening sends Monday.
+function scheduleNextDay_(now) {
+  var dow = Number(Utilities.formatDate(now, SCHEDULE_TZ, 'u')); // 1=Mon..7=Sun
+  if (dow === 6) return null;
+  return new Date(now.getTime() + 24 * 3600 * 1000);
+}
+
+// Same sources and de-dupe rules as the Dispatch board, filtered to one day.
+function scheduleJobsForDay_(ss, dayKey) {
+  var tz = ss.getSpreadsheetTimeZone();
+  var jobs = [], seen = {};
+  var sameDay = function (v) {
+    var d = parseApptDate(v);
+    return d && Utilities.formatDate(d, tz, 'yyyy-MM-dd') === dayKey;
+  };
+
+  // Orders tab (found by header row, like Dispatch)
+  var sheets = ss.getSheets(), src = null, hRow = -1, cols = null;
+  for (var s = 0; s < sheets.length && !src; s++) {
+    var vals = sheets[s].getDataRange().getValues();
+    for (var r = 0; r < Math.min(3, vals.length); r++) {
+      var row = vals[r].map(function (x) { return String(x).trim(); });
+      if (row.indexOf('Appointment Date') > -1 && row.indexOf('Customer Name') > -1) {
+        src = sheets[s]; hRow = r; cols = row; break;
+      }
+    }
+  }
+  if (src) {
+    var c = function (n) { return cols.indexOf(n); };
+    var all = src.getDataRange().getValues().slice(hRow + 1);
+    all.forEach(function (row) {
+      if (!sameDay(row[c('Appointment Date')])) return;
+      var name = String(row[c('Customer Name')] || '').trim();
+      var time = cellTimeStr(row[c('Appointment Time')], tz);
+      var k = name.toLowerCase() + '|' + time;
+      if (seen[k]) return; seen[k] = true;
+      jobs.push({
+        time: time, name: name,
+        phone: String(row[c('Phone')] || '').trim(),
+        veh: String(row[c('Vehicle')] || '').trim(),
+        items: String(row[c('Items Ordered')] || '').trim(),
+        svc: String(row[c('Installation Service')] || '').trim(),
+        order: c('Order #') > -1 ? String(row[c('Order #')] || '').trim() : '',
+        pay: c('Payment Status') > -1 ? payText(row[c('Payment Status')]) : '',
+        notes: ''
+      });
+    });
+  }
+
+  // Service Bookings tab (website service form + hand-entered jobs)
+  var sv = ss.getSheetByName('Service Bookings');
+  if (sv && sv.getLastRow() > 1) {
+    var v = sv.getDataRange().getValues();
+    var h = v[0].map(function (x) { return String(x).trim(); });
+    var i = function (n) { return h.indexOf(n); };
+    for (var k2 = 1; k2 < v.length; k2++) {
+      var rr = v[k2];
+      if (!sameDay(rr[i('Date')])) continue;
+      jobs.push({
+        time: cellTimeStr(rr[i('Time')], tz),
+        name: String(rr[i('Customer')] || '').trim(),
+        phone: String(rr[i('Phone')] || '').trim(),
+        veh: String(rr[i('Vehicle')] || '').trim(),
+        items: '', order: '', pay: '',
+        svc: String(rr[i('Service')] || '').trim(),
+        notes: String(rr[i('Notes')] || '').trim()
+      });
+    }
+  }
+
+  jobs.sort(function (a, b) { return timeToMin(a.time) - timeToMin(b.time); });
+  return jobs;
+}
+
+function scheduleEsc_(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function scheduleHtml_(dayLabel, jobs) {
+  var head = '<div style="font-family:Arial,sans-serif;max-width:680px">' +
+    '<div style="background:#f5c518;color:#0a0a0a;padding:12px 16px;font-size:18px;font-weight:bold">' +
+    'PC TIRES — ' + scheduleEsc_(dayLabel) + '</div>';
+  if (!jobs.length) {
+    return head + '<p style="padding:12px 16px;color:#555">Nothing booked yet. ' +
+      'Walk-ins and phone bookings added to the sheet after 7 PM won\'t show here.</p></div>';
+  }
+  var payColour = { PAID: '#1e8f4e', OWING: '#c0392b', DEPOSIT: '#c77f0a' };
+  var rows = jobs.map(function (j, n) {
+    var digits = String(j.phone).replace(/\D/g, '');
+    var phone = digits ? '<a href="tel:' + digits + '" style="color:#0a58ca">' + scheduleEsc_(fmtPhone(j.phone)) + '</a>' : '';
+    var detail = [j.veh, j.items, j.notes].filter(String).map(scheduleEsc_).join('<br>');
+    var pay = j.pay ? '<span style="font-weight:bold;color:' + (payColour[j.pay] || '#333') + '">' + j.pay + '</span>' : '';
+    return '<tr style="background:' + (n % 2 ? '#fafafa' : '#fff') + '">' +
+      '<td style="padding:8px;font-weight:bold;white-space:nowrap;vertical-align:top;color:' + (j.time ? '#0a0a0a' : '#c0392b') + '">' +
+        (j.time ? scheduleEsc_(prettyTime(j.time)) : 'no time') + '</td>' +
+      '<td style="padding:8px;vertical-align:top"><b>' + scheduleEsc_(j.name) + '</b><br>' + phone + '</td>' +
+      '<td style="padding:8px;vertical-align:top">' + scheduleEsc_(j.svc) +
+        (detail ? '<div style="color:#555;font-size:13px;margin-top:3px">' + detail + '</div>' : '') + '</td>' +
+      '<td style="padding:8px;vertical-align:top;text-align:center">' + pay + '</td></tr>';
+  }).join('');
+  return head +
+    '<table style="width:100%;border-collapse:collapse;font-size:14px">' +
+    '<tr style="background:#1d1d1d;color:#fff;font-size:12px;text-align:left">' +
+    '<th style="padding:6px 8px">Time</th><th style="padding:6px 8px">Customer</th>' +
+    '<th style="padding:6px 8px">Job</th><th style="padding:6px 8px">Paid</th></tr>' +
+    rows + '</table>' +
+    '<p style="color:#888;font-size:12px;padding:8px">' + jobs.length + ' job' + (jobs.length === 1 ? '' : 's') +
+    ' · from the PCTires Customer List sheet</p></div>';
+}
+
+function schedulePlain_(dayLabel, jobs) {
+  if (!jobs.length) return 'PC Tires — ' + dayLabel + '\nNothing booked yet.';
+  return 'PC Tires — ' + dayLabel + '\n\n' + jobs.map(function (j) {
+    return (j.time ? prettyTime(j.time) : 'no time') + '  ' + j.name + '  ' + fmtPhone(j.phone) +
+      '\n   ' + [j.svc, j.veh, j.items, j.notes, j.pay].filter(String).join(' | ');
+  }).join('\n\n');
+}
