@@ -508,7 +508,14 @@ export async function onRequest(context) {
   }
 
   const row = feed.get(pid);
-  if (!row) return notFound();
+  if (!row) {
+    // SKU dropped out of the feed (sold through / size discontinued at TDG).
+    // Send people, Google and AI-search links to the model page instead of a
+    // dead 404 -- the model page always lists what's currently in stock.
+    const gone = metaForId(pid);
+    if (gone) return Response.redirect(origin + '/' + gone.page, 301);
+    return notFound();
+  }
 
   const meta = metaForId(row.id);
   if (!meta) return notFound();
