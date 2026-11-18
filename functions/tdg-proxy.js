@@ -1,38 +1,43 @@
 /**
  * Cloudflare Pages Function: /functions/tdg-proxy.js
- * Proxies requests to the TDG Access API
+ * Proxies READ-ONLY catalogue requests to the TDG Access API.
+ *
+ * Hardened 2026-11-18: this endpoint is public (the site's tire search uses it),
+ * so it now exposes ONLY catalogue/stock lookups. Order creation, order status,
+ * order quotes and the account lookups (shipping addresses, payment methods,
+ * pickup locations) were removed - nothing on the site called them through this
+ * proxy, and leaving them here let anyone on the internet place orders against
+ * the TDG account. Real orders go through functions/order-core.js, which talks
+ * to TDG directly, server-side, after payment.
  */
 
 const TDG_API_BASE = 'https://www.tdgaccess.ca/api';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
 };
 
+// Read-only actions ONLY. Do not add order/* or account/* here.
 const ACTION_MAP = {
-  search:           `${TDG_API_BASE}/product/search`,
-  hardware:         `${TDG_API_BASE}/hardware/search`,
-  inventory:        `${TDG_API_BASE}/inventory/search`,
-  all:              `${TDG_API_BASE}/product/all`,
-  shippingAddresses:`${TDG_API_BASE}/account/shippingAddresses`,
-  shippingMethods:  `${TDG_API_BASE}/account/shippingMethods`,
-  paymentMethods:   `${TDG_API_BASE}/account/paymentMethods`,
-  pickupLocations:  `${TDG_API_BASE}/account/pickuplocations`,
-  orderCreate:      `${TDG_API_BASE}/order/create`,
-  orderStatus:      `${TDG_API_BASE}/order/status`,
-  quote:            `${TDG_API_BASE}/order/quote`,
+  search:    `${TDG_API_BASE}/product/search`,
+  hardware:  `${TDG_API_BASE}/hardware/search`,
+  inventory: `${TDG_API_BASE}/inventory/search`,
+  all:       `${TDG_API_BASE}/product/all`,
 };
 
-const GET_ACTIONS = new Set(['shippingAddresses','shippingMethods','paymentMethods','pickupLocations']);
+const MAX_BODY_BYTES = 20000;
 
 export async function onRequest(context) {
   const { request, env } = context;
 
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: CORS });
+  }
+  if (request.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: CORS });
   }
 
   const TDG_API_KEY = env.TDG_API_KEY;
@@ -46,21 +51,27 @@ export async function onRequest(context) {
 
   try {
     let body = {};
-    try { body = await request.json(); } catch(e) {}
+    try {
+      const raw = await request.text();
+      if (raw.length > MAX_BODY_BYTES) {
+        return new Response(JSON.stringify({ error: 'Request too large' }), { status: 413, headers: CORS });
+      }
+      body = raw ? JSON.parse(raw) : {};
+    } catch (e) { body = {}; }
+    if (!body || typeof body !== 'object' || Array.isArray(body)) body = {};
 
-    const action  = body.path || 'search';
-    const payload = body.payload || {};
+    const action  = typeof body.path === 'string' ? body.path : 'search';
+    const payload = (body.payload && typeof body.payload === 'object') ? body.payload : {};
 
-    const tdgUrl = ACTION_MAP[action];
+    const tdgUrl = Object.prototype.hasOwnProperty.call(ACTION_MAP, action) ? ACTION_MAP[action] : null;
     if (!tdgUrl) {
-      return new Response(JSON.stringify({ error: 'Unknown action: ' + action }), { status: 400, headers: CORS });
+      return new Response(JSON.stringify({ error: 'Unknown action' }), { status: 400, headers: CORS });
     }
 
-    const isGet = GET_ACTIONS.has(action);
     const res = await fetch(tdgUrl, {
-      method: isGet ? 'GET' : 'POST',
+      method: 'POST',
       headers: HEADERS,
-      ...(isGet ? {} : { body: JSON.stringify(payload) }),
+      body: JSON.stringify(payload),
     });
 
     const text = await res.text();
@@ -69,7 +80,7 @@ export async function onRequest(context) {
     return new Response(text, { status: res.status, headers: respHeaders });
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: 'Proxy error', message: err.message }), {
+    return new Response(JSON.stringify({ error: 'Proxy error' }), {
       status: 500, headers: CORS,
     });
   }
