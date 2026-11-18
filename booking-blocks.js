@@ -40,8 +40,22 @@ const BOOKING_BLOCKS = {
     // '12:30 PM',
   ],
 
+  // ── SCHOOL BREAKS ────────────────────────────────────────────────
+  // During school, the boys only help on Saturdays, so customer bookings
+  // start at 3 PM Mon-Fri and Saturday is the big install day.
+  // During a school break they're free on weekdays, so weekdays open up
+  // from breakWeekdayStart and Saturdays are left for walk-ins/patches.
+  // Add each break as { from: 'YYYY-MM-DD', to: 'YYYY-MM-DD' } (inclusive).
+  // Used by index.html (checkout + Book a Service) and swap.html.
+  schoolBreaks: [
+    // { from: '2026-12-21', to: '2027-01-01' },  // example: Christmas break
+  ],
+  breakWeekdayStart: '10:00 AM',   // first customer slot Mon-Fri during a break
+  breakSaturdayOnline: false,      // false = Saturdays walk-in only during a break
+
   // Business hours — first bookable slot to last
-  hoursStart: '8:00 AM',
+  hoursStart: '3:00 PM',          // first bookable slot Mon-Fri
+  saturdayHoursStart: '10:00 AM',  // first bookable slot Saturday
   hoursEnd: '5:00 PM',           // last bookable slot Mon-Fri
   saturdayHoursEnd: '3:00 PM',   // earlier close Saturday
 
@@ -76,6 +90,18 @@ function bb_formatTime(minutes) {
   return h12 + ':' + String(m).padStart(2, '0') + ' ' + period;
 }
 
+// True if the date falls inside one of BOOKING_BLOCKS.schoolBreaks.
+function bb_isSchoolBreak(yyyymmdd) {
+  const list = BOOKING_BLOCKS.schoolBreaks || [];
+  return list.some(function (b) { return b && yyyymmdd >= b.from && yyyymmdd <= b.to; });
+}
+
+// Saturday during a school break with online Saturday booking switched off.
+function bb_isWalkInOnly(yyyymmdd) {
+  if (!yyyymmdd || BOOKING_BLOCKS.breakSaturdayOnline) return false;
+  return new Date(yyyymmdd + 'T12:00:00').getDay() === 6 && bb_isSchoolBreak(yyyymmdd);
+}
+
 function bb_isDateBlocked(yyyymmdd) {
   if (!yyyymmdd) return true;
   const date = new Date(yyyymmdd + 'T12:00:00');
@@ -92,12 +118,15 @@ function bb_isSlotBlocked(yyyymmdd, time) {
 
 // Returns available time slots for a given YYYY-MM-DD string
 function bb_getAvailableSlots(yyyymmdd) {
-  if (!yyyymmdd || bb_isDateBlocked(yyyymmdd)) return [];
+  if (!yyyymmdd || bb_isDateBlocked(yyyymmdd) || bb_isWalkInOnly(yyyymmdd)) return [];
   const date = new Date(yyyymmdd + 'T12:00:00');
   const isSaturday = date.getDay() === 6;
   const endTime = isSaturday ? BOOKING_BLOCKS.saturdayHoursEnd : BOOKING_BLOCKS.hoursEnd;
   const slots = [];
-  let cur = bb_parseTime(BOOKING_BLOCKS.hoursStart);
+  const startTime = isSaturday
+    ? (BOOKING_BLOCKS.saturdayHoursStart || BOOKING_BLOCKS.hoursStart)
+    : (bb_isSchoolBreak(yyyymmdd) ? BOOKING_BLOCKS.breakWeekdayStart : BOOKING_BLOCKS.hoursStart);
+  let cur = bb_parseTime(startTime);
   const end = bb_parseTime(endTime);
   while (cur <= end) {
     const timeStr = bb_formatTime(cur);
