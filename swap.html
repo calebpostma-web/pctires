@@ -487,6 +487,10 @@ function onDateChange() {
     grid.innerHTML = '<div class="time-empty">We\'re closed on that date. Pick another day.</div>';
     return;
   }
+  if (typeof bb_isWalkInOnly === 'function' && bb_isWalkInOnly(date)) {
+    grid.innerHTML = '<div class="time-empty">Saturdays during school breaks are walk-in only. Come by any time we\'re open, or pick a weekday to book.</div>';
+    return;
+  }
   const slots = bb_getAvailableSlots(date);
   if (!slots.length) {
     grid.innerHTML = '<div class="time-empty">No times available on that date. Pick another day.</div>';
@@ -524,6 +528,7 @@ async function submitBooking() {
   if (!date)         return showErr(errEl, 'Please pick a date.');
   if (!selectedTime) return showErr(errEl, 'Please pick a time.');
   if (bb_isDateBlocked(date))               return showErr(errEl, "We're closed on that date. Pick another day.");
+  if (typeof bb_isWalkInOnly === 'function' && bb_isWalkInOnly(date)) return showErr(errEl, 'Saturdays during school breaks are walk-in only. Pick a weekday to book.');
   if (bb_isSlotBlocked(date, selectedTime)) return showErr(errEl, 'That slot is no longer available. Pick another time.');
 
   const btn = document.getElementById('submitBtn');
