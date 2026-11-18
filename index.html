@@ -1246,6 +1246,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 <script src="/promo-codes.js" defer></script>
 <script src="/vehicle-db.js" defer></script>
 <script src="/service-pricing.js" defer></script>
+<script src="/booking-blocks.js" defer></script>
 <style id="pc-callfirst-css">
 /* ===== Mobile call-first layer (added 2026-06) ===== */
 /* mobile-only: desktop stays Caleb's quoting tool, untouched */
@@ -6184,6 +6185,34 @@ const FIRST_DAY_EARLIEST_HOUR    = 10;  // on the first eligible day, no slots b
 // Add N business days (Mon–Fri only) to a date.
 // Saturday we open later — no slots before this hour on a Saturday.
 const SATURDAY_EARLIEST_HOUR = 10;
+// Customers can't book anything before 3 PM Monday-Friday (Saturday stays 10 AM).
+// During a school break (dates live in /booking-blocks.js) weekdays open from
+// breakWeekdayStart and Saturdays are walk-in only. The owner (signed in) can book any slot.
+const WEEKDAY_EARLIEST_HOUR = 15;
+function _bbYmd(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function inSchoolBreak(d) {
+  try { return !!(d && typeof bb_isSchoolBreak === 'function' && bb_isSchoolBreak(_bbYmd(d))); }
+  catch (e) { return false; }
+}
+function publicEarliestHour(d) {
+  if (!d || isNaN(d)) return 0;
+  if (typeof isOwner === 'function' && isOwner()) return 0;
+  if (d.getDay() === 6) return SATURDAY_EARLIEST_HOUR;
+  if (inSchoolBreak(d)) {
+    try { return Math.floor(bb_parseTime(BOOKING_BLOCKS.breakWeekdayStart) / 60) || WEEKDAY_EARLIEST_HOUR; }
+    catch (e) { return WEEKDAY_EARLIEST_HOUR; }
+  }
+  return WEEKDAY_EARLIEST_HOUR;
+}
+// Saturday during a school break: customers can't book online (walk-ins only).
+function publicDayBlocked(d) {
+  if (!d || d.getDay() !== 6) return false;
+  if (typeof isOwner === 'function' && isOwner()) return false;
+  try { return typeof bb_isWalkInOnly === 'function' && bb_isWalkInOnly(_bbYmd(d)); }
+  catch (e) { return false; }
+}
 
 // Ontario statutory holidays. TDG does not ship and we are not open, so these
 // never count as a business day for tire-arrival lead time and are not bookable.
@@ -6290,7 +6319,7 @@ function buildCal() {
   let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
   for (let d = 1; d <= days; d++) {
-    const dt = new Date(calY, calMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt) || isShopClosed(dt);
+    const dt = new Date(calY, calMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt) || isShopClosed(dt) || publicDayBlocked(dt);
     const dateStr = `${MONTHS[calMo]} ${d}, ${calY}`, isSel = selDate === dateStr;
     html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="pickDate('${dateStr}')"`:''}>${d}</div>`;
   }
@@ -6300,8 +6329,9 @@ function buildCal() {
   const leadNote = document.getElementById('leadTimeNote');
   if (leadNote) {
     const earliest = minDate.toLocaleDateString('en-CA', { weekday:'long', month:'long', day:'numeric' });
-    const h12 = FIRST_DAY_EARLIEST_HOUR > 12 ? FIRST_DAY_EARLIEST_HOUR - 12 : FIRST_DAY_EARLIEST_HOUR;
-    const ampm = FIRST_DAY_EARLIEST_HOUR >= 12 ? 'PM' : 'AM';
+    const _firstHr = Math.max(FIRST_DAY_EARLIEST_HOUR, publicEarliestHour(minDate));
+    const h12 = _firstHr > 12 ? _firstHr - 12 : _firstHr;
+    const ampm = _firstHr >= 12 ? 'PM' : 'AM';
     const _localFlag = cartFullyLocal();
     const _reason = _earliestBumpedByClosure
       ? 'our next available install date'
@@ -6325,14 +6355,14 @@ function buildTimes() {
     selDateObj.getMonth()    === earliestDate.getMonth() &&
     selDateObj.getDate()     === earliestDate.getDate();
 
-  document.getElementById('timeGrid').innerHTML = slots.map(t => {
+  const _startHr = publicEarliestHour(selDateObj);
+  if (selTime && slotLabelToHour24(selTime) < _startHr) selTime = null;
+  document.getElementById('timeGrid').innerHTML = slots.filter(t => slotLabelToHour24(t) >= _startHr).map(t => {
     const isBooked = booked.includes(t);
     const tooEarly = isFirstDay && slotLabelToHour24(t) < FIRST_DAY_EARLIEST_HOUR;
-    const satEarly = selDateObj && selDateObj.getDay() === 6 && slotLabelToHour24(t) < SATURDAY_EARLIEST_HOUR;
-    const disabled = isBooked || tooEarly || satEarly;
+    const disabled = isBooked || tooEarly;
     const note     = isBooked ? '<br><small>Booked</small>'
-                              : (tooEarly ? '<br><small>Tires arriving</small>'
-                              : (satEarly ? '<br><small>Sat opens 10</small>' : ''));
+                              : (tooEarly ? '<br><small>Tires arriving</small>' : '');
     return `<div class="time-slot${disabled?' bkd':''}${selTime===t?' sel':''}" ${!disabled?`onclick="pickTime('${t}')"`:''}>${t}${note}</div>`;
   }).join('');
 }
@@ -7750,7 +7780,7 @@ function buildSvcCal() {
   let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<div class="cal-lbl">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-day emp"></div>`;
   for (let d = 1; d <= days; d++) {
-    const dt = new Date(svcCalY, svcCalMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt) || isShopClosed(dt);
+    const dt = new Date(svcCalY, svcCalMo, d), past = dt < minDate, sun = dt.getDay() === 0, dis = past || sun || isHoliday(dt) || isShopClosed(dt) || publicDayBlocked(dt);
     const dateStr = `${MONTHS[svcCalMo]} ${d}, ${svcCalY}`, isSel = svcSelDate === dateStr;
     html += `<div class="cal-day${dis?' dis':''}${isSel?' sel':''}" ${!dis?`onclick="svcPickDate('${dateStr}')"`:''}>${d}</div>`;
   }
@@ -7776,11 +7806,11 @@ function buildSvcTimes() {
     return h * 60 + min;
   };
   const svcDateObj = svcSelDate ? new Date(svcSelDate) : null;
-  const svcIsSat = svcDateObj && svcDateObj.getDay() === 6;
-  document.getElementById('svcTimeGrid').innerHTML = slots.map(t => {
+  const _svcStart = publicEarliestHour(svcDateObj) * 60;
+  if (svcSelTime && slotMin(svcSelTime) < _svcStart) svcSelTime = null;
+  document.getElementById('svcTimeGrid').innerHTML = slots.filter(t => slotMin(t) >= _svcStart).map(t => {
     const passed = isToday && slotMin(t) <= nowMin;
     if (passed) return `<div class="time-slot bkd" title="Already passed">${t}</div>`;
-    if (svcIsSat && slotMin(t) < SATURDAY_EARLIEST_HOUR * 60) return `<div class="time-slot bkd" title="Saturday opens at 10 AM">${t}</div>`;
     return `<div class="time-slot${svcSelTime===t?' sel':''}" onclick="svcPickTime('${t}')">${t}</div>`;
   }).join('');
 }
