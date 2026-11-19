@@ -496,8 +496,13 @@ function onDateChange() {
     grid.innerHTML = '<div class="time-empty">No times available on that date. Pick another day.</div>';
     return;
   }
-  grid.innerHTML = slots.map(t =>
-    '<div class="time-slot" onclick="pickTime(this,\'' + t + '\')">' + t + '</div>'
+  // Show the whole day; slots that aren't open to book show as Booked (not hidden).
+  const display = (typeof bb_getDisplaySlots === 'function')
+    ? bb_getDisplaySlots(date)
+    : slots.map(function (t) { return { time: t, booked: false }; });
+  grid.innerHTML = display.map(s => s.booked
+    ? '<div class="time-slot disabled">' + s.time + '<br><small>Booked</small></div>'
+    : '<div class="time-slot" onclick="pickTime(this,\'' + s.time + '\')">' + s.time + '</div>'
   ).join('');
 }
 
