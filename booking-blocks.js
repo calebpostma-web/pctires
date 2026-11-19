@@ -48,12 +48,13 @@ const BOOKING_BLOCKS = {
   // Add each break as { from: 'YYYY-MM-DD', to: 'YYYY-MM-DD' } (inclusive).
   // Used by index.html (checkout + Book a Service) and swap.html.
   schoolBreaks: [
-    // { from: '2026-12-21', to: '2027-01-01' },  // example: Christmas break
+    { from: '2026-12-21', to: '2027-01-03' },  // Christmas break (school is back Mon Jan 4)
   ],
   breakWeekdayStart: '10:00 AM',   // first customer slot Mon-Fri during a break
   breakSaturdayOnline: false,      // false = Saturdays walk-in only during a break
 
   // Business hours — first bookable slot to last
+  displayStart: '8:00 AM',        // first slot SHOWN; anything before the bookable start shows as Booked
   hoursStart: '3:00 PM',          // first bookable slot Mon-Fri
   saturdayHoursStart: '10:00 AM',  // first bookable slot Saturday
   hoursEnd: '5:00 PM',           // last bookable slot Mon-Fri
@@ -134,6 +135,25 @@ function bb_getAvailableSlots(yyyymmdd) {
     cur += 30; // 30-minute slots
   }
   return slots;
+}
+
+// Every slot of the day for display: [{ time, booked }]. Slots before the day's
+// bookable start, and blocked slots, come back booked:true so pages can show
+// them greyed out as "Booked" instead of hiding them.
+function bb_getDisplaySlots(yyyymmdd) {
+  const open = bb_getAvailableSlots(yyyymmdd);
+  if (!open.length) return [];
+  const date = new Date(yyyymmdd + 'T12:00:00');
+  const endTime = date.getDay() === 6 ? BOOKING_BLOCKS.saturdayHoursEnd : BOOKING_BLOCKS.hoursEnd;
+  const end = bb_parseTime(endTime);
+  let cur = Math.min(bb_parseTime(BOOKING_BLOCKS.displayStart || open[0]), bb_parseTime(open[0]));
+  const out = [];
+  while (cur <= end) {
+    const t = bb_formatTime(cur);
+    out.push({ time: t, booked: open.indexOf(t) === -1 });
+    cur += 30;
+  }
+  return out;
 }
 
 // Min/max dates for booking inputs — respects minLeadHours and maxAdvanceDays
