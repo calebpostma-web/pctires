@@ -6357,8 +6357,9 @@ function buildTimes() {
 
   const _startHr = publicEarliestHour(selDateObj);
   if (selTime && slotLabelToHour24(selTime) < _startHr) selTime = null;
-  document.getElementById('timeGrid').innerHTML = slots.filter(t => slotLabelToHour24(t) >= _startHr).map(t => {
-    const isBooked = booked.includes(t);
+  document.getElementById('timeGrid').innerHTML = slots.map(t => {
+    // Slots before the day's start hour show as Booked (not hidden).
+    const isBooked = booked.includes(t) || slotLabelToHour24(t) < _startHr;
     const tooEarly = isFirstDay && slotLabelToHour24(t) < FIRST_DAY_EARLIEST_HOUR;
     const disabled = isBooked || tooEarly;
     const note     = isBooked ? '<br><small>Booked</small>'
@@ -7808,7 +7809,9 @@ function buildSvcTimes() {
   const svcDateObj = svcSelDate ? new Date(svcSelDate) : null;
   const _svcStart = publicEarliestHour(svcDateObj) * 60;
   if (svcSelTime && slotMin(svcSelTime) < _svcStart) svcSelTime = null;
-  document.getElementById('svcTimeGrid').innerHTML = slots.filter(t => slotMin(t) >= _svcStart).map(t => {
+  document.getElementById('svcTimeGrid').innerHTML = slots.map(t => {
+    // Slots before the day's start hour show as Booked (not hidden).
+    if (slotMin(t) < _svcStart) return `<div class="time-slot bkd">${t}<br><small>Booked</small></div>`;
     const passed = isToday && slotMin(t) <= nowMin;
     if (passed) return `<div class="time-slot bkd" title="Already passed">${t}</div>`;
     return `<div class="time-slot${svcSelTime===t?' sel':''}" onclick="svcPickTime('${t}')">${t}</div>`;
