@@ -1260,6 +1260,37 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:48px 40
 .pc-cf-call-sub{font-weight:600;font-size:12px;letter-spacing:.3px;opacity:.82}
 .pc-cf-note{text-align:center;color:var(--muted);font-size:12px;margin:11px 0 0;line-height:1.45}
 .pc-cf-aglink{display:block;text-align:center;margin:12px 0 0;padding:11px;border:1px solid rgba(245,197,24,.4);border-radius:3px;color:var(--yellow);text-decoration:none;font-weight:700;font-size:14px;letter-spacing:.3px}
+/* Phone first screen (2026-11-19): Call | Text, then the size box */
+.pc-cf-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 16px}
+.pc-cf-actions .pc-cf-call{padding:12px 8px}
+.pc-cf-actions .pc-cf-call-sub{font-size:13px;opacity:.9}
+.pc-cf-text{background:var(--yellow);color:#111;box-shadow:0 4px 14px rgba(245,197,24,.28)}
+.pc-cf-text:hover{box-shadow:0 6px 20px rgba(245,197,24,.42)}
+.pc-cf-size-lbl{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:21px;letter-spacing:.3px;text-transform:uppercase;color:var(--white);margin:0 0 7px}
+.pc-cf-size-row{display:flex;gap:8px;align-items:stretch}
+.pc-cf-size-input{flex:1;min-width:0;background:var(--black);border:2px solid rgba(245,197,24,.55);color:var(--white);padding:12px 12px;font-family:'IBM Plex Mono',monospace;font-size:20px;letter-spacing:1px;border-radius:3px;outline:none;-webkit-appearance:none;appearance:none}
+.pc-cf-size-input{text-transform:uppercase}
+.pc-cf-size-input::placeholder{color:var(--muted);opacity:.75}
+.pc-cf-size-input:focus{border-color:var(--yellow)}
+.pc-cf-size-input.invalid{border-color:var(--red)}
+.pc-cf-size-btn{flex-shrink:0;background:var(--yellow);color:#111;border:none;border-radius:3px;padding:0 20px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;opacity:.88}
+.pc-cf-size-btn.ready{opacity:1;box-shadow:0 4px 14px rgba(245,197,24,.3)}
+.pc-cf-size-hint{font-size:13px;color:var(--muted);margin:7px 0 0;min-height:18px;line-height:1.4}
+.pc-cf-size-hint.ok{color:var(--green);font-weight:700}
+.pc-cf-size-hint.error{color:var(--red);font-weight:600}
+.pc-cf-alt{font-size:14px;color:var(--light);margin:12px 0 2px;line-height:1.7}
+.pc-cf-alt span{display:block}
+.pc-cf-alt button{background:none;border:none;padding:6px 1px;margin:0;font:inherit;font-weight:700;color:var(--yellow);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.pc-callfirst .pc-cf-offer{font-size:clamp(19px,5.2vw,26px)}
+.pc-cf-offercard{margin:22px 0 0}
+.pc-callfirst .pc-cf-sub{margin-bottom:0;font-size:13px}
+@media(max-width:360px){
+  /* small phones: keep a full size like 225/65R17 visible in the box */
+  .pc-cf-size-input{font-size:17px;letter-spacing:0;padding:12px 9px}
+  .pc-cf-size-btn{padding:0 12px;font-size:17px}
+  .pc-cf-actions .pc-cf-call{padding:12px 4px}
+  .pc-cf-actions .pc-cf-call-sub{font-size:11.5px;letter-spacing:0;white-space:nowrap}
+}
 @media(max-width:600px){
   /* turn the tiny nav number into a real tap-to-call button */
   .phone-link{font-size:13px !important;font-weight:800 !important;background:#19a957 !important;color:#fff !important;padding:8px 12px !important;border-radius:3px !important;gap:6px !important}
@@ -1488,14 +1519,30 @@ buildTicker();
 <section class="lookup-section" id="lookup">
   <div class="lookup-inner">
     <div class="pc-callfirst">
-      <p class="pc-cf-offer">Tires installed in Chatham-Kent &mdash; <span class="y">from $25/tire, all in.</span></p>
-      <p class="pc-cf-sub">Mount, balance, TPMS reset &amp; disposal included. Open Saturdays.</p>
-      <a class="pc-cf-call" href="tel:5193974686">
-        <span class="pc-cf-call-main">&#128222; Call 519-397-4686</span>
-        <span class="pc-cf-call-sub">Talk to the owner &mdash; fast, fair, all-in pricing</span>
-      </a>
-      <p class="pc-cf-note">Or find your fit below.</p>
-      <a class="pc-cf-aglink" href="/used">🛞 Used &amp; Budget Tires &mdash; see prices &rarr;</a>
+      <!-- Phone first screen (2026-11-19): Call / Text, then type your size. -->
+      <div class="pc-cf-actions">
+        <a class="pc-cf-call" href="tel:5193974686">
+          <span class="pc-cf-call-main">&#128222; Call</span>
+          <span class="pc-cf-call-sub">519-397-4686</span>
+        </a>
+        <a class="pc-cf-call pc-cf-text" href="sms:+15193974686?&amp;body=Hi%20PC%20Tires%2C%20I%27m%20looking%20for%20tires.%20My%20size%20is%20">
+          <span class="pc-cf-call-main">&#128172; Text</span>
+          <span class="pc-cf-call-sub">Send us your size</span>
+        </a>
+      </div>
+      <label class="pc-cf-size-lbl" for="heroSizeInput">Enter your tire size</label>
+      <div class="pc-cf-size-row">
+        <input type="text" id="heroSizeInput" class="pc-cf-size-input" inputmode="text" enterkeyhint="search" autocapitalize="characters"
+               placeholder="225/65R18" aria-describedby="heroSizeHint" autocomplete="off" autocorrect="off" spellcheck="false"
+               oninput="onHeroSizeInput(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();doHeroSizeSearch();}">
+        <button type="button" class="pc-cf-size-btn" id="heroSizeBtn" onclick="doHeroSizeSearch()">Search</button>
+      </div>
+      <div class="pc-cf-size-hint" id="heroSizeHint" aria-live="polite">Type it how it reads on the tire: 225/65R18</div>
+      <div class="pc-cf-alt"><span>Don't know your size?</span>
+        <button type="button" onclick="heroGoTab('vehicle')">Find by vehicle</button> &middot;
+        <button type="button" onclick="heroGoTab('vin')">VIN</button> &middot;
+        <button type="button" onclick="heroGoTab('life')">Help me choose</button>
+      </div>
     </div>
     <div class="pc-hide-mobile" style="margin-bottom:24px">
       <h1 class="section-title" style="font-size:clamp(26px,4vw,38px);margin-bottom:6px">Find the Right Tire or Wheel</h1>
@@ -1733,6 +1780,12 @@ buildTicker();
         <span style="font-size:17px">✅</span>
         <span id="lookupText"></span>
       </div>
+    </div>
+    <!-- Phone only: the offer card sits below the finder so the size box comes first. -->
+    <div class="pc-callfirst pc-cf-offercard">
+      <p class="pc-cf-offer">Tires installed in Chatham-Kent &mdash; <span class="y">from $25/tire, all in.</span></p>
+      <p class="pc-cf-sub">Mount, balance, TPMS reset &amp; disposal included. Open Saturdays.</p>
+      <a class="pc-cf-aglink" href="/used">🛞 Used &amp; Budget Tires &mdash; see prices &rarr;</a>
     </div>
   </div>
 </section>
@@ -2537,7 +2590,7 @@ buildTicker();
     <div class="mbody">
       <div class="psteps">
         <div class="ps active" id="ps1"><div class="ps-dot">1</div><div class="ps-lbl">Contact</div></div>
-        <div class="ps" id="ps2"><div class="ps-dot">2</div><div class="ps-lbl">Schedule</div></div>
+        <div class="ps" id="ps2"><div class="ps-dot">2</div><div class="ps-lbl">Install</div></div>
         <div class="ps" id="ps3"><div class="ps-dot">3</div><div class="ps-lbl">Add-ons</div></div>
         <div class="ps" id="ps4"><div class="ps-dot">4</div><div class="ps-lbl">Payment</div></div>
         <div class="ps" id="ps5"><div class="ps-dot">5</div><div class="ps-lbl">Confirm</div></div>
@@ -2558,8 +2611,8 @@ buildTicker();
       </div>
       <!-- Step 2: Schedule -->
       <div class="fsec" id="s2">
-        <div class="appt-note"><b>Select your installation service</b> — we'll block the right amount of time automatically.</div>
-        <div id="serviceMenu" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px"></div>
+        <div id="installQ"></div>
+        <div id="serviceMenu" style="display:none"></div>
         <div id="calSection" style="display:none">
           <div class="appt-note" id="durationNote" style="background:var(--yellow-dim);border-color:rgba(245,197,24,.25)"></div>
           <div class="appt-note" id="leadTimeNote" style="background:rgba(245,197,24,.08);border-color:rgba(245,197,24,.25);font-size:13px;line-height:1.5"></div>
@@ -2567,7 +2620,8 @@ buildTicker();
           <div class="cal-grid" id="calGrid"></div>
           <div id="timeSec" style="display:none"><div class="time-lbl">Available Times</div><div class="time-grid" id="timeGrid"></div></div>
         </div>
-        <button class="skip-btn" onclick="skipInstall()">Skip — I'll arrange service separately →</button>
+        <div id="installMsg" role="alert" style="display:none;color:#ff6b6b;font-size:13px;font-weight:600;margin-top:10px;text-align:center"></div>
+        <button class="skip-btn" id="installLaterBtn" style="display:none" onclick="installBookLater()">I'll book my time later — call me to set it up →</button>
       </div>
       <!-- Step 3: Add-ons -->
       <div class="fsec" id="s3">
@@ -4454,7 +4508,7 @@ function parseRawSize(raw) {
 
 // Validate-as-you-type for the size tab's "type exact" input
 function onQuickSizeInput(el) {
-  const parsed = parseRawSize(el.value);
+  const parsed = parseSizeLoose(el.value);
   const btn = document.getElementById('sQuickBtn');
   const hint = document.getElementById('sQuickHint');
   const ok = !!parsed;
@@ -4515,9 +4569,133 @@ async function runRawSizeSearch(parsed, sourceTag) {
 
 function doQuickSizeSearch() {
   const v = document.getElementById('sQuickInput').value;
-  const parsed = parseRawSize(v);
+  const parsed = parseSizeLoose(v);
   if (!parsed) return;
   runRawSizeSearch(parsed, 'size');
+}
+
+// ─────────────────────────────────────────────────
+//  FORGIVING SIZE PARSER (top-of-page size box + "type your exact size")
+//  Accepts what people actually type: 2256517 · 225/65R17 · 225 65 17 ·
+//  225/65/17 · 225-65-17 · P225/65ZR17 102H · LT285/55R20 · 33x12.5x18 ·
+//  33125018 · 11R22.5 · 29575225. Returns the same object as parseRawSize()
+//  (so searches are identical), or null if it is not a real tire size.
+// ─────────────────────────────────────────────────
+function parseSizeLoose(raw) {
+  if (!raw) return null;
+  const strict = parseRawSize(raw);
+  // A properly written metric or flotation size is taken as typed. The strict
+  // "commercial" pattern (digits R digits) is too greedy on its own
+  // ("225 65R17" would read as 22565R17), so it must look like a real truck size.
+  if (strict && (strict.kind !== 'commercial' ||
+      (+strict.width >= 7 && +strict.width <= 13 && ['17.5', '19.5', '22.5', '24.5'].indexOf(strict.rim) !== -1))) return strict;
+  let s = String(raw).toUpperCase().replace(/[×*]/g, 'X').trim();
+  s = s.replace(/^(LT|ST|P)(?=\s*\d)/, '');
+  // 225.65.18 / 225.65.R18: dots used as separators, not decimals
+  if (/^\d{3}\s*\.\s*\d{2}\s*\.\s*Z?R?\s*\d{2}(?!\.?\d)/.test(s)) s = s.replace(/\./g, ' ');
+  const hasX = /\d\s*X\s*\d/.test(s);
+  const hasR = /\d\s*Z?R\s*\d/.test(s);
+  const nums = (s.match(/\d+(?:\.\d+)?/g) || []);
+  const COMM_RIMS = ['17.5', '19.5', '22.5', '24.5'];
+  const metric = (w, a, r) => {
+    const W = +w, A = +a, R = +r;
+    if (!(W >= 125 && W <= 395 && W % 10 === 5)) return null;   // metric widths always end in 5
+    if (!(A >= 20 && A <= 95 && A % 5 === 0)) return null;
+    if (!((Number.isInteger(R) && R >= 12 && R <= 30) || COMM_RIMS.indexOf(String(r)) !== -1)) return null;
+    return parseRawSize(W + '/' + A + 'R' + r);
+  };
+  // truckOnly = guessed from a bare run of digits, so only accept light-truck flotation sizes.
+  const flotation = (d, w, r, truckOnly) => {
+    const D = +d, W = +w, R = +r;
+    if (!(D >= (truckOnly ? 27 : 16) && D <= 46)) return null;
+    if (!(W >= (truckOnly ? 8.5 : 6) && W <= 16.5)) return null;
+    if (!((Number.isInteger(R) && R >= (truckOnly ? 15 : 8) && R <= 26) || String(r) === '16.5')) return null;
+    return parseRawSize(D + 'X' + W.toFixed(2) + 'R' + r);
+  };
+  const commercial = (w, r) => {
+    const W = +w;
+    if (!(W >= 7 && W <= 13) || COMM_RIMS.indexOf(String(r)) === -1) return null;
+    return parseRawSize(W + 'R' + r);
+  };
+  // 1. Separated numbers: 225 65 17 · 225/65/17 · 33x12.5x18 · 225/65R17 102H
+  if (nums.length >= 3) {
+    if (hasX) return flotation(nums[0], nums[1], nums[2]);
+    return metric(nums[0], nums[1], nums[2]) || flotation(nums[0], nums[1], nums[2]);
+  }
+  // 2. Two numbers: 11R22.5 · 22565 17 · 225 6517
+  if (nums.length === 2) {
+    if (hasR && !hasX) { const c = commercial(nums[0], nums[1]); if (c) return c; }
+    const j = nums.join('');
+    if (/^\d{7}$/.test(j)) return metric(j.slice(0, 3), j.slice(3, 5), j.slice(5));
+    return null;
+  }
+  // 3. One run of digits (number pad): 2256517 · 29575225 · 33125018 · 11225
+  if (nums.length === 1 && /^\d+$/.test(nums[0])) {
+    const d = nums[0];
+    if (d.length === 7) {
+      return metric(d.slice(0, 3), d.slice(3, 5), d.slice(5)) ||
+        flotation(d.slice(0, 2), d.slice(2, 4) + '.' + d.slice(4, 5), d.slice(5), true);   // 3312518 = 33X12.50R18
+    }
+    if (d.length === 8) {
+      const rim = d.slice(5, 7) + '.' + d.slice(7);
+      if (COMM_RIMS.indexOf(rim) !== -1) { const c = metric(d.slice(0, 3), d.slice(3, 5), rim); if (c) return c; }
+      return flotation(d.slice(0, 2), d.slice(2, 4) + '.' + d.slice(4, 6), d.slice(6), true);
+    }
+    if (d.length === 5 || d.length === 4) {
+      const rim = d.slice(-3, -1) + '.' + d.slice(-1);
+      return commercial(d.slice(0, d.length - 3), rim);
+    }
+  }
+  return null;
+}
+
+// ── Top-of-page size box (phone layout) ──────────────────────────
+function onHeroSizeInput(el) {
+  const btn = document.getElementById('heroSizeBtn');
+  const hint = document.getElementById('heroSizeHint');
+  const v = el.value.trim();
+  const parsed = parseSizeLoose(v);
+  el.classList.toggle('invalid', false);
+  if (btn) btn.classList.toggle('ready', !!parsed);
+  if (!hint) return;
+  hint.classList.remove('error', 'ok');
+  if (!v) { hint.textContent = 'Type it how it reads on the tire: 225/65R18'; return; }
+  if (parsed) { hint.textContent = '✓ ' + parsed.display + ' — tap Search'; hint.classList.add('ok'); return; }
+  hint.textContent = 'Keep going — like 225/65R18. Spaces or just the numbers work too.';
+}
+function doHeroSizeSearch() {
+  const el = document.getElementById('heroSizeInput');
+  const hint = document.getElementById('heroSizeHint');
+  if (!el) return;
+  const parsed = parseSizeLoose(el.value);
+  if (!parsed) {
+    el.classList.add('invalid');
+    if (hint) {
+      hint.classList.remove('ok'); hint.classList.add('error');
+      hint.textContent = el.value.trim()
+        ? "We couldn't read that size. It's on your tire's sidewall, like 225/65R18. Or call or text us."
+        : 'Type the size from your tire, like 225/65R18.';
+    }
+    try { el.focus(); } catch (e) {}
+    return;
+  }
+  el.value = parsed.display;
+  el.classList.remove('invalid');
+  if (hint) { hint.classList.remove('error'); hint.classList.add('ok'); hint.textContent = 'Searching ' + parsed.display + '…'; }
+  try { el.blur(); } catch (e) {}
+  Promise.resolve(runRawSizeSearch(parsed, 'size-top')).then(function () {
+    if (hint) hint.textContent = '✓ Showing ' + parsed.display + ' below';
+  }).catch(function () {
+    if (hint) { hint.classList.remove('ok'); hint.classList.add('error'); hint.textContent = 'Search hit a snag. Try again, or call 519-397-4686.'; }
+  });
+}
+// "Don't know your size?" links: open that tab in the finder below and bring it into view.
+function heroGoTab(tab) {
+  try { switchLookupTab(tab); } catch (e) {}
+  const box = document.querySelector('.lookup-box');
+  if (box && box.scrollIntoView) {
+    try { box.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { box.scrollIntoView(); }
+  }
 }
 
 function doSemiSearch() {
@@ -4874,13 +5052,13 @@ function renderCart() {
         <div class="ci-brand">${item.brand}</div>
         <div class="ci-name">${item.name}</div>
         <div class="ci-size">${item.size || wheelSpecLine(item)}</div>
-        ${item.install && item.itemType !== 'wheel' && !commercial && !oversize ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
+        ${item.install && item.itemType !== 'wheel' && !commercial && !oversize && (installAnswer === 'yes' || installPriceLocked()) ? '<div class="ci-install-badge">✓ Installation included</div>' : ''}
         ${commercial
           ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">🚛 <strong style="color:var(--light)">Commercial size</strong> — sell-only, no in-shop install. We'll source &amp; ship or arrange pickup.</div>`
           : oversize
           ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">🛻 <strong style="color:var(--light)">Oversize</strong> — beyond our mounting equipment, so we sell these but can't install them in-shop. Call <a href="tel:5193974686" style="color:var(--yellow)">519-397-4686</a> and we'll help you sort out install.</div>`
           : (item.itemType !== 'wheel'
-              ? `<label class="inst-toggle"><input type="checkbox" ${item.install ? 'checked' : ''} onchange="togInst('${item.itemNumber}')">${tireInstallCovered(item) ? '<span>Installation <b>included with wheel mount &amp; balance</b></span>' : `<span>Add installation <b>+$${installPriceEach(item)}/tire</b></span>`}</label>`
+              ? cartInstallLineHtml(item)
               : `<div class="inst-toggle" style="display:block">
                   <select onchange="setWheelInst('${item.itemNumber}', this.value)" style="width:100%;background:var(--raised);color:var(--white);border:1px solid var(--border);border-radius:2px;padding:7px 8px;font-family:Barlow,sans-serif;font-size:12.5px">
                     <option value="none" ${!item.install ? 'selected' : ''}>No installation — wheels only</option>
@@ -5161,7 +5339,7 @@ function openCheckout() {
     try { const el = document.querySelector('.wheel-tpms[data-unset="1"]'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
     return;
   }
-  closeCart(); step = 1; selectedAddons = new Set(); _calAutoPickPending = true;
+  closeCart(); step = 1; selectedAddons = new Set(); _calAutoPickPending = true; installAnswer = null; _noInstallConfirmed = false;
   // Fast-lane: pre-fill name/phone the customer already gave Caleb on the phone.
   if (window._quoteFastLane) {
     const nameParts = (window._quoteCustomerName || '').trim().split(/\s+/).filter(Boolean);
@@ -5181,7 +5359,7 @@ function openCheckout() {
 }
 function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('show'); }
 
-const mTitles = ['', 'Contact Info', 'Book Installation', 'Add-ons', 'Payment', 'Order Confirmed!'];
+const mTitles = ['', 'Contact Info', 'Installation', 'Add-ons', 'Payment', 'Order Confirmed!'];
 const nLabels = ['', 'Continue →', 'Continue →', 'Continue →', 'Pay Securely 🔒', ''];
 
 function updSteps() {
@@ -5193,18 +5371,8 @@ function updSteps() {
   nb.textContent = nLabels[step] || 'Continue →';
   bb.style.display = (step > 1) ? 'block' : 'none';
   if (step === 2) {
-    selectedService = null; selDate = null; selTime = null;
-    document.getElementById('calSection').style.display = 'none';
-    buildServiceMenu();
-    // If cart already has installation, auto-select 4-Tire Mount & Balance
-    const cartHasInstall = cart.some(c => c.install && c.itemType !== 'wheel');
-    if (cartHasInstall) {
-      selectedService = SERVICES.find(s => s.id === 'mount4');
-      buildServiceMenu();
-      document.getElementById('calSection').style.display = 'block';
-      document.getElementById('durationNote').innerHTML = `<b>✅ Installation already included in your order</b> — just pick your date and time below.`;
-      buildCal();
-    }
+    // One question: "Do you want us to install your tires?" (see renderInstallQuestion).
+    renderInstallQuestion();
   }
   if (step === 3) buildAddonGrid();
   if (step === 4) { buildPaymentSummary(); initStripeElements(); updateStripeAmount(); }
@@ -5224,9 +5392,12 @@ async function nextStep() {
     if (window._quoteFastLane) { step = 4; updSteps(); return; }
   }
   if (step === 2) {
-    if (!selectedService) { alert('Please select a service type, or click Skip to arrange later.'); return; }
-    if (!selDate || !selTime) { alert('Please select a date and time, or click Skip to arrange later.'); return; }
+    if (installStepMode() === 'ask' && !installAnswer) { installInlineMsg('Please choose one: install them, or pick them up.'); return; }
+    if (selectedService && (!selDate || !selTime)) { installInlineMsg('Please pick a date and time, or tap "I\'ll book my time later".'); return; }
+    installInlineMsg('');
   }
+  // Before payment: tires that could be installed but install is off — confirm it.
+  if (step === 3 && needsNoInstallCheck()) { showNoInstallCheck(); return; }
   if (step === 4) { await processPayment(); return; }
   step++; updSteps();
 }
@@ -5235,6 +5406,145 @@ function prevStep() {
   if (step > 1) { step--; updSteps(); }
 }
 function skipInstall() { step = 3; updSteps(); }
+
+// ── INSTALL QUESTION (checkout step 2) ───────────────────────────
+// One plain question replaces the old cart checkbox + service menu:
+// "Do you want us to install your tires?"  The answer sets item.install on the
+// tire lines, so what is booked and what is charged can never disagree.
+let installAnswer = null;          // null = not asked yet | 'yes' | 'no'
+let _noInstallConfirmed = false;   // customer confirmed "pickup only" on the pre-payment check
+function installableTireLines() {
+  return cart.filter(c => c.itemType !== 'wheel' && !isCommercialTire(c) && !isOversizeTire(c));
+}
+// Locked / all-in quotes are priced by Caleb: the question never changes them.
+function installPriceLocked() {
+  return !!window._quoteLocked || quoteOverrideActive();
+}
+// What install would cost if the customer says Yes (before HST and promos).
+function installCostIfYes() {
+  let covered = wheelMountQty(), total = 0, qty = 0;
+  const rates = new Set();
+  installableTireLines().forEach(c => {
+    const each = installPriceEach(c);
+    let q = c.qty; qty += c.qty;
+    if (covered > 0 && each > 0) { const k = Math.min(q, covered); covered -= k; q -= k; }
+    if (q > 0) rates.add(each);
+    total += each * q;
+  });
+  return { total: total, qty: qty, each: rates.size === 1 ? Array.from(rates)[0] : null };
+}
+function installMoney(n) { return '$' + (Number.isInteger(n) ? n : n.toFixed(2)); }
+// 'ask'  = show the question
+// 'auto' = install is already settled (wheel mount, or a quote that includes it): just book a time
+// 'none' = nothing to install or book (sell-only sizes, wheels only, pickup quotes)
+function installStepMode() {
+  if (installPriceLocked()) return cart.some(c => c.install) ? 'auto' : 'none';
+  if (cart.some(c => c.itemType === 'wheel' && c.install)) return 'auto';
+  return installableTireLines().length ? 'ask' : 'none';
+}
+function installInlineMsg(msg) {
+  const el = document.getElementById('installMsg'); if (!el) return;
+  el.textContent = msg || '';
+  el.style.display = msg ? 'block' : 'none';
+}
+function showInstallCalendar(note) {
+  selectedService = SERVICES.find(s => s.id === 'mount4');
+  document.getElementById('calSection').style.display = 'block';
+  document.getElementById('durationNote').innerHTML = note;
+  const later = document.getElementById('installLaterBtn'); if (later) later.style.display = 'block';
+  selDate = null; selTime = null; _calAutoPickPending = true; buildCal();
+}
+function hideInstallCalendar() {
+  selectedService = null; selDate = null; selTime = null;
+  document.getElementById('calSection').style.display = 'none';
+  const later = document.getElementById('installLaterBtn'); if (later) later.style.display = 'none';
+}
+function renderInstallQuestion() {
+  const box = document.getElementById('installQ'); if (!box) return;
+  installInlineMsg('');
+  const mode = installStepMode();
+  if (mode === 'auto') {
+    box.innerHTML = '';
+    showInstallCalendar('<b>✅ Installation is already included in your order</b> — just pick your date and time below.');
+    return;
+  }
+  hideInstallCalendar();
+  if (mode === 'none') {
+    box.innerHTML = '<div class="appt-note"><b>Nothing to book.</b> ' + (installPriceLocked()
+      ? 'This quote is for pickup. To add installation, call <a href="tel:5193974686" style="color:var(--yellow)">519-397-4686</a>.'
+      : 'This order is pickup only. We\'ll let you know when it\'s ready.') + '</div>';
+    return;
+  }
+  const c = installCostIfYes();
+  const yesPrice = c.total > 0 ? installMoney(c.total) : 'Included';
+  const yesSub = (c.total > 0 ? (c.each ? c.qty + ' × ' + installMoney(c.each) + ' + HST. ' : 'Plus HST. ') : '') +
+    'Mount, balance, TPMS reset and old tire disposal included.';
+  const card = (val, title, price, sub) => {
+    const on = installAnswer === val;
+    return '<div role="button" tabindex="0" data-install-choice="' + val + '" onclick="answerInstall(\'' + val + '\')" ' +
+      'style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--card);border:2px solid ' + (on ? 'var(--yellow)' : 'var(--border)') + ';border-radius:4px;cursor:pointer;margin-bottom:8px">' +
+      '<div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:3px">' + title + '</div>' +
+      '<div style="font-size:12px;color:var(--muted);line-height:1.45">' + sub + '</div></div>' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:20px;font-weight:800;color:' + (on ? 'var(--yellow)' : 'var(--white)') + ';flex-shrink:0">' + price + '</div></div>';
+  };
+  box.innerHTML = '<div class="appt-note" style="font-size:15px"><b>Do you want us to install your tires?</b></div>' +
+    card('yes', 'Yes, install them', yesPrice, yesSub) +
+    card('no', 'No, I\'ll pick them up', '$0', 'We\'ll let you know when they\'re in. You arrange your own mounting.');
+  if (installAnswer === 'yes') showInstallCalendar('<b>✅ Installation added</b> — pick your date and time below.');
+}
+function answerInstall(val) {
+  if (installStepMode() !== 'ask') return;
+  installAnswer = (val === 'yes') ? 'yes' : 'no';
+  _noInstallConfirmed = false;
+  installableTireLines().forEach(c => { c.install = (installAnswer === 'yes'); });
+  saveCartToStorage();
+  renderCart();
+  renderInstallQuestion();
+}
+// "Yes" but no time yet: the install charge stays; the appointment is left
+// unbooked so the order shows "Not booked" and the shop calls to set it up.
+function installBookLater() {
+  hideInstallCalendar();
+  installInlineMsg('');
+  step = 3; updSteps();
+}
+// Line shown under a tire in the cart (replaces the old install checkbox).
+function cartInstallLineHtml(item) {
+  if (tireInstallCovered(item)) return '<div class="inst-toggle" style="cursor:default"><span>Installation <b>included with wheel mount &amp; balance</b></span></div>';
+  if (!item.install) return '<div class="inst-toggle" style="cursor:default"><span>Pickup only, no installation</span></div>';
+  return '<div class="inst-toggle" style="cursor:default"><span>Installation <b>+$' + installPriceEach(item) + '/tire</b>' +
+    (installAnswer === 'yes' ? '' : ' &middot; choose install or pickup at checkout') + '</span></div>';
+}
+// Pre-payment safety check: tires that could be installed, but install is off.
+function needsNoInstallCheck() {
+  if (window._quoteFastLane || staffPhoneOrder || _noInstallConfirmed) return false;
+  if (installStepMode() !== 'ask') return false;
+  return installableTireLines().some(c => !c.install);
+}
+function showNoInstallCheck() {
+  let el = document.getElementById('noInstallCheck');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'noInstallCheck';
+    el.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1300;display:flex;align-items:center;justify-content:center;padding:20px';
+    document.body.appendChild(el);
+  }
+  const c = installCostIfYes();
+  const btn = 'display:block;width:100%;padding:13px 14px;border-radius:4px;font-family:Barlow,sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;';
+  el.innerHTML = '<div role="dialog" aria-modal="true" aria-label="Installation check" style="background:var(--card);border:1px solid var(--border);border-radius:6px;max-width:420px;width:100%;padding:22px">' +
+    '<div style="font-size:19px;font-weight:800;color:var(--white);margin-bottom:8px">Just making sure</div>' +
+    '<div style="font-size:14px;color:var(--light);line-height:1.55;margin-bottom:8px">We noticed you don\'t have installation selected. You\'ll pick up your tires and have them mounted somewhere else. Is that right?</div>' +
+    '<button type="button" id="noInstallAddBtn" onclick="noInstallCheckAnswer(false)" style="' + btn + 'background:var(--yellow);color:var(--black);border:2px solid var(--yellow)">No, add installation' + (c.total > 0 ? ' (+' + installMoney(c.total) + ')' : '') + '</button>' +
+    '<button type="button" id="noInstallOkBtn" onclick="noInstallCheckAnswer(true)" style="' + btn + 'background:transparent;color:var(--white);border:2px solid var(--border)">Yes, pickup only</button>' +
+    '</div>';
+  el.style.display = 'flex';
+}
+function noInstallCheckAnswer(pickupOnly) {
+  const el = document.getElementById('noInstallCheck'); if (el) el.style.display = 'none';
+  if (pickupOnly) { _noInstallConfirmed = true; step = 4; updSteps(); return; }
+  answerInstall('yes');
+  step = 2; updSteps();
+}
 
 // ── ADD-ONS ──────────────────────────────────────
 // hidden: true = not offered yet; kept here so it can be switched back on by deleting the flag.
