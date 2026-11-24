@@ -677,7 +677,15 @@ async function actPaidOther(env, c, auth, body) {
     if (emailErr) return json({ error: emailErr }, 400);
     const already = before.pays.find((p) => p.id === id);
     if (!already && before.due <= 0) return json({ error: 'This order is already paid in full.' }, 409);
-    const amount = already ? already.amount : before.due;
+    // Default: the whole balance. The owner can instead record a deposit or part
+    // payment (e.g. a $50 e-transfer); the rest stays owing on the order.
+    let amount = already ? already.amount : before.due;
+    if (!already && body.amount !== undefined && body.amount !== null && body.amount !== '') {
+      const part = r2(body.amount);
+      if (!(part >= 0.01)) return json({ error: 'Enter the amount received.' }, 400);
+      if (part > before.due + 0.001) return json({ error: 'That is more than the ' + money(before.due) + ' still owing on this order.' }, 400);
+      amount = Math.min(part, before.due);
+    }
     if (!already) await upsertPay(env, c, auth.order, { id, amount, label, at: when.toISOString() });
     const st = await loadOrder(env, c, auth.order);
     const invoice = await ensureOrderInvoice(env, c, st);
