@@ -251,31 +251,57 @@ details summary::-webkit-details-marker{display:none}
   $('oSend').onclick = function () { err($('oErr'), ''); runPayment({ email: $('oEmail').value.trim() }, loadOrder); };
   $('oOther').onclick = function () {
     if (!owner) { err($('oErr'), 'Log in below first (owner password) to record an e-transfer or cash payment.'); $('loginBox').scrollIntoView({ behavior: 'smooth' }); return; }
-    payOther(window._orderDue, { email: $('oEmail').value.trim() }, loadOrder);
+    payOther(window._orderDue, { email: $('oEmail').value.trim() }, loadOrder, true);
   };
 
   // ── Paid another way (e-transfer / cash) ──────────────────────────────────
   function newRid() { return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10); }
-  function payOther(amount, extra, onDone) {
+  // partial = true on an order: the owner can record a deposit / part payment
+  // instead of the whole balance. Walk-ins are always the full amount.
+  function payOther(amount, extra, onDone, partial) {
     stopPoll();
     var rid = newRid();
+    var chosen = amount;
     function pick(method, name) {
-      openOv([el('div', 'amt', money(amount)), el('div', 'msg', 'Mark as paid by ' + name + '?'),
-        el('div', 'det', method === 'etransfer' ? 'Only once the e-transfer has landed.' : 'Only once the cash is in hand.'),
+      var left = round2(amount - chosen);
+      openOv([el('div', 'amt', money(chosen)), el('div', 'msg', 'Mark ' + (left > 0 ? money(chosen) + ' ' : '') + 'as paid by ' + name + '?'),
+        el('div', 'det', (method === 'etransfer' ? 'Only once the e-transfer has landed.' : 'Only once the cash is in hand.') + (left > 0 ? ' ' + money(left) + ' will still be owing.' : '')),
         btn('Yes — paid by ' + name, '', function () {
           openOv([el('div', 'spin'), el('div', 'msg', 'Recording…')]);
-          api('paid_other', Object.assign({}, extra, { method: method, rid: rid })).then(function (r) {
+          api('paid_other', Object.assign({}, extra, { method: method, rid: rid }, partial ? { amount: chosen } : {})).then(function (r) {
             if (r.error) { if (r.needLogin) logout(); return failOv(r.error); }
             r.manual = true;
             okOv(r.amount, r, onDone);
           });
         }),
-        btn('Back', 'ghost', function () { payOther(amount, extra, onDone); })]);
+        btn('Back', 'ghost', function () { ask(); })]);
     }
-    openOv([el('div', 'amt', money(amount)), el('div', 'msg', 'How was it paid?'),
-      btn('E-transfer', '', function () { pick('etransfer', 'e-transfer'); }),
-      btn('Cash', '', function () { pick('cash', 'cash'); }),
-      btn('Cancel', 'ghost', closeOv)]);
+    function ask(problem) {
+      var nodes = [el('div', 'amt', money(amount)), el('div', 'msg', 'How was it paid?')];
+      var inp = null;
+      if (partial) {
+        nodes.push(el('div', 'det', 'Amount received. Change it for a deposit or part payment:'));
+        inp = el('input'); inp.type = 'number'; inp.step = '0.01'; inp.min = '0.01'; inp.id = 'otherAmt';
+        inp.setAttribute('inputmode', 'decimal'); inp.setAttribute('aria-label', 'Amount received');
+        inp.value = Number(chosen).toFixed(2); inp.style.margin = '6px 0 10px'; inp.style.textAlign = 'center';
+        nodes.push(inp);
+        if (problem) { var pe = el('div', 'det', problem); pe.style.color = '#ff6b6b'; pe.style.fontWeight = '700'; nodes.push(pe); }
+      }
+      function go(method, name) {
+        if (inp) {
+          var v = round2(inp.value);
+          if (!(v >= 0.01)) return ask('Enter the amount received.');
+          if (v > amount + 0.001) return ask('That is more than the ' + money(amount) + ' still owing.');
+          chosen = v;
+        }
+        pick(method, name);
+      }
+      nodes.push(btn('E-transfer', '', function () { go('etransfer', 'e-transfer'); }));
+      nodes.push(btn('Cash', '', function () { go('cash', 'cash'); }));
+      nodes.push(btn('Cancel', 'ghost', closeOv));
+      openOv(nodes);
+    }
+    ask();
   }
 
   // ── Walk-in ───────────────────────────────────────────────────────────────
