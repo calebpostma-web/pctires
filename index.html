@@ -2636,9 +2636,9 @@ buildTicker();
           <div style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:8px">Staff — Payment Method</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
             <button type="button" id="spm-card"      onclick="setStaffPay('card')">Card (charge now)</button>
-            <button type="button" id="spm-etransfer" onclick="setStaffPay('etransfer')">E-transfer received</button>
-            <button type="button" id="spm-cash"      onclick="setStaffPay('cash')">Cash</button>
-            <button type="button" id="spm-pickup"    onclick="setStaffPay('pickup')">Pay on pickup</button>
+            <button type="button" id="spm-etransfer" onclick="setStaffPay('etransfer')">E-transfer (deposit or full)</button>
+            <button type="button" id="spm-cash"      onclick="setStaffPay('cash')">Cash (deposit or full)</button>
+            <button type="button" id="spm-pickup"    onclick="setStaffPay('pickup')">Nothing paid yet</button>
           </div>
           <div id="staffRecvWrap" style="display:none;margin-top:10px">
             <div style="font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Amount received so far</div>
@@ -5682,7 +5682,7 @@ function applyDepositOnlyUi() {
 
 async function buildPaymentSummary() {
   const box = document.getElementById('payBox'); if (!box) return;
-  renderStaffPay();
+  if (!window._inStaffRefresh) renderStaffPay();
   var _pc = document.getElementById('payChoice');
   if (_pc) { _pc.style.display = staffNoCharge() ? 'none' : (depositEligible() ? 'grid' : 'none'); }
   if (!depositEligible()) { window._payMode = 'full'; }
@@ -5697,7 +5697,7 @@ async function buildPaymentSummary() {
     box.innerHTML = `
     <div class="ptrow"><span>Items (${cart.reduce((s,c)=>s+c.qty,0)})</span><span>$${t.sub.toFixed(2)}</span></div>
     <div class="ptrow"><span>Tax (HST 13%)</span><span>$${t.tax.toFixed(2)}</span></div>
-    <div class="ptrow bold"><span>${window._payMode === 'deposit' ? 'Order Total (quoted, all-in)' : 'Total Due Today (quoted, all-in)'}</span><span>$${grandTotal.toFixed(2)}</span></div>${depositRowsHtml(grandTotal)}
+    <div class="ptrow bold"><span>${(window._payMode === 'deposit' || staffNoCharge()) ? 'Order Total (quoted, all-in)' : 'Total Due Today (quoted, all-in)'}</span><span>$${grandTotal.toFixed(2)}</span></div>${depositRowsHtml(grandTotal)}
     `;
     return;
   }
@@ -5711,7 +5711,7 @@ async function buildPaymentSummary() {
     ${instTotal > 0 ? `<div class="ptrow"><span>Installation</span><span>$${instTotal.toFixed(2)}</span></div>` : ''}
     ${addonLines}
     <div class="ptrow"><span>Tax (HST 13%)</span><span>$${(t.tax + addonAmt * 0.13).toFixed(2)}</span></div>
-    <div class="ptrow bold"><span>${window._payMode === 'deposit' ? 'Order Total' : 'Total Due Today'}</span><span>$${grandTotal.toFixed(2)}</span></div>${depositRowsHtml(grandTotal)}
+    <div class="ptrow bold"><span>${(window._payMode === 'deposit' || staffNoCharge()) ? 'Order Total' : 'Total Due Today'}</span><span>$${grandTotal.toFixed(2)}</span></div>${depositRowsHtml(grandTotal)}
   `;
 }
 
@@ -5931,7 +5931,7 @@ function staffPayLabel() {
       : 'Place Order — ' + how + ' Paid in Full ✓';
   }
   switch (window._staffPay) {
-    case 'pickup':    return 'Place Order — Pay on Pickup';
+    case 'pickup':    return 'Place Order — Nothing Paid Yet';
     default:          return (window._payMode === 'deposit') ? 'Pay $' + DEPOSIT_AMOUNT + ' Deposit' : (typeof nLabels !== 'undefined' ? nLabels[4] : 'Pay Securely 🔒');
   }
 }
@@ -5977,7 +5977,7 @@ function refreshStaffPayUi() {
     spn.style.color = '';
     var txt = '';
     if (method === 'pickup') {
-      txt = 'No payment taken. The customer email will show the full $' + total.toFixed(2) + ' as due on pickup. Tagged UNPAID.';
+      txt = 'Nothing received yet. The customer email will show the full $' + total.toFixed(2) + ' as due on pickup. Tagged UNPAID. If they already sent a deposit, pick E-transfer or Cash instead.';
     } else if (needsAmt) {
       var recv = staffReceivedAmount(total);
       if (recv === null) {
@@ -5994,6 +5994,12 @@ function refreshStaffPayUi() {
   }
   var nb = document.getElementById('nextBtn');
   if (nb && !window._paymentInFlight) nb.textContent = staffPayLabel();
+  // Redraw the order summary so its "received / balance" lines match the buttons above.
+  if (!window._inStaffRefresh && typeof step !== 'undefined' && step === 4) {
+    window._inStaffRefresh = true;
+    try { buildPaymentSummary(); } catch (e) {}
+    window._inStaffRefresh = false;
+  }
 }
 function setStaffPay(method) {
   window._staffPay = method;
@@ -6036,6 +6042,22 @@ function setPayMode(m) {
   }
 }
 function depositRowsHtml(g) {
+  // Owner phone order with no card charge: show exactly what will be recorded.
+  if (staffNoCharge()) {
+    var first = 'margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)';
+    var row = function (label, val, colour, style) {
+      return '<div class="ptrow"' + (style ? ' style="' + style + '"' : '') + '><span>' + label + '</span><span' + (colour ? ' style="color:' + colour + ';font-weight:800"' : '') + '>' + val + '</span></div>';
+    };
+    if (window._staffPay === 'pickup') {
+      return row('Received so far', '$0.00', 'var(--yellow)', first) + row('Balance due at pickup', '$' + g.toFixed(2));
+    }
+    var how = (window._staffPay === 'etransfer') ? 'e-transfer' : 'cash';
+    var recv = staffReceivedAmount(g);
+    if (recv === null) return row('Received by ' + how, 'choose the amount above ↑', 'var(--yellow)', first);
+    var due = Math.round((g - recv) * 100) / 100;
+    if (due < 0.005) return row('Received by ' + how + ' (paid in full)', '$' + recv.toFixed(2), 'var(--green)', first) + row('Balance owing', '$0.00');
+    return row('Deposit received by ' + how, '$' + recv.toFixed(2), 'var(--green)', first) + row('Balance owing at installation', '$' + due.toFixed(2));
+  }
   if (window._payMode !== 'deposit' || !depositEligible()) return '';
   return '<div class="ptrow" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)"><span>Due today (deposit)</span><span style="color:var(--yellow);font-weight:800">$' + DEPOSIT_AMOUNT.toFixed(2) + '</span></div>'
        + '<div class="ptrow"><span>Balance at installation (' + (promoDepositOnly() ? 'e-transfer' : 'e-transfer, card, or cash') + ')</span><span>$' + (g - DEPOSIT_AMOUNT).toFixed(2) + '</span></div>';
